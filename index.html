@@ -116,9 +116,9 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 <div class="bar"><h2>Editor grafiche</h2><button class="btn" id="un" data-nc>↶ Annulla</button><button class="btn" id="re" data-nc>↷ Ripeti</button><button class="btn" id="dl">Scarica grafica</button><button class="btn p" id="sg">Aggiungi grafica al Best of</button></div>
 <div class="tabs" id="et"><button class="on" data-et="s" data-nc>Impostazioni</button><button data-et="c" data-nc>Contenuti</button><button data-et="e" data-nc>Elementi</button><button data-et="k" data-nc>Caption</button></div>
 <div class="ep on" id="ep_s"><label for="gt">Modello</label>
-<select id="gt"><option value="cl">Classifica</option><option value="mar">Marcatori</option><option value="tw">Team of the week</option><option value="bo">Best of della settimana</option><option value="cop">Copertina</option><option value="mc">Match day (partita)</option><option value="st">Logo tra le stelle</option></select>
+<select id="gt"><option value="cl">Classifica</option><option value="mar">Marcatori</option><option value="tw">Team of the week</option><option value="bo">Best of della settimana</option><option value="cop">Copertina</option><option value="mc">Match day (partita)</option><option value="ris">Risultati della giornata</option><option value="st">Logo tra le stelle</option></select>
 <div class="bar" style="margin:8px 0 0"><button class="btn" id="ng2">+ Aggiungi nuova grafica</button><button class="btn" id="dg2" style="display:none">Elimina questa grafica</button></div>
-<div id="ngp" class="card" style="display:none;margin-top:8px"><label for="ngn">Nome della grafica</label><input id="ngn" placeholder="Es. Sondaggio MVP"><label for="ngb">Parti da</label><select id="ngb"><option value="cop">Copertina (titolo grande)</option><option value="bo">Elenco libero (righe Testo;Sottotesto;Valore)</option><option value="vuota">Vuota (titolo e sottotitolo, poi aggiungi elementi)</option><option value="mc">Match day (partita)</option><option value="tw">Formazione (campetto)</option><option value="st">Logo tra le stelle</option></select><div class="bar" style="margin:8px 0 0"><button class="btn p" id="ngc">Crea</button><button class="btn" id="ngx">Annulla</button></div></div>
+<div id="ngp" class="card" style="display:none;margin-top:8px"><label for="ngn">Nome della grafica</label><input id="ngn" placeholder="Es. Sondaggio MVP"><label for="ngb">Parti da</label><select id="ngb"><option value="cop">Copertina (titolo grande)</option><option value="bo">Elenco libero (righe Testo;Sottotesto;Valore)</option><option value="vuota">Vuota (titolo e sottotitolo, poi aggiungi elementi)</option><option value="mc">Match day (partita)</option><option value="ft">Full time (risultato finale)</option><option value="ris">Risultati della giornata</option><option value="tw">Formazione (campetto)</option><option value="st">Logo tra le stelle</option></select><div class="bar" style="margin:8px 0 0"><button class="btn p" id="ngc">Crea</button><button class="btn" id="ngx">Annulla</button></div></div>
 <label for="gf">Formato</label>
 <select id="gf"><option value="1080x1350">Post 4:5</option><option value="1080x1920">Storia o reel 9:16</option><option value="1080x1080">Quadrato</option><option value="1920x1080">YouTube 16:9</option></select>
 <label>Stile</label><div class="bar" id="pr"></div><button class="btn" id="sp" style="margin-bottom:8px">+ Salva questi colori come preset</button>
@@ -130,13 +130,14 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 </div>
 <div class="ep" id="ep_c"><label for="gh">Titolo (con | vai a capo nella copertina)</label><input id="gh">
 <label for="gs">Sottotitolo</label><input id="gs">
-<div id="mcw" style="display:none"><datalist id="tn"></datalist><div class="g3" style="grid-template-columns:1fr 1fr"><div><label>Squadra di casa</label><input list="tn" data-m="h"></div><div><label>Squadra ospite</label><input list="tn" data-m="a"></div><div><label>Data e ora</label><input data-m="d" placeholder="Lunedì 18 maggio · 20:45"></div><div><label>Campo</label><input data-m="v" placeholder="Stadio / campo"></div></div></div>
+<div id="mcw" style="display:none"><datalist id="tn"></datalist><div class="g3" style="grid-template-columns:1fr 1fr"><div><label>Squadra di casa</label><input list="tn" data-m="h"></div><div><label>Squadra ospite</label><input list="tn" data-m="a"></div><div><label>Data e ora</label><input data-m="d" placeholder="Lunedì 18 maggio · 20:45"></div><div><label>Campo</label><input data-m="v" placeholder="Stadio / campo"></div><div><label>Risultato</label><input data-m="sc" placeholder="4 - 0"></div></div></div>
 <div id="twp" style="display:none"><div class="g3" style="grid-template-columns:1fr 1fr auto;align-items:end"><div><label for="tf">Modulo</label><select id="tf"></select></div><div><label for="tv">Vista</label><select id="tv"><option value="c">Campetto</option><option value="l">Lista</option></select></div><button class="btn" id="ta">Compila dai marcatori</button></div><div id="twr"></div><label for="tres">Risultati della giornata (facoltativo, una partita per riga, es. Meceneri 3-1 Atletico Cocai)</label><textarea id="tres" rows="3"></textarea><div class="hint">Con i risultati i suggerimenti usano solo la giornata. Senza, confronto l’ultima classifica importata con la precedente.</div><div id="tsg"></div></div>
-<div id="gdw"><label for="gd" id="gdl"></label><textarea id="gd" rows="8"></textarea></div>
+<div id="rsw" style="display:none"><label for="rres">Risultati della giornata (una partita per riga, es. Meceneri 4-0 Marzenego Riverside)</label><textarea id="rres" rows="8"></textarea><div class="hint">Se i nomi coincidono con quelli della classifica compaiono anche i loghi. Gli stessi risultati servono ai suggerimenti del Team of the week.</div></div><div id="gdw"><label for="gd" id="gdl"></label><textarea id="gd" rows="8"></textarea></div>
 </div>
 <div class="ep" id="ep_e"><div id="lyp" style="margin-top:14px"><label>Elementi sulla grafica (clicca sul disegno per selezionarli, trascinali per spostarli)</label>
 <div class="bar" id="lyl" style="margin:6px 0"></div>
 <div class="bar"><button class="btn" id="al">+ Logo</button><button class="btn" id="at">+ Testo</button><label class="btn" style="margin:0">+ Immagine<input type="file" id="ai" accept="image/*" hidden></label><button class="btn" id="rl">Ripristina elementi</button></div>
+<div class="bar" id="mcb"><span class="hint" style="margin:0">Partita:</span><button class="btn" data-ma="lh">+ Logo casa</button><button class="btn" data-ma="la">+ Logo ospite</button><button class="btn" data-ma="nh">+ Nome casa</button><button class="btn" data-ma="na">+ Nome ospite</button><button class="btn" data-ma="vs">+ VS</button><button class="btn" data-ma="sc">+ Risultato</button><button class="btn" data-ma="d">+ Data</button><button class="btn" data-ma="v">+ Campo</button><button class="btn" data-ma="bx">+ Riquadro</button></div>
 <div id="lyc" class="card" style="display:none"><div id="lw_t"><label>Testo</label><input data-p="t"></div>
 <div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
 <label>Dimensione</label><input type="range" data-p="s"><div id="lw_r"><label>Altezza</label><input type="range" data-p="h" min=".05" max=".6" step=".005"><label>Angoli arrotondati</label><input type="range" data-p="r" min="0" max="100"></div><label>Opacità</label><input type="range" data-p="o" min="0" max="100">
@@ -201,9 +202,10 @@ const DEF=()=>({cl:[],mar:[],tipi:[
 {id:"cl",n:"Classifica e caption",g:0,c:"Instagram",d:"Grafica classifica + caption di contesto"},
 {id:"iv",n:"Intervista alla squadra",g:2,c:"Instagram (breve), YouTube (estesa)",d:"Vlog o intervista, a scelta della squadra"},
 {id:"bo",n:"Best of della settimana",g:5,c:"Instagram",d:"Migliori goal: pagine IG delle squadre o video WhatsApp"},
+{id:"ris",n:"Risultati della settimana",g:4,c:"Instagram",d:"Grafica con tutti i risultati della giornata"},
 {id:"tw",n:"Team of the week",g:6,c:"Instagram",d:"Statistiche dal sito della classifica"}],
 st:{},raw:{},mode:{},tol:40,sty:{bg:"#000000",ac:"#2f7bff",tx:"#ffffff",str:true,dk:45,po:65,fmt:"1080x1350"},
-tw2:Array.from({length:7},()=>({n:"",t:""})),tf:"2-3-1",twv:"c",mt:{h:"",a:"",d:"",v:""},ly:{},
+tw2:Array.from({length:7},()=>({n:"",t:""})),tf:"2-3-1",twv:"c",mt:{h:"",a:"",d:"",v:"",sc:""},ly:{},
 bo:"Nome Cognome;Squadra;12’\nNome Cognome;Squadra;31’"});
 let S;try{S={...DEF(),...(JSON.parse(localStorage.getItem("a7v2"))||{})}}catch(e){S=DEF()}
 S.sty={...DEF().sty,...S.sty};Object.keys(S.mode||{}).forEach(k=>{if(S.mode[k]==="bw")S.mode[k]="w"});Object.keys(S.ly).forEach(k=>S.ly[k]=S.ly[k].filter(l=>l.k!=="img"||l.src));
@@ -382,11 +384,11 @@ $("#bt").onclick=e=>{const q=e.target.closest("[title]");if(!q||run)return;const
 $("#et").onclick=e=>{const k=e.target.dataset.et;if(!k)return;$$("#et button").forEach(b=>b.classList.toggle("on",b===e.target));$$(".ep").forEach(p=>p.classList.toggle("on",p.id==="ep_"+k))};
 
 /* ---- editor grafiche ---- */
-const TT={cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"]};
+const TT={cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"],ris:["Risultati","Giornata 4"]};
 function sync(ch){const T=gT(),B=BS(T);if(ch){const q=TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=q[1]}
- $("#gdw").style.display=B==="bo"?"block":"none";$("#mcw").style.display=B==="mc"?"block":"none";$("#twp").style.display=B==="tw"?"block":"none";
+ $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";
  if(B==="bo"){$("#gdl").textContent=T==="bo"?"Goal (Marcatore;Squadra;Minuto)":"Righe (Testo;Sottotesto;Valore)";$("#gd").value=S[T]||""}
- ["h","a","d","v"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});lyUI()}
+ ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});lyUI()}
 function sty(){["bg","ac","tx"].forEach(k=>$("#c"+k).value=S.sty[k]);$("#ss").checked=S.sty.str;$("#dk").value=S.sty.dk;$("#po").value=S.sty.po;$("#gf").value=S.sty.fmt}
 Object.entries(PR).forEach(([k,v])=>{const b=document.createElement("button");b.className="btn";b.textContent=k;b.onclick=()=>{Object.assign(S.sty,{bg:v[0],ac:v[1],tx:v[2]});sty();save();draw()};$("#pr").append(b)});
 ["bg","ac","tx"].forEach(k=>$("#c"+k).oninput=e=>{S.sty[k]=e.target.value;save();draw()});
@@ -423,7 +425,7 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
  else if(T==="st"){x.textAlign="center";const g=x.createLinearGradient(0,H*.6,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.65)");x.fillStyle=g;x.fillRect(0,H*.6,W,H*.4);const sl=LY().find(l=>l.k==="stars");if(sl)stars(x,W,H,sl);
   const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
-  let it,hd,cw=78;if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T!=="vuota"){
+  let it,hd,cw=78;if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
   if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:i===0,c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
   else if(T==="mar"){hd=["Gol"];cw=110;it=S.mar.map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:i===0,c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:p.n||"Nome Cognome",sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
@@ -451,7 +453,8 @@ function capt(){const T0=$("#gt").value,T=BS(T0),tt=$("#gh").value.replace(/\|/g
  else if(T==="tw"){const sl=SL(),ps=S.tw2.map((p,i)=>({...p,r:sl[i]})).filter(p=>p.n),at=ps.filter(p=>p.r==="Attaccante"),cnt={};ps.forEach(p=>{if(p.t)cnt[p.t]=(cnt[p.t]||0)+1});const tp=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0],tm=tp&&tp[1]>1?`${tp[0]} piazza ${tp[1]} giocatori nell’undici ideale.`:"";
   t=`Il team of the week ${wg} è servito!`+(at.length?` Davanti ${at.map(p=>p.n).join(" e ")}${at.length>1?" fanno paura":" fa paura"}${tm?", e "+tm:"."}`:tm?" "+tm:"")+P(["\n\nSiete d’accordo con la formazione? Scrivetelo nei commenti.","\n\nChi avreste scelto voi? Dite la vostra nei commenti.","\n\nManca qualcuno che meritava un posto? Taggatelo!"])}
  else if(T==="bo"){const r=rows(S[T0]||"").filter(a=>a[0]&&a[0]!=="Nome Cognome");t=`I migliori goal ${wg}`+(r.length?`: ${r.slice(0,4).map(a=>a[0]+(a[1]&&a[1]!=="Squadra"?" ("+a[1]+")":"")).join(", ")}${r.length>4?" e non solo":""}.`:".")+P([" Guardate i video e votate il vostro preferito nei commenti!"," Quale vi ha fatto saltare dal divano? Votate nei commenti!"," Il più bello secondo voi? Scrivetelo qui sotto!"])}
- else if(T==="mc"){const h=S.mt.h||"Casa",a=S.mt.a||"Ospite";t=`${h} vs ${a}${S.mt.d?", "+S.mt.d:""}${S.mt.v?" · "+S.mt.v:""}. `+P(["Tutti a sostenere la propria squadra!","Venite a riempire gli spalti: si gioca!","Chi la spunterà? Dite la vostra nei commenti."])}
+ else if(T==="ris"){const r=parseRes(S.res||""),tg=r.reduce((q,e)=>q+e.h+e.a,0),bg=[...r].sort((p,q)=>q.h+q.a-p.h-p.a)[0];t=`Tutti i risultati ${wg}!`+(r.length?` ${r.length} ${r.length===1?"partita":"partite"} e ${tg} gol in totale.`+(bg&&bg.h+bg.a>=5?` Il match più ricco di reti: ${bg.hn} ${bg.h}-${bg.a} ${bg.an}.`:""):"")+P(["\n\nCome sono andate per la vostra squadra? Scrivetelo nei commenti!","\n\nQuale risultato vi ha sorpreso di più? Dite la vostra!","\n\nTutti i punteggi nella grafica: avete visto qualche sorpresa?"])}
+ else if(T==="mc"){const h=S.mt.h||"Casa",a=S.mt.a||"Ospite";t=(S.mt.sc?`Full time: ${h} ${S.mt.sc} ${a}`:`${h} vs ${a}`)+`${S.mt.d?", "+S.mt.d:""}${S.mt.v?" · "+S.mt.v:""}. `+(S.mt.sc?P(["Grazie a tutti per averci seguito!","Cosa ne pensate del match? Dite la vostra nei commenti!"]):P(["Tutti a sostenere la propria squadra!","Venite a riempire gli spalti: si gioca!","Chi la spunterà? Dite la vostra nei commenti."]))}
  else if(T==="st")t=`Siamo tornati, carichi per ${/campionato/i.test(tt)?"il "+tt.toLowerCase():"la nuova stagione"}! ${S.cl.length||"Tante"} squadre pronte a contendersi la corona. Chi la spunterà?`;
  else t=`${tt}${sb?" · "+sb:""}. `+P(["Non perdetevelo!","Dateci un’occhiata e fateci sapere cosa ne pensate.","Fateci sapere cosa ne pensate nei commenti!"]);
  $("#gc").value=t+FT}
@@ -463,10 +466,10 @@ $("#dl").onclick=()=>{EXP=1;draw();$("#cv").toBlob(b=>{const a=document.createEl
 /* ---- editor: livelli, annulla, campetto, match day ---- */
 let LB=[],SEL=null,EXP=0,hist=[],hi=-1,drag=null,rq=0;
 const gT=()=>$("#gt").value,nid=()=>"l"+Date.now().toString(36)+Math.random().toString(36).slice(2,4);
-const defLy=T=>{T=BS(T);const a=[];if(T==="st")a.push({id:"stars",k:"stars",nm:"Logo a stelle",x:.5,y:.25,s:1,o:100,c:"",b:0});
+const defLy=T=>{const T0=T;T=BS(T);const a=[];if(T==="st")a.push({id:"stars",k:"stars",nm:"Logo a stelle",x:.5,y:.25,s:1,o:100,c:"",b:0});
  else{a.push({id:"logo",k:"logo",nm:"Logo lega",x:T==="mc"?.5:.89,y:.075,s:T==="mc"?.16:.11,o:100,c:"",b:0},{id:"ft",k:"text",nm:"Piè di pagina",t:"Lega Amatori Calcio Treviso",x:.5,y:.975,s:.02,o:60,c:"",b:0});
-  if(["cl","mar","bo"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
- if(T==="mc")a.unshift(BAND());return[...a,...TL()]};
+  if(["cl","mar","bo","ris"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
+ if(T==="mc"){const[W,H]=S.sty.fmt.split("x").map(Number),cg=(S.cg||[]).find(c=>c.id===T0),b=BAND();a.unshift(b,...MCL(b,W,H,cg&&cg.ft))}return[...a,...TL()]};
 const TL=()=>[{id:"tt",k:"tt",nm:"Titolo",x:null,y:null,s:1,o:100,c:"",b:0},{id:"ts",k:"ts",nm:"Sottotitolo",x:null,y:null,s:1,o:100,c:"",b:0}],BAND=()=>({id:"band",k:"band",nm:"Fascia loghi",x:.5,y:.735,s:.84,h:.176,r:18,o:90,c:"",b:1});
 const LY=()=>S.ly[gT()]||(S.ly[gT()]=defLy(gT())),SELL=()=>LY().find(q=>q.id===SEL),rd=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})};
 const snap=()=>JSON.stringify({sty:S.sty,ly:S.ly,tw2:S.tw2,tf:S.tf,twv:S.twv,mt:S.mt,gh:$("#gh").value,gs:$("#gs").value,T:gT()});
@@ -476,8 +479,12 @@ const undo=()=>{if(hi>0)rest(hist[--hi])},redo=()=>{if(hi<hist.length-1)rest(his
 function lg(l){const raw=im(S.raw.__lega);if(!raw)return null;if(!l.c)return logo("__lega");const k="__t"+l.c+S.raw.__lega.length+S.tol;
  return PC[k]||(PC[k]=(()=>{const m=process(raw,"s"),c=document.createElement("canvas");c.width=m.width;c.height=m.height;const q=c.getContext("2d");q.drawImage(m,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
 function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==="ts"||!!l.b!==!!b)return;x.save();x.globalAlpha=l.o/100;let bx;
- if(l.k==="text"){const fs=l.s*W;x.font=`700 ${fs}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||st.tx;const w=x.measureText(l.t||"").width;x.fillText(l.t||"",l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
- else if(l.k==="band"){const w=l.s*W,h=l.h*W,x0=l.x*W-w/2,y0=l.y*H-h/2;x.fillStyle=l.c||st.ac;x.beginPath();x.roundRect(x0,y0,w,h,l.r/100*h/2);x.fill();bx=[x0,y0,w,h]}
+ if(l.k==="text"||l.k==="mt"||l.k==="mname"){const fs=l.s*W;let t=l.k==="text"?l.t||"":l.k==="mname"?(S.mt[l.side]||(l.side==="h"?"Casa":"Ospite")):mtT(l);if(!t){if(EXP){x.restore();return}t=l.nm||"";x.globalAlpha*=.3}
+  x.font=`${l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):700} ${fs}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||(l.k==="text"?st.tx:mcCol(l));const w=x.measureText(t).width;x.fillText(t,l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
+ else if(l.k==="mlogo"){const z=l.s*W,cx=l.x*W,cy=l.y*H,nm=S.mt[l.side]||"",lc=logo(nm);
+  if(lc){const r=Math.min(z/lc.width,z/lc.height),w=lc.width*r,h=lc.height*r;x.drawImage(lc,cx-w/2,cy-h/2,w,h);bx=[cx-w/2,cy-h/2,w,h]}
+  else{x.fillStyle="rgba(255,255,255,.2)";x.beginPath();x.arc(cx,cy,z*.44,0,7);x.fill();x.fillStyle=mcCol(l);x.font=`800 ${z*.4}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText((nm||"?").slice(0,2).toUpperCase(),cx,cy);bx=[cx-z/2,cy-z/2,z,z]}}
+  else if(l.k==="band"){const w=l.s*W,h=l.h*W,x0=l.x*W-w/2,y0=l.y*H-h/2;x.fillStyle=l.c||st.ac;x.beginPath();x.roundRect(x0,y0,w,h,l.r/100*h/2);x.fill();bx=[x0,y0,w,h]}
  else{const c=l.k==="img"?im(l.src):lg(l),z=l.s*W;if(c){const w=c.width||c.naturalWidth,h=c.height||c.naturalHeight,r=z/Math.max(w,h);x.drawImage(c,l.x*W-w*r/2,l.y*H-h*r/2,w*r,h*r);bx=[l.x*W-w*r/2,l.y*H-h*r/2,w*r,h*r]}else bx=[l.x*W-z/2,l.y*H-z/2,z,z]}
  x.restore();LB.push({id:l.id,x0:bx[0],y0:bx[1],x1:bx[0]+bx[2],y1:bx[1]+bx[3]})})}
 const FM=["2-3-1","3-2-1","2-2-2","3-1-2","1-3-2","2-1-3"];
@@ -516,20 +523,34 @@ function pitch(x,W,H,y0,m,F){const u=W/1080,st=S.sty,X0=m,w=W-2*m,h=H-y0-70*u;
   if(q.t){let g2=f*.8;x.font=`400 ${g2}px ${F}`;while(x.measureText(q.t).width>mw&&g2>10*u){g2--;x.font=`400 ${g2}px ${F}`}x.fillStyle=rgba(st.tx,.9);x.fillText(q.t,px,ly+f*1.5+g2*.9)}})});
  x.textAlign="left";x.textBaseline="alphabetic"}
 function mcg(x,W,H){const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"rgba(0,0,0,.5)");g.addColorStop(.45,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.75)");x.fillStyle=g;x.fillRect(0,0,W,H)}
-function mcv(x,W,H,u,F,fit){const st=S.sty,t=S.mt,k=Math.min(W,H)/1080,ls=($("#gh").value||"MATCH|DAY").split("|"),s=Math.min(...ls.map(q=>fit(q,Math.min(200*k,H*.2),W*.8,800))),y0=H*.3;
- TX(x,W,H,ls,W/2,y0,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[$("#gs").value],W/2,y0+(ls.length-1)*s+s*.34,s*.22,"center","ts",st.ac,600,1,F);
- const bl=LY().find(q=>q.k==="band"),bw=bl?bl.s*W:W*.84,bh=bl?bl.h*W:190*k,cx0=bl?bl.x*W:W/2,by=bl?bl.y*H-bh/2:H*.66,kk=bh/190,tc=lum((bl&&bl.c)||st.ac)>150?"#000":"#fff";
- x.save();x.textAlign="center";
- [[t.h,-.26],[t.a,.26]].forEach(([n,fx])=>{const cx=cx0+bw*fx,cy=by+bh*.4,l=logo(n);
-  if(l)dl(x,l,cx,cy,110*kk);else{x.fillStyle="rgba(255,255,255,.2)";x.beginPath();x.arc(cx,cy,48*kk,0,7);x.fill();x.fillStyle=tc;x.font=`800 ${44*kk}px ${F}`;x.fillText((n||"?").slice(0,2).toUpperCase(),cx,cy+15*kk)}
-  let f=32*kk;x.font=`700 ${f}px ${F}`;while(x.measureText(n||"Squadra").width>bw*.4&&f>12){f--;x.font=`700 ${f}px ${F}`}x.fillStyle=tc;x.fillText(n||"Squadra",cx,by+bh*.88)});
- x.fillStyle=tc;x.font=`800 ${64*kk}px ${F}`;x.fillText("VS",cx0,by+bh*.5);
- x.fillStyle=st.tx;x.font=`700 ${42*k}px ${F}`;x.fillText(t.d||"",cx0,by+bh+75*k);x.fillStyle=rgba(st.tx,.7);x.font=`400 ${30*k}px ${F}`;x.fillText(t.v||"",cx0,by+bh+120*k);x.restore()}
-function lyUI(){const a=LY(),l=SELL();if(SEL&&!l)SEL=null;
+function mcv(x,W,H,u,F,fit){const st=S.sty,k=Math.min(W,H)/1080,ls=($("#gh").value||"MATCH|DAY").split("|"),s=Math.min(...ls.map(q=>fit(q,Math.min(200*k,H*.2),W*.8,800))),y0=H*.3;
+ TX(x,W,H,ls,W/2,y0,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[$("#gs").value],W/2,y0+(ls.length-1)*s+s*.34,s*.22,"center","ts",st.ac,600,1,F)}
+/* elementi della partita: ognuno è un livello indipendente (logo, nome, VS, risultato, data, campo) */
+const MCL=(b,W,H,ft)=>{const bh=b.h*W,by=b.y*H-bh/2,kk=bh/190,k=Math.min(W,H)/1080,X=v=>v/W,Y=v=>v/H,dx=.26*b.s,it=o=>({o:100,c:"",b:0,ia:1,...o});
+ const a=[it({id:"mlh",k:"mlogo",nm:"Logo casa",side:"h",x:b.x-dx,y:Y(by+bh*.4),s:X(110*kk)}),it({id:"mla",k:"mlogo",nm:"Logo ospite",side:"a",x:b.x+dx,y:Y(by+bh*.4),s:X(110*kk)}),
+  it({id:"mnh",k:"mname",nm:"Nome casa",side:"h",x:b.x-dx,y:Y(by+bh*.88-11*kk),s:X(32*kk)}),it({id:"mna",k:"mname",nm:"Nome ospite",side:"a",x:b.x+dx,y:Y(by+bh*.88-11*kk),s:X(32*kk)}),
+  it({id:"mvs",k:"mt",f:"vs",t:"VS",nm:"VS",x:b.x,y:Y(by+bh*.5-22*kk),s:X(64*kk)})];
+ if(ft)a.push(it({id:"msc",k:"mt",f:"sc",nm:"Risultato",x:b.x,y:Y(by+bh+60*k),s:X(72*k)}));
+ else a.push(it({id:"mdt",k:"mt",f:"d",nm:"Data e ora",x:b.x,y:Y(by+bh+60*k),s:X(42*k)}),it({id:"mvn",k:"mt",f:"v",nm:"Campo",x:b.x,y:Y(by+bh+110*k),s:X(30*k)}));
+ return a};
+const mtT=l=>l.f==="vs"?(l.t||"VS"):l.f==="sc"?(S.mt.sc||""):l.f==="d"?(S.mt.d||""):(S.mt.v||"");
+function mcCol(l){const[W,H]=S.sty.fmt.split("x").map(Number),bl=l.ia?LY().find(q=>q.k==="band"&&Math.abs(l.x-q.x)<=q.s/2&&Math.abs(l.y-q.y)<=q.h*W/H/2):null;return bl?(lum(bl.c||S.sty.ac)>150?"#000000":"#ffffff"):S.sty.tx}
+function parseRes(t){const nm=[...new Set([...S.cl.map(e=>e.n),...Object.keys(S.raw).filter(k=>k!=="__lega")])],cn=q=>nm.find(n=>n.toLowerCase()===q.toLowerCase())||q;
+ return t.split("\n").map(l=>l.trim().replace(/\s+/g," ").match(/^(.+?) (\d+) ?[-–:] ?(\d+) (.+)$/)).filter(Boolean).map(m=>({hn:cn(m[1]),an:cn(m[4]),h:+m[2],a:+m[3]}))}
+function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,top=y0+30*u;x.save();
+ if(!n){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Inserisci i risultati nei Contenuti",W/2,top+70*u);x.restore();return}
+ const hl=ms.some(r=>logo(r.hn)||logo(r.an)),rh=Math.min(140*u,(H-top-90*u)/n),cx=W/2,pw=Math.min(210*u,W*.22),ph=rh*.62,lg=hl?rh*.62:0,gap=18*u,sw=(W-2*m-pw)/2,tc=lum(st.ac)>150?"#000":"#fff";
+ ms.forEach((r,i)=>{const cy=top+i*rh+rh/2;x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,top+(i+1)*rh-1.5,W-2*m+36,1.5);
+  x.fillStyle=st.ac;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();
+  x.fillStyle=tc;x.font=`800 ${rh*.36}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(r.h+" - "+r.a,cx,cy+rh*.015);
+  [[r.hn,-1,r.h,r.a],[r.an,1,r.a,r.h]].forEach(([nm,sd,o,q])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);
+   const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),mw=sw-gap*(hl?2:1)-lg,wt=o===q?700:o>q?800:500;let f=rh*.3;x.font=`${wt} ${f}px ${F}`;while(x.measureText(nm).width>mw&&f>12){f--;x.font=`${wt} ${f}px ${F}`}
+   x.textAlign=sd<0?"right":"left";x.fillStyle=o<q?rgba(st.tx,.75):st.tx;x.fillText(nm,nx,cy+rh*.015)})});x.restore()}
+function lyUI(){const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
  $("#lyl").innerHTML=a.map(q=>`<button class="btn${q.id===SEL?" p":""}" data-sl="${q.id}">${esc(q.k==="text"?(q.t||"Testo").slice(0,16):q.nm||"Immagine")}</button>`).join("")||'<span class="hint">Nessun elemento</span>';
- const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"?"none":"block";
- const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.2,1.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
- q("o").value=l.o;q("b").checked=!!l.b;q("c").value=l.c||(l.k==="text"||l.k==="tt"?S.sty.tx:l.k==="ts"||l.k==="band"?S.sty.ac:"#ffffff");q("t").value=l.k==="tt"?$("#gh").value:l.k==="ts"?$("#gs").value:l.t||"";if(l.k==="band"){q("h").value=l.h;q("r").value=l.r}}
+ const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)||(l.k==="mt"&&l.f==="vs")?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"||l.k==="mlogo"?"none":"block";
+ const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
+ q("o").value=l.o;q("b").checked=!!l.b;q("c").value=l.c||(l.k==="mt"||l.k==="mname"?mcCol(l):l.k==="text"||l.k==="tt"?S.sty.tx:l.k==="ts"||l.k==="band"?S.sty.ac:"#ffffff");q("t").value=l.k==="tt"?$("#gh").value:l.k==="ts"?$("#gs").value:l.t||"";if(l.k==="band"){q("h").value=l.h;q("r").value=l.r}}
 const addL=l=>{LY().push({o:100,c:"",b:0,x:.5,y:.5,id:nid(),...l});SEL=LY()[LY().length-1].id;lyUI();draw();save()};
 $("#lyl").onclick=e=>{const id=e.target.dataset.sl;if(id){SEL=id;lyUI();draw()}};
 $("#lyc").oninput=e=>{const l=SELL(),p=e.target.dataset.p;if(!l||!p)return;const t=e.target.type;l[p]=t==="checkbox"?+e.target.checked:t==="range"?+e.target.value:e.target.value;if(p==="t"&&(l.k==="tt"||l.k==="ts")){$(l.k==="tt"?"#gh":"#gs").value=e.target.value;delete l.t}rd();save();if(p==="t")lyUI()};
@@ -541,6 +562,9 @@ $("#ld").onclick=()=>{const l=SELL();if(l)addL({...l,x:l.x+.04,y:l.y+.04,id:nid(
 $("#lx").onclick=()=>{const i=LY().findIndex(q=>q.id===SEL);if(i>=0)LY().splice(i,1);SEL=null;lyUI();draw();save()};
 $("#rp").onclick=()=>{BG="";$("#ph").value="";draw()};$("#po").oninput=e=>{S.sty.po=+e.target.value;save();draw()};
 $("#un").onclick=undo;$("#re").onclick=redo;
+const MAD={lh:{k:"mlogo",nm:"Logo casa",side:"h",s:.1},la:{k:"mlogo",nm:"Logo ospite",side:"a",s:.1},nh:{k:"mname",nm:"Nome casa",side:"h",s:.03},na:{k:"mname",nm:"Nome ospite",side:"a",s:.03},vs:{k:"mt",f:"vs",t:"VS",nm:"VS",s:.06},sc:{k:"mt",f:"sc",nm:"Risultato",s:.08},d:{k:"mt",f:"d",nm:"Data e ora",s:.04},v:{k:"mt",f:"v",nm:"Campo",s:.03},bx:{k:"band",nm:"Riquadro",s:.5,h:.1,r:18,b:1,o:100}};
+$("#mcb").onclick=e=>{const a=MAD[e.target.dataset.ma];if(a)addL({ia:1,...a})};
+$("#rres").oninput=e=>{S.res=e.target.value;save();draw()};
 $("#twp").oninput=e=>{const d=e.target.dataset;if(d.ti!==undefined)S.tw2[d.ti].n=e.target.value;else if(d.ts!==undefined)S.tw2[d.ts].t=e.target.value;else return;save();draw()};
 $("#tf").onchange=e=>{S.tf=e.target.value;renderTW();save();draw()};$("#tv").onchange=e=>{S.twv=e.target.value;save();draw()};
 $("#ta").onclick=()=>{const sl=SL(),pv=S.pv?S.pv.mar:null;let ls=S.mar.map(e=>{const p=pv&&pv.find(q=>q.n===e.n&&q.sq===e.sq);return{...e,w:pv?e.g-(p?p.g:0):e.g}});if(pv)ls=ls.filter(e=>e.w>0);ls.sort((a,b)=>b.w-a.w);let k=0;sl.forEach((r,i)=>{if(r==="Attaccante"&&ls[k]){S.tw2[i]={n:ls[k].n,t:ls[k].sq};k++}});renderTW();save();draw()};
@@ -573,11 +597,12 @@ $("#imc").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{
 $("#twp").addEventListener("click",e=>{const x=e.target.dataset.tx;if(x!==undefined){delete S.tw2[x].ph;renderTW();save();draw()}
  if(e.target.id==="tdf"){const r=rank();if(!r.length)return;let k=0;SL().forEach((ro,i)=>{if(ro==="Portiere")S.tw2[i].t=r[0].n;else if(ro==="Difensore")S.tw2[i].t=r[Math.min(k++,r.length-1)].n});renderTW();save();draw()}});
 $("#twp").addEventListener("change",e=>{const i=e.target.dataset.tp,f=e.target.files&&e.target.files[0];if(i===undefined||!f)return;const m=new Image();m.onload=()=>{const s=Math.min(1,260/Math.min(m.width,m.height)),c=document.createElement("canvas");c.width=m.width*s;c.height=m.height*s;c.getContext("2d").drawImage(m,0,0,c.width,c.height);S.tw2[i].ph=c.toDataURL("image/jpeg",.85);renderTW();save();draw();cm()};m.src=URL.createObjectURL(f)});
+if(!S.mig2){S.mig2=1;const[W0,H0]=S.sty.fmt.split("x").map(Number);Object.keys(S.ly).forEach(k=>{const a=S.ly[k],b=a.find(l=>l.k==="band");if(b&&!a.some(l=>["mlogo","mname","mt"].includes(l.k)))a.splice(a.indexOf(b)+1,0,...MCL(b,W0,H0,0))});if(!S.tipi.some(t=>t.id==="ris"))S.tipi.push({id:"ris",n:"Risultati della settimana",g:4,c:"Instagram",d:"Grafica con tutti i risultati della giornata"});save()}
 if(!S.mig){S.mig=1;Object.keys(S.ly).forEach(k=>{const a=S.ly[k];if(!a.some(l=>l.id==="tt"))a.push(...TL());if(k==="mc"&&!a.some(l=>l.k==="band"))a.unshift(BAND())});save()}
 
-function renderGt(v){const e=$("#gt"),cur=v||e.value;[...e.querySelectorAll("[data-c]")].forEach(o=>o.remove());(S.cg||[]).forEach(c=>{TT[c.id]=TT[c.id]||[c.b==="mc"?"MATCH|DAY":c.n,(TT[c.b]||[0,"Giornata 3"])[1]];const o=document.createElement("option");o.value=c.id;o.dataset.c=1;o.textContent=c.n;e.append(o)});e.value=cur;if(e.value!==cur)e.value="cl";$("#dg2").style.display=(S.cg||[]).some(c=>c.id===e.value)?"":"none"}
+function renderGt(v){const e=$("#gt"),cur=v||e.value;[...e.querySelectorAll("[data-c]")].forEach(o=>o.remove());(S.cg||[]).forEach(c=>{TT[c.id]=TT[c.id]||[c.ft?"FULL|TIME":c.b==="mc"?"MATCH|DAY":c.n,(TT[c.b]||[0,"Giornata 3"])[1]];const o=document.createElement("option");o.value=c.id;o.dataset.c=1;o.textContent=c.n;e.append(o)});e.value=cur;if(e.value!==cur)e.value="cl";$("#dg2").style.display=(S.cg||[]).some(c=>c.id===e.value)?"":"none"}
 $("#ng2").onclick=()=>{$("#ngp").style.display="block";$("#ngn").focus()};$("#ngx").onclick=()=>{$("#ngp").style.display="none"};
-$("#ngc").onclick=()=>{const n=$("#ngn").value.trim();if(!n)return;const c={id:"c_"+Date.now().toString(36),n,b:$("#ngb").value};(S.cg=S.cg||[]).push(c);save();renderGt(c.id);$("#ngn").value="";$("#ngp").style.display="none";SEL=null;sync(true);draw();cm()};
+$("#ngc").onclick=()=>{const n=$("#ngn").value.trim();if(!n)return;const bv=$("#ngb").value,c={id:"c_"+Date.now().toString(36),n,b:bv==="ft"?"mc":bv};if(bv==="ft")c.ft=1;(S.cg=S.cg||[]).push(c);save();renderGt(c.id);$("#ngn").value="";$("#ngp").style.display="none";SEL=null;sync(true);draw();cm()};
 $("#dg2").onclick=()=>{const id=$("#gt").value;if(!confirm("Eliminare questa grafica personalizzata?"))return;S.cg=S.cg.filter(c=>c.id!==id);delete S.ly[id];delete S[id];save();renderGt("cl");SEL=null;sync(true);draw()};
 (function(){const c=$("#hc");c.width=1200;c.height=130;stripes(c.getContext("2d"),1200,130,1.4,"#2f7bff")})();
 $("#uni").checked=S.uni!==false;$("#olw").value=S.olw||3;$("#uni").onchange=e=>{S.uni=e.target.checked;PC={};save();renderLogos();draw()};$("#olw").oninput=e=>{S.olw=+e.target.value;PC={};save();thumbs();draw()};
