@@ -133,6 +133,7 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 </div>
 <div class="ep" id="ep_c"><label for="gh">Titolo (con | vai a capo nella copertina)</label><input id="gh">
 <label for="gs">Sottotitolo</label><input id="gs">
+<div id="marw" class="card" style="display:none"><b>Quanti marcatori mostrare</b><div class="bar" style="margin:6px 0"><input type="number" id="marn" min="0" step="1" placeholder="Tutti" style="width:90px"><button class="btn" data-mn="3">Primi 3</button><button class="btn" data-mn="5">Primi 5</button><button class="btn" data-mn="10">Primi 10</button><button class="btn" data-mn="0">Tutti</button></div><label><input type="checkbox" id="mart"> Includi i pari merito con l’ultimo mostrato</label><div class="hint" id="marh"></div></div>
 <div id="mcw" style="display:none"><datalist id="tn"></datalist><div class="g3" style="grid-template-columns:1fr 1fr"><div><label>Squadra di casa</label><input list="tn" data-m="h"></div><div><label>Squadra ospite</label><input list="tn" data-m="a"></div><div><label>Data e ora</label><input data-m="d" placeholder="Lunedì 18 maggio · 20:45"></div><div><label>Campo</label><input data-m="v" placeholder="Stadio / campo"></div><div><label>Risultato</label><input data-m="sc" placeholder="4 - 0"></div></div></div>
 <div id="twp" style="display:none"><div class="g3" style="grid-template-columns:1fr 1fr auto;align-items:end"><div><label for="tf">Modulo</label><select id="tf"></select></div><div><label for="tv">Vista</label><select id="tv"><option value="c">Campetto</option><option value="l">Lista</option></select></div><button class="btn" id="ta">Compila dai marcatori</button></div><div id="twr"></div><div id="twb" class="card" style="margin-top:10px"><b>Box nomi e squadre</b><div class="g3"><div><label>Sfondo nome</label><input type="color" data-tb="bc"></div><div><label>Testo nome</label><input type="color" data-tb="tc"></div><div><label>Testo squadra</label><input type="color" data-tb="sc"></div></div><div class="g3"><div><label><input type="checkbox" data-tb="tbOn"> Box squadra</label><input type="color" data-tb="tb"></div><div><label>Dimensione</label><input type="range" data-tb="sz" min=".6" max="1.8" step=".05"></div><div><label>Arrotondamento</label><input type="range" data-tb="r" min="0" max="30"></div></div><label>Opacità box</label><input type="range" data-tb="bo" min="20" max="100"><div class="bar" style="margin:8px 0 0"><button class="btn" data-tbp="g">Verde</button><button class="btn" data-tbp="0">Predefinito</button></div></div><label for="tres">Risultati della giornata (facoltativo, una partita per riga, es. Meceneri 3-1 Atletico Cocai)</label><textarea id="tres" rows="3"></textarea><div class="hint">Sono i risultati della giornata selezionata in Dati e TOTW (dal calendario o scritti a mano). Senza, confronto la classifica della giornata con la precedente.</div><div id="tsg"></div></div>
 <div id="rsw" style="display:none"><label for="rres">Risultati della giornata (una partita per riga, es. Meceneri 4-0 Marzenego Riverside)</label><textarea id="rres" rows="8"></textarea><div class="hint">Se i nomi coincidono con quelli della classifica compaiono anche i loghi. Gli stessi risultati servono ai suggerimenti del Team of the week.</div></div><div id="gdw"><label for="gd" id="gdl"></label><textarea id="gd" rows="8"></textarea></div>
@@ -387,7 +388,7 @@ $("#et").onclick=e=>{const k=e.target.dataset.et;if(!k)return;$$("#et button").f
 /* ---- editor grafiche ---- */
 const TT={cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"],ris:["Risultati","Giornata 4"]};
 function sync(ch){const T=gT(),B=BS(T);if(ch){const q=TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=q[1]}
- $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";
+ $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";$("#marw").style.display=B==="mar"?"block":"none";marUI();
  if(B==="bo"){$("#gdl").textContent=T==="bo"?"Goal (Marcatore;Squadra;Minuto)":"Righe (Testo;Sottotesto;Valore)";$("#gd").value=S[T]||""}
  ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});lyUI()}
 function sty(){["bg","ac","tx"].forEach(k=>$("#c"+k).value=S.sty[k]);$("#ss").checked=S.sty.str;$("#dk").value=S.sty.dk;$("#po").value=S.sty.po;$("#gf").value=S.sty.fmt}
@@ -412,6 +413,15 @@ function stars(x,W,H,ly){sd=7;const st=S.sty,col=ly.c||st.tx,raw=im(S.raw.__lega
   x.fillStyle=col;x.beginPath();x.arc(px,py,r,0,7);x.fill();
   if(r>3.4*u){x.strokeStyle=rgba(col,.7);x.lineWidth=u;x.beginPath();x.moveTo(px-r*4,py);x.lineTo(px+r*4,py);x.moveTo(px,py-r*4);x.lineTo(px,py+r*4);x.stroke();x.strokeStyle=rgba(col,.28);x.lineWidth=1.3*u}});x.globalAlpha=1;LB.push({id:ly.id,x0:ox,y0:oy,x1:ox+w*s,y1:oy+h*s})}
 
+/* ---- testi uniformi: stesso corpo per tutti, a capo solo dove serve ---- */
+function wrapName(x,t,mw){if(x.measureText(t).width<=mw)return[t];const i=t.indexOf(" - ");if(i>0){const a=t.slice(0,i),b=t.slice(i+3);if(x.measureText(a).width<=mw&&x.measureText(b).width<=mw)return[a,b]}
+ const w=t.split(" ");let best=null,bw=1e9;for(let k=1;k<w.length;k++){const a=w.slice(0,k).join(" "),b=w.slice(k).join(" "),m=Math.max(x.measureText(a).width,x.measureText(b).width);if(m<bw){bw=m;best=[a,b]}}return best&&bw<=mw?best:null}
+function fitNames(x,ns,wt,f0,mw,wrap,F,fmin){fmin=fmin||14;let f=Math.floor(f0);for(;;){x.font=`${wt} ${f}px ${F}`;const l=ns.map(n=>x.measureText(n).width<=mw?[n]:(wrap?wrapName(x,n,mw):null));if(l.every(Boolean)||f<=fmin)return{f,l:l.map((q,i)=>q||[ns[i]])};f--}}
+const marList=()=>{const a=S.mar||[],n=+S.marN||0;if(!n||n>=a.length)return a;let k=n;if(S.marTie)while(k<a.length&&a[k].g===a[k-1].g)k++;return a.slice(0,k)};
+function marUI(){const el=$("#marn");if(!el)return;const a=S.mar||[],n=+S.marN||0,sh=marList().length;if(document.activeElement!==el)el.value=n||"";$("#mart").checked=!!S.marTie;
+ let h=a.length?`Nella grafica: ${sh} marcatori su ${a.length}.`:"Carica l’Excel dei marcatori (scheda Dati e TOTW).";
+ if(n&&n<a.length&&!S.marTie){const g=a[n-1].g,tot=a.filter(e=>e.g===g).length,dentro=a.slice(0,n).filter(e=>e.g===g).length;if(tot>dentro)h+=` ⚠ L’ultimo mostrato ha ${g} gol: altri ${tot-dentro} a pari merito restano fuori.`}
+ $("#marh").textContent=h}
 function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0=$("#gt").value,T=BS(T0),L=W>H,m=64,u=W/1080;
  if(c.width!==W||c.height!==H){c.width=W;c.height=H}
  const x=c.getContext("2d"),F='"Inter Tight",system-ui,sans-serif',mu=rgba(st.tx,.6),tt=$("#gh").value,sb=$("#gs").value;
@@ -428,17 +438,18 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
   let it,hd,cw=78;if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
   if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:i===0,c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
-  else if(T==="mar"){hd=["Gol"];cw=110;it=S.mar.map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:i===0,c:[e.g]}))}
+  else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:i===0,c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:p.n||"Nome Cognome",sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
   const top=ty+170,n=Math.max(it.length,1),rh=Math.min(84,(H-top-70)/n),fs=rh*.42,R=W-m,hasL=it.some(e=>logo(e.lg)),nx=m+54+(hasL?rh*.72:0),nc=hd.length;
   x.textAlign="right";x.font=`600 ${Math.max(20,fs*.7)}px ${F}`;x.fillStyle=mu;hd.forEach((h,i)=>x.fillText(h,R-(nc-1-i)*cw,top-16));
+  const mw=R-nc*cw-nx-20,NF=fitNames(x,it.map(e=>e.n),600,fs*(T==="cl"?.92:1),mw,!it.some(e=>e.sub),F,16);let SF=fs*.66;while(it.some(e=>{if(!e.sub)return 0;x.font=`400 ${SF}px ${F}`;return x.measureText(e.sub).width>mw})&&SF>12)SF--;
   it.forEach((e,i)=>{const y=top+i*rh,tc=e.hl?(lum(st.ac)>150?"#000":"#fff"):st.tx;
    if(e.hl){x.fillStyle=st.ac;x.fillRect(m-18,y,W-2*m+36,rh-6)}else{x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,y+rh-6,W-2*m+36,1.5)}
    x.fillStyle=tc;x.textAlign="left";x.font=`600 ${fs}px ${F}`;x.fillText(i+1,m,y+rh*.62);
    const l=logo(e.lg);if(l)dl(x,l,m+54+rh*.36,y+(rh-6)/2,rh*.66);
-   const mw=R-nc*cw-nx-20;let f=fs;x.font=`600 ${f}px ${F}`;while(x.measureText(e.n).width>mw&&f>16){f--;x.font=`600 ${f}px ${F}`}
-   x.fillText(e.n,nx,e.sub?y+rh*.46:y+rh*.62);
-   if(e.sub){x.font=`400 ${fs*.66}px ${F}`;x.fillStyle=e.hl?tc:mu;x.fillText(e.sub,nx,y+rh*.46+fs*.8)}
+   const ls=NF.l[i];x.font=`600 ${NF.f}px ${F}`;
+   if(e.sub){x.fillText(e.n,nx,y+rh*.46);x.font=`400 ${SF}px ${F}`;x.fillStyle=e.hl?tc:mu;x.fillText(e.sub,nx,y+rh*.46+fs*.8)}
+   else{const lh=NF.f*1.08,b0=y+(rh-6)/2-(ls.length-1)*lh/2+NF.f*.37;ls.forEach((q,k)=>x.fillText(q,nx,b0+k*lh))}
    x.textAlign="right";e.c.forEach((v,k)=>{const last=k===e.c.length-1;let f2=fs*(last?.95:.85),wt=last?800:400;x.font=`${wt} ${f2}px ${F}`;while(x.measureText(v).width>cw-14&&f2>14){f2--;x.font=`${wt} ${f2}px ${F}`}x.fillStyle=tc;x.fillText(v,R-(e.c.length-1-k)*cw,y+rh*.62)})})}}
  x.textAlign="left";drawLy(x,W,H,0,st);
  if(!EXP){const b=LB.find(q=>q.id===SEL);if(b){x.save();x.strokeStyle="#2f7bff";x.lineWidth=3*u;x.setLineDash([12*u,8*u]);x.strokeRect(b.x0-6*u,b.y0-6*u,b.x1-b.x0+12*u,b.y1-b.y0+12*u);x.restore()}} if($("#l").classList.contains("on"))thumbs()}
@@ -495,7 +506,8 @@ const wk=()=>{const names=S.cl.map(e=>e.n).sort((a,b)=>b.length-a.length),o={};
  {const w=wd(S.gs);if(w&&w.pc.cl!=null){w.tm.forEach(e=>{o[e.n]={g:e.g,gs:e.gs}});if(Object.keys(o).length)return{o,src:"differenza tra la classifica della giornata "+S.gs+" e la "+w.pc.cl}}}
  return null};
 const rank=()=>{const d=S.dsc||{},aw=d.aw||{},w=wk();if(w)return S.cl.filter(e=>w.o[e.n]).map(e=>({...e,wg:w.o[e.n].g,wgs:w.o[e.n].gs})).sort((a,b)=>a.wgs/a.wg-b.wgs/b.wg||(aw[a.n]||0)-(aw[b.n]||0));return[...S.cl].sort((a,b)=>a.gs/(a.g||1)-b.gs/(b.g||1))};
-function sugg(){if(!S.cl.length)return'<p class="hint">Carica l’Excel della classifica (scheda Dati e TOTW) per avere i suggerimenti.</p>';const d=S.dsc||{am:{},sq:{}},aw=d.aw||{},w=wk();
+function sugg(){return sugg0()+fvBlock("fvt",0)}
+function sugg0(){if(!S.cl.length)return'<p class="hint">Carica l’Excel della classifica (scheda Dati e TOTW) per avere i suggerimenti.</p>';const d=S.dsc||{am:{},sq:{}},aw=d.aw||{},w=wk();
  const hd=w?`Suggerimenti per portiere e difensori sui dati della sola giornata (${w.src}): meno gol subiti, poi meno ammonizioni della settimana. Il sito non pubblica i rossi.`:`<span style="color:#e0a84a">Non ho i dati della settimana, quindi uso quelli complessivi. Scrivi qui sopra i risultati della giornata, oppure assegna alla giornata precedente e a questa gli Excel della classifica (scheda Dati e TOTW): confronterò le due versioni.</span>`;
  return'<div class="hint" style="margin-top:10px">'+hd+'</div>'+rank().slice(0,5).map((e,i)=>w?`<div class="hint">${i+1}. <b>${esc(e.n)}</b> · ${e.wgs} gol subiti in ${e.wg} ${e.wg===1?"gara":"gare"}${S.dsc?` · ${aw[e.n]||0} ammoniti`:""}</div>`:`<div class="hint">${i+1}. <b>${esc(e.n)}</b> · ${e.gs} gol subiti in ${e.g} gare (totale)</div>`).join("")+'<button class="btn" id="tdf" style="margin-top:6px">Assegna le prime squadre a portiere e difensori</button>'}
 function renderTW(){$("#tres").value=S.res||"";$("#tf").innerHTML=FM.map(f=>`<option${f===S.tf?" selected":""}>${f}</option>`).join("");$("#tv").value=S.twv;
@@ -533,15 +545,16 @@ const mtT=l=>l.f==="vs"?(l.t||"VS"):l.f==="sc"?(S.mt.sc||""):l.f==="d"?(S.mt.d||
 function mcCol(l){const[W,H]=S.sty.fmt.split("x").map(Number),bl=l.ia?LY().find(q=>q.k==="band"&&Math.abs(l.x-q.x)<=q.s/2&&Math.abs(l.y-q.y)<=q.h*W/H/2):null;return bl?(lum(bl.c||S.sty.ac)>150?"#000000":"#ffffff"):S.sty.tx}
 function parseRes(t){const nm=[...new Set([...S.cl.map(e=>e.n),...Object.keys(S.raw).filter(k=>k!=="__lega")])],cn=q=>nm.find(n=>n.toLowerCase()===q.toLowerCase())||q;
  return t.split("\n").map(l=>l.trim().replace(/\s+/g," ").match(/^(.+?) (\d+) ?[-–:] ?(\d+) (.+)$/)).filter(Boolean).map(m=>({hn:cn(m[1]),an:cn(m[4]),h:+m[2],a:+m[3]}))}
-function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,top=y0+30*u;x.save();
- if(!n){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Inserisci i risultati nei Contenuti",W/2,top+70*u);x.restore();return}
- const hl=ms.some(r=>logo(r.hn)||logo(r.an)),rh=Math.min(140*u,(H-top-90*u)/n),cx=W/2,pw=Math.min(210*u,W*.22),ph=rh*.62,lg=hl?rh*.62:0,gap=18*u,sw=(W-2*m-pw)/2,tc=lum(st.ac)>150?"#000":"#fff";
+function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,top0=y0+30*u;x.save();
+ if(!n){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Inserisci i risultati nei Contenuti",W/2,top0+70*u);x.restore();return}
+ const hl=ms.some(r=>logo(r.hn)||logo(r.an)),av=H-top0-90*u,rh=Math.min(200*u,av/n),top=top0+Math.max(0,av-n*rh)*.35,cx=W/2,pw=Math.min(210*u,W*.22),ph=Math.min(rh*.5,104*u),lg=hl?Math.min(rh*.5,90*u):0,gap=18*u,sw=(W-2*m-pw)/2,tc=lum(st.ac)>150?"#000":"#fff",mw=sw-gap*(hl?2:1)-lg;
+ const NF=fitNames(x,ms.flatMap(r=>[r.hn,r.an]),800,Math.min(rh*.27,56*u),mw,true,F,12),lh=NF.f*1.1;
  ms.forEach((r,i)=>{const cy=top+i*rh+rh/2;x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,top+(i+1)*rh-1.5,W-2*m+36,1.5);
   x.fillStyle=st.ac;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();
-  x.fillStyle=tc;x.font=`800 ${rh*.36}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(r.h+" - "+r.a,cx,cy+rh*.015);
-  [[r.hn,-1,r.h,r.a],[r.an,1,r.a,r.h]].forEach(([nm,sd,o,q])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);
-   const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),mw=sw-gap*(hl?2:1)-lg,wt=o===q?700:o>q?800:500;let f=rh*.3;x.font=`${wt} ${f}px ${F}`;while(x.measureText(nm).width>mw&&f>12){f--;x.font=`${wt} ${f}px ${F}`}
-   x.textAlign=sd<0?"right":"left";x.fillStyle=o<q?rgba(st.tx,.75):st.tx;x.fillText(nm,nx,cy+rh*.015)})});x.restore()}
+  x.fillStyle=tc;x.font=`800 ${ph*.56}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(r.h+" - "+r.a,cx,cy+ph*.02);
+  [[r.hn,-1,r.h,r.a,2*i],[r.an,1,r.a,r.h,2*i+1]].forEach(([nm,sd,o,q,ix])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);
+   const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),wt=o===q?700:o>q?800:500,ls=NF.l[ix];x.font=`${wt} ${NF.f}px ${F}`;
+   x.textAlign=sd<0?"right":"left";x.fillStyle=o<q?rgba(st.tx,.75):st.tx;ls.forEach((t,k)=>x.fillText(t,nx,cy+(k-(ls.length-1)/2)*lh+NF.f*.02))})});x.restore()}
 function lyUI(){const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
  $("#lyl").innerHTML=a.map(q=>`<button class="btn${q.id===SEL?" p":""}" data-sl="${q.id}">${esc(q.k==="text"?(q.t||"Testo").slice(0,16):q.nm||"Immagine")}</button>`).join("")||'<span class="hint">Nessun elemento</span>';
  const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)||(l.k==="mt"&&l.f==="vs")?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"||l.k==="mlogo"?"none":"block";
@@ -644,7 +657,7 @@ function wd(n){if(!(kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")))return null;cons
 function kApply(){const ns=kGL(),lc=ns.filter(n=>kHAS(n,"cl")).pop(),lm=ns.filter(n=>kHAS(n,"mar")).pop();
  if(lc!=null)S.cl=kGR(lc).cl;if(lm!=null)S.mar=kGR(lm).mar;if(!S.gs)S.gs=ns.length?ns[ns.length-1]:1;
  if(ns.length||(S.cal||[]).length){if(!S.gvm){S.gvm=1;if((S.res||"").trim()&&!(kGR(S.gs).res||"").trim())kGV(S.gs).res=S.res}S.res=kEff(S.gs)}
- const w=wd(S.gs);S.dsc=w&&kHAS(S.gs,"amm")?{am:{},sq:{},aw:w.aw}:undefined}
+ const w=wd(S.gs);S.dsc=w&&kHAS(S.gs,"amm")?{am:{},sq:{},aw:w.aw}:undefined;marUI()}
 const kSet=v=>{S.res=v;kGV(S.gs).res=v;save()};
 function csvrows(t){return t.split(/\r?\n/).map(l=>(l.includes(";")||l.includes("\t")?l.split(/;|\t/):l.split(",")).map(s=>s.trim()))}
 function kdet(R){const hi=R.findIndex(r=>r.some(c=>String(c).trim()));if(hi<0)return null;const h=R[hi].map(kHN),I=s=>h.indexOf(s),B=R.slice(hi+1).filter(r=>r.some(c=>String(c).trim())),C=(r,s)=>String(r[I(s)]==null?"":r[I(s)]).trim();
@@ -656,7 +669,7 @@ function kdet(R){const hi=R.findIndex(r=>r.some(c=>String(c).trim()));if(hi<0)re
 async function kload(files,expect){const out=[],g=S.gs;for(const f of files){let R;try{R=/\.xlsx$/i.test(f.name)?(await xrows(await f.arrayBuffer())).map(r=>r.map(v=>String(v==null?"":v).trim())):csvrows(await f.text())}catch(x){out.push(f.name+": file non leggibile");continue}
   const d=kdet(R);if(!d){out.push(f.name+": formato non riconosciuto (servono classifica, marcatori, ammoniti o calendario)");continue}
   const wrong=expect&&expect!==d.k?" (era "+(d.k==="cal"?"un calendario":"un file di "+KT[d.k])+": l’ho messo nel box giusto)":"";
-  if(d.k==="cal"){S.cal=d.v;out.push(f.name+": calendario ("+d.v.length+" partite"+(d.v.length?"":", il file è ancora vuoto")+")"+wrong)}
+  if(d.k==="cal"){S.calInfo={n:f.name,t:Date.now(),k:d.v.length};if(!d.v.length&&(S.cal||[]).length)out.push(f.name+": calendario senza partite (solo intestazione): ho tenuto quello caricato prima"+wrong);else{S.cal=d.v;out.push(f.name+": calendario ("+d.v.length+" partite"+(d.v.length?"":", il file contiene solo l’intestazione, nessuna partita")+")"+wrong)}}
   else{const o=kGV(g);o[d.k]=d.v;(o.t=o.t||{})[d.k]=Date.now();out.push(f.name+": "+KT[d.k]+" assegnata alla giornata "+g+wrong)}}
  PC={};kApply();save();$("#kmsg").textContent=out.join(" · ");renderK();renderTW();draw()}
 function kChk(){const el=$("#kchk");if(!el)return;const w=wd(S.gs);if(!w){el.innerHTML="";return}
@@ -665,10 +678,22 @@ function kChk(){const el=$("#kchk");if(!el)return;const w=wd(S.gs);if(!w){el.inn
  if(kHAS(S.gs,"cl")&&kHAS(S.gs,"mar")&&w.pc.cl!=null&&w.pc.mar!=null)w.tm.forEach(e=>{const s=w.mar.filter(m=>m.sq===e.n).reduce((q,m)=>q+m.w,0);if(s<e.gf)o.push(`<b>${esc(e.n)}</b>: ${e.gf} gol in classifica, ${s} marcatori registrati (ne mancano ${e.gf-s}: autogol o marcatore non ancora inserito)`);else if(s>e.gf)o.push(`<b>${esc(e.n)}</b>: ${s} gol di marcatori ma ${e.gf} in classifica (la classifica non è ancora aggiornata)`)});
  const cm=(S.cal||[]).filter(x=>x.g===S.gs&&!kRG(x.r));if(cm.length)o.push("Senza risultato nel calendario: "+cm.map(x=>esc(x.h)+" – "+esc(x.a)).join(", "));
  el.innerHTML=o.length?`<div class="card"><b>Controllo dei dati</b><small>Confronto tra risultati, classifica e marcatori</small>${o.map(x=>`<div class="hint" style="color:#e0a84a">⚠ ${x}</div>`).join("")}</div>`:(r.length?'<div class="hint" style="color:#4ade80">✓ Risultati, classifica e marcatori sono coerenti.</div>':"")}
+const KX={},KXN=8;
+function xl(a,k,f,em){if(!a.length)return'<div class="hint">'+em+'</div>';return(KX[k]?a:a.slice(0,KXN)).map(f).join("")+(a.length>KXN?`<button class="btn" data-kx="${k}" style="margin:6px 0">${KX[k]?"Comprimi l’elenco":"Mostra tutti ("+a.length+")"}</button>`:"")}
+/* ---- Fantavoto (stile Fantacalcio): solo chi compare nella settimana tra marcatori o ammoniti ---- */
+const FVP=()=>({b:6,g:3,a:.5,...(S.fv||{})}),fvF=v=>String(Math.round(v*100)/100).replace(".",",");
+const fvK=(n,sq)=>String(n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z ]/g," ").split(/\s+/).filter(Boolean).sort().join(" ")+"|"+sq;
+function fvCalc(n){const w=wd(n);if(!w)return null;const P=FVP(),m={},g=e=>m[fvK(e.n,e.sq)]=m[fvK(e.n,e.sq)]||{n:e.n,sq:e.sq,g:0,a:0};w.mar.forEach(e=>g(e).g+=e.w);w.amm.forEach(e=>g(e).a+=e.w);
+ return Object.values(m).map(p=>({...p,v:P.b+p.g*P.g-p.a*P.a})).sort((a,b)=>b.v-a.v||b.g-a.g||a.a-b.a||a.n.localeCompare(b.n))}
+function fvBlock(k,ed){const n=S.gs,l=n==null?null:fvCalc(n);if(!l)return"";const P=FVP(),w=wd(n),miss=["mar","amm"].filter(q=>!kHAS(n,q)).map(q=>KT[q]),tot=["mar","amm"].filter(q=>kHAS(n,q)&&w.pc[q]==null).map(q=>KT[q]);
+ return`<div class="card"><b>Fantavoto · stile Fantacalcio · giornata ${n}</b><small>Solo chi compare questa settimana tra marcatori e ammoniti. Voto base ${fvF(P.b)}, gol +${fvF(P.g)}, ammonizione −${fvF(P.a)} (due gialli = −${fvF(2*P.a)}). Il sito non pubblica i rossi diretti. È un aiuto in più: non sostituisce gli altri criteri.</small>
+ ${ed?`<div class="g3"><div><label>Voto base</label><input type="number" step=".5" data-fvp="b" value="${P.b}"></div><div><label>Gol (bonus)</label><input type="number" step=".5" data-fvp="g" value="${P.g}"></div><div><label>Ammonizione (malus)</label><input type="number" step=".5" data-fvp="a" value="${P.a}"></div></div>`:""}
+ ${miss.length?`<div class="hint" style="color:#e0a84a">⚠ Per la giornata ${n} mancano: ${miss.join(", ")}.</div>`:""}${tot.length?`<div class="hint" style="color:#e0a84a">⚠ ${tot.join(", ")}: nessuna giornata precedente, uso i valori totali.</div>`:""}
+ ${xl(l,k,e=>`<div class="hint" style="display:flex;justify-content:space-between;gap:8px"><span><b>${esc(e.n)}</b> (${esc(e.sq)}) · ${[e.g?"⚽ "+e.g:"",e.a?"🟨 "+e.a:""].filter(Boolean).join(" · ")}</span><b style="color:${e.v>=P.b+P.g?"#4ade80":e.v<P.b?"#e0a84a":"inherit"}">${fvF(e.v)}</b></div>`,"nessun giocatore questa settimana")}</div>`}
 function renderK(){const N0=kNG(),ch=[];for(let n=1;n<=N0;n++)ch.push(`<button class="btn${n===S.gs?" p":""}" data-g="${n}">G${n}<i>${["cl","mar","amm"].map(k=>kHAS(n,k)?"●":"○").join("")}</i></button>`);ch.push('<button class="btn" data-g="+" title="Aggiungi una giornata">+</button>');$("#gch").innerHTML=ch.join("");$$("[data-gl]").forEach(e=>e.textContent=S.gs);
  const sm={cl:a=>a.length+" squadre",mar:a=>a.length+" marcatori ("+sg(a)+" gol)",amm:a=>a.length+" ammoniti ("+a.reduce((q,e)=>q+e.t,0)+" cartellini)"};
  ["cl","mar","amm"].forEach(k=>{const a=kGR(S.gs)[k],t=(kGR(S.gs).t||{})[k];$(`[data-ds="${k}"]`).innerHTML=a&&a.length?`<b style="color:#4ade80">✓ G${S.gs}</b> · ${sm[k](a)}<br>${TS(t)}`:`Nessun file per la giornata ${S.gs}`});
- const cal=S.cal||[],cg=[...new Set(cal.map(r=>r.g))];$('[data-ds="cal"]').innerHTML=cal.length?`<b style="color:#4ade80">✓</b> ${cal.length} partite · giornate ${Math.min(...cg)}–${Math.max(...cg)}`:"Nessun calendario (o file ancora vuoto)";
+ const cal=S.cal||[],cg=[...new Set(cal.map(r=>r.g))];$('[data-ds="cal"]').innerHTML=cal.length?`<b style="color:#4ade80">✓</b> ${cal.length} partite · giornate ${Math.min(...cg)}–${Math.max(...cg)}`:(S.calInfo&&!S.calInfo.k?`<b style="color:#e0a84a">⚠ ${esc(S.calInfo.n)} letto</b>, ma contiene solo l’intestazione: nessuna partita. Riesportalo dal sito quando il calendario è compilato, oppure scrivi i risultati a mano qui sotto.`:"Nessun calendario");
  const rows=[...new Set([...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")),S.gs])].sort((a,b)=>a-b),cell=(n,k)=>kHAS(n,k)?`<span style="color:#4ade80">✓</span> ${new Date(kGR(n).t[k]).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} <button class="btn" data-rm="${n}|${k}" title="Elimina" style="padding:0 7px;min-height:0">×</button>`:'<span style="color:var(--mut)">—</span>',inc=[];
  rows.forEach(n=>{const a=kGR(n).cl;if(a&&a.length){const mx=Math.max(...a.map(e=>e.g)),lo=a.filter(e=>e.g<mx);if(lo.length)inc.push(`G${n}: ${lo.map(e=>esc(e.n)+" ("+e.g+" su "+mx+")").join(", ")} con meno gare, dati incompleti`)}});
  $("#kst").innerHTML=`<div class="card"><b>Giornate caricate</b><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="color:var(--mut);text-align:left"><th>Giornata</th><th>Classifica</th><th>Marcatori</th><th>Ammoniti</th></tr>${rows.map(n=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 0"><b>G${n}</b>${n===S.gs?" ◀":""}</td><td>${cell(n,"cl")}</td><td>${cell(n,"mar")}</td><td>${cell(n,"amm")}</td></tr>`).join("")}</table></div>${inc.map(x=>`<div class="hint" style="color:#e0a84a">⚠ ${x}</div>`).join("")}</div>`;
@@ -676,7 +701,7 @@ function renderK(){const N0=kNG(),ch=[];for(let n=1;n<=N0;n++)ch.push(`<button c
  const L=k=>w.pc[k]==null?'<span style="color:#e0a84a">nessuna giornata precedente, valori totali</span>':`G${S.gs} − G${w.pc[k]}`,miss=["cl","mar","amm"].filter(k=>!kHAS(S.gs,k)).map(k=>KT[k]),none=!w.tm.length&&!w.mar.length&&!w.amm.length;
  $("#kcalc").innerHTML=`<div class="card"><b>Settimana della giornata ${S.gs}</b><small>Confronti: classifica ${L("cl")} · marcatori ${L("mar")} · ammoniti ${L("amm")}</small>
  ${miss.length?`<div class="hint" style="color:#e0a84a">Per la giornata ${S.gs} mancano: ${miss.join(", ")}.</div>`:""}
- ${none?'<div class="hint" style="color:#e0a84a">Nessuna variazione rispetto alla giornata precedente: controlla di aver assegnato i file alla giornata giusta.</div>':`<small>Squadre</small>${w.tm.map(e=>`<div class="hint">${esc(e.n)}: ${e.g} ${e.g>1?"gare":"gara"}, ${e.gf} fatti, ${e.gs} subiti</div>`).join("")||'<div class="hint">nessuna</div>'}<small style="margin-top:8px">Marcatori</small>${w.mar.map(e=>`<div class="hint"><b>${esc(e.n)}</b> (${esc(e.sq)}) +${e.w}</div>`).join("")||'<div class="hint">nessun gol</div>'}<small style="margin-top:8px">Ammoniti</small>${w.amm.map(e=>`<div class="hint"><b>${esc(e.n)}</b> (${esc(e.sq)}) +${e.w}</div>`).join("")||'<div class="hint">nessuna ammonizione</div>'}`}</div>
+ ${none?'<div class="hint" style="color:#e0a84a">Nessuna variazione rispetto alla giornata precedente: controlla di aver assegnato i file alla giornata giusta.</div>':`<small>Squadre</small>${w.tm.map(e=>`<div class="hint">${esc(e.n)}: ${e.g} ${e.g>1?"gare":"gara"}, ${e.gf} fatti, ${e.gs} subiti</div>`).join("")||'<div class="hint">nessuna</div>'}<small style="margin-top:8px">Marcatori</small>${xl(w.mar,"mar",e=>`<div class="hint"><b>${esc(e.n)}</b> (${esc(e.sq)}) +${e.w}</div>`,"nessun gol")}<small style="margin-top:8px">Ammoniti</small>${xl(w.amm,"amm",e=>`<div class="hint"><b>${esc(e.n)}</b> (${esc(e.sq)}) +${e.w}</div>`,"nessuna ammonizione")}`}</div>${fvBlock("fv",1)}
  <label for="kres">Risultati della giornata ${S.gs} (una partita per riga, es. Meceneri 3-1 Atletico Cocai)</label><textarea id="kres" rows="5">${esc(S.res||"")}</textarea><div class="hint">Arrivano dal calendario quando i risultati sono inseriti; puoi aggiungerli o correggerli a mano. Vengono confrontati con gli Excel.</div>
  <div id="kchk"></div><div class="bar"><button class="btn" id="kcr">Ricarica dal calendario</button><button class="btn p" id="kgo">Compila il TOTW della giornata ${S.gs}</button></div>`;kChk()}
 $$("[data-dz]").forEach(z=>{const k=z.dataset.dz;z.ondragover=e=>{e.preventDefault();z.style.borderColor="var(--blue)"};z.ondragleave=()=>z.style.borderColor="";z.ondrop=e=>{e.preventDefault();z.style.borderColor="";kload([...e.dataTransfer.files],k)}});
@@ -687,6 +712,10 @@ $("#k").addEventListener("click",e=>{const t=e.target,d=t.closest("[data-g]"),rm
  if(t.id==="kcr"){kGV(S.gs).res="";kApply();save();renderK();renderTW();draw();return}
  if(t.id==="kgo"){if(!kHAS(S.gs,"mar"))return alert("Carica l’Excel dei marcatori per la giornata "+S.gs+".");$("#ta").click();go("g");$("#gt").value="tw";$("#gt").dispatchEvent(new Event("change"))}});
 $("#k").addEventListener("input",e=>{if(e.target.id==="kres"){kSet(e.target.value);kChk();draw();const s=$("#tsg");if(s)s.innerHTML=sugg()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-kx]");if(!b)return;KX[b.dataset.kx]=!KX[b.dataset.kx];renderK();const q=$("#tsg");if(q)q.innerHTML=sugg()});
+document.addEventListener("change",e=>{const p=e.target.dataset&&e.target.dataset.fvp;if(!p)return;S.fv={...FVP(),[p]:kN(e.target.value)};save();renderK();const q=$("#tsg");if(q)q.innerHTML=sugg()});
+$("#marw").addEventListener("input",e=>{if(e.target.id==="marn")S.marN=Math.max(0,parseInt(e.target.value)||0);else if(e.target.id==="mart")S.marTie=e.target.checked;else return;save();marUI();draw()});
+$("#marw").addEventListener("click",e=>{const v=e.target.dataset.mn;if(v===undefined)return;S.marN=+v;$("#marn").value=+v||"";save();marUI();draw()});
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
