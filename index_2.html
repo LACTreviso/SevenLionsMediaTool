@@ -1,0 +1,1098 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#000000"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Seven Lions"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
+<title>Seven Lions League Social Media Tool</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#000;--panel:#0a0e18;--line:#1a2744;--fg:#fff;--mut:#8b98b8;--blue:#2f7bff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fff;--panel:#f2f5fb;--line:#d5def0;--fg:#050a18;--mut:#53607e;color-scheme:light}}
+:root[data-theme="light"]{--bg:#fff;--panel:#f2f5fb;--line:#d5def0;--fg:#050a18;--mut:#53607e;color-scheme:light}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--fg);font:15px/1.5 "Inter Tight",system-ui,sans-serif}
+.hero{height:130px;position:relative;overflow:hidden;display:flex;align-items:flex-end;padding:0 20px 14px}
+.hero canvas{position:absolute;inset:0;width:100%;height:100%}
+.hero h1{position:relative;margin:0;font-size:clamp(22px,4.2vw,40px);font-weight:800;letter-spacing:-.03em;line-height:1}
+nav{display:flex;gap:6px;padding:12px 20px;border-bottom:1px solid var(--line);overflow-x:auto}
+nav button{background:none;border:0;color:var(--mut);font:600 15px "Inter Tight",system-ui,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+nav button[aria-selected=true]{background:var(--blue);color:#fff}
+:focus-visible{outline:2px solid var(--blue);outline-offset:2px}
+main{padding:20px;max-width:1200px;margin:auto}
+section{display:none}section.on{display:block}
+.bar{display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+.bar h2{margin:0;font-size:22px;letter-spacing:-.02em;flex:1}
+.btn{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px 14px;font:600 14px "Inter Tight",system-ui,sans-serif;cursor:pointer}
+.btn.p{background:var(--blue);border-color:var(--blue);color:#fff}
+.week{display:grid;grid-template-columns:repeat(7,minmax(160px,1fr));gap:10px;overflow-x:auto;padding-bottom:6px}
+.day{border-left:1px solid var(--line);padding-left:10px;min-height:160px}
+.day h3{margin:0 0 8px;font-size:14px;font-weight:600;color:var(--mut)}
+.day.today h3{color:var(--blue)}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:10px;margin-bottom:8px}
+.card b{display:block}.card small{color:var(--mut);display:block;margin-bottom:6px}
+.st{width:100%;text-align:left;margin-bottom:6px}
+.st[data-s="2"]{border-color:var(--blue)}.st[data-s="3"]{background:var(--blue);color:#fff;border-color:var(--blue)}
+textarea,input,select{width:100%;background:var(--bg);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:8px;font:14px "Inter Tight",system-ui,sans-serif}
+input[type=checkbox]{width:auto}input[type=color]{padding:2px;height:38px}input[type=range]{padding:0}
+textarea{resize:vertical;min-height:56px}
+label{display:block;color:var(--mut);font-size:13px;margin:10px 0 4px}
+.two{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:24px}
+@media(max-width:800px){.two{grid-template-columns:1fr}}
+.pv{width:100%;max-width:460px;border:1px solid var(--line);border-radius:6px;display:block}
+.row{display:flex;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+.row>span{flex:1;min-width:140px}.row small{color:var(--mut)}
+.th{width:56px;height:56px;border-radius:8px;background:repeating-conic-gradient(#3a4256 0 25%,#2b3142 0 50%) 0 0/12px 12px}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.f{display:grid;grid-template-columns:2fr 1fr 2fr;gap:8px;align-items:end}
+@media(max-width:600px){.f{grid-template-columns:1fr}}
+.hint{color:var(--mut);font-size:13px;margin:6px 0}
+#sqw{position:relative;max-width:480px}#sl{position:absolute;left:12px;bottom:48px;font:800 22px "Inter Tight",sans-serif;color:#fff;text-shadow:0 1px 6px #000}
+a{color:var(--blue)}
+.pv{touch-action:none;cursor:move}
+.gi{position:relative}.gi img{height:90px;border-radius:6px;border:1px solid var(--line);cursor:pointer;display:block}.gi button{position:absolute;top:2px;right:2px;padding:0 6px}
+.stk{position:sticky;top:8px;align-self:start;z-index:2;max-height:calc(100vh - 16px);overflow:auto;background:var(--bg)}
+.stk .pv{width:auto;height:auto;max-width:min(100%,460px);max-height:calc(100vh - 120px)}
+.gal{margin-bottom:12px}
+main.wide{max-width:none}
+.week{grid-template-columns:repeat(7,minmax(150px,1fr));min-height:calc(100vh - 300px)}
+.day{min-height:calc(100vh - 300px)}
+.week textarea{min-height:96px}
+.jn{display:flex;align-items:center;gap:10px;margin:0 0 8px 6px;color:var(--mut)}
+.dot{width:30px;height:30px;border-radius:50%;border:2px solid var(--blue);background:var(--bg);color:var(--blue);font-size:12px;cursor:pointer;padding:0}
+.dot.on{background:var(--blue);color:#fff}
+.jp{border-color:var(--blue)}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:10px 0 6px;overflow-x:auto}
+.tabs button{background:none;border:0;color:var(--mut);font:600 14px "Inter Tight",system-ui,sans-serif;padding:8px 14px;border-radius:999px;cursor:pointer;white-space:nowrap}
+.tabs button.on{background:var(--blue);color:#fff}
+.ep{display:none}.ep.on{display:block}
+.ed{grid-template-columns:minmax(280px,460px) minmax(0,1fr)}
+@media(max-width:800px){.ed{grid-template-columns:1fr}}
+.sub{margin-top:10px;border-top:1px solid var(--line);padding-top:4px}
+
+@media(max-width:800px){
+body{padding-bottom:calc(66px + env(safe-area-inset-bottom,0px));-webkit-tap-highlight-color:transparent}
+.hero{height:84px;padding:0 14px 10px}.hero h1{font-size:clamp(18px,5.4vw,26px)}
+.hero>div{top:8px!important;right:8px!important}.hero .btn{padding:6px 10px;font-size:12px}
+nav{position:fixed;left:0;right:0;bottom:0;z-index:30;background:var(--bg);border-top:1px solid var(--line);border-bottom:0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));gap:2px;justify-content:flex-start}
+nav button{flex:1 0 auto;padding:10px 10px;font-size:12px;border-radius:12px}
+main{padding:12px}
+.btn,.tabs button{min-height:44px}
+input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-height:32px}input[type=checkbox]{min-height:0;width:22px;height:22px}
+.bar h2{font-size:19px;flex-basis:100%}
+.week{grid-template-columns:1fr!important;min-height:0!important;overflow:visible}
+.day{min-height:0!important;border-left:0;border-top:1px solid var(--line);padding:8px 0 0}
+.stk{position:sticky;top:0;z-index:5;max-height:none;padding:6px 0;text-align:center}
+.stk .pv{max-height:38vh;max-width:100%;margin:auto}
+.ed .edp{padding-bottom:12px}
+.row input[type=file],.row select{width:100%!important}
+.row>span{flex-basis:calc(100% - 70px)}
+.g3{gap:6px}
+.f{grid-template-columns:1fr}
+.jn{margin-left:0}
+#cl video{max-height:160px!important}
+}
+@media(display-mode:standalone){html{overscroll-behavior:none}}
+.gch{display:flex;gap:6px;flex-wrap:wrap;margin:6px 0 12px}.gch .btn{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:62px}.gch .btn i{font-style:normal;font-size:10px;letter-spacing:2px;opacity:.8}
+.dz4{display:grid;grid-template-columns:1fr 1fr;gap:10px}.dz{border-style:dashed;text-align:center;padding:16px 10px;margin:0}.dz small{display:block}
+@media(max-width:600px){.dz4{grid-template-columns:1fr}}
+/* ---- podcast ---- */
+.pp{display:none}.pp.on{display:block}
+.two.pdg{grid-template-columns:minmax(300px,440px) minmax(0,1fr)}@media(max-width:800px){.two.pdg{grid-template-columns:minmax(0,1fr)}}
+.pdv{position:sticky;top:8px;align-self:start;max-height:calc(100vh - 16px);overflow:auto;padding-right:4px}
+@media(max-width:800px){.pdv{position:static;max-height:none}}
+.ptl{display:flex;height:30px;gap:2px;margin:8px 0 4px;border-radius:8px;overflow:hidden}
+.ptl div{display:flex;align-items:center;justify-content:center;font-size:11px;color:#fff;white-space:nowrap;overflow:hidden;min-width:4px;cursor:pointer}
+.pgu{border-left:4px solid var(--c,var(--blue))}
+.pgu details{margin-top:8px}.pgu summary{cursor:pointer;color:var(--blue);font-weight:600;font-size:14px}
+.pchip{display:inline-block;font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--line);margin:2px 4px 2px 0;color:var(--mut)}
+.psb{margin:0 0 16px;scroll-margin-top:10px}.psb h4{margin:0 0 4px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;display:flex;gap:6px;align-items:center;flex-wrap:wrap;color:var(--c,var(--blue))}
+.psb h4 span{flex:1}.psb h4 small{display:inline;margin:0;color:var(--mut);letter-spacing:0;text-transform:none;font-weight:600}
+.pl{display:flex;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:flex-start}
+.pl .w{font:800 11px "Inter Tight",system-ui,sans-serif;letter-spacing:.06em;min-width:96px;max-width:96px;padding-top:3px;color:var(--c,var(--blue));text-transform:uppercase;overflow-wrap:anywhere}
+.pl .t{flex:1}.pl.d .t{color:var(--mut);font-style:italic}
+.pl .sr{font-size:11px;opacity:.75;white-space:nowrap;padding-top:3px}
+.pl .x{background:none;border:0;color:var(--mut);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;opacity:.45}.pl .x:hover{opacity:1}
+.pbx{padding:4px 9px!important;min-height:0!important;font-size:12px!important}
+.pkp{display:grid;grid-template-columns:22px 1fr 70px auto auto;gap:6px;align-items:center;padding:6px 0;border-bottom:1px solid var(--line)}
+.pkp i{width:12px;height:12px;border-radius:3px;display:block}
+@media(max-width:800px){.pl .w{min-width:70px;max-width:70px}}
+#tp{position:fixed;inset:0;z-index:100;background:#000;color:#fff;display:none;flex-direction:column}
+#tp.on{display:flex}
+#tpb{flex:1;overflow:hidden;position:relative;touch-action:none;cursor:grab}
+#tpb::before,#tpb::after{content:"";position:absolute;left:0;right:0;height:22vh;z-index:2;pointer-events:none}
+#tpb::before{top:0;background:linear-gradient(#000,transparent)}#tpb::after{bottom:0;background:linear-gradient(transparent,#000)}
+#tp.mir #tpt{scale:-1 1}
+#tpt{padding:42vh 8vw 70vh;font:600 var(--tfs,44px)/1.35 "Inter Tight",system-ui,sans-serif;will-change:transform}
+#tpt p{margin:0 0 .7em}
+#tpt .w{display:block;font-size:.42em;font-weight:800;letter-spacing:.12em;color:var(--c,#2f7bff)}
+#tpt .d{color:#8b98b8;font-style:italic;font-size:.66em}
+#tpt h3{font-size:.42em;letter-spacing:.2em;text-transform:uppercase;color:#2f7bff;border-top:2px solid #1a2744;padding-top:.6em;margin:1.8em 0 .5em}
+.tpl{position:absolute;left:0;right:0;top:40vh;height:13vh;border-top:1px solid rgba(47,123,255,.6);border-bottom:1px solid rgba(47,123,255,.6);background:rgba(47,123,255,.07);pointer-events:none;z-index:3}
+#tpc{display:flex;gap:8px;align-items:center;padding:10px 14px calc(10px + env(safe-area-inset-bottom,0px));background:#0a0e18;border-top:1px solid #1a2744;flex-wrap:wrap}
+#tpc .btn{background:#0a0e18;color:#fff;border-color:#1a2744}#tpc .btn.p{background:#2f7bff;border-color:#2f7bff}
+#tpc label{margin:0;color:#8b98b8;display:flex;align-items:center;gap:6px;font-size:12px}#tpc input[type=range]{width:110px}
+#tpk{font:800 22px "Inter Tight",system-ui,sans-serif;font-variant-numeric:tabular-nums;margin-left:auto;text-align:right;line-height:1.1}
+#tpk small{display:block;font-size:11px;font-weight:600;color:#8b98b8;letter-spacing:.08em;text-transform:uppercase}
+</style>
+</head>
+<body>
+<div class="hero"><canvas id="hc"></canvas><h1>Seven Lions League Social Media Tool</h1><div style="position:absolute;right:16px;top:12px;display:flex;gap:8px;z-index:2"><button class="btn" id="ex" title="Scarica un file con loghi, preset, grafiche e impostazioni">Esporta configurazione</button><label class="btn" style="margin:0">Importa<input type="file" id="imc" accept=".json" hidden></label></div></div>
+<nav role="tablist">
+<button role="tab" aria-selected="true" data-t="w">Settimana</button>
+<button role="tab" aria-selected="false" data-t="g">Grafiche</button>
+<button role="tab" aria-selected="false" data-t="b">Best of</button>
+<button role="tab" aria-selected="false" data-t="p">Podcast</button>
+<button role="tab" aria-selected="false" data-t="l">Loghi</button>
+<button role="tab" aria-selected="false" data-t="k">Dati e TOTW</button>
+<button role="tab" aria-selected="false" data-t="t">Tipi di content</button>
+</nav>
+<main class="wide">
+<section id="w" class="on">
+<div class="bar"><h2 id="wl"></h2><button class="btn" id="pw">Settimana prima</button><button class="btn" id="tw">Oggi</button><button class="btn" id="nw">Settimana dopo</button></div>
+<div class="week" id="wk"></div>
+</section>
+
+<section id="g"><div class="gal"></div><div class="two ed"><div class="stk"><canvas id="cv" class="pv" width="1080" height="1350"></canvas></div><div class="edp">
+<div class="bar"><h2>Editor grafiche</h2><button class="btn" id="un" data-nc>↶ Annulla</button><button class="btn" id="re" data-nc>↷ Ripeti</button><button class="btn" id="dl">Scarica grafica</button><button class="btn p" id="sg">Aggiungi grafica al Best of</button></div>
+<div class="tabs" id="et"><button class="on" data-et="s" data-nc>Impostazioni</button><button data-et="c" data-nc>Contenuti</button><button data-et="e" data-nc>Elementi</button><button data-et="k" data-nc>Caption</button></div>
+<div class="ep on" id="ep_s"><label for="gt">Modello</label>
+<select id="gt"><option value="cl">Classifica</option><option value="mar">Marcatori</option><option value="tw">Team of the week</option><option value="bo">Best of della settimana</option><option value="cop">Copertina</option><option value="mc">Match day (partita)</option><option value="ris">Risultati della giornata</option><option value="st">Logo tra le stelle</option></select>
+<div class="bar" style="margin:8px 0 0"><button class="btn" id="ng2">+ Aggiungi nuova grafica</button><button class="btn" id="dg2" style="display:none">Elimina questa grafica</button></div>
+<div id="ngp" class="card" style="display:none;margin-top:8px"><label for="ngn">Nome della grafica</label><input id="ngn" placeholder="Es. Sondaggio MVP"><label for="ngb">Parti da</label><select id="ngb"><option value="cop">Copertina (titolo grande)</option><option value="bo">Elenco libero (righe Testo;Sottotesto;Valore)</option><option value="vuota">Vuota (titolo e sottotitolo, poi aggiungi elementi)</option><option value="mc">Match day (partita)</option><option value="ft">Full time (risultato finale)</option><option value="ris">Risultati della giornata</option><option value="tw">Formazione (campetto)</option><option value="st">Logo tra le stelle</option></select><div class="bar" style="margin:8px 0 0"><button class="btn p" id="ngc">Crea</button><button class="btn" id="ngx">Annulla</button></div></div>
+<label for="gf">Formato</label>
+<select id="gf"><option value="1080x1350">Post 4:5</option><option value="1080x1920">Storia o reel 9:16</option><option value="1080x1080">Quadrato</option><option value="1920x1080">YouTube 16:9</option></select>
+<label>Stile</label><div class="bar" id="pr"></div><button class="btn" id="sp" style="margin-bottom:8px">+ Salva questi colori come preset</button>
+<div class="g3"><div><label for="cbg">Sfondo</label><input type="color" id="cbg"></div><div><label for="cac">Accento</label><input type="color" id="cac"></div><div><label for="ctx">Testo</label><input type="color" id="ctx"></div></div>
+<label><input type="checkbox" id="ss"> Strisce sfumate</label>
+<label for="ph">Foto di sfondo (per le stelle, usa una foto dello stadio)</label><input type="file" id="ph" accept="image/*"><button class="btn" id="rp" style="margin-top:6px">Rimuovi foto</button>
+<label for="po">Opacità foto (si sovrappone allo sfondo)</label><input type="range" id="po" min="0" max="100">
+<label for="dk">Oscuramento foto</label><input type="range" id="dk" min="0" max="90">
+</div>
+<div class="ep" id="ep_c"><label for="gh">Titolo (con | vai a capo nella copertina)</label><input id="gh">
+<label for="gs">Sottotitolo</label><input id="gs">
+<div id="marw" class="card" style="display:none"><b>Quanti marcatori mostrare</b><div class="bar" style="margin:6px 0"><input type="number" id="marn" min="0" step="1" placeholder="Tutti" style="width:90px"><button class="btn" data-mn="3">Primi 3</button><button class="btn" data-mn="5">Primi 5</button><button class="btn" data-mn="10">Primi 10</button><button class="btn" data-mn="0">Tutti</button></div><label><input type="checkbox" id="mart"> Includi i pari merito con l’ultimo mostrato</label><div class="hint" id="marh"></div></div>
+<div id="mcw" style="display:none"><datalist id="tn"></datalist><div class="g3" style="grid-template-columns:1fr 1fr"><div style="grid-column:1/-1"><label for="mcsel">Partita dal calendario</label><select id="mcsel"></select></div><div><label>Squadra di casa</label><input list="tn" data-m="h"></div><div><label>Squadra ospite</label><input list="tn" data-m="a"></div><div><label>Data e ora</label><input data-m="d" placeholder="Lunedì 18 maggio · 20:45"></div><div><label>Campo</label><input data-m="v" placeholder="Stadio / campo"></div><div><label>Risultato</label><input data-m="sc" placeholder="4 - 0"></div></div></div>
+<div id="twp" style="display:none"><div class="g3" style="grid-template-columns:1fr 1fr auto;align-items:end"><div><label for="tf">Modulo</label><select id="tf"></select></div><div><label for="tv">Vista</label><select id="tv"><option value="c">Campetto</option><option value="l">Lista</option></select></div><button class="btn" id="ta">Compila dai marcatori</button></div><div id="twr"></div><div id="twb" class="card" style="margin-top:10px"><b>Box nomi e squadre</b><div class="g3"><div><label>Sfondo nome</label><input type="color" data-tb="bc"></div><div><label>Testo nome</label><input type="color" data-tb="tc"></div><div><label>Testo squadra</label><input type="color" data-tb="sc"></div></div><div class="g3"><div><label><input type="checkbox" data-tb="tbOn"> Box squadra</label><input type="color" data-tb="tb"></div><div><label>Dimensione</label><input type="range" data-tb="sz" min=".6" max="1.8" step=".05"></div><div><label>Arrotondamento</label><input type="range" data-tb="r" min="0" max="30"></div></div><label>Opacità box</label><input type="range" data-tb="bo" min="20" max="100"><div class="bar" style="margin:8px 0 0"><button class="btn" data-tbp="g">Verde</button><button class="btn" data-tbp="0">Predefinito</button></div></div><label for="tres">Risultati della giornata (facoltativo, una partita per riga, es. Meceneri 3-1 Atletico Cocai)</label><textarea id="tres" rows="3"></textarea><div class="hint">Sono i risultati della giornata selezionata in Dati e TOTW (dal calendario o scritti a mano). Senza, confronto la classifica della giornata con la precedente.</div><div id="tsg"></div></div>
+<div id="rsw" style="display:none"><label for="rres">Risultati della giornata (una partita per riga, es. Meceneri 4-0 Marzenego Riverside)</label><textarea id="rres" rows="8"></textarea><div class="hint">Si compila da solo dal calendario incollato in Dati e TOTW (puoi comunque correggerlo a mano). Se i nomi coincidono con quelli della classifica compaiono anche i loghi. Gli stessi risultati servono ai suggerimenti del Team of the week.</div></div><div id="gdw"><label for="gd" id="gdl"></label><textarea id="gd" rows="8"></textarea></div>
+</div>
+<div class="ep" id="ep_e"><div id="lyp" style="margin-top:14px"><label>Elementi sulla grafica (clicca sul disegno per selezionarli, trascinali per spostarli)</label>
+<div class="bar" id="lyl" style="margin:6px 0"></div>
+<div class="bar"><button class="btn" id="al">+ Logo</button><button class="btn" id="at">+ Testo</button><label class="btn" style="margin:0">+ Immagine<input type="file" id="ai" accept="image/*" hidden></label><button class="btn" id="rl">Ripristina elementi</button></div>
+<div class="bar" id="mcb"><span class="hint" style="margin:0">Partita:</span><button class="btn" data-ma="lh">+ Logo casa</button><button class="btn" data-ma="la">+ Logo ospite</button><button class="btn" data-ma="nh">+ Nome casa</button><button class="btn" data-ma="na">+ Nome ospite</button><button class="btn" data-ma="vs">+ VS</button><button class="btn" data-ma="sc">+ Risultato</button><button class="btn" data-ma="d">+ Data</button><button class="btn" data-ma="v">+ Campo</button><button class="btn" data-ma="bx">+ Riquadro</button></div>
+<div id="lyc" class="card" style="display:none"><div id="lw_t"><label>Testo</label><input data-p="t"></div>
+<div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
+<label>Dimensione</label><input type="range" data-p="s"><div id="lw_r"><label>Altezza</label><input type="range" data-p="h" min=".05" max=".6" step=".005"><label>Angoli arrotondati</label><input type="range" data-p="r" min="0" max="100"></div><label>Opacità</label><input type="range" data-p="o" min="0" max="100">
+<label><input type="checkbox" data-p="b"> Dietro ai contenuti</label>
+<div class="bar" style="margin:8px 0 0"><button class="btn" id="ld">Duplica</button><button class="btn" id="lx">Elimina</button></div></div></div>
+</div>
+<div class="ep" id="ep_k"><label for="gc">Caption</label><textarea id="gc" rows="4"></textarea>
+<div class="bar" style="margin-top:12px"><button class="btn" id="mc">Genera caption</button><button class="btn" id="cc">Copia caption</button></div>
+</div>
+<p class="hint">La foto di sfondo non viene salvata: va ricaricata a ogni sessione. Annulla/Ripeti con i pulsanti o Ctrl+Z; Canc elimina l’elemento selezionato, le frecce lo spostano.</p>
+</div></div></section>
+
+<section id="b">
+<div class="bar"><h2>Best of della settimana</h2><label class="btn" style="margin:0">+ Clip<input type="file" id="cf" accept="video/*" multiple hidden></label><select id="bf" style="width:auto"><option value="720x1280">9:16</option><option value="720x900">4:5</option><option value="1280x720">16:9</option></select><button class="btn" id="bg">Crea grafica con i marcatori</button></div>
+<p class="hint">Aggiungi clip e grafiche (le aggiungi dalla sezione Grafiche con “Aggiungi grafica al Best of”), scegli transizione ed effetto per ognuna ed esporta il video. Le clip restano solo in questa sessione. Etichetta clip: Marcatore;Squadra;Minuto. Su ogni clip o grafica puoi aggiungere testi e box a comparsa (trascinali sull’anteprima per spostarli) e, sulle clip, replay, rallentatore, filtri e zoom. Clicca un blocco della barra sotto l’anteprima per vederne il momento. Durante l’esportazione lascia la scheda in primo piano.</p>
+<div class="gal"></div>
+<div class="two"><div id="cl"></div><div class="stk"><canvas id="bp" class="pv" style="cursor:default"></canvas>
+<div class="bar" style="margin-top:8px;gap:8px;flex-wrap:nowrap"><button class="btn" id="bk0" title="Dall’inizio">⏮</button><button class="btn p" id="pl" style="min-width:112px">▶ Riproduci</button><button class="btn" id="st0" title="Stop">■</button><input type="range" id="bk" min="0" max="1" step=".05" value="0" style="flex:1;min-width:80px"><span id="bs" class="hint" style="margin:0;white-space:nowrap">0:00 / 0:00</span></div><div class="bar" style="margin:0 0 4px"><button class="btn p" id="xv">Esporta video</button></div><div id="bt" style="display:flex;height:34px;gap:2px;margin:8px 0"></div><div id="br"></div></div></div></section>
+
+<section id="l">
+<div class="bar"><h2>Loghi</h2></div>
+<div class="bar"><select id="am" style="width:200px"></select><button class="btn" id="aa">Applica a tutte le squadre</button></div>
+<div class="bar" style="margin-top:10px"><label style="margin:0;display:flex;align-items:center;gap:8px;color:var(--fg)"><input type="checkbox" id="uni"> Uniforma la dimensione dei loghi (ritaglia i margini vuoti e li porta tutti alla stessa grandezza)</label></div>
+<label for="tg">Tolleranza per rimuovere lo sfondo</label><input type="range" id="tg" min="5" max="90">
+<label for="olw">Spessore del contorno nei loghi bianchi</label><input type="range" id="olw" min="1" max="7">
+<p class="hint">Bianco (contorno e linee): il bordo del logo e le linee interne diventano bianchi, il resto è trasparente. Bianco pieno: sagoma tutta bianca.</p>
+<div id="ll"></div>
+</section>
+
+<section id="k"><div class="bar"><h2>Dati e TOTW</h2><a href="https://classifica.legaamatoricalciotreviso.it/" target="_blank" rel="noopener">Apri il sito della classifica</a></div>
+<p class="hint">Il <b>calendario</b> non si esporta più: apri la pagina CalendarioV4, premi Ctrl+A e Ctrl+C, poi incolla con Ctrl+V in questa pagina (anche senza cliccare nel box). Ogni volta che lo reincolli si aggiornano date e risultati, e si compilano da sole le grafiche della giornata. Per Classifica, Marcatori e Ammoniti premi <b>Excel</b> sul sito, poi trascina i file nei box (o usa “Scegli file”). Prima scegli la <b>giornata</b> a cui appartengono: ogni giornata conserva la sua copia dei dati, cioè lo stato del torneo dopo quella giornata. I dati della settimana sono la differenza con la giornata precedente. Se una partita arriva in ritardo, seleziona la giornata e ricarica gli Excel: sostituiscono quelli vecchi.</p>
+<label>Giornata a cui assegni i file <small style="display:inline">(● classifica, marcatori, ammoniti già caricati)</small></label>
+<div class="gch" id="gch"></div>
+<div class="dz4">
+<div class="card dz" data-dz="cl"><b>+ Excel classifica</b><small>Giornata <span data-gl></span></small><label class="btn" style="display:inline-block;margin:0">Scegli file<input type="file" accept=".xlsx,.csv,.txt" data-fi="cl" hidden></label><div class="hint" data-ds="cl"></div></div>
+<div class="card dz" data-dz="mar"><b>+ Excel marcatori</b><small>Giornata <span data-gl></span></small><label class="btn" style="display:inline-block;margin:0">Scegli file<input type="file" accept=".xlsx,.csv,.txt" data-fi="mar" hidden></label><div class="hint" data-ds="mar"></div></div>
+<div class="card dz" data-dz="amm"><b>+ Excel ammoniti</b><small>Giornata <span data-gl></span></small><label class="btn" style="display:inline-block;margin:0">Scegli file<input type="file" accept=".xlsx,.csv,.txt" data-fi="amm" hidden></label><div class="hint" data-ds="amm"></div></div>
+<div class="card dz" data-dz="cal"><b>+ Calendario (copia e incolla)</b><small>Vale per tutte le giornate</small><textarea id="calp" rows="3" placeholder="Apri CalendarioV4, Ctrl+A, Ctrl+C, poi qui Ctrl+V"></textarea><div class="bar" style="margin:6px 0"><a href="https://classifica.legaamatoricalciotreviso.it/CalendarioV4" target="_blank" rel="noopener">Apri CalendarioV4</a><label class="btn" style="display:inline-block;margin:0">Excel (vecchio metodo)<input type="file" accept=".xlsx,.csv,.txt" data-fi="cal" hidden></label></div><div class="hint" data-ds="cal"></div></div>
+</div>
+<div id="kmsg" class="hint"></div>
+<div id="kst"></div>
+<div id="kcalc"></div></section>
+<section id="t">
+<div class="bar"><h2>Tipi di content</h2></div>
+<p class="hint">Ogni tipo compare nel calendario nel giorno scelto, ogni settimana.</p>
+<div id="tl"></div>
+<div class="f" style="margin-top:16px">
+<div><label for="nn">Nome</label><input id="nn" placeholder="Es. Sondaggio MVP"></div>
+<div><label for="ng">Giorno</label><select id="ng"></select></div>
+<div><label for="nc">Canali</label><input id="nc" placeholder="Instagram, YouTube"></div></div>
+<label for="nd">Note fisse (opzionale)</label><input id="nd">
+<div class="bar" style="margin-top:12px"><button class="btn p" id="na">Aggiungi tipo</button></div>
+</section>
+<section id="p">
+<div class="bar"><h2>Podcast · copione automatico</h2><span class="hint" id="pst" style="margin:0"></span><button class="btn" id="pnw">+ Nuova puntata</button><button class="btn p" id="psv">Salva puntata</button></div>
+<div class="two pdg">
+<div>
+<div class="tabs" id="ptb"><button class="on" data-pt="e">Puntata</button><button data-pt="o">Ospiti</button><button data-pt="s">Scaletta</button><button data-pt="r">Oggetti di scena</button></div>
+<div class="pp on" id="pp_e">
+<div class="g3" style="grid-template-columns:1fr 1fr">
+<div><label>Nome del podcast</label><input data-pe="show"></div>
+<div><label>Episodio n°</label><input type="number" min="1" data-pe="ep"></div>
+<div style="grid-column:1/-1"><label>Titolo della puntata (facoltativo)</label><input data-pe="tit" placeholder="Es. Il derby che tutti aspettano"></div>
+<div><label>Data di registrazione</label><input type="date" data-pe="data"></div>
+<div><label>Durata (minuti)</label><select data-pe="dur"><option>15</option><option>20</option><option>30</option><option>45</option><option>60</option></select></div>
+<div><label>Conduttore</label><input data-pe="host" placeholder="Il tuo nome"></div>
+<div><label>Co-conduttore (facoltativo)</label><input data-pe="co"></div>
+<div><label>Tono</label><select data-pe="tono"><option value="l">Leggero e ironico</option><option value="e">Equilibrato</option><option value="s">Serio, da analisi</option></select></div>
+<div><label>Sponsor della puntata (facoltativo)</label><input data-pe="spo"></div>
+</div>
+<p class="hint">I dati (classifica, marcatori, ammoniti, calendario) arrivano dalla scheda Dati e TOTW: più sono aggiornati, più il copione è preciso.</p>
+<label>Archivio puntate</label><div id="parc"></div>
+</div>
+<div class="pp" id="pp_o"><p class="hint">Scrivi nome e squadra: il copione si aggiorna mentre scrivi. Manda il questionario su WhatsApp e incolla qui la risposta: le domande personali si scrivono da sole.</p><datalist id="ptn"></datalist><div id="pos"></div><button class="btn" id="poa" style="margin-top:8px">+ Aggiungi ospite</button></div>
+<div class="pp" id="pp_s"><p class="hint">Accendi, spegni e riordina i blocchi. Il numero di domande segue i minuti. Cambiando la durata totale i minuti si ridistribuiscono.</p><div id="pbl"></div></div>
+<div class="pp" id="pp_r"><p class="hint">Scrivi i tuoi oggetti di scena e la regola del gioco: finiscono nel blocco “Oggetti di scena” con le indicazioni di regia. Il fischietto, se attivo, si usa nel rapid fire.</p><div id="prp"></div>
+<div class="card" style="margin-top:10px"><b>+ Nuovo oggetto di scena</b><label>Nome</label><input id="prn" placeholder="Es. Clessidra, Microfono d’oro, Scatola dei ricordi"><label>Regola del gioco</label><textarea id="prr" rows="2" placeholder="Cosa succede quando lo usi"></textarea><div class="bar" style="margin:8px 0 0"><button class="btn p" id="pra">Aggiungi</button></div></div></div>
+</div>
+<div class="pdv">
+<div class="bar" style="margin-bottom:6px;gap:6px"><button class="btn p" id="ptp">🎬 Teleprompter</button><button class="btn" id="pcp">Copia</button><button class="btn" id="pdl">Scarica .txt</button><button class="btn" id="ppr">Stampa / PDF</button><button class="btn" id="prg" title="Rimescola tutte le domande e ripristina le righe tolte">🎲 Rimescola tutto</button></div>
+<div class="bar" style="margin-bottom:6px;gap:6px"><button class="btn" data-px="g">📲 Scaletta per gli ospiti</button><button class="btn" data-px="c">Titolo e caption</button><button class="btn" data-px="a">🤖 Prompt per Claude</button><button class="btn" id="pcv">🎨 Copertina episodio</button><button class="btn" id="pca">📅 Segna in calendario</button></div>
+<div id="pout" class="card" style="display:none"><b id="pouth"></b><textarea id="poutt" rows="8" style="margin-top:6px"></textarea><div class="bar" style="margin:8px 0 0"><button class="btn p" id="poutc">Copia</button><a class="btn" id="poutw" target="_blank" rel="noopener" style="text-decoration:none;display:none">Apri WhatsApp</a><button class="btn" id="poutx">Chiudi</button></div></div>
+<div class="ptl" id="ptl"></div><div class="hint" id="ptm"></div>
+<div id="psc" class="card" style="padding:14px 16px;margin-top:8px"></div>
+</div>
+</div>
+<div id="tp"><div id="tpb"><div class="tpl"></div><div id="tpt"></div></div>
+<div id="tpc"><button class="btn" id="tp0" title="Dall’inizio">⏮</button><button class="btn p" id="tpg" style="min-width:110px">▶ Avvia</button><label>Velocità <input type="range" id="tps" min="10" max="160" step="5"></label><label>Testo <input type="range" id="tpf" min="24" max="96" step="2"></label><button class="btn" id="tpm">⇋ Specchio</button><div id="tpk"></div><button class="btn" id="tpx">✕ Chiudi</button></div></div>
+</section>
+</main>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const GG=["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"],ST=["Da fare","In lavorazione","Pronto","Pubblicato"];
+const MO=[["o","Originale"],["b","Senza sfondo"],["w","Bianco (contorno e linee)"],["s","Bianco pieno (sagoma)"]];
+const PR={Notte:["#000000","#2f7bff","#ffffff"],Oro:["#0b1220","#c9a45c","#f4ead2"],Giorno:["#f4f7ff","#1646d9","#060b1c"],Campo:["#04170d","#22c55e","#f2fff6"],Fuoco:["#140505","#ff5a2a","#fff4ee"]};
+const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),rgba=(h,a)=>`rgba(${rgb(h)},${a})`,lum=h=>{const[r,g,b]=rgb(h);return .3*r+.59*g+.11*b};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const DEF=()=>({cl:[],mar:[],tipi:[
+{id:"cl",n:"Classifica e caption",g:0,c:"Instagram",d:"Grafica classifica + caption di contesto"},
+{id:"iv",n:"Intervista alla squadra",g:2,c:"Instagram (breve), YouTube (estesa)",d:"Vlog o intervista, a scelta della squadra"},
+{id:"bo",n:"Best of della settimana",g:5,c:"Instagram",d:"Migliori goal: pagine IG delle squadre o video WhatsApp"},
+{id:"ris",n:"Risultati della settimana",g:4,c:"Instagram",d:"Grafica con tutti i risultati della giornata"},
+{id:"tw",n:"Team of the week",g:6,c:"Instagram",d:"Statistiche dal sito della classifica"}],
+st:{},raw:{},mode:{},tol:40,sty:{bg:"#000000",ac:"#2f7bff",tx:"#ffffff",str:true,dk:45,po:65,fmt:"1080x1350"},
+tw2:Array.from({length:7},()=>({n:"",t:""})),tf:"2-3-1",twv:"c",mt:{h:"",a:"",d:"",v:"",sc:""},ly:{},
+bo:"Nome Cognome;Squadra;12’\nNome Cognome;Squadra;31’"});
+let S;try{S={...DEF(),...(JSON.parse(localStorage.getItem("a7v2"))||{})}}catch(e){S=DEF()}
+S.sty={...DEF().sty,...S.sty};Object.keys(S.mode||{}).forEach(k=>{if(S.mode[k]==="bw")S.mode[k]="w"});Object.keys(S.ly).forEach(k=>S.ly[k]=S.ly[k].filter(l=>l.k!=="img"||l.src));
+const BS=T=>((S.cg||[]).find(c=>c.id===T)||{}).b||T;
+const save=()=>{try{localStorage.setItem("a7v2",JSON.stringify(S,(k,v)=>k==="src"?undefined:v))}catch(e){}};
+let BG="",PC={},IC={},sd=7,CL=[],off=0;
+const rn=()=>(sd=sd*16807%2147483647)/2147483647;
+const im=s=>{if(!s)return null;let i=IC[s];if(!i){i=IC[s]=new Image();i.onload=()=>draw();i.src=s}return i.complete&&i.naturalWidth?i:null};
+const rows=t=>t.split("\n").map(l=>l.split(";").map(x=>x.trim())).filter(r=>r[0]);
+
+/* ---- navigazione ---- */
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));$$("section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.t));
+ const t=b.dataset.t;$("main").classList.toggle("wide",t==="w");if(t==="g"){sync();TBU();draw()}if(t==="l")renderLogos();if(t==="k")renderK()});
+const go=t=>$$("nav button").find(b=>b.dataset.t===t).click();
+
+/* ---- settimana e tipi ---- */
+const mon=o=>{const d=new Date();d.setHours(12,0,0,0);d.setDate(d.getDate()-((d.getDay()+6)%7)+o*7);return d},iso=d=>d.toISOString().slice(0,10);
+function week(){const m=mon(off),k=iso(m),e=new Date(m);e.setDate(e.getDate()+6);
+ const f=d=>d.toLocaleDateString("it-IT",{day:"numeric",month:"long"});$("#wl").textContent=f(m)+" – "+f(e);
+ $("#wk").innerHTML=GG.map((n,i)=>{const d=new Date(m);d.setDate(d.getDate()+i);
+  const it=S.tipi.filter(t=>t.g===i).map(t=>{const key=k+"|"+t.id,v=S.st[key]||{s:0,n:""};
+   return `<div class="card"><b>${esc(t.n)}</b><small>${esc(t.c)}</small><button class="btn st" data-k="${key}" data-s="${v.s}">${ST[v.s]}</button><textarea data-n="${key}" placeholder="${esc(t.d)}">${esc(v.n)}</textarea></div>`}).join("");
+  return `<div class="day ${iso(d)===iso(new Date(new Date().setHours(12)))?"today":""}"><h3>${n} ${d.getDate()}</h3>${it}</div>`}).join("");
+ $$(".st").forEach(b=>b.onclick=()=>{const v=S.st[b.dataset.k]||{s:0,n:""};v.s=(v.s+1)%4;S.st[b.dataset.k]=v;save();week()});
+ $$("[data-n]").forEach(t=>t.oninput=()=>{const v=S.st[t.dataset.n]||{s:0,n:""};v.n=t.value;S.st[t.dataset.n]=v;save()})}
+$("#pw").onclick=()=>{off--;week()};$("#nw").onclick=()=>{off++;week()};$("#tw").onclick=()=>{off=0;week()};
+function tipi(){$("#tl").innerHTML=S.tipi.map((t,i)=>`<div class="row"><span><b>${esc(t.n)}</b><br><small>${GG[t.g]} · ${esc(t.c)}</small></span><button class="btn" data-x="${i}">Elimina</button></div>`).join("");
+ $$("#tl [data-x]").forEach(b=>b.onclick=()=>{S.tipi.splice(+b.dataset.x,1);save();tipi();week()})}
+$("#ng").innerHTML=GG.map((n,i)=>`<option value="${i}">${n}</option>`).join("");
+$("#na").onclick=()=>{const n=$("#nn").value.trim();if(!n)return;S.tipi.push({id:"x"+Date.now(),n,g:+$("#ng").value,c:$("#nc").value||"Instagram",d:$("#nd").value});["nn","nc","nd"].forEach(i=>$("#"+i).value="");save();tipi();week()};
+
+/* ---- loghi ---- */
+function trimBox(i){const nw=i.naturalWidth,nh=i.naturalHeight,s=Math.min(1,200/Math.max(nw,nh)),w=Math.max(1,Math.round(nw*s)),h=Math.max(1,Math.round(nh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const q=c.getContext("2d",{willReadFrequently:true});q.drawImage(i,0,0,w,h);const p=q.getImageData(0,0,w,h).data,co=[0,(w-1)*4,(h-1)*w*4,(w*h-1)*4].filter(o=>p[o+3]>200),bg=co.length>2?[0,1,2].map(k=>co.reduce((a,o)=>a+p[o+k],0)/co.length):null;let x0=w,y0=h,x1=-1,y1=-1;
+ for(let b=0;b<h;b++)for(let a=0;a<w;a++){const o=(b*w+a)*4;if(p[o+3]<25||bg&&Math.hypot(p[o]-bg[0],p[o+1]-bg[1],p[o+2]-bg[2])<45)continue;if(a<x0)x0=a;if(a>x1)x1=a;if(b<y0)y0=b;if(b>y1)y1=b}
+ if(x1<0)return[0,0,nw,nh];x0=Math.max(0,x0-2);y0=Math.max(0,y0-2);x1=Math.min(w-1,x1+2);y1=Math.min(h-1,y1+2);return[x0/s,y0/s,Math.min(nw,(x1-x0+1)/s),Math.min(nh,(y1-y0+1)/s)]}
+function process(i,m){if(m==="bw")m="w";const nw=i.naturalWidth,nh=i.naturalHeight,[sx,sy,sw,sh]=S.uni===false?[0,0,nw,nh]:trimBox(i),s=Math.min(256/Math.max(sw,sh),4),w=Math.max(1,Math.round(sw*s)),h=Math.max(1,Math.round(sh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d",{willReadFrequently:true});x.imageSmoothingQuality="high";x.drawImage(i,sx,sy,sw,sh,0,0,w,h);if(m==="o")return c;
+ const d=x.getImageData(0,0,w,h),p=d.data,n=w*h;
+ {const co=[0,(w-1)*4,(h-1)*w*4,(n-1)*4].filter(o=>p[o+3]>200),bg=co.length>2?[0,1,2].map(k=>co.reduce((a,o)=>a+p[o+k],0)/co.length):null,thr=S.tol*4.4,
+  ok=o=>p[o+3]<10||bg&&Math.hypot(p[o]-bg[0],p[o+1]-bg[1],p[o+2]-bg[2])<thr,seen=new Uint8Array(n),st=[],
+  push=(a,b)=>{const q=b*w+a;if(a>=0&&b>=0&&a<w&&b<h&&!seen[q]&&ok(q*4)){seen[q]=1;st.push(q)}};
+  for(let a=0;a<w;a++){push(a,0);push(a,h-1)}for(let b=0;b<h;b++){push(0,b);push(w-1,b)}
+  while(st.length){const q=st.pop();p[q*4+3]=0;const a=q%w,b=(q-a)/w;push(a+1,b);push(a-1,b);push(a,b+1);push(a,b-1)}}
+ if(m==="b"){x.putImageData(d,0,0);return c}
+ const M=new Uint8Array(n),hs={};let tot=0;for(let q=0;q<n;q++)if(p[q*4+3]>=128){M[q]=1;const k=(p[q*4]>>5)*64+(p[q*4+1]>>5)*8+(p[q*4+2]>>5);hs[k]=(hs[k]||0)+1;tot++}
+ const top=Math.max(0,...Object.values(hs));
+ if(m==="s"||!tot||top/tot>.88){for(let o=0;o<p.length;o+=4){p[o]=p[o+1]=p[o+2]=255}x.putImageData(d,0,0);return c}
+ const E=new Uint8Array(n),cd=(a,b)=>Math.hypot(p[a]-p[b],p[a+1]-p[b+1],p[a+2]-p[b+2]);
+ for(let b=0;b<h;b++)for(let a=0;a<w;a++){const q=b*w+a;if(!M[q])continue;if(a===0||b===0||a===w-1||b===h-1||!M[q-1]||!M[q+1]||!M[q-w]||!M[q+w]){E[q]=1;continue}if(cd((q-1)*4,(q+1)*4)>70||cd((q-w)*4,(q+w)*4)>70)E[q]=1}
+ const r=Math.max(0,Math.floor((S.olw||3)/2)),out=new Uint8ClampedArray(n*4);
+ for(let b=0;b<h;b++)for(let a=0;a<w;a++){const q=b*w+a;if(!M[q])continue;let on=0;for(let dy=-r;dy<=r&&!on;dy++)for(let dx=-r;dx<=r;dx++){const yy=b+dy,xx=a+dx;if(yy>=0&&xx>=0&&yy<h&&xx<w&&E[yy*w+xx]){on=1;break}}if(on){out[q*4]=out[q*4+1]=out[q*4+2]=out[q*4+3]=255}}
+ x.putImageData(new ImageData(out,w,h),0,0);return c}
+const logo=k=>{if(!k||!S.raw[k])return null;if(PC[k])return PC[k];const i=im(S.raw[k]);return i?(PC[k]=process(i,S.mode[k]||"o")):null};
+const dl=(x,c,cx,cy,sz)=>{const r=Math.min(sz/c.width,sz/c.height);x.drawImage(c,cx-c.width*r/2,cy-c.height*r/2,c.width*r,c.height*r)};
+function thumbs(){$$(".th").forEach(c=>{const x=c.getContext("2d");x.clearRect(0,0,56,56);const l=logo(c.dataset.th);if(l)dl(x,l,28,28,52)})}
+function renderLogos(){const ks=["__lega",...S.cl.map(e=>e.n)];
+ $("#ll").innerHTML=ks.map(k=>`<div class="row"><canvas class="th" width="56" height="56" data-th="${esc(k)}"></canvas><span><b>${k==="__lega"?"Logo della lega":esc(k)}</b></span><input type="file" accept="image/*" data-k="${esc(k)}" style="width:200px"><select data-k="${esc(k)}" data-m="1" style="width:190px">${MO.map(([v,l])=>`<option value="${v}"${(S.mode[k]||"o")===v?" selected":""}>${l}</option>`).join("")}</select><button class="btn" data-rm="${esc(k)}">Rimuovi</button></div>`).join("");thumbs()}
+$("#am").innerHTML=MO.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");$("#tg").value=S.tol;
+$("#aa").onclick=()=>{S.cl.forEach(e=>{S.mode[e.n]=$("#am").value;delete PC[e.n]});save();renderLogos();draw()};
+$("#tg").oninput=e=>{S.tol=+e.target.value;PC={};save();thumbs();draw()};
+$("#ll").onchange=e=>{const t=e.target,k=t.dataset.k;if(t.type==="file"&&t.files[0]){const r=new FileReader();r.onload=()=>{const i=new Image();i.onload=()=>{const s=Math.min(1,320/Math.max(i.width,i.height)),c=document.createElement("canvas");c.width=Math.round(i.width*s);c.height=Math.round(i.height*s);c.getContext("2d").drawImage(i,0,0,c.width,c.height);S.raw[k]=c.toDataURL("image/png");delete PC[k];save();renderLogos();draw()};i.src=r.result};r.readAsDataURL(t.files[0])}
+ else if(t.dataset.m){S.mode[k]=t.value;delete PC[k];save();thumbs();draw()}};
+
+/* ---- best of: montaggio ---- */
+const TR=[["cut","Taglio secco"],["fade","Dissolvenza"],["sl","Scorri da destra"],["su","Scorri dal basso"],["zm","Zoom"],["wp","Tendina"],["sr","Scorri da sinistra"],["sd","Scorri dall’alto"],["fl","Flash bianco"]],FXO=[["n","Nessuna"],["fo","Dissolvenza in uscita"],["dn","Scende"],["sh","Rimpicciolisce"],["sx","Scorre a sinistra"]],FXG=[["n","Nessuno"],["zi","Zoom lento"],["fi","Dissolvenza in entrata"],["up","Sale dal basso"],["pu","Pulsazione"]],TD=.6;
+let bsz=[720,1280],ac=null,adst=null,run=null,JO=-1,OB=[],OSELo=null,ESELo=null,EDT=null,bdrag=null;
+const jn=i=>{const c=CL[i],nm=TR.find(a=>a[0]===c.tr)[1],op=JO===i,td=(c.td||TD).toFixed(1);return `<div class="jn"><button class="dot${op?" on":""}" data-j="${i}" title="Transizione tra la clip ${i} e la ${i+1}">${c.tr==="cut"?"●":"◆"}</button><small>${nm}${c.tr!=="cut"?" · "+td+" s":""}</small></div>`+(op?`<div class="card jp"><label>Transizione tra la clip ${i} e la ${i+1}</label><div class="bar" style="gap:6px">${TR.map(([k,t])=>`<button class="btn${k===c.tr?" p":""}" data-tr="${k}" data-i="${i}">${t}</button>`).join("")}</div>${c.tr!=="cut"?`<label>Durata della transizione: ${td} s</label><input type="range" min=".2" max="1.5" step=".1" data-f="td" data-i="${i}" value="${c.td||TD}">`:""}</div>`:"")};
+const dur=c=>c.k==="g"?c.d:plan(c).tot;
+const L=()=>{let e=0;return CL.map((c,i)=>{const s0=i&&c.tr!=="cut"?Math.max(0,e-(c.td||TD)):e,d=dur(c);e=s0+d;return{c,s:s0,d}})},total=()=>{const l=L();return l.length?Math.max(...l.map(o=>o.s+o.d)):0};
+function meta(i,v){const c=CL[i];if(c&&c.k==="c"&&!c.b){c.b=+v.duration.toFixed(1);renderB()}}
+function itemDraw(x,c,lt,d,BW,BH,p,still){x.save();const tr=c.tr;
+ if(p<1&&tr!=="cut"){if(tr==="fade")x.globalAlpha=p;else if(tr==="sl")x.translate((1-p)*BW,0);else if(tr==="su")x.translate(0,(1-p)*BH);else if(tr==="zm"){x.globalAlpha=p;x.translate(BW/2,BH/2);x.scale(.6+.4*p,.6+.4*p);x.translate(-BW/2,-BH/2)}else if(tr==="wp"){x.beginPath();x.rect(0,0,BW*p,BH);x.clip()}else if(tr==="sr")x.translate(-(1-p)*BW,0);else if(tr==="sd")x.translate(0,-(1-p)*BH);else if(tr==="fl")x.globalAlpha=p}
+ let sc=1,ty=0,al=1,tx=0;const f=still?"n":c.fx;if(f==="zi")sc=1+.08*lt/d;else if(f==="pu")sc=1+.025*Math.sin(lt*4);else if(f==="fi")al=Math.min(1,lt/.5);else if(f==="up"){const k=Math.min(1,lt/.6);ty=(1-k)*BH*.08;al=k}
+ {const xd=Math.min(.6,d/2),ko=Math.min(1,Math.max(0,(d-lt)/xd)),fo=still?"n":c.fo;if(fo==="fo")al*=ko;else if(fo==="dn"){ty+=(1-ko)*BH*.1;al*=ko}else if(fo==="sh"){sc*=.8+.2*ko;al*=ko}else if(fo==="sx")tx=-(1-ko)*BW}const cf=c.k==="c"?clipFx(c,lt):null;x.globalAlpha*=al;x.save();x.translate(BW/2+tx,BH/2+ty);x.scale(sc*(cf?cf.z:1),sc*(cf?cf.z:1));x.translate(-BW/2,-BH/2);
+ const m=c.k==="c"?c.el:c.img,mw=m.videoWidth||m.naturalWidth,mh=m.videoHeight||m.naturalHeight;if(mw){const r=Math.max(BW/mw,BH/mh);if(cf&&cf.f&&"filter" in x)x.filter=cf.f;x.drawImage(m,(BW-mw*r)/2,(BH-mh*r)/2,mw*r,mh*r);x.filter="none"}x.restore();if(cf&&cf.q.rp&&cf.q.rp.lb)repTag(x,lt-cf.q.o,BW,BH);(c.ov||[]).forEach(v=>drawOv(x,v,lt,d,BW,BH,still));
+ if(c.k==="c"&&c.t){const q=c.t.split(";"),k=Math.min(1,lt/.45),e=1-Math.pow(1-k,3),w=BW*.82,Y=BH*.8,h=BH*.095,fs=Math.min(BW,BH)*.04,ac2=S.sty.ac,tc=lum(ac2)>150?"#000":"#fff";
+  x.translate(-(1-e)*w,0);x.fillStyle=rgba(ac2,.93);x.fillRect(0,Y,w,h);x.fillStyle=tc;x.textBaseline="middle";x.textAlign="left";x.font=`800 ${fs}px "Inter Tight",system-ui,sans-serif`;x.fillText((q[0]||"").toUpperCase(),BW*.04,Y+h*.36);
+  x.font=`400 ${fs*.62}px "Inter Tight",system-ui,sans-serif`;x.fillText((q[1]||""),BW*.04,Y+h*.74);x.textAlign="right";x.font=`800 ${fs*1.3}px "Inter Tight",system-ui,sans-serif`;x.fillText(q[2]||"",w-BW*.04,Y+h/2)}
+ if(p<1&&tr==="fl"){x.globalAlpha=Math.sin(p*Math.PI)*.8;x.fillStyle="#fff";x.fillRect(-BW,-BH,BW*3,BH*3)}
+ x.restore()}
+function frame(t,still){OB=[];const[BW,BH]=bsz,cv=$("#bp"),x=cv.getContext("2d");if(cv.width!==BW||cv.height!==BH){cv.width=BW;cv.height=BH}x.fillStyle="#000";x.fillRect(0,0,BW,BH);
+ L().forEach(o=>{const lt=t-o.s;if(lt<0||lt>=o.d)return;itemDraw(x,o.c,lt,o.d,BW,BH,still||o.c.tr==="cut"||o.s===0?1:Math.min(1,lt/(o.c.td||TD)),still)})}
+function stopM(){if(!run)return;cancelAnimationFrame(run.id);CL.forEach(c=>{if(c.k==="c"){c.el.pause();c._on=0;c._sg=-1;c.el.muted=false;c.el.playbackRate=1}});const r=run.rec;run=null;if(r&&r.state!=="inactive")r.stop()}
+function runM(ex,fr=0){stopM();const tot=total();if(!tot)return alert("Aggiungi almeno una clip o una grafica");run={};
+ ac=ac||new AudioContext();adst=adst||ac.createMediaStreamDestination();ac.resume();
+ CL.forEach(c=>{if(c.k!=="c")return;if(!c._s)c._s=ac.createMediaElementSource(c.el);c._s.disconnect();c._s.connect(adst);if(!ex)c._s.connect(ac.destination)});
+ if(ex){const st=$("#bp").captureStream(30);adst.stream.getAudioTracks().forEach(a=>st.addTrack(a));const ch=[],mt=["video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/webm;codecs=vp9,opus","video/webm"].find(m=>MediaRecorder.isTypeSupported(m)),r=new MediaRecorder(st,{mimeType:mt,videoBitsPerSecond:6e6});
+  r.ondataavailable=e=>e.data.size&&ch.push(e.data);r.onstop=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob(ch,{type:mt.split(";")[0]}));a.download="best-of."+(mt.includes("mp4")?"mp4":"webm");a.click();$("#bs").textContent="Video esportato."};r.start();run.rec=r}
+ const t0=performance.now(),tick=now=>{if(!run)return;const t=fr+(now-t0)/1000;run.t=t;
+  L().forEach(o=>{const c=o.c;if(c.k!=="c")return;const lt=t-o.s,on=lt>=0&&lt<o.d;if(on){const q=segAt(c,lt),sr=q.s+(lt-q.o)*q.sp;if(!c._on||c._sg!==q.i){c.el.currentTime=sr;c.el.playbackRate=q.sp;c.el.muted=!!q.rp;c.el.play();c._on=1;c._sg=q.i}else if(Math.abs(c.el.currentTime-sr)>.4)c.el.currentTime=sr}else if(c._on){c.el.pause();c._on=0;c._sg=-1;c.el.muted=false;c.el.playbackRate=1}});
+  frame(t);$("#bs").textContent=(ex?"REC ":"")+tf(t)+" / "+tf(tot);if(t>=tot){PT=0;EDT=null;stopM();return}run.id=requestAnimationFrame(tick)};run.id=requestAnimationFrame(tick)}
+function idle(){if(run)return;const l=L(),ed=EDT!=null&&EDT<total(),tt=ed?EDT:0;l.forEach(o=>{if(o.c.k==="c"&&tt>=o.s&&tt<o.s+o.d){const q=segAt(o.c,tt-o.s);o.c.el.onseeked=()=>{if(!run)frame(tt,ed)};o.c.el.currentTime=q.s+(tt-o.s-q.o)*q.sp+.01}});frame(tt,ed)}
+function renderB(){const l=L(),tot=total(),sel=(n,i,v,a)=>`<select data-f="${n}" data-i="${i}">${a.map(([k,t])=>`<option value="${k}"${k===v?" selected":""}>${t}</option>`).join("")}</select>`;
+ $("#cl").innerHTML=CL.map((c,i)=>(i?jn(i):"")+`<div class="card"><b>${i+1}. ${c.k==="c"?"Clip":"Grafica: "+esc(c.n)}</b>`+(c.k==="c"?`<video data-vi="${i}" src="${c.url}" controls playsinline preload="metadata" style="width:100%;max-height:200px" onloadedmetadata="meta(${i},this)"></video><label>Etichetta (Marcatore;Squadra;Minuto)</label><input data-f="t" data-i="${i}" value="${esc(c.t)}"><div class="bar" style="margin:8px 0 0"><span>Inizio</span><input type="number" step="0.1" min="0" data-f="a" data-i="${i}" value="${c.a}" style="width:84px"><span>Fine</span><input type="number" step="0.1" min="0" data-f="b" data-i="${i}" value="${c.b}" style="width:84px"><button class="btn" data-c="a${i}">Inizio qui</button><button class="btn" data-c="b${i}">Fine qui</button></div>`:`<img src="${c.img.src}" style="height:110px;border-radius:6px;display:block;margin:6px 0"><div class="bar" style="margin:8px 0 0"><span>Durata (s)</span><input type="number" step="0.5" min="1" data-f="d" data-i="${i}" value="${c.d}" style="width:84px"></div>`)+
+  `<div class="g3" style="grid-template-columns:1fr 1fr;margin-top:8px"><div><label>Animazione in entrata</label>${sel("fx",i,c.fx,FXG)}</div><div><label>Animazione in uscita</label>${sel("fo",i,c.fo||"n",FXO)}</div></div>${ovUI(c,i)}${c.k==="c"?efUI(c,i):""}<div class="bar" style="margin:8px 0 0"><button class="btn" data-c="u${i}">Su</button><button class="btn" data-c="d${i}">Giù</button><button class="btn" data-c="r${i}">Rimuovi</button></div></div>`).join("")||'<p class="hint">Nessun elemento: aggiungi clip o grafiche salvate.</p>';
+ $("#bt").innerHTML=l.map((o,i)=>`<div title="${i+1}" style="flex:${o.d};min-width:18px;border-radius:6px;background:${o.c.k==="c"?"var(--blue)":rgba(S.sty.ac,.55)};color:#fff;font-size:12px;display:flex;align-items:center;justify-content:center">${i+1}</div>`).join("");
+ const nm=t=>TR.find(a=>a[0]===t)[1],mm=n=>Math.floor(n/60)+":"+String(Math.round(n%60)).padStart(2,"0");
+ $("#br").innerHTML=CL.length?`<div class="hint"><b>Video finale: ${mm(tot)}</b> · ${CL.length} elementi · ${$("#bf").selectedOptions[0].text}</div>`+l.map((o,i)=>`<div class="hint">${i+1}. ${o.c.k==="c"?"Clip "+esc((o.c.t||"").split(";").slice(0,2).join(" · ")):"Grafica "+esc(o.c.n)} — ${o.d.toFixed(1)} s${i?" · entra con "+nm(o.c.tr).toLowerCase():""}${o.c.fx!=="n"?" · "+FXG.find(a=>a[0]===o.c.fx)[1].toLowerCase():""}${o.c.fo&&o.c.fo!=="n"?" · uscita: "+FXO.find(a=>a[0]===o.c.fo)[1].toLowerCase():""}</div>`).join(""):"";
+ setTimeout(idle,150)}
+const addC=c=>{CL.push({tr:"fade",fx:"n",fo:"n",...c});renderB()};
+$("#cf").onchange=e=>{[...e.target.files].forEach(f=>{const url=URL.createObjectURL(f),el=document.createElement("video");el.src=url;el.playsInline=true;el.preload="auto";el.onloadeddata=()=>{if(!run)frame(0)};addC({k:"c",url,el,t:"",a:0,b:0})});e.target.value=""};
+function addG(id){const g=G.find(q=>q.id===id);if(!g)return;const img=new Image();img.onload=()=>{addC({k:"g",n:g.n,img,d:3,fx:"zi"});go("b")};img.src=g.d}
+$("#cl").addEventListener("input",e=>{const d=e.target.dataset;if(d.f==="t")CL[d.i].t=e.target.value});
+$("#cl").addEventListener("change",e=>{const d=e.target.dataset;if(d.f===undefined)return;const c=CL[d.i],v=e.target.value;c[d.f]=["a","b","d","td"].includes(d.f)?+v:v;renderB()});
+$("#cl").onclick=e=>{if(bofClick(e))return;const dj=e.target.dataset.j,dt=e.target.dataset.tr;if(dj!==undefined){JO=JO===+dj?-1:+dj;renderB();return}if(dt){CL[+e.target.dataset.i].tr=dt;renderB();return}const c=e.target.dataset.c;if(!c)return;JO=-1;const a=c[0],i=+c.slice(1),v=$(`[data-vi="${i}"]`);
+ if(a==="a"||a==="b")CL[i][a]=+v.currentTime.toFixed(1);else if(a==="r"){CL.splice(i,1);EDT=null;OSELo=null;ESELo=null}else{const j=a==="u"?i-1:i+1;if(CL[j])[CL[i],CL[j]]=[CL[j],CL[i]]}renderB()};
+$("#bf").onchange=e=>{bsz=e.target.value.split("x").map(Number);renderB()};$("#pl").onclick=()=>runM(0);$("#st0").onclick=()=>{stopM();idle()};$("#xv").onclick=()=>runM(1);
+$("#bg").onclick=()=>{const t=CL.map(c=>c.t).filter(Boolean).join("\n");if(t){S.bo=t;save()}go("g");$("#gt").value="bo";sync(true);draw()};
+
+/* ---- best of: testi/box a comparsa, replay e filtri ---- */
+const OAI=[["n","Nessuna"],["fa","Dissolvenza"],["up","Sale dal basso"],["dn","Scende dall’alto"],["sl","Da destra"],["sr","Da sinistra"],["pop","Pop (zoom)"],["wp","Tendina"]],OAO=[["n","Nessuna"],["fo","Dissolvenza"],["dn","Scende"],["sh","Rimpicciolisce"]],OAT=[["n","Tutto insieme"],["ty","Typing (macchina da scrivere)"],["wd","Parola per parola"],["fa","Dissolvenza"]],FLT={bw:"grayscale(1)",sep:"sepia(1)",ct:"contrast(1.35) saturate(1.25)",vv:"saturate(1.9)"},FLN=[["bw","Bianco e nero"],["sep","Seppia"],["ct","Alto contrasto"],["vv","Colori vivi"]],EFN={rp:"Replay",sm:"Rallentatore",fl:"Filtro",zm:"Zoom"};
+const cl01=(v,a,b)=>Math.min(b,Math.max(a,v)),ss=v=>v*v*(3-2*v);
+function plan(c){const key=c.a+"|"+c.b+"|"+(c._ek||0);if(c._pl&&c._pk===key)return c._pl;const a=c.a,b=c.b>c.a?c.b:c.a+1;
+ const ed=(c.ef||[]).filter(e=>e.k==="sm"||e.k==="rp").map(e=>({...e,a:cl01(+e.a,a,b),b:cl01(+e.b,a,b),sp:cl01(+e.sp||.5,.25,1)})).filter(e=>e.b-e.a>.05).sort((p,q)=>(p.k==="rp"?p.b:p.a)-(q.k==="rp"?q.b:q.a)),sg=[];let cur=a;
+ ed.forEach(e=>{if(e.k==="sm"){if(e.b<=cur)return;const s0=Math.max(e.a,cur);if(s0>cur)sg.push({s:cur,e:s0,sp:1});sg.push({s:s0,e:e.b,sp:e.sp});cur=e.b}else{if(e.b>cur){sg.push({s:cur,e:e.b,sp:1});cur=e.b}sg.push({s:e.a,e:e.b,sp:e.sp,rp:e})}});
+ if(cur<b)sg.push({s:cur,e:b,sp:1});let o=0;sg.forEach((q,i)=>{q.i=i;q.o=o;q.d=(q.e-q.s)/q.sp;o+=q.d});c._pk=key;return c._pl={sg,tot:o||1}}
+function segAt(c,lt){const s=plan(c).sg;for(const q of s)if(lt<q.o+q.d)return q;return s[s.length-1]}
+function clipFx(c,lt){const q=segAt(c,lt),s=q.s+Math.min(Math.max(lt-q.o,0),q.d)*q.sp,f=[];let z=1;if(q.rp&&q.rp.bw)f.push(FLT.bw);
+ (c.ef||[]).forEach(e=>{if(s<+e.a||s>+e.b)return;if(e.k==="fl")f.push(FLT[e.fl||"bw"]);else if(e.k==="zm")z=Math.max(z,1+(e.z-1)*ss(cl01((s-e.a)/.35,0,1))*ss(cl01((e.b-s)/.3,0,1)))});return{f:f.join(" "),z,q}}
+function repTag(x,t,BW,BH){const U=Math.min(BW,BH),fs=U*.045,px=U*.05,py=U*.07;x.save();x.globalAlpha*=Math.min(1,t/.2);x.font=`800 ${fs}px "Inter Tight",system-ui,sans-serif`;const w=x.measureText("▶ REPLAY").width+fs*1.5,h=fs*1.7;x.fillStyle=rgba(S.sty.ac,.95);x.beginPath();x.roundRect(px,py,w,h,h/2);x.fill();x.fillStyle=lum(S.sty.ac)>150?"#000":"#fff";x.textBaseline="middle";x.textAlign="left";x.fillText("▶ REPLAY",px+fs*.75,py+h/2+fs*.04);x.restore()}
+function wrapT(x,t,mw){const o=[];String(t).split("\n").forEach(p=>{let l="";p.split(" ").forEach(w=>{const q=l?l+" "+w:w;if(l&&x.measureText(q).width>mw){o.push(l);l=w}else l=q});o.push(l)});return o}
+function drawOv(x,v,lt,d,BW,BH,still){const du=v.du>0?v.du:d-v.st,t=lt-v.st;if(t<0||t>du)return;
+ const U=Math.min(BW,BH),fs=Math.max(10,v.fs*U),pd=fs*.7,bw=Math.min(BW*.98,v.w*BW),ls=v.lg?fs*2.5:0;x.save();x.font=`700 ${fs}px "Inter Tight",system-ui,sans-serif`;
+ const lines=wrapT(x,v.t||"",Math.max(40,bw-2*pd-(ls?ls+pd:0))),lh=fs*1.25,th=lines.length*lh,bh=Math.max(th,ls)+2*pd,k=still?1:Math.min(1,t/.45),ko=still?1:Math.min(1,(du-t)/.4),e=1-Math.pow(1-k,3),eb=1+2.70158*Math.pow(k-1,3)+1.70158*Math.pow(k-1,2);
+ let al=1,tx=0,ty=0,sc=1,cw=1;const ai=v.ai,ao=v.ao;
+ if(ai==="fa")al=e;else if(ai==="up"){ty=(1-e)*BH*.07;al=e}else if(ai==="dn"){ty=-(1-e)*BH*.07;al=e}else if(ai==="sl"){tx=(1-e)*BW*.25;al=e}else if(ai==="sr"){tx=-(1-e)*BW*.25;al=e}else if(ai==="pop"){sc=Math.max(.01,.6+.4*eb);al=Math.min(1,k*2.5)}else if(ai==="wp")cw=e;
+ if(ao==="fo")al*=ko;else if(ao==="dn"){ty+=(1-ko)*BH*.07;al*=ko}else if(ao==="sh"){sc*=.85+.15*ko;al*=ko}
+ const cx=v.x*BW,cy=v.y*BH;OB.push({ov:v,x0:cx-bw/2,y0:cy-bh/2,x1:cx+bw/2,y1:cy+bh/2});
+ x.globalAlpha*=al;x.translate(cx+tx,cy+ty);x.scale(sc,sc);const x0=-bw/2,y0=-bh/2;
+ if(cw<1){x.beginPath();x.rect(x0-4,y0-4,bw*cw+8,bh+8);x.clip()}
+ if(v.bx){x.fillStyle=rgba(v.bc,v.bo/100);x.beginPath();x.roundRect(x0,y0,bw,bh,v.r/100*bh/2);x.fill()}
+ if(v.lg){const lc=logo(v.lg);if(lc)dl(x,lc,x0+pd+ls/2,0,ls)}
+ const tx0=x0+pd+(ls?ls+pd:0),ty0=-th/2,tot=lines.reduce((a,l)=>a+l.length,0),tt=Math.max(0,t-.3),m=v.at;let n=tot,ta=1;
+ if(!still){if(m==="ty")n=Math.floor(tt*v.cps);else if(m==="wd"){let r=Math.floor(tt*v.cps/5),nn=0;lines.forEach(ln=>ln.split(" ").forEach((w,wi)=>{if(r>0){nn+=w.length+(wi?1:0);r--}}));n=nn}else if(m==="fa")ta=cl01((t-.2)/.5,0,1)}
+ x.fillStyle=v.c;x.textBaseline="middle";x.textAlign="left";x.globalAlpha*=ta;let r=n,lx=tx0,ly=ty0+lh/2;
+ lines.forEach((ln,i)=>{const s=ln.slice(0,Math.max(0,r));r-=ln.length;if(s){x.fillText(s,tx0,ty0+lh*(i+.5));lx=tx0+x.measureText(s).width;ly=ty0+lh*(i+.5)}});
+ if(!still&&m==="ty"&&t>.15&&n<tot+v.cps*1.5&&Math.floor(t*2.6)%2===0)x.fillRect(lx+fs*.08,ly-fs*.55,fs*.07,fs*1.1);
+ x.restore();
+ if(still&&v===OSELo){x.save();x.strokeStyle="#2f7bff";x.lineWidth=Math.max(2,BW/260);x.setLineDash([BW/70,BW/110]);x.strokeRect(cx-bw/2-6,cy-bh/2-6,bw+12,bh+12);x.restore()}}
+function selO(a,f,i,j,v,l){return `<select data-${a}="${f}" data-ci="${i}" data-k="${j}">${l.map(([k,t])=>`<option value="${k}"${k===v?" selected":""}>${t}</option>`).join("")}</select>`}
+const fld=(l,h)=>`<div><label>${l}</label>${h}</div>`,ni=(a,f,i,j,v,x)=>`<input type="number" data-${a}="${f}" data-ci="${i}" data-k="${j}" value="${v}" ${x||""}>`,ri=(a,f,i,j,v,mn,mx,s)=>`<input type="range" data-${a}="${f}" data-ci="${i}" data-k="${j}" min="${mn}" max="${mx}" step="${s}" value="${v}">`;
+function ovUI(c,i){const ov=c.ov||[],sj=ov.indexOf(OSELo);let h=`<div class="sub"><label>Testi e box sulla clip</label><div class="bar" style="gap:6px;margin:4px 0">${ov.map((v,j)=>`<button class="btn${j===sj?" p":""}" data-ov="${i}:${j}">${esc((v.t||"Testo").replace(/\n/g," ").slice(0,14))}</button>`).join("")}<button class="btn" data-ova="${i}">+ Testo / box</button></div>`;
+ if(sj>=0){const v=ov[sj],S1=(f,l)=>selO("o",f,i,sj,v[f],l),N1=(f,x)=>ni("o",f,i,sj,v[f],x),R1=(f,a,b,s)=>ri("o",f,i,sj,v[f],a,b,s);
+  h+=`<div class="card jp" style="margin-top:6px"><label>Testo (Invio per andare a capo)</label><textarea rows="3" data-o="t" data-ci="${i}" data-k="${sj}">${esc(v.t)}</textarea><div class="g3" style="grid-template-columns:1fr 1fr">${fld("Logo nel box",`<select data-o="lg" data-ci="${i}" data-k="${sj}"><option value="">Nessun logo</option><option value="__lega"${v.lg==="__lega"?" selected":""}>Logo della lega</option>${S.cl.map(e=>`<option value="${esc(e.n)}"${e.n===v.lg?" selected":""}>${esc(e.n)}</option>`).join("")}</select>`)}${fld("Animazione del testo",S1("at",OAT))}${fld("Box in entrata",S1("ai",OAI))}${fld("Box in uscita",S1("ao",OAO))}${fld("Inizio (s dalla partenza)",N1("st",'step=".1" min="0"'))}${fld("Durata (s, 0 = fino a fine)",N1("du",'step=".5" min="0"'))}</div>${v.at==="ty"||v.at==="wd"?`<label>Velocità di scrittura</label>${R1("cps",4,60,1)}`:""}<div class="g3"><div><label>Colore testo</label><input type="color" data-o="c" data-ci="${i}" data-k="${sj}" value="${v.c}"></div><div><label>Colore box</label><input type="color" data-o="bc" data-ci="${i}" data-k="${sj}" value="${v.bc}"></div><div><label>Opacità box</label>${R1("bo",0,100,1)}</div></div><label>Dimensione testo</label>${R1("fs",.02,.1,.002)}<label>Larghezza box</label>${R1("w",.25,.98,.01)}<label>Angoli arrotondati</label>${R1("r",0,100,1)}<label><input type="checkbox" data-o="bx" data-ci="${i}" data-k="${sj}"${v.bx?" checked":""}> Mostra il box</label><div class="hint">Trascina il box sull’anteprima per spostarlo.</div><div class="bar" style="margin:6px 0 0"><button class="btn" data-ovd="${i}:${sj}">Duplica</button><button class="btn" data-ovx="${i}:${sj}">Elimina</button></div></div>`}
+ return h+"</div>"}
+function efUI(c,i){const ef=c.ef||[],sj=ef.indexOf(ESELo);const b0=c.b>c.a?c.b:c.a+1,pc=k=>(k-c.a)/(b0-c.a)*100,EC={rp:"#e0a84a",sm:"#9b6bff",fl:"#2ec4b6",zm:"#ff6b9a"};
+ let h=`<div class="sub"><label>Effetti sulla clip</label><div class="hint">① scegli l’effetto ② scegli la durata ③ tocca la linea del tempo: il pin 📍 e il video si posizionano lì ④ premi “Inserisci”. Tocca un blocco colorato per modificarlo.</div><div class="bar" style="gap:6px;margin:4px 0">${["rp","sm","fl","zm"].map(k=>`<button class="btn${k===EFT?" p":""}" data-efk="${k}">${EFN[k]}</button>`).join("")}</div><label>Durata: <b data-efdl>${EFD.toFixed(1)}</b> s</label><input type="range" min=".5" max="6" step=".5" value="${EFD}" data-efd><div data-tl="${i}" style="position:relative;height:44px;margin:10px 0 4px;background:var(--bg);border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:crosshair;overflow:hidden">${ef.map((e,j)=>`<div data-ef="${i}:${j}" title="${EFN[e.k]}" style="position:absolute;top:${j%2?24:4}px;height:16px;left:${pc(e.a)}%;width:${Math.max(2,pc(e.b)-pc(e.a))}%;background:${EC[e.k]};border-radius:4px;outline:${j===sj?"2px solid #fff":"0"};cursor:pointer"></div>`).join("")}<div class="tlh" style="position:absolute;top:0;bottom:0;width:2px;background:#fff;left:0;pointer-events:none"></div><div class="tlp" style="position:absolute;top:-2px;transform:translateX(-50%);pointer-events:none;left:${c._pin!=null?pc(c._pin):0}%;display:${c._pin!=null?"block":"none"}">📍</div></div><div class="bar" style="margin:6px 0"><button class="btn p" data-efi="${i}">📍 Inserisci effetto qui</button></div>`;
+ if(sj>=0){const e=ef[sj],N=f=>ni("e",f,i,sj,e[f],'step=".1" min="0" style="width:90px"'),q=(f,t)=>`<button class="btn" data-eq="${f}:${i}:${sj}">${t}</button>`;
+  h+=`<div class="card jp" style="margin-top:6px"><div class="bar" style="margin:0"><span>${e.k==="rp"?"Rivedi da":"Da"}</span>${N("a")}${q("a","Qui")}<span>${e.k==="rp"?"fino a":"A"}</span>${N("b")}${q("b","Qui")}</div>${e.k==="rp"||e.k==="sm"?`<label>Velocità: ${(+e.sp).toFixed(2)}×</label>${ri("e","sp",i,sj,e.sp,.25,1,.05)}`:""}${e.k==="zm"?`<label>Intensità zoom</label>${ri("e","z",i,sj,e.z,1.1,2,.05)}`:""}${e.k==="fl"?`<label>Filtro</label>${selO("e","fl",i,sj,e.fl,FLN)}`:""}${e.k==="rp"?`<label><input type="checkbox" data-e="bw" data-ci="${i}" data-k="${sj}"${e.bw?" checked":""}> Bianco e nero durante il replay</label><label><input type="checkbox" data-e="lb" data-ci="${i}" data-k="${sj}"${e.lb?" checked":""}> Scritta REPLAY</label><div class="hint">Quando la clip arriva al secondo “fino a”, rivede al rallentatore il tratto precedente.</div>`:""}<div class="bar" style="margin:6px 0 0"><button class="btn" data-efx="${i}:${sj}">Elimina effetto</button></div></div>`}
+ return h+"</div>"}
+function setEDT(i,v,e){const l=L()[i];if(!l)return;const c=l.c;let lt=0;if(v){const du=v.du>0?v.du:l.d-v.st;lt=v.st+Math.min(du/2,.6)}else if(e){const pl=plan(c).sg;if(e.k==="rp"){const q=pl.find(q=>q.rp&&q.rp.id===e.id);if(q)lt=q.o+Math.min(.6,q.d/2)}else{const s=(+e.a+ +e.b)/2,q=pl.find(q=>!q.rp&&s>=q.s&&s<=q.e);if(q)lt=q.o+(s-q.s)/q.sp}}EDT=l.s+cl01(lt,0,l.d-.02)}
+function addOv(i){const c=CL[i],ac=S.sty.ac,v={id:nid(),t:"Il tuo testo qui",lg:"",x:.5,y:.82,w:.9,fs:.05,c:lum(ac)>150?"#000000":"#ffffff",bx:1,bc:ac,bo:92,r:35,st:.3,du:0,ai:"up",ao:"fo",at:"ty",cps:22};(c.ov=c.ov||[]).push(v);OSELo=v;ESELo=null;setEDT(i,v);renderB()}
+function addEf(i,k){const c=CL[i],vd=$(`[data-vi="${i}"]`),b=c.b>c.a?c.b:c.a+1;let t=c._pin!=null?c._pin:vd?vd.currentTime:c.a;if(!(t>c.a&&t<b))t=Math.min(b,c.a+2);const e={id:nid(),k};
+ if(k==="rp"){e.b=+t.toFixed(1);e.a=+Math.max(c.a,t-EFD).toFixed(1);e.sp=.5;e.bw=1;e.lb=1}else{e.a=+t.toFixed(1);e.b=+Math.min(b,t+EFD).toFixed(1);if(k==="sm")e.sp=.5;if(k==="fl")e.fl="bw";if(k==="zm")e.z=1.4}
+ (c.ef=c.ef||[]).push(e);c._ek=(c._ek||0)+1;ESELo=e;OSELo=null;setEDT(i,null,e);renderB()}
+function bofClick(e){const d=e.target.dataset,P2=s=>s.split(":").map(Number);
+ if(d.ova!==undefined){addOv(+d.ova);return 1}
+ if(d.ov!==undefined){const[i,j]=P2(d.ov),v=CL[i].ov[j];OSELo=OSELo===v?null:v;ESELo=null;if(OSELo)setEDT(i,v);else EDT=null;renderB();return 1}
+ if(d.ovd!==undefined){const[i,j]=P2(d.ovd),v=CL[i].ov[j],n={...v,id:nid(),x:Math.min(1,v.x+.04),y:Math.min(1,v.y+.05)};CL[i].ov.push(n);OSELo=n;setEDT(i,n);renderB();return 1}
+ if(d.ovx!==undefined){const[i,j]=P2(d.ovx);CL[i].ov.splice(j,1);OSELo=null;EDT=null;renderB();return 1}
+ if(d.efa!==undefined){addEf(+d.efa.slice(2),d.efa.slice(0,2));return 1}
+ if(d.ef!==undefined){const[i,j]=P2(d.ef),v=CL[i].ef[j];ESELo=ESELo===v?null:v;OSELo=null;if(ESELo)setEDT(i,null,v);else EDT=null;renderB();return 1}
+ if(d.efx!==undefined){const[i,j]=P2(d.efx);CL[i].ef.splice(j,1);CL[i]._ek=(CL[i]._ek||0)+1;ESELo=null;EDT=null;renderB();return 1}
+ if(d.eq!==undefined){const[f,i,j]=d.eq.split(":"),vd=$(`[data-vi="${i}"]`),ef=CL[i].ef[j];if(vd){ef[f]=+vd.currentTime.toFixed(1);CL[i]._ek=(CL[i]._ek||0)+1;setEDT(+i,null,ef);renderB()}return 1}
+ return 0}
+$("#cl").addEventListener("input",e=>{const t=e.target,d=t.dataset;if(d.ci===undefined)return;const c=CL[d.ci],isO=d.o!==undefined,v=isO?(c.ov||[])[d.k]:(c.ef||[])[d.k],f=isO?d.o:d.e;if(!v)return;v[f]=t.type==="checkbox"?+t.checked:t.type==="number"||t.type==="range"?+t.value:t.value;if(!isO)c._ek=(c._ek||0)+1;if(isO?f==="st"||f==="du":["a","b","sp"].includes(f))setEDT(+d.ci,isO?v:null,isO?null:v);idle()});
+$("#cl").addEventListener("change",e=>{const t=e.target;if(t.dataset.ci!==undefined&&(t.tagName==="SELECT"||t.type==="checkbox"))renderB()});
+const BP=$("#bp"),bpt=e=>{const r=BP.getBoundingClientRect();return[(e.clientX-r.left)*BP.width/r.width,(e.clientY-r.top)*BP.height/r.height]},bhit=e=>{const[px,py]=bpt(e);return[...OB].reverse().find(b=>px>=b.x0&&px<=b.x1&&py>=b.y0&&py<=b.y1)};
+BP.onpointerdown=e=>{if(run)return;const h=bhit(e);if(!h)return;const[px,py]=bpt(e);OSELo=h.ov;ESELo=null;if(EDT==null)EDT=0;bdrag={v:h.ov,dx:px-h.ov.x*BP.width,dy:py-h.ov.y*BP.height};BP.setPointerCapture(e.pointerId);frame(EDT,1)};
+BP.onpointermove=e=>{if(bdrag){const[px,py]=bpt(e);bdrag.v.x=cl01((px-bdrag.dx)/BP.width,0,1);bdrag.v.y=cl01((py-bdrag.dy)/BP.height,0,1);frame(EDT,1)}else if(!run)BP.style.cursor=bhit(e)?"move":"default"};
+BP.onpointerup=()=>{if(bdrag){bdrag=null;renderB()}};
+$("#bt").onclick=e=>{const q=e.target.closest("[title]");if(!q||run)return;const l=L()[+q.title-1];if(l){EDT=l.s+Math.min(.5,l.d/2);idle()}};
+$("#et").onclick=e=>{const k=e.target.dataset.et;if(!k)return;$$("#et button").forEach(b=>b.classList.toggle("on",b===e.target));$$(".ep").forEach(p=>p.classList.toggle("on",p.id==="ep_"+k))};
+
+/* ---- editor grafiche ---- */
+const TT={cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"],ris:["Risultati","Giornata 4"]};
+const gsub=s=>S.gs?String(s).replace(/^(giornata\s+)\d+/i,"$1"+S.gs).replace(/^(dopo\s+)\d+/i,"$1"+S.gs):s;
+function sync(ch){const T=gT(),B=BS(T);if(ch){const q=TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=gsub(q[1])}
+ $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";$("#marw").style.display=B==="mar"?"block":"none";marUI();
+ if(B==="bo"){$("#gdl").textContent=T==="bo"?"Goal (Marcatore;Squadra;Minuto)":"Righe (Testo;Sottotesto;Valore)";$("#gd").value=S[T]||""}
+ ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcFill();lyUI()}
+function sty(){["bg","ac","tx"].forEach(k=>$("#c"+k).value=S.sty[k]);$("#ss").checked=S.sty.str;$("#dk").value=S.sty.dk;$("#po").value=S.sty.po;$("#gf").value=S.sty.fmt}
+Object.entries(PR).forEach(([k,v])=>{const b=document.createElement("button");b.className="btn";b.textContent=k;b.onclick=()=>{Object.assign(S.sty,{bg:v[0],ac:v[1],tx:v[2]});sty();save();draw()};$("#pr").append(b)});
+["bg","ac","tx"].forEach(k=>$("#c"+k).oninput=e=>{S.sty[k]=e.target.value;save();draw()});
+$("#ss").onchange=e=>{S.sty.str=e.target.checked;save();draw()};$("#dk").oninput=e=>{S.sty.dk=+e.target.value;save();draw()};
+$("#gf").onchange=e=>{S.sty.fmt=e.target.value;save();draw()};$("#gt").onchange=()=>{SEL=null;renderGt();sync(true);draw()};
+["gh","gs"].forEach(i=>$("#"+i).oninput=draw);$("#gd").oninput=e=>{S[$("#gt").value]=e.target.value;save();draw()};
+$("#ph").onchange=e=>{const f=e.target.files[0];if(f){BG=URL.createObjectURL(f);draw()}};
+
+function stripes(x,W,H,fade,col){for(let i=0;i<Math.floor(W/30);i++){const a=.2+.8*Math.abs(Math.sin(i*.9)*Math.cos(i*.31)),g=x.createLinearGradient(0,0,0,H*fade);g.addColorStop(0,rgba(col,a));g.addColorStop(1,rgba(col,0));x.fillStyle=g;x.fillRect(i*30+4,0,22,H*fade)}}
+function stars(x,W,H,ly){sd=7;const st=S.sty,col=ly.c||st.tx,raw=im(S.raw.__lega);let m;
+ if(raw)m=process(raw,"s");else{m=document.createElement("canvas");m.width=360;m.height=190;const q=m.getContext("2d");q.fillStyle="#fff";q.textAlign="center";q.font="800 130px sans-serif";q.fillText("LEGA",180,118);q.font="700 34px sans-serif";q.fillText("AMATORI TREVISO",180,170)}
+ const w=m.width,h=m.height,p=m.getContext("2d").getImageData(0,0,w,h).data,on=(a,b)=>a>=0&&b>=0&&a<w&&b<h&&p[(b*w+a)*4+3]>128,E=[],I=[];
+ for(let b=0;b<h;b+=2)for(let a=0;a<w;a+=2){if(!on(a,b))continue;if(!on(a-3,b)||!on(a+3,b)||!on(a,b-3)||!on(a,b+3))E.push([a,b]);else if(a%10===0&&b%10===0)I.push([a,b])}
+ const K=[],d0=Math.max(w,h)/46;E.forEach(e=>{if(K.every(k=>Math.hypot(k[0]-e[0],k[1]-e[1])>d0))K.push(e)});
+ const s=Math.min(W*.62/w,H*.34/h)*ly.s,ox=ly.x*W-w*s/2,oy=ly.y*H-h*s/2,u=W/1080;
+ x.globalAlpha=ly.o/100;x.strokeStyle=rgba(col,.28);x.lineWidth=1.3*u;
+ K.forEach((a,i)=>K.forEach((b,j)=>{if(j>i&&Math.hypot(a[0]-b[0],a[1]-b[1])<d0*1.9){x.beginPath();x.moveTo(ox+a[0]*s,oy+a[1]*s);x.lineTo(ox+b[0]*s,oy+b[1]*s);x.stroke()}}));
+ [...K,...I].forEach((a,i)=>{const px=ox+a[0]*s,py=oy+a[1]*s,r=(i<K.length?1.6+rn()*2.4:.9+rn()*.8)*u,g=x.createRadialGradient(px,py,0,px,py,r*5);
+  g.addColorStop(0,rgba(col,.6));g.addColorStop(1,rgba(col,0));x.fillStyle=g;x.fillRect(px-r*5,py-r*5,r*10,r*10);
+  x.fillStyle=col;x.beginPath();x.arc(px,py,r,0,7);x.fill();
+  if(r>3.4*u){x.strokeStyle=rgba(col,.7);x.lineWidth=u;x.beginPath();x.moveTo(px-r*4,py);x.lineTo(px+r*4,py);x.moveTo(px,py-r*4);x.lineTo(px,py+r*4);x.stroke();x.strokeStyle=rgba(col,.28);x.lineWidth=1.3*u}});x.globalAlpha=1;LB.push({id:ly.id,x0:ox,y0:oy,x1:ox+w*s,y1:oy+h*s})}
+
+/* ---- testi uniformi: stesso corpo per tutti, a capo solo dove serve ---- */
+function wrapName(x,t,mw){if(x.measureText(t).width<=mw)return[t];const i=t.indexOf(" - ");if(i>0){const a=t.slice(0,i),b=t.slice(i+3);if(x.measureText(a).width<=mw&&x.measureText(b).width<=mw)return[a,b]}
+ const w=t.split(" ");let best=null,bw=1e9;for(let k=1;k<w.length;k++){const a=w.slice(0,k).join(" "),b=w.slice(k).join(" "),m=Math.max(x.measureText(a).width,x.measureText(b).width);if(m<bw){bw=m;best=[a,b]}}return best&&bw<=mw?best:null}
+function fitNames(x,ns,wt,f0,mw,wrap,F,fmin){fmin=fmin||14;let f=Math.floor(f0);for(;;){x.font=`${wt} ${f}px ${F}`;const l=ns.map(n=>x.measureText(n).width<=mw?[n]:(wrap?wrapName(x,n,mw):null));if(l.every(Boolean)||f<=fmin)return{f,l:l.map((q,i)=>q||[ns[i]])};f--}}
+const marList=()=>{const a=S.mar||[],n=+S.marN||0;if(!n||n>=a.length)return a;let k=n;if(S.marTie)while(k<a.length&&a[k].g===a[k-1].g)k++;return a.slice(0,k)};
+function marUI(){const el=$("#marn");if(!el)return;const a=S.mar||[],n=+S.marN||0,sh=marList().length;if(document.activeElement!==el)el.value=n||"";$("#mart").checked=!!S.marTie;
+ let h=a.length?`Nella grafica: ${sh} marcatori su ${a.length}.`:"Carica l’Excel dei marcatori (scheda Dati e TOTW).";
+ if(n&&n<a.length&&!S.marTie){const g=a[n-1].g,tot=a.filter(e=>e.g===g).length,dentro=a.slice(0,n).filter(e=>e.g===g).length;if(tot>dentro)h+=` ⚠ L’ultimo mostrato ha ${g} gol: altri ${tot-dentro} a pari merito restano fuori.`}
+ $("#marh").textContent=h}
+function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0=$("#gt").value,T=BS(T0),L=W>H,m=64,u=W/1080;
+ if(c.width!==W||c.height!==H){c.width=W;c.height=H}
+ const x=c.getContext("2d"),F='"Inter Tight",system-ui,sans-serif',mu=rgba(st.tx,.6),tt=$("#gh").value,sb=$("#gs").value;
+ LB=[];x.fillStyle=st.bg;x.fillRect(0,0,W,H);const ph=im(BG);
+ if(ph){const r=Math.max(W/ph.naturalWidth,H/ph.naturalHeight),w=ph.naturalWidth*r,h=ph.naturalHeight*r;x.globalAlpha=st.po/100;x.drawImage(ph,(W-w)/2,(H-h)/2,w,h);x.globalAlpha=1;x.fillStyle=`rgba(0,0,0,${st.dk/100*st.po/100})`;x.fillRect(0,0,W,H)}
+ if(T==="st"){const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,rgba(st.bg,.9));g.addColorStop(.45,rgba(st.bg,0));g.addColorStop(.78,rgba(st.ac,.4));g.addColorStop(1,rgba(st.bg,.95));x.fillStyle=g;x.fillRect(0,0,W,H);sd=3;for(let i=0;i<220;i++){x.fillStyle=rgba(st.tx,.25+rn()*.5);x.beginPath();x.arc(rn()*W,rn()*H*.8,(.4+rn()*1.1)*u,0,7);x.fill()}}
+ if(st.str&&T!=="st")stripes(x,W,H,.34,st.ac);if(T==="mc")mcg(x,W,H);drawLy(x,W,H,1,st);
+ const fit=(t,mx,w,wt)=>{let s=mx;do{x.font=`${wt} ${s}px ${F}`;s-=4}while(x.measureText(t).width>w&&s>28);return s+4};
+ x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle=st.tx;
+ if(T==="cop"){const ls=tt.split("|"),s=Math.min(...ls.map(t=>fit(t,230*u,W-2*m,800))),y0=H*(L?.5:.58);TX(x,W,H,ls,m,y0,s,"left","tt",st.tx,800,1.02,F);TX(x,W,H,[sb],m,y0+(ls.length-1)*s*1.02+s*.55,s*.32,"left","ts",st.ac,600,1,F)}
+ else if(T==="mc")mcv(x,W,H,u,F,fit);
+ else if(T==="st"){x.textAlign="center";const g=x.createLinearGradient(0,H*.6,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.65)");x.fillStyle=g;x.fillRect(0,H*.6,W,H*.4);const sl=LY().find(l=>l.k==="stars");if(sl)stars(x,W,H,sl);
+  const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
+ else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
+  let it,hd,cw=78;if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
+  if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:i===0,c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
+  else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:i===0,c:[e.g]}))}
+  else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:p.n||"Nome Cognome",sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
+  const top=ty+170,n=Math.max(it.length,1),rh=Math.min(84,(H-top-70)/n),fs=rh*.42,R=W-m,hasL=it.some(e=>logo(e.lg)),nx=m+54+(hasL?rh*.72:0),nc=hd.length;
+  x.textAlign="right";x.font=`600 ${Math.max(20,fs*.7)}px ${F}`;x.fillStyle=mu;hd.forEach((h,i)=>x.fillText(h,R-(nc-1-i)*cw,top-16));
+  const mw=R-nc*cw-nx-20,NF=fitNames(x,it.map(e=>e.n),600,fs*(T==="cl"?.92:1),mw,!it.some(e=>e.sub),F,16);let SF=fs*.66;while(it.some(e=>{if(!e.sub)return 0;x.font=`400 ${SF}px ${F}`;return x.measureText(e.sub).width>mw})&&SF>12)SF--;
+  it.forEach((e,i)=>{const y=top+i*rh,tc=e.hl?(lum(st.ac)>150?"#000":"#fff"):st.tx;
+   if(e.hl){x.fillStyle=st.ac;x.fillRect(m-18,y,W-2*m+36,rh-6)}else{x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,y+rh-6,W-2*m+36,1.5)}
+   x.fillStyle=tc;x.textAlign="left";x.font=`600 ${fs}px ${F}`;x.fillText(i+1,m,y+rh*.62);
+   const l=logo(e.lg);if(l)dl(x,l,m+54+rh*.36,y+(rh-6)/2,rh*.66);
+   const ls=NF.l[i];x.font=`600 ${NF.f}px ${F}`;
+   if(e.sub){x.fillText(e.n,nx,y+rh*.46);x.font=`400 ${SF}px ${F}`;x.fillStyle=e.hl?tc:mu;x.fillText(e.sub,nx,y+rh*.46+fs*.8)}
+   else{const lh=NF.f*1.08,b0=y+(rh-6)/2-(ls.length-1)*lh/2+NF.f*.37;ls.forEach((q,k)=>x.fillText(q,nx,b0+k*lh))}
+   x.textAlign="right";e.c.forEach((v,k)=>{const last=k===e.c.length-1;let f2=fs*(last?.95:.85),wt=last?800:400;x.font=`${wt} ${f2}px ${F}`;while(x.measureText(v).width>cw-14&&f2>14){f2--;x.font=`${wt} ${f2}px ${F}`}x.fillStyle=tc;x.fillText(v,R-(e.c.length-1-k)*cw,y+rh*.62)})})}}
+ x.textAlign="left";drawLy(x,W,H,0,st);
+ if(!EXP){const b=LB.find(q=>q.id===SEL);if(b){x.save();x.strokeStyle="#2f7bff";x.lineWidth=3*u;x.setLineDash([12*u,8*u]);x.strokeRect(b.x0-6*u,b.y0-6*u,b.x1-b.x0+12*u,b.y1-b.y0+12*u);x.restore()}} if($("#l").classList.contains("on"))thumbs()}
+
+const P=a=>a[Math.floor(Math.random()*a.length)],FT="\n\n#ForPlayersByPlayers ⚽💚🩵";
+function capt(){const T0=$("#gt").value,T=BS(T0),tt=$("#gh").value.replace(/\|/g," "),sb=$("#gs").value.trim(),gm=sb.match(/giornata\s*\d+/i),gi=gm?"la "+gm[0].toLowerCase():"l’ultima giornata",pl=n=>n===1?"punto":"punti",wg=gm?"della "+gm[0].toLowerCase():"della settimana";let t="";
+ if(T==="cl"&&S.cl.length){const c=S.cl,a=c[0],b=c[1],at=[...c].sort((p,q)=>q.gf-p.gf)[0],df=[...c].sort((p,q)=>p.gs-q.gs)[0],gap=b?a.pt-b.pt:0,inv=c.filter(e=>e.p===0&&e.g>0&&e!==a),
+  o1=P([`Dopo ${gi} ${a.n} comanda la classifica con ${a.pt} punti`,`${a.n} si prende la vetta dopo ${gi}: ${a.pt} punti`,`Aggiornamento classifica: ${a.n} in testa con ${a.pt} punti`]),
+  o2=!b?".":gap===0?`, ma ${b.n} è a pari punti e non ha intenzione di mollare.`:gap<=3?`, con ${b.n} lì dietro a ${gap} ${pl(gap)}. La sfida è apertissima!`:`, ${gap} lunghezze su ${b.n}. Chi riuscirà a ricucire lo strappo?`,
+  o3=at===df?` ${at.n} ha il miglior attacco (${at.gf} gol) e la miglior difesa (${df.gs} subiti): squadra da battere.`:P([` Attacco più prolifico: ${at.n} con ${at.gf} gol. Difesa più solida: ${df.n}, solo ${df.gs} subiti.`,` ${at.n} fa festa con ${at.gf} gol, ${df.n} blinda la porta con appena ${df.gs} subiti.`]);
+  t=o1+o2+o3+(inv.length?` ${inv.map(e=>e.n).join(" e ")} ${inv.length>1?"restano":"resta"} imbattut${inv.length>1?"e":"a"}.`:"")+P(["\n\nTutte le posizioni nella grafica. Chi sale e chi scende? Ditecelo nei commenti.","\n\nScorrete per vedere tutte le posizioni: secondo voi chi vince il titolo?","\n\nTutte le squadre nella grafica. Per chi tifate?"])}
+ else if(T==="mar"&&S.mar.length){const a=S.mar[0],b=S.mar[1],gp=b?a.g-b.g:0;t=P([`${a.n} (${a.sq}) comanda la classifica marcatori con ${a.g} gol`,`Capocannoniere: ${a.n} (${a.sq}) a quota ${a.g} gol`,`Il bomber del momento è ${a.n} (${a.sq}): ${a.g} gol`])+(b?(gp===0?`, ma ${b.n} (${b.sq}) è a pari gol.`:`, ${b.n} (${b.sq}) insegue a ${gp} gol.`):".")+P([" Chi riuscirà a raggiungerlo?"," Gli attaccanti sono avvisati."," La corsa al titolo di capocannoniere è aperta!"])+"\n\nTutti i marcatori nella grafica."}
+ else if(T==="tw"){const sl=SL(),ps=S.tw2.map((p,i)=>({...p,r:sl[i]})).filter(p=>p.n),at=ps.filter(p=>p.r==="Attaccante"),cnt={};ps.forEach(p=>{if(p.t)cnt[p.t]=(cnt[p.t]||0)+1});const tp=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0],tm=tp&&tp[1]>1?`${tp[0]} piazza ${tp[1]} giocatori nell’undici ideale.`:"";
+  t=`Il team of the week ${wg} è servito!`+(at.length?` Davanti ${at.map(p=>p.n).join(" e ")}${at.length>1?" fanno paura":" fa paura"}${tm?", e "+tm:"."}`:tm?" "+tm:"")+P(["\n\nSiete d’accordo con la formazione? Scrivetelo nei commenti.","\n\nChi avreste scelto voi? Dite la vostra nei commenti.","\n\nManca qualcuno che meritava un posto? Taggatelo!"])}
+ else if(T==="bo"){const r=rows(S[T0]||"").filter(a=>a[0]&&a[0]!=="Nome Cognome");t=`I migliori goal ${wg}`+(r.length?`: ${r.slice(0,4).map(a=>a[0]+(a[1]&&a[1]!=="Squadra"?" ("+a[1]+")":"")).join(", ")}${r.length>4?" e non solo":""}.`:".")+P([" Guardate i video e votate il vostro preferito nei commenti!"," Quale vi ha fatto saltare dal divano? Votate nei commenti!"," Il più bello secondo voi? Scrivetelo qui sotto!"])}
+ else if(T==="ris"){const r=parseRes(S.res||""),tg=r.reduce((q,e)=>q+e.h+e.a,0),bg=[...r].sort((p,q)=>q.h+q.a-p.h-p.a)[0];t=`Tutti i risultati ${wg}!`+(r.length?` ${r.length} ${r.length===1?"partita":"partite"} e ${tg} gol in totale.`+(bg&&bg.h+bg.a>=5?` Il match più ricco di reti: ${bg.hn} ${bg.h}-${bg.a} ${bg.an}.`:""):"")+P(["\n\nCome sono andate per la vostra squadra? Scrivetelo nei commenti!","\n\nQuale risultato vi ha sorpreso di più? Dite la vostra!","\n\nTutti i punteggi nella grafica: avete visto qualche sorpresa?"])}
+ else if(T==="mc"){const h=S.mt.h||"Casa",a=S.mt.a||"Ospite";t=(S.mt.sc?`Full time: ${h} ${S.mt.sc} ${a}`:`${h} vs ${a}`)+`${S.mt.d?", "+S.mt.d:""}${S.mt.v?" · "+S.mt.v:""}. `+(S.mt.sc?P(["Grazie a tutti per averci seguito!","Cosa ne pensate del match? Dite la vostra nei commenti!"]):P(["Tutti a sostenere la propria squadra!","Venite a riempire gli spalti: si gioca!","Chi la spunterà? Dite la vostra nei commenti."]))}
+ else if(T==="st")t=`Siamo tornati, carichi per ${/campionato/i.test(tt)?"il "+tt.toLowerCase():"la nuova stagione"}! ${S.cl.length||"Tante"} squadre pronte a contendersi la corona. Chi la spunterà?`;
+ else t=`${tt}${sb?" · "+sb:""}. `+P(["Non perdetevelo!","Dateci un’occhiata e fateci sapere cosa ne pensate.","Fateci sapere cosa ne pensate nei commenti!"]);
+ $("#gc").value=t+FT}
+$("#mc").onclick=capt;
+$("#cc").onclick=()=>{try{navigator.clipboard.writeText($("#gc").value)}catch(e){$("#gc").select();document.execCommand("copy")}};
+$("#dl").onclick=()=>{EXP=1;draw();$("#cv").toBlob(b=>{const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=$("#gt").value+".png";a.click();EXP=0;draw()})};
+
+
+/* ---- editor: livelli, annulla, campetto, match day ---- */
+let LB=[],SEL=null,EXP=0,hist=[],hi=-1,drag=null,rq=0;
+const gT=()=>$("#gt").value,nid=()=>"l"+Date.now().toString(36)+Math.random().toString(36).slice(2,4);
+const defLy=T=>{const T0=T;T=BS(T);const a=[];if(T==="st")a.push({id:"stars",k:"stars",nm:"Logo a stelle",x:.5,y:.25,s:1,o:100,c:"",b:0});
+ else{a.push({id:"logo",k:"logo",nm:"Logo lega",x:T==="mc"?.5:.89,y:.075,s:T==="mc"?.16:.11,o:100,c:"",b:0},{id:"ft",k:"text",nm:"Piè di pagina",t:"Lega Amatori Calcio Treviso",x:.5,y:.975,s:.02,o:60,c:"",b:0});
+  if(["cl","mar","bo","ris"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
+ if(T==="mc"){const[W,H]=S.sty.fmt.split("x").map(Number),cg=(S.cg||[]).find(c=>c.id===T0),b=BAND();a.unshift(b,...MCL(b,W,H,cg&&cg.ft))}return[...a,...TL()]};
+const TL=()=>[{id:"tt",k:"tt",nm:"Titolo",x:null,y:null,s:1,o:100,c:"",b:0},{id:"ts",k:"ts",nm:"Sottotitolo",x:null,y:null,s:1,o:100,c:"",b:0}],BAND=()=>({id:"band",k:"band",nm:"Fascia loghi",x:.5,y:.735,s:.84,h:.176,r:18,o:90,c:"",b:1});
+const LY=()=>S.ly[gT()]||(S.ly[gT()]=defLy(gT())),SELL=()=>LY().find(q=>q.id===SEL),rd=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})};
+const snap=()=>JSON.stringify({sty:S.sty,ly:S.ly,tw2:S.tw2,tf:S.tf,twv:S.twv,mt:S.mt,gh:$("#gh").value,gs:$("#gs").value,T:gT()});
+const cm=()=>{const s=snap();if(s===hist[hi])return;hist=hist.slice(0,hi+1);hist.push(s);if(hist.length>80)hist.shift();hi=hist.length-1};
+function rest(s){const o=JSON.parse(s);Object.assign(S,{sty:o.sty,ly:o.ly,tw2:o.tw2,tf:o.tf,twv:o.twv,mt:o.mt});$("#gt").value=o.T;$("#gh").value=o.gh;$("#gs").value=o.gs;sty();sync(false);renderTW();save();draw()}
+const undo=()=>{if(hi>0)rest(hist[--hi])},redo=()=>{if(hi<hist.length-1)rest(hist[++hi])};
+function lg(l){const raw=im(S.raw.__lega);if(!raw)return null;if(!l.c)return logo("__lega");const k="__t"+l.c+S.raw.__lega.length+S.tol;
+ return PC[k]||(PC[k]=(()=>{const m=process(raw,"s"),c=document.createElement("canvas");c.width=m.width;c.height=m.height;const q=c.getContext("2d");q.drawImage(m,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
+function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==="ts"||!!l.b!==!!b)return;x.save();x.globalAlpha=l.o/100;let bx;
+ if(l.k==="text"||l.k==="mt"||l.k==="mname"){const fs=l.s*W;let t=l.k==="text"?l.t||"":l.k==="mname"?(S.mt[l.side]||(l.side==="h"?"Casa":"Ospite")):mtT(l);if(!t){if(EXP){x.restore();return}t=l.nm||"";x.globalAlpha*=.3}
+  x.font=`${l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):700} ${fs}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||(l.k==="text"?st.tx:mcCol(l));const w=x.measureText(t).width;x.fillText(t,l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
+ else if(l.k==="mlogo"){const z=l.s*W,cx=l.x*W,cy=l.y*H,nm=S.mt[l.side]||"",lc=logo(nm);
+  if(lc){const r=Math.min(z/lc.width,z/lc.height),w=lc.width*r,h=lc.height*r;x.drawImage(lc,cx-w/2,cy-h/2,w,h);bx=[cx-w/2,cy-h/2,w,h]}
+  else{x.fillStyle="rgba(255,255,255,.2)";x.beginPath();x.arc(cx,cy,z*.44,0,7);x.fill();x.fillStyle=mcCol(l);x.font=`800 ${z*.4}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText((nm||"?").slice(0,2).toUpperCase(),cx,cy);bx=[cx-z/2,cy-z/2,z,z]}}
+  else if(l.k==="band"){const w=l.s*W,h=l.h*W,x0=l.x*W-w/2,y0=l.y*H-h/2;x.fillStyle=l.c||st.ac;x.beginPath();x.roundRect(x0,y0,w,h,l.r/100*h/2);x.fill();bx=[x0,y0,w,h]}
+ else{const c=l.k==="img"?im(l.src):lg(l),z=l.s*W;if(c){const w=c.width||c.naturalWidth,h=c.height||c.naturalHeight,r=z/Math.max(w,h);x.drawImage(c,l.x*W-w*r/2,l.y*H-h*r/2,w*r,h*r);bx=[l.x*W-w*r/2,l.y*H-h*r/2,w*r,h*r]}else bx=[l.x*W-z/2,l.y*H-z/2,z,z]}
+ x.restore();LB.push({id:l.id,x0:bx[0],y0:bx[1],x1:bx[0]+bx[2],y1:bx[1]+bx[3]})})}
+const FM=["2-3-1","3-2-1","2-2-2","3-1-2","1-3-2","2-1-3"];
+const SL=()=>{const[d,m,a]=S.tf.split("-").map(Number);return["Portiere",...Array(d).fill("Difensore"),...Array(m).fill("Centrocampista"),...Array(a).fill("Attaccante")]};
+const wk=()=>{const names=S.cl.map(e=>e.n).sort((a,b)=>b.length-a.length),o={};
+ if((S.res||"").trim()){S.res.split("\n").forEach(l=>{const m=l.trim().replace(/\s+/g," ").match(/^(.+?) (\d+) ?[-–:] ?(\d+) (.+)$/);if(!m)return;const h=names.find(n=>m[1].toLowerCase().endsWith(n.toLowerCase())),a=names.find(n=>m[4].toLowerCase().startsWith(n.toLowerCase()));if(h&&a){(o[h]=o[h]||{g:0,gs:0}).g++;o[h].gs+=+m[3];(o[a]=o[a]||{g:0,gs:0}).g++;o[a].gs+=+m[2]}});if(Object.keys(o).length)return{o,src:"risultati inseriti"}}
+ {const w=wd(S.gs);if(w&&w.pc.cl!=null){w.tm.forEach(e=>{o[e.n]={g:e.g,gs:e.gs}});if(Object.keys(o).length)return{o,src:"differenza tra la classifica della giornata "+S.gs+" e la "+w.pc.cl}}}
+ return null};
+const rank=()=>{const d=S.dsc||{},aw=d.aw||{},w=wk();if(w)return S.cl.filter(e=>w.o[e.n]).map(e=>({...e,wg:w.o[e.n].g,wgs:w.o[e.n].gs})).sort((a,b)=>a.wgs/a.wg-b.wgs/b.wg||(aw[a.n]||0)-(aw[b.n]||0));return[...S.cl].sort((a,b)=>a.gs/(a.g||1)-b.gs/(b.g||1))};
+function sugg(){return sugg0()+twModBlock()+twAttBlock()+twMidBlock()+fvBlock("fvt",0)}
+function sugg0(){if(!S.cl.length)return'<p class="hint">Carica l’Excel della classifica (scheda Dati e TOTW) per avere i suggerimenti.</p>';const d=S.dsc||{am:{},sq:{}},aw=d.aw||{},w=wk();
+ const hd=w?`Suggerimenti per portiere e difensori sui dati della sola giornata (${w.src}): meno gol subiti, poi meno ammonizioni della settimana. Il sito non pubblica i rossi.`:`<span style="color:#e0a84a">Non ho i dati della settimana, quindi uso quelli complessivi. Scrivi qui sopra i risultati della giornata, oppure assegna alla giornata precedente e a questa gli Excel della classifica (scheda Dati e TOTW): confronterò le due versioni.</span>`;
+ return'<div class="hint" style="margin-top:10px">'+hd+'</div>'+rank().slice(0,5).map((e,i)=>w?`<div class="hint">${i+1}. <b>${esc(e.n)}</b> · ${e.wgs} gol subiti in ${e.wg} ${e.wg===1?"gara":"gare"}${S.dsc?` · ${aw[e.n]||0} ammoniti`:""}</div>`:`<div class="hint">${i+1}. <b>${esc(e.n)}</b> · ${e.gs} gol subiti in ${e.g} gare (totale)</div>`).join("")+'<button class="btn" id="tdf" style="margin-top:6px">Assegna le prime squadre a portiere e difensori</button>'}
+function renderTW(){$("#tres").value=S.res||"";$("#tf").innerHTML=FM.map(f=>`<option${f===S.tf?" selected":""}>${f}</option>`).join("");$("#tv").value=S.twv;
+ const tn=[...new Set([...S.cl.map(e=>e.n),...S.tw2.map(p=>p.t).filter(Boolean)])];$("#tn").innerHTML=tn.map(n=>`<option value="${esc(n)}">`).join("");
+ $("#twr").innerHTML=SL().map((r,i)=>{const p=S.tw2[i];return `<div style="display:grid;grid-template-columns:90px 1fr 1fr auto auto;gap:6px;margin-top:6px;align-items:center"><small>${r}</small><input data-ti="${i}" value="${esc(p.n)}" placeholder="Nome Cognome"><select data-ts="${i}"><option value="">Squadra</option>${tn.map(n=>`<option${n===p.t?" selected":""}>${esc(n)}</option>`).join("")}</select><label class="btn" style="margin:0;padding:6px 8px">${p.ph?"✓ Foto":"Foto"}<input type="file" accept="image/*" data-tp="${i}" hidden></label>${p.ph?`<button class="btn" data-tx="${i}" style="padding:6px 8px">×</button>`:"<span></span>"}</div>`}).join("");$("#tsg").innerHTML=sugg()}
+function TX(x,W,H,ls,px,py,fs,al,id,col,wt,lh,F){const l=LY().find(q=>q.id===id);if(!l)return;const f=fs*(l.s||1),ax=l.x==null?px:l.x*W,ay=l.y==null?py:l.y*H;let w=0;
+ x.save();x.globalAlpha=(l.o??100)/100;x.fillStyle=l.c||col;x.font=`${wt} ${f}px ${F}`;x.textAlign=al;x.textBaseline="alphabetic";ls.forEach((t,i)=>{x.fillText(t,ax,ay+i*f*lh);w=Math.max(w,x.measureText(t).width)});x.restore();
+ const x0=al==="center"?ax-w/2:ax;LB.push({id,x0,y0:ay-f*.85,x1:x0+w,y1:ay+(ls.length-1)*f*lh+f*.2,ax:px/W,ay:py/H})}
+function pitch(x,W,H,y0,m,F){const u=W/1080,st=S.sty,X0=m,w=W-2*m,h=H-y0-70*u;
+ x.save();x.strokeStyle=rgba(st.tx,.5);x.lineWidth=3*u;x.beginPath();x.roundRect(X0,y0,w,h,24*u);x.stroke();x.beginPath();x.moveTo(X0,y0+h/2);x.lineTo(X0+w,y0+h/2);x.stroke();x.beginPath();x.arc(X0+w/2,y0+h/2,Math.min(w,h)*.11,0,7);x.stroke();
+ const bw=w*.5,bh=h*.15,gw=w*.24,gh=h*.06;x.strokeRect(X0+(w-bw)/2,y0,bw,bh);x.strokeRect(X0+(w-gw)/2,y0,gw,gh);x.strokeRect(X0+(w-bw)/2,y0+h-bh,bw,bh);x.strokeRect(X0+(w-gw)/2,y0+h-gh,gw,gh);x.restore();
+ const[d,mm,a]=S.tf.split("-").map(Number),SLs=SL();let k=1;const R=[[0]];[d,mm,a].forEach(n=>{if(n){R.push(Array.from({length:n},(_,j)=>k+j));k+=n}});const nrr=R.length,kk=Math.max(.45,Math.min(1.45,(h/nrr-8*u)/(176*u))),stp=nrr>1?(h-(169*kk+6)*u-6*u)/(nrr-1):0;
+ R.forEach((r,ri)=>{const py=y0+6*u+(nrr-1-ri)*stp+54*u*kk;r.forEach((i,j)=>{const q=S.tw2[i],px=X0+w*(j+.5)/r.length,cw=96*u*kk,ch=108*u*kk,nm=q.n||"Nome Cognome",l=logo(q.t),ph=im(q.ph),rr=[22*u,22*u,10*u,10*u];
+  x.save();x.beginPath();x.roundRect(px-cw/2,py-ch/2,cw,ch,rr);x.clip();const g=x.createLinearGradient(0,py-ch/2,0,py+ch/2);g.addColorStop(0,rgba(st.ac,.95));g.addColorStop(1,rgba(st.ac,.55));x.fillStyle=g;x.fillRect(px-cw/2,py-ch/2,cw,ch);
+  if(ph){const r2=Math.max(cw/ph.naturalWidth,ch/ph.naturalHeight);x.drawImage(ph,px-ph.naturalWidth*r2/2,py-ch/2,ph.naturalWidth*r2,ph.naturalHeight*r2)}
+  else{x.fillStyle=rgba(st.tx,.4);x.beginPath();x.arc(px,py-ch*.12,ch*.17,0,7);x.fill();x.beginPath();x.ellipse(px,py+ch*.42,cw*.36,ch*.3,0,0,7);x.fill();x.fillStyle=st.tx;x.font=`800 ${34*u*kk}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(SLs[i][0],px,py+ch*.2)}
+  x.restore();x.strokeStyle=st.tx;x.lineWidth=3*u;x.beginPath();x.roundRect(px-cw/2,py-ch/2,cw,ch,rr);x.stroke();
+  if(l){x.fillStyle="#fff";x.beginPath();x.arc(px-cw/2+4*u,py-ch/2+4*u,21*u*kk,0,7);x.fill();dl(x,l,px-cw/2+4*u,py-ch/2+4*u,32*u*kk)}
+  const mw=Math.min(w/r.length-14*u,380*u);let f=24*u*kk*TB().sz;x.font=`700 ${f}px ${F}`;while(x.measureText(nm).width>mw&&f>12*u){f--;x.font=`700 ${f}px ${F}`}
+  const tw=x.measureText(nm).width,ly=py+ch/2+6*u;x.textAlign="center";x.textBaseline="middle";x.save();x.globalAlpha=TB().bo/100;x.fillStyle=TB().bc||st.tx;x.beginPath();x.roundRect(px-tw/2-10*u,ly,tw+20*u,f*1.5,TB().r*u);x.fill();x.restore();x.fillStyle=TB().tc||st.bg;x.fillText(nm,px,ly+f*.78);
+  if(q.t){let g2=f*.8;x.font=`400 ${g2}px ${F}`;while(x.measureText(q.t).width>mw&&g2>10*u){g2--;x.font=`400 ${g2}px ${F}`}{const w2=x.measureText(q.t).width,yy=ly+f*1.5+g2*.9;if(TB().tbOn){x.save();x.globalAlpha=TB().bo/100;x.fillStyle=TB().tb;x.beginPath();x.roundRect(px-w2/2-8*u,yy-g2*.75,w2+16*u,g2*1.5,TB().r*u);x.fill();x.restore()}x.fillStyle=TB().sc||rgba(st.tx,.9);x.fillText(q.t,px,yy)}}})});
+ x.textAlign="left";x.textBaseline="alphabetic"}
+function mcg(x,W,H){const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,"rgba(0,0,0,.5)");g.addColorStop(.45,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.75)");x.fillStyle=g;x.fillRect(0,0,W,H)}
+function mcv(x,W,H,u,F,fit){const st=S.sty,k=Math.min(W,H)/1080,ls=($("#gh").value||"MATCH|DAY").split("|"),s=Math.min(...ls.map(q=>fit(q,Math.min(200*k,H*.2),W*.8,800))),y0=H*.3;
+ TX(x,W,H,ls,W/2,y0,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[$("#gs").value],W/2,y0+(ls.length-1)*s+s*.34,s*.22,"center","ts",st.ac,600,1,F)}
+/* elementi della partita: ognuno è un livello indipendente (logo, nome, VS, risultato, data, campo) */
+const MCL=(b,W,H,ft)=>{const bh=b.h*W,by=b.y*H-bh/2,kk=bh/190,k=Math.min(W,H)/1080,X=v=>v/W,Y=v=>v/H,dx=.26*b.s,it=o=>({o:100,c:"",b:0,ia:1,...o});
+ const a=[it({id:"mlh",k:"mlogo",nm:"Logo casa",side:"h",x:b.x-dx,y:Y(by+bh*.4),s:X(110*kk)}),it({id:"mla",k:"mlogo",nm:"Logo ospite",side:"a",x:b.x+dx,y:Y(by+bh*.4),s:X(110*kk)}),
+  it({id:"mnh",k:"mname",nm:"Nome casa",side:"h",x:b.x-dx,y:Y(by+bh*.88-11*kk),s:X(32*kk)}),it({id:"mna",k:"mname",nm:"Nome ospite",side:"a",x:b.x+dx,y:Y(by+bh*.88-11*kk),s:X(32*kk)}),
+  it({id:"mvs",k:"mt",f:"vs",t:"VS",nm:"VS",x:b.x,y:Y(by+bh*.5-22*kk),s:X(64*kk)})];
+ if(ft)a.push(it({id:"msc",k:"mt",f:"sc",nm:"Risultato",x:b.x,y:Y(by+bh+60*k),s:X(72*k)}));
+ else a.push(it({id:"mdt",k:"mt",f:"d",nm:"Data e ora",x:b.x,y:Y(by+bh+60*k),s:X(42*k)}),it({id:"mvn",k:"mt",f:"v",nm:"Campo",x:b.x,y:Y(by+bh+110*k),s:X(30*k)}));
+ return a};
+const mtT=l=>l.f==="vs"?(l.t||"VS"):l.f==="sc"?(S.mt.sc||""):l.f==="d"?(S.mt.d||""):(S.mt.v||"");
+function mcCol(l){const[W,H]=S.sty.fmt.split("x").map(Number),bl=l.ia?LY().find(q=>q.k==="band"&&Math.abs(l.x-q.x)<=q.s/2&&Math.abs(l.y-q.y)<=q.h*W/H/2):null;return bl?(lum(bl.c||S.sty.ac)>150?"#000000":"#ffffff"):S.sty.tx}
+function parseRes(t){const nm=[...new Set([...S.cl.map(e=>e.n),...Object.keys(S.raw).filter(k=>k!=="__lega")])],cn=q=>nm.find(n=>n.toLowerCase()===q.toLowerCase())||q;
+ return t.split("\n").map(l=>l.trim().replace(/\s+/g," ").match(/^(.+?) (\d+) ?[-–:] ?(\d+) (.+)$/)).filter(Boolean).map(m=>({hn:cn(m[1]),an:cn(m[4]),h:+m[2],a:+m[3]}))}
+function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,top0=y0+30*u;x.save();
+ if(!n){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Inserisci i risultati nei Contenuti",W/2,top0+70*u);x.restore();return}
+ const hl=ms.some(r=>logo(r.hn)||logo(r.an)),av=H-top0-90*u,rh=Math.min(200*u,av/n),top=top0+Math.max(0,av-n*rh)*.35,cx=W/2,pw=Math.min(210*u,W*.22),ph=Math.min(rh*.5,104*u),lg=hl?Math.min(rh*.5,90*u):0,gap=18*u,sw=(W-2*m-pw)/2,tc=lum(st.ac)>150?"#000":"#fff",mw=sw-gap*(hl?2:1)-lg;
+ const NF=fitNames(x,ms.flatMap(r=>[r.hn,r.an]),800,Math.min(rh*.27,56*u),mw,true,F,12),lh=NF.f*1.1;
+ ms.forEach((r,i)=>{const cy=top+i*rh+rh/2;x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,top+(i+1)*rh-1.5,W-2*m+36,1.5);
+  x.fillStyle=st.ac;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();
+  x.fillStyle=tc;x.font=`800 ${ph*.56}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(r.h+" - "+r.a,cx,cy+ph*.02);
+  [[r.hn,-1,r.h,r.a,2*i],[r.an,1,r.a,r.h,2*i+1]].forEach(([nm,sd,o,q,ix])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);
+   const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),wt=o===q?700:o>q?800:500,ls=NF.l[ix];x.font=`${wt} ${NF.f}px ${F}`;
+   x.textAlign=sd<0?"right":"left";x.fillStyle=o<q?rgba(st.tx,.75):st.tx;ls.forEach((t,k)=>x.fillText(t,nx,cy+(k-(ls.length-1)/2)*lh+NF.f*.02))})});x.restore()}
+function lyUI(){const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
+ $("#lyl").innerHTML=a.map(q=>`<button class="btn${q.id===SEL?" p":""}" data-sl="${q.id}">${esc(q.k==="text"?(q.t||"Testo").slice(0,16):q.nm||"Immagine")}</button>`).join("")||'<span class="hint">Nessun elemento</span>';
+ const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)||(l.k==="mt"&&l.f==="vs")?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"||l.k==="mlogo"?"none":"block";
+ const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
+ q("o").value=l.o;q("b").checked=!!l.b;q("c").value=l.c||(l.k==="mt"||l.k==="mname"?mcCol(l):l.k==="text"||l.k==="tt"?S.sty.tx:l.k==="ts"||l.k==="band"?S.sty.ac:"#ffffff");q("t").value=l.k==="tt"?$("#gh").value:l.k==="ts"?$("#gs").value:l.t||"";if(l.k==="band"){q("h").value=l.h;q("r").value=l.r}}
+const addL=l=>{LY().push({o:100,c:"",b:0,x:.5,y:.5,id:nid(),...l});SEL=LY()[LY().length-1].id;lyUI();draw();save()};
+$("#lyl").onclick=e=>{const id=e.target.dataset.sl;if(id){SEL=id;lyUI();draw()}};
+$("#lyc").oninput=e=>{const l=SELL(),p=e.target.dataset.p;if(!l||!p)return;const t=e.target.type;l[p]=t==="checkbox"?+e.target.checked:t==="range"?+e.target.value:e.target.value;if(p==="t"&&(l.k==="tt"||l.k==="ts")){$(l.k==="tt"?"#gh":"#gs").value=e.target.value;delete l.t}rd();save();if(p==="t")lyUI()};
+$("#lo").onclick=()=>{const l=SELL();if(l){l.c="";lyUI();draw();save()}};
+$("#al").onclick=()=>addL({k:"logo",nm:"Logo lega",s:.3});$("#at").onclick=()=>addL({k:"text",t:"Nuovo testo",s:.06});
+$("#ai").onchange=e=>{const f=e.target.files[0];if(f)addL({k:"img",nm:"Immagine",s:.4,src:URL.createObjectURL(f)});e.target.value=""};
+$("#rl").onclick=()=>{delete S.ly[gT()];SEL=null;lyUI();draw();save()};
+$("#ld").onclick=()=>{const l=SELL();if(l)addL({...l,x:l.x+.04,y:l.y+.04,id:nid()})};
+$("#lx").onclick=()=>{const i=LY().findIndex(q=>q.id===SEL);if(i>=0)LY().splice(i,1);SEL=null;lyUI();draw();save()};
+$("#rp").onclick=()=>{BG="";$("#ph").value="";draw()};$("#po").oninput=e=>{S.sty.po=+e.target.value;save();draw()};
+$("#un").onclick=undo;$("#re").onclick=redo;
+const MAD={lh:{k:"mlogo",nm:"Logo casa",side:"h",s:.1},la:{k:"mlogo",nm:"Logo ospite",side:"a",s:.1},nh:{k:"mname",nm:"Nome casa",side:"h",s:.03},na:{k:"mname",nm:"Nome ospite",side:"a",s:.03},vs:{k:"mt",f:"vs",t:"VS",nm:"VS",s:.06},sc:{k:"mt",f:"sc",nm:"Risultato",s:.08},d:{k:"mt",f:"d",nm:"Data e ora",s:.04},v:{k:"mt",f:"v",nm:"Campo",s:.03},bx:{k:"band",nm:"Riquadro",s:.5,h:.1,r:18,b:1,o:100}};
+$("#mcb").onclick=e=>{const a=MAD[e.target.dataset.ma];if(a)addL({ia:1,...a})};
+$("#rres").oninput=e=>{kSet(e.target.value);draw()};
+$("#twp").oninput=e=>{const d=e.target.dataset;if(d.ti!==undefined)S.tw2[d.ti].n=e.target.value;else if(d.ts!==undefined)S.tw2[d.ts].t=e.target.value;else return;save();draw()};
+$("#tf").onchange=e=>{S.tf=e.target.value;renderTW();save();draw()};$("#tv").onchange=e=>{S.twv=e.target.value;save();draw()};
+$("#ta").onclick=()=>{const w=wd(S.gs);if(!w||!kHAS(S.gs,"mar"))return alert("Carica l’Excel dei marcatori per la giornata "+S.gs+" (scheda Dati e TOTW).");if(w.pc.mar==null&&!confirm("Non c’è una giornata precedente con i marcatori: userei i gol di tutto il torneo. Continuare?"))return;twFillAtt();renderTW();save();draw()};
+$("#tres").oninput=e=>{kSet(e.target.value);$("#tsg").innerHTML=sugg()};
+$("#mcw").oninput=e=>{const k=e.target.dataset.m;if(!k)return;S.mt[k]=e.target.value;if(k==="v"&&MCC)(S.stad=S.stad||{})[MCC.s]=e.target.value;save();draw()};
+$("#ll").addEventListener("click",e=>{const k=e.target.dataset.rm;if(k===undefined)return;delete S.raw[k];delete S.mode[k];PC={};save();renderLogos();draw()});
+const CV=$("#cv"),pt=e=>{const r=CV.getBoundingClientRect();return[(e.clientX-r.left)*CV.width/r.width,(e.clientY-r.top)*CV.height/r.height]};
+CV.onpointerdown=e=>{const[px,py]=pt(e),h=[...LB].reverse().find(b=>px>=b.x0&&px<=b.x1&&py>=b.y0&&py<=b.y1);SEL=h?h.id:null;const l=SELL();
+ if(l){if(l.x==null){l.x=h.ax;l.y=h.ay}drag={l,dx:px-l.x*CV.width,dy:py-l.y*CV.height};CV.setPointerCapture(e.pointerId)}lyUI();draw()};
+CV.onpointermove=e=>{if(!drag)return;const[px,py]=pt(e);drag.l.x=Math.min(1,Math.max(0,(px-drag.dx)/CV.width));drag.l.y=Math.min(1,Math.max(0,(py-drag.dy)/CV.height));rd()};
+CV.onpointerup=()=>{if(drag){drag=null;save();cm()}};
+$("#g").addEventListener("change",()=>cm());$("#g").addEventListener("click",e=>{if(e.target.closest("button")&&!e.target.closest("[data-nc]"))setTimeout(cm,0)});
+document.addEventListener("keydown",e=>{if(!$("#g").classList.contains("on"))return;const ed=/INPUT|TEXTAREA|SELECT/.test(e.target.tagName),k=e.key,z=e.ctrlKey||e.metaKey;if(ed)return;
+ if(z&&k.toLowerCase()==="z"){e.preventDefault();e.shiftKey?redo():undo()}else if(z&&k.toLowerCase()==="y"){e.preventDefault();redo()}
+ else if(SEL&&(k==="Delete"||k==="Backspace")){e.preventDefault();$("#lx").click();cm()}
+ else if(SEL&&k.startsWith("Arrow")){e.preventDefault();const l=SELL(),d=e.shiftKey?.02:.004;if(l.x==null){const b=LB.find(q=>q.id===l.id);l.x=b.ax;l.y=b.ay}l.x+=k==="ArrowRight"?d:k==="ArrowLeft"?-d:0;l.y+=k==="ArrowDown"?d:k==="ArrowUp"?-d:0;rd();save();cm()}});
+
+/* ---- galleria, preset, esporta/importa ---- */
+let G=[];try{G=JSON.parse(localStorage.getItem("a7g"))||[]}catch(e){}
+const saveG=()=>{try{localStorage.setItem("a7g",JSON.stringify(G));return 1}catch(e){alert("Memoria del browser piena: elimina qualche grafica o esporta la configurazione.");return 0}};
+function renderGal(){const h=G.length?G.map(g=>`<div class="gi"><img src="${g.d}" title="${esc(g.n)}" data-ga="${g.id}"><button class="btn" data-gx="${g.id}">×</button></div>`).join(""):'<span class="hint">Nessuna grafica: usa “Aggiungi grafica al Best of”.</span>';
+ $$(".gal").forEach(e=>e.innerHTML='<div class="hint">Le mie grafiche (clic per aggiungerla al montaggio Best of)</div><div class="bar" style="gap:8px">'+h+'</div>')}
+$("#sg").onclick=()=>{EXP=1;draw();const c=CV,k=Math.min(1,1080/Math.max(c.width,c.height)),t=document.createElement("canvas");t.width=Math.round(c.width*k);t.height=Math.round(c.height*k);t.getContext("2d").drawImage(c,0,0,t.width,t.height);EXP=0;draw();
+ const gn=$("#gh").value.replace("|"," "),gd=t.toDataURL("image/jpeg",.85);G.push({id:nid(),n:gn,d:gd});if(!saveG())G.pop();renderGal();const gi=new Image();gi.onload=()=>{addC({k:"g",n:gn,img:gi,d:3,fx:"zi"});const bb=$("#sg");bb.textContent="✓ Aggiunta al Best of";setTimeout(()=>bb.textContent="Aggiungi grafica al Best of",1800)};gi.src=gd};
+document.addEventListener("click",e=>{const a=e.target.dataset.ga,x=e.target.dataset.gx;if(a)addG(a);if(x){G=G.filter(g=>g.id!==x);saveG();renderGal()}});
+function renderCP(){$$("#pr .cp").forEach(b=>b.remove());(S.cp||[]).forEach((p,i)=>{const b=document.createElement("button");b.className="btn cp";b.textContent=p.n;b.title="Tasto destro per eliminare";b.onclick=()=>{Object.assign(S.sty,{bg:p.v[0],ac:p.v[1],tx:p.v[2]});sty();save();draw();cm()};b.oncontextmenu=e=>{e.preventDefault();S.cp.splice(i,1);save();renderCP()};$("#pr").append(b)})}
+$("#sp").onclick=()=>{const n=prompt("Nome del preset?");if(n){(S.cp=S.cp||[]).push({n,v:[S.sty.bg,S.sty.ac,S.sty.tx]});save();renderCP()}};
+$("#ex").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({v:2,S,G},(k,v)=>k==="src"?undefined:v)],{type:"application/json"}));a.download="lega-a7-config.json";a.click()};
+$("#imc").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const o=JSON.parse(t);if(!o.S)throw 0;S={...DEF(),...o.S};S.sty={...DEF().sty,...S.sty};G=o.G||[];save();saveG();location.reload()}catch(x){alert("File di configurazione non valido")}})};
+$("#twp").addEventListener("click",e=>{const x=e.target.dataset.tx;if(x!==undefined){delete S.tw2[x].ph;renderTW();save();draw()}
+ if(e.target.id==="tdf"){const r=rank();if(!r.length)return;let k=0;SL().forEach((ro,i)=>{if(ro==="Portiere")S.tw2[i].t=r[0].n;else if(ro==="Difensore")S.tw2[i].t=r[Math.min(k++,r.length-1)].n});renderTW();save();draw()}});
+$("#twp").addEventListener("change",e=>{const i=e.target.dataset.tp,f=e.target.files&&e.target.files[0];if(i===undefined||!f)return;const m=new Image();m.onload=()=>{const s=Math.min(1,260/Math.min(m.width,m.height)),c=document.createElement("canvas");c.width=m.width*s;c.height=m.height*s;c.getContext("2d").drawImage(m,0,0,c.width,c.height);S.tw2[i].ph=c.toDataURL("image/jpeg",.85);renderTW();save();draw();cm()};m.src=URL.createObjectURL(f)});
+if(!S.mig2){S.mig2=1;const[W0,H0]=S.sty.fmt.split("x").map(Number);Object.keys(S.ly).forEach(k=>{const a=S.ly[k],b=a.find(l=>l.k==="band");if(b&&!a.some(l=>["mlogo","mname","mt"].includes(l.k)))a.splice(a.indexOf(b)+1,0,...MCL(b,W0,H0,0))});if(!S.tipi.some(t=>t.id==="ris"))S.tipi.push({id:"ris",n:"Risultati della settimana",g:4,c:"Instagram",d:"Grafica con tutti i risultati della giornata"});save()}
+if(!S.mig){S.mig=1;Object.keys(S.ly).forEach(k=>{const a=S.ly[k];if(!a.some(l=>l.id==="tt"))a.push(...TL());if(k==="mc"&&!a.some(l=>l.k==="band"))a.unshift(BAND())});save()}
+
+function renderGt(v){const e=$("#gt"),cur=v||e.value;[...e.querySelectorAll("[data-c]")].forEach(o=>o.remove());(S.cg||[]).forEach(c=>{TT[c.id]=TT[c.id]||[c.ft?"FULL|TIME":c.b==="mc"?"MATCH|DAY":c.n,(TT[c.b]||[0,"Giornata 3"])[1]];const o=document.createElement("option");o.value=c.id;o.dataset.c=1;o.textContent=c.n;e.append(o)});e.value=cur;if(e.value!==cur)e.value="cl";$("#dg2").style.display=(S.cg||[]).some(c=>c.id===e.value)?"":"none"}
+$("#ng2").onclick=()=>{$("#ngp").style.display="block";$("#ngn").focus()};$("#ngx").onclick=()=>{$("#ngp").style.display="none"};
+$("#ngc").onclick=()=>{const n=$("#ngn").value.trim();if(!n)return;const bv=$("#ngb").value,c={id:"c_"+Date.now().toString(36),n,b:bv==="ft"?"mc":bv};if(bv==="ft")c.ft=1;(S.cg=S.cg||[]).push(c);save();renderGt(c.id);$("#ngn").value="";$("#ngp").style.display="none";SEL=null;sync(true);draw();cm()};
+$("#dg2").onclick=()=>{const id=$("#gt").value;if(!confirm("Eliminare questa grafica personalizzata?"))return;S.cg=S.cg.filter(c=>c.id!==id);delete S.ly[id];delete S[id];save();renderGt("cl");SEL=null;sync(true);draw()};
+(function(){const c=$("#hc");c.width=1200;c.height=130;stripes(c.getContext("2d"),1200,130,1.4,"#2f7bff")})();
+$("#uni").checked=S.uni!==false;$("#olw").value=S.olw||3;$("#uni").onchange=e=>{S.uni=e.target.checked;PC={};save();renderLogos();draw()};$("#olw").oninput=e=>{S.olw=+e.target.value;PC={};save();thumbs();draw()};
+
+/* ---- player, effetti con pin, box TOTW, calcolo TOTW ---- */
+let PT=0,EFT="sm",EFD=2;const tf=n=>Math.floor(n/60)+":"+String(Math.floor(n%60)).padStart(2,"0");
+$("#pl").onclick=()=>{if(run){PT=run.t||0;stopM();EDT=PT;idle()}else runM(0,PT>=total()-.05?0:PT)};
+$("#st0").onclick=()=>{stopM();PT=0;EDT=0;idle()};$("#bk0").onclick=()=>{const w=!!run;stopM();PT=0;EDT=0;idle();if(w)runM(0,0)};
+$("#bk").oninput=e=>{if(run)stopM();PT=+e.target.value;EDT=PT;idle()};
+document.addEventListener("keydown",e=>{if(e.code!=="Space"||!$("#b").classList.contains("on")||/INPUT|TEXTAREA|SELECT|BUTTON|VIDEO/.test(e.target.tagName))return;e.preventDefault();$("#pl").click()});
+setInterval(()=>{const tot=total();$("#bk").max=tot||1;$("#pl").textContent=run?"❚❚ Pausa":"▶ Riproduci";if(run)$("#bk").value=run.t||0;else{const v=EDT!=null?EDT:PT;$("#bk").value=v;$("#bs").textContent=tf(v)+" / "+tf(tot)}
+ $$("[data-tl]").forEach(b=>{const i=+b.dataset.tl,c=CL[i],vd=$(`[data-vi="${i}"]`);if(!c||!vd)return;const b0=c.b>c.a?c.b:c.a+1;b.querySelector(".tlh").style.left=cl01((vd.currentTime-c.a)/(b0-c.a),0,1)*100+"%"})},150);
+const tlSet=(b,e)=>{const i=+b.dataset.tl,c=CL[i],r=b.getBoundingClientRect(),b0=c.b>c.a?c.b:c.a+1,t=+(c.a+cl01((e.clientX-r.left)/r.width,0,1)*(b0-c.a)).toFixed(2),vd=$(`[data-vi="${i}"]`);c._pin=t;if(vd){vd.pause();vd.currentTime=t}const p=b.querySelector(".tlp");p.style.display="block";p.style.left=(t-c.a)/(b0-c.a)*100+"%"};
+$("#cl").addEventListener("pointerdown",e=>{const b=e.target.closest("[data-tl]");if(b){b.setPointerCapture(e.pointerId);b._dn=1;tlSet(b,e)}});
+$("#cl").addEventListener("pointermove",e=>{const b=e.target.closest("[data-tl]");if(b&&b._dn)tlSet(b,e)});
+$("#cl").addEventListener("pointerup",e=>{const b=e.target.closest("[data-tl]");if(b)b._dn=0});
+$("#cl").addEventListener("click",e=>{const d=e.target.dataset;if(d.efk){EFT=d.efk;$$("[data-efk]").forEach(b=>b.classList.toggle("p",b.dataset.efk===EFT))}if(d.efi!==undefined)addEf(+d.efi,EFT)});
+$("#cl").addEventListener("input",e=>{if(e.target.dataset.efd!==undefined){EFD=+e.target.value;$$("[data-efdl]").forEach(x=>x.textContent=EFD.toFixed(1))}});
+const TB=()=>({bc:"",tc:"",sc:"",tb:"#0a4d24",tbOn:false,sz:1,r:6,bo:100,...(S.twb||{})});
+const TBU=()=>$$("#twb [data-tb]").forEach(i=>{const k=i.dataset.tb,v=TB()[k];if(i.type==="checkbox")i.checked=!!v;else i.value=v||(k==="bc"||k==="sc"?S.sty.tx:k==="tc"?S.sty.bg:"#000000")});
+$("#twb").addEventListener("input",e=>{const k=e.target.dataset.tb;if(!k)return;const t=e.target;S.twb=S.twb||{};S.twb[k]=t.type==="checkbox"?t.checked:t.type==="range"?+t.value:t.value;save();draw()});
+$("#twb").addEventListener("click",e=>{const p=e.target.dataset.tbp;if(p===undefined)return;S.twb=p==="g"?{bc:"#14803c",tc:"#ffffff",sc:"#ffffff",tb:"#0a4d24",tbOn:true,sz:1,r:8,bo:100}:{};save();TBU();draw()});
+async function xrows(buf){const u=new Uint8Array(buf),dv=new DataView(buf),td=new TextDecoder();let e=u.length-22;while(e>0&&dv.getUint32(e,true)!==0x06054b50)e--;const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const F={};
+ for(let i=0;i<n;i++){const m=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xe=dv.getUint16(p+30,true),ce=dv.getUint16(p+32,true),o=dv.getUint32(p+42,true),nm=td.decode(u.subarray(p+46,p+46+nl));p+=46+nl+xe+ce;const h=o+30+dv.getUint16(o+26,true)+dv.getUint16(o+28,true),d=u.subarray(h,h+cs);F[nm]=async()=>td.decode(m?new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer()):d)}
+ const X=async k=>F[k]?new DOMParser().parseFromString(await F[k](),"text/xml"):null,ss=await X("xl/sharedStrings.xml"),SS=ss?[...ss.getElementsByTagName("si")].map(s=>[...s.getElementsByTagName("t")].map(t=>t.textContent).join("")):[];
+ const sk=Object.keys(F).filter(k=>/^xl\/worksheets\/sheet\d+\.xml$/.test(k)).sort()[0],sh=await X(sk),R=[];
+ [...sh.getElementsByTagName("row")].forEach(r=>{const a=[];[...r.getElementsByTagName("c")].forEach(c=>{const L=(c.getAttribute("r")||"").replace(/\d/g,""),ci=[...L].reduce((q,ch)=>q*26+ch.charCodeAt(0)-64,0)-1,v=c.getElementsByTagName("v")[0],t=c.getAttribute("t");a[ci]=t==="s"?SS[+v.textContent]:t==="inlineStr"?c.textContent:v?v.textContent:""});R.push(Array.from(a,x=>x==null?"":x))});return R}
+/* ---- giornate: dati per giornata, calcolo della settimana ---- */
+const TS=n=>new Date(n).toLocaleString("it-IT",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"}),sg=a=>a.reduce((q,e)=>q+e.g,0);
+const KT={cl:"classifica",mar:"marcatori",amm:"ammoniti"};
+const kGL=()=>Object.keys(S.gv||{}).map(Number).sort((a,b)=>a-b),kGR=n=>(S.gv||{})[n]||{},kHAS=(n,k)=>!!(kGR(n)[k]&&kGR(n)[k].length),kGV=n=>{S.gv=S.gv||{};return S.gv[n]=S.gv[n]||{}};
+const kNG=()=>Math.max(3,S.gs||1,S.gx||0,(S.cal||[]).reduce((q,r)=>Math.max(q,r.g),0),...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")).map(n=>n+1));
+const kRG=s=>{const m=String(s||"").match(/(\d+)\s*[-–:]\s*(\d+)/);return m?[+m[1],+m[2]]:null};
+const kHN=s=>String(s||"").toLowerCase().replace(/[^a-z]/g,""),kN=v=>{const x=parseFloat(String(v).replace(",","."));return isNaN(x)?0:x};
+const kXD=v=>{v=String(v==null?"":v).trim();if(/^\d{4}-\d{2}-\d{2}/.test(v))return v.slice(0,10);const n=+v;if(n>20000&&n<80000)return new Date(Math.round((n-25569)*864e5)).toISOString().slice(0,10);return v};
+function kEff(n){const m=kGR(n).res;if(m&&m.trim())return m;return(S.cal||[]).filter(r=>r.g===n&&kRG(r.r)).map(r=>{const x=kRG(r.r);return r.h+" "+x[0]+"-"+x[1]+" "+r.a}).join("\n")}
+const kPV=(n,k)=>{const q=kGL().filter(m=>m<n&&kHAS(m,k)).pop();return q==null?null:q};
+function wd(n){if(!(kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")))return null;const c=kGR(n),pc={cl:kPV(n,"cl"),mar:kPV(n,"mar"),amm:kPV(n,"amm")},P=k=>pc[k]==null?[]:kGR(pc[k])[k];
+ const mar=(c.mar||[]).map(e=>{const p=P("mar").find(q=>q.n===e.n&&q.sq===e.sq);return{...e,w:e.g-(p?p.g:0)}}).filter(e=>e.w>0).sort((a,b)=>b.w-a.w||a.n.localeCompare(b.n));
+ const tm=(c.cl||[]).map(e=>{const p=P("cl").find(q=>q.n===e.n)||{g:0,gf:0,gs:0,pt:0};return{n:e.n,g:e.g-p.g,gf:e.gf-p.gf,gs:e.gs-p.gs,pt:e.pt-p.pt}}).filter(e=>e.g>0);
+ const amm=(c.amm||[]).map(e=>{const p=P("amm").find(q=>q.n===e.n&&q.sq===e.sq);return{...e,w:e.t-(p?p.t:0)}}).filter(e=>e.w>0).sort((a,b)=>a.sq.localeCompare(b.sq)||a.n.localeCompare(b.n));
+ const aw={};amm.forEach(e=>aw[e.sq]=(aw[e.sq]||0)+e.w);return{n,pc,mar,tm,amm,aw}}
+function kApply(){const ns=kGL(),lc=ns.filter(n=>kHAS(n,"cl")).pop(),lm=ns.filter(n=>kHAS(n,"mar")).pop();
+ if(lc!=null)S.cl=kGR(lc).cl;if(lm!=null)S.mar=kGR(lm).mar;if(!S.gs)S.gs=ns.length?ns[ns.length-1]:1;
+ if(ns.length||(S.cal||[]).length){if(!S.gvm){S.gvm=1;if((S.res||"").trim()&&!(kGR(S.gs).res||"").trim())kGV(S.gs).res=S.res}S.res=kEff(S.gs)}
+ const w=wd(S.gs);S.dsc=w&&kHAS(S.gs,"amm")?{am:{},sq:{},aw:w.aw}:undefined;marUI();autoLabels()}
+const kSet=v=>{S.res=v;kGV(S.gs).res=v;save()};
+function csvrows(t){return t.split(/\r?\n/).map(l=>(l.includes(";")||l.includes("\t")?l.split(/;|\t/):l.split(",")).map(s=>s.trim()))}
+function kdet(R){const hi=R.findIndex(r=>r.some(c=>String(c).trim()));if(hi<0)return null;const h=R[hi].map(kHN),I=s=>h.indexOf(s),B=R.slice(hi+1).filter(r=>r.some(c=>String(c).trim())),C=(r,s)=>String(r[I(s)]==null?"":r[I(s)]).trim();
+ if(I("squadracasa")>=0&&I("giornata")>=0)return{k:"cal",v:B.map(r=>({g:kN(C(r,"giornata")),d:kXD(C(r,"data")),s:C(r,"stadiosigla"),h:C(r,"squadracasa"),a:C(r,"squadraospite"),r:C(r,"risultato")})).filter(x=>x.g&&x.h&&x.a)};
+ if(I("punti")>=0&&I("gf")>=0&&I("gs")>=0)return{k:"cl",v:B.map(r=>({n:C(r,"squadra"),pt:kN(C(r,"punti")),g:kN(C(r,"g")),v:kN(C(r,"v")),nn:kN(C(r,"n")),p:kN(C(r,"p")),gf:kN(C(r,"gf")),gs:kN(C(r,"gs")),dr:kN(C(r,"dr"))})).filter(x=>x.n)};
+ if(I("golfatti")>=0)return{k:"mar",v:B.map(r=>({n:C(r,"atleta"),sq:C(r,"squadra"),g:kN(C(r,"golfatti"))})).filter(x=>x.n&&x.g>0).sort((a,b)=>b.g-a.g)};
+ if(I("totammonizioni")>=0)return{k:"amm",v:B.map(r=>({n:C(r,"atleta"),sq:C(r,"squadra"),t:kN(C(r,"totammonizioni")),df:C(r,"diffida"),d:kXD(C(r,"ultimadata"))})).filter(x=>x.n&&x.t>0)};
+ return null}
+async function kload(files,expect){const out=[],g=S.gs;for(const f of files){let R;try{R=/\.xlsx$/i.test(f.name)?(await xrows(await f.arrayBuffer())).map(r=>r.map(v=>String(v==null?"":v).trim())):csvrows(await f.text())}catch(x){out.push(f.name+": file non leggibile");continue}
+  const d=kdet(R);if(!d){out.push(f.name+": formato non riconosciuto (servono classifica, marcatori, ammoniti o calendario)");continue}
+  const wrong=expect&&expect!==d.k?" (era "+(d.k==="cal"?"un calendario":"un file di "+KT[d.k])+": l’ho messo nel box giusto)":"";
+  if(d.k==="cal"){S.calInfo={n:f.name,t:Date.now(),k:d.v.length};if(!d.v.length&&(S.cal||[]).length)out.push(f.name+": calendario senza partite (solo intestazione): ho tenuto quello caricato prima"+wrong);else{S.cal=d.v;out.push(f.name+": calendario ("+d.v.length+" partite"+(d.v.length?"":", il file contiene solo l’intestazione, nessuna partita")+")"+wrong)}}
+  else{const o=kGV(g);o[d.k]=d.v;(o.t=o.t||{})[d.k]=Date.now();out.push(f.name+": "+KT[d.k]+" assegnata alla giornata "+g+wrong)}}
+ PC={};kApply();save();$("#kmsg").textContent=out.join(" · ");renderK();renderTW();draw()}
+function kChk(){const el=$("#kchk");if(!el)return;const w=wd(S.gs);if(!w){el.innerHTML="";return}
+ const r=parseRes(S.res||""),o=[],rt={},tm={};r.forEach(m=>[[m.hn,m.h,m.a],[m.an,m.a,m.h]].forEach(([t,f,s])=>{const x=rt[t]=rt[t]||{g:0,gf:0,gs:0};x.g++;x.gf+=f;x.gs+=s}));w.tm.forEach(e=>tm[e.n]=e);
+ if(r.length&&kHAS(S.gs,"cl")&&w.pc.cl!=null){Object.keys(rt).forEach(t=>{const a=rt[t],b=tm[t];if(!b)o.push(`<b>${esc(t)}</b>: nei risultati risulta una partita (${a.gf}-${a.gs}) che non è ancora nella classifica Excel`);else if(a.gf!==b.gf||a.gs!==b.gs)o.push(`<b>${esc(t)}</b>: risultati ${a.gf}-${a.gs}, classifica Excel ${b.gf}-${b.gs}`)});Object.keys(tm).forEach(t=>{if(!rt[t])o.push(`<b>${esc(t)}</b>: ha giocato nella classifica Excel ma manca nei risultati`)})}
+ if(kHAS(S.gs,"cl")&&kHAS(S.gs,"mar")&&w.pc.cl!=null&&w.pc.mar!=null)w.tm.forEach(e=>{const s=w.mar.filter(m=>m.sq===e.n).reduce((q,m)=>q+m.w,0);if(s<e.gf)o.push(`<b>${esc(e.n)}</b>: ${e.gf} gol in classifica, ${s} marcatori registrati (ne mancano ${e.gf-s}: autogol o marcatore non ancora inserito)`);else if(s>e.gf)o.push(`<b>${esc(e.n)}</b>: ${s} gol di marcatori ma ${e.gf} in classifica (la classifica non è ancora aggiornata)`)});
+ const cm=(S.cal||[]).filter(x=>x.g===S.gs&&!kRG(x.r));if(cm.length)o.push("Senza risultato nel calendario: "+cm.map(x=>esc(x.h)+" – "+esc(x.a)).join(", "));
+ el.innerHTML=o.length?`<div class="card"><b>Controllo dei dati</b><small>Confronto tra risultati, classifica e marcatori</small>${o.map(x=>`<div class="hint" style="color:#e0a84a">⚠ ${x}</div>`).join("")}</div>`:(r.length?'<div class="hint" style="color:#4ade80">✓ Risultati, classifica e marcatori sono coerenti.</div>':"")}
+const KX={},KXN=8;
+function xl(a,k,f,em){if(!a.length)return'<div class="hint">'+em+'</div>';return(KX[k]?a:a.slice(0,KXN)).map(f).join("")+(a.length>KXN?`<button class="btn" data-kx="${k}" style="margin:6px 0">${KX[k]?"Comprimi l’elenco":"Mostra tutti ("+a.length+")"}</button>`:"")}
+/* ---- Fantavoto (stile Fantacalcio): solo chi compare nella settimana tra marcatori o ammoniti ---- */
+const FVP=()=>({b:6,g:3,a:.5,d:.5,...(S.fv||{})}),fvF=v=>String(Math.round(v*100)/100).replace(".",",");
+const fvK=(n,sq)=>String(n).toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^a-z ]/g," ").split(/\s+/).filter(Boolean).sort().join(" ")+"|"+sq;
+function twTeam(n){const o={},txt=n===S.gs?(S.res||""):kEff(n);
+ parseRes(txt).forEach(m=>[[m.hn,m.h,m.a],[m.an,m.a,m.h]].forEach(([t,f,q])=>{const x=o[t]=o[t]||{g:0,gf:0,gs:0};x.g++;x.gf+=f;x.gs+=q}));
+ if(!Object.keys(o).length){const w=wd(n);if(w)w.tm.forEach(e=>o[e.n]={g:e.g,gf:e.gf,gs:e.gs})}
+ return o}
+function fvCalc(n){const w=wd(n);if(!w)return null;const P=FVP(),T=twTeam(n),tk={};Object.keys(T).forEach(t=>tk[kHN(t)]=T[t]);const m={},g=e=>m[fvK(e.n,e.sq)]=m[fvK(e.n,e.sq)]||{n:e.n,sq:e.sq,g:0,a:0};w.mar.forEach(e=>g(e).g+=e.w);w.amm.forEach(e=>g(e).a+=e.w);
+ return Object.values(m).map(p=>{const t=tk[kHN(p.sq)]||null,dr=t?t.gf-t.gs:0,f=P.d*dr;return{...p,tm:t,dr,f,v:P.b+p.g*P.g-p.a*P.a+f}}).sort((a,b)=>b.v-a.v||b.g-a.g||a.a-b.a||b.dr-a.dr||a.n.localeCompare(b.n))}
+const fvS=v=>(v>0?"+":"")+fvF(v);
+function fvBlock(k,ed){const n=S.gs,l=n==null?null:fvCalc(n);if(!l)return"";const P=FVP(),w=wd(n),miss=["mar","amm"].filter(q=>!kHAS(n,q)).map(q=>KT[q]),tot=["mar","amm"].filter(q=>kHAS(n,q)&&w.pc[q]==null).map(q=>KT[q]);
+ return`<div class="card"><b>Fantavoto · stile Fantacalcio · giornata ${n}</b><small>Solo chi compare questa settimana tra marcatori e ammoniti. Voto base ${fvF(P.b)}, gol +${fvF(P.g)}, ammonizione −${fvF(P.a)} (due gialli = −${fvF(2*P.a)}). Fattore squadra: ${fvF(P.d)} per ogni gol di differenza reti della sua squadra nella giornata (+ se ha vinto, − se ha perso). Il sito non pubblica i rossi diretti. È un aiuto in più: non sostituisce gli altri criteri.</small>
+ ${ed?`<div class="g3"><div><label>Voto base</label><input type="number" step=".5" data-fvp="b" value="${P.b}"></div><div><label>Gol (bonus)</label><input type="number" step=".5" data-fvp="g" value="${P.g}"></div><div><label>Ammonizione (malus)</label><input type="number" step=".5" data-fvp="a" value="${P.a}"></div><div><label>Fattore squadra (per gol di scarto)</label><input type="number" step=".5" data-fvp="d" value="${P.d}"></div></div>`:""}
+ ${miss.length?`<div class="hint" style="color:#e0a84a">⚠ Per la giornata ${n} mancano: ${miss.join(", ")}.</div>`:""}${tot.length?`<div class="hint" style="color:#e0a84a">⚠ ${tot.join(", ")}: nessuna giornata precedente, uso i valori totali.</div>`:""}
+ ${xl(l,k,e=>`<div class="hint" style="display:flex;justify-content:space-between;gap:8px"><span><b>${esc(e.n)}</b> (${esc(e.sq)}) · ${[e.g?"⚽ "+e.g:"",e.a?"🟨 "+e.a:"",e.tm?"squadra "+e.tm.gf+"-"+e.tm.gs+" ("+fvS(e.f)+")":""].filter(Boolean).join(" · ")}</span><b style="color:${e.v>=P.b+P.g?"#4ade80":e.v<P.b?"#e0a84a":"inherit"}">${fvF(e.v)}</b></div>`,"nessun giocatore questa settimana")}</div>`}
+
+/* ---- TOTW: attaccanti con spareggio, centrocampisti da scegliere, modulo consigliato ---- */
+function twPlaced(roles){const R=SL();return S.tw2.map((q,i)=>({q,r:R[i]})).filter(o=>o.q.n&&roles.includes(o.r)).map(o=>fvK(o.q.n,o.q.t||""))}
+function twAtt(){const n=S.gs,l=fvCalc(n);if(!l)return null;const na=SL().filter(r=>r==="Attaccante").length,ex=new Set(twPlaced(["Portiere","Difensore","Centrocampista"])),c=l.filter(p=>p.g>0&&!ex.has(fvK(p.n,p.sq))),eq=(a,b)=>a.v===b.v&&a.g===b.g&&a.a===b.a&&a.dr===b.dr,picks=c.slice(0,na);let tie=null;
+ if(na>0&&c.length>na&&eq(c[na],c[na-1])){const gr=c.filter(p=>eq(p,c[na-1])),fixed=picks.filter(p=>!eq(p,c[na-1])).length;tie={gr,slots:na-fixed}}
+ return{picks,tie,na}}
+function twFillAtt(){const r=twAtt();if(!r)return false;const ex=new Set(twPlaced(["Portiere","Difensore","Centrocampista"]));let k=0;
+ SL().forEach((ro,i)=>{if(ro!=="Attaccante")return;const o=S.tw2[i],p=r.picks[k];if(p){k++;S.tw2[i]={n:p.n,t:p.sq,...(o.ph&&o.n===p.n?{ph:o.ph}:{})}}else if(o.n&&ex.has(fvK(o.n,o.t||"")))S.tw2[i]={n:"",t:""}});S.twAuto=1;return true}
+function twAttBlock(){const r=twAtt();if(!r||!r.na)return"";const row=p=>`<div class="hint"><b>${esc(p.n)}</b> (${esc(p.sq)}) · ⚽ ${p.g}${p.a?" · 🟨 "+p.a:""}${p.tm?" · squadra "+p.tm.gf+"-"+p.tm.gs+" ("+fvS(p.f)+")":""} → <b>${fvF(p.v)}</b></div>`;
+ return`<div class="card" style="margin-top:10px"><b>Attaccanti proposti (${r.na})</b><small>Ordine: fantavoto con fattore squadra; a parità più gol, meno ammonizioni, miglior differenza reti.</small>${r.picks.map(row).join("")||'<div class="hint">nessun marcatore questa settimana</div>'}${r.tie?`<div class="hint" style="color:#e0a84a">⚠ Pari merito assoluto tra ${r.tie.gr.map(p=>esc(p.n)+" ("+esc(p.sq)+")").join(", ")}: stesso voto, gol, ammonizioni e differenza reti. Ne servono ${r.tie.slots}, scegli tu e correggi il nome nel campetto.</div>`:""}</div>`}
+let TWC=[];
+const twMI=()=>SL().map((r,i)=>r==="Centrocampista"?i:-1).filter(i=>i>=0);
+function twMidBlock(){const n=S.gs,l=fvCalc(n),mi=twMI();if(!l||!mi.length)return"";const free=mi.filter(i=>!S.tw2[i].n),T=twTeam(n),ex=new Set(twPlaced(["Portiere","Difensore"])),inM=new Set(mi.filter(i=>S.tw2[i].n).map(i=>fvK(S.tw2[i].n,S.tw2[i].t||""))),att=new Set([...twPlaced(["Attaccante"]),...((twAtt()||{}).picks||[]).map(p=>fvK(p.n,p.sq))]);
+ TWC=l.filter(p=>!ex.has(fvK(p.n,p.sq))&&!inM.has(fvK(p.n,p.sq))).slice(0,10);
+ const ts=Object.entries(T).map(([t,x])=>({t,...x,dr:x.gf-x.gs})).sort((a,b)=>b.dr-a.dr||b.gf-a.gf||a.gs-b.gs).slice(0,3),inXI={};S.tw2.forEach(q=>{if(q.n&&q.t)inXI[q.t]=(inXI[q.t]||0)+1});
+ return`<div class="card" style="margin-top:10px"><b>Centrocampisti (${free.length} liberi su ${mi.length})</b><small>Il sito non indica i ruoli: scegli tu, tra i migliori per fantavoto, chi è un centrocampista. Con “→ centro” lo metto nel primo slot libero (e lo tolgo dall’attacco).</small>
+ ${TWC.map((p,j)=>`<div class="hint" style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span><b>${esc(p.n)}</b> (${esc(p.sq)}) · ${[p.g?"⚽ "+p.g:"",p.a?"🟨 "+p.a:"",att.has(fvK(p.n,p.sq))?"★ ora in attacco":""].filter(Boolean).join(" · ")} · <b>${fvF(p.v)}</b></span>${free.length?`<button class="btn" data-mid="${j}" style="padding:4px 8px;min-height:0">→ centro</button>`:""}</div>`).join("")||'<div class="hint">nessun candidato</div>'}
+ ${ts.length&&free.length?`<small style="margin-top:8px">Se tra i marcatori non c’è nessun centrocampista: le squadre con la miglior differenza reti della giornata, a cui chiedere chi schierare</small>${ts.map(e=>`<div class="hint" style="display:flex;justify-content:space-between;gap:8px;align-items:center"><span><b>${esc(e.t)}</b> · ${e.gf}-${e.gs} (${e.dr>0?"+":""}${e.dr})${inXI[e.t]?" · già "+inXI[e.t]+" in formazione":""}</span><button class="btn" data-midt="${esc(e.t)}" style="padding:4px 8px;min-height:0">→ squadra al centro</button></div>`).join("")}`:""}</div>`}
+function twMod(){const n=S.gs,T=twTeam(n),ts=Object.values(T);if(!ts.length)return null;const l=fvCalc(n)||[],pr=parseRes(n===S.gs?(S.res||""):kEff(n)),M=Math.max(1,pr.length||Math.round(ts.reduce((q,x)=>q+x.g,0)/2)),gol=ts.reduce((q,x)=>q+x.gf,0),
+ hat=l.filter(p=>p.g>=3).length,dop=l.filter(p=>p.g===2).length,A=dop+2*hat,cs=ts.filter(x=>x.g>0&&x.gs===0).length,low=ts.filter(x=>x.gs>0&&x.gs<=x.g).length,D=cs+low*.5,ra=A/M,rd=D/M,ta=ra>=1?3:ra>=.5?2:1,td=rd>=.75?3:rd>=.25?2:1,
+ c=FM.map(f=>{const[d,m,a]=f.split("-").map(Number);return{f,d,m,a,c:Math.abs(a-ta)+Math.abs(d-td)}}).sort((x,y)=>x.c-y.c||(ra>=rd?y.a-x.a:y.d-x.d)||y.m-x.m)[0];
+ return{f:c.f,a:c.a,d:c.d,m:c.m,M,gol,gpm:gol/M,hat,dop,cs,low}}
+function twModBlock(){const o=twMod();if(!o)return"";
+ return`<div class="card" style="margin-top:10px"><b>Modulo consigliato: ${o.f}</b><small>${o.gol} gol in ${o.M} ${o.M===1?"partita":"partite"} (${fvF(o.gpm)} a partita) · ${o.hat} ${o.hat===1?"tripletta":"triplette"} e ${o.dop} ${o.dop===1?"doppietta":"doppiette"} · ${o.cs} ${o.cs===1?"porta inviolata":"porte inviolate"}, ${o.low} ${o.low===1?"squadra con":"squadre con"} un solo gol subito a partita. ${o.a>o.d?"Settimana da attaccanti: più spazio davanti.":o.d>o.a?"Settimana da difese: più spazio dietro.":"Settimana equilibrata."} (${o.d} difensori, ${o.m} a centrocampo, ${o.a} attaccanti)</small>${S.tf===o.f?'<div class="hint" style="color:#4ade80">✓ È già il modulo selezionato.</div>':`<button class="btn" data-mod="${o.f}" style="margin-top:6px">Usa ${o.f}</button>`}</div>`}
+$("#twp").addEventListener("click",e=>{const t=e.target.closest("[data-mid],[data-midt],[data-mod]");if(!t)return;const mi=twMI();
+ if(t.dataset.mod){S.tf=t.dataset.mod;renderTW();save();draw();return}
+ if(t.dataset.mid!==undefined){const p=TWC[+t.dataset.mid];if(!p)return;const i=mi.find(j=>!S.tw2[j].n);if(i===undefined)return alert("Tutti gli slot dei centrocampisti hanno già un nome: cancellane uno o cambia modulo.");
+  S.tw2.forEach((q,j)=>{if(j!==i&&q.n&&fvK(q.n,q.t||"")===fvK(p.n,p.sq))S.tw2[j]={n:"",t:""}});const o=S.tw2[i];S.tw2[i]={n:p.n,t:p.sq,...(o.ph&&o.n===p.n?{ph:o.ph}:{})};if(S.twAuto)twFillAtt();renderTW();save();draw();return}
+ if(t.dataset.midt!==undefined){const i=mi.find(j=>!S.tw2[j].n&&!S.tw2[j].t);if(i===undefined)return alert("Nessuno slot di centrocampo libero per la squadra.");S.tw2[i].t=t.dataset.midt;renderTW();save();draw()}});
+
+/* ---- calendario incollato dal sito (CalendarioV4) ---- */
+const calISO=(d,m,y)=>y+"-"+String(m).padStart(2,"0")+"-"+String(d).padStart(2,"0");
+function calParse(t){const R=/^\s*(\d+)\s*[^\s\d]{0,2}\s*giornata\b[^\t\n]*?\s+(\d{1,2})\/(\d{1,2})\/(\d{4})\s*(\([A-Za-z]{1,3}\))?\s*(.*)$/i,out=[],late=[],tn=new Set(S.cl.map(e=>e.n));
+ String(t||"").split(/\r?\n/).forEach(line=>{const m=line.match(R);if(!m)return;const g=+m[1],d=calISO(m[2],m[3],m[4]),rc=m[5]?m[5].replace(/[()]/g,"").toUpperCase():"",rest=m[6],p=rest.split("\t").map(x=>x.trim());
+  if(p.length>=3&&p[0]&&p[1]&&p[2]){const x=kRG(p[3]);out.push({g,d,s:p[0],h:p[1],a:p[2],r:x?x[0]+"-"+x[1]:"",rc});tn.add(p[1]);tn.add(p[2])}else late.push({g,d,rc,rest})});
+ late.forEach(o=>{const names=[...tn].sort((a,b)=>b.length-a.length),mm=o.rest.trim().match(/^(\S+)\s+(.*?)(?:\s+(\d+\s*[-–:]\s*\d+))?\s*$/);if(!mm)return;const h=names.find(n=>mm[2].toLowerCase().startsWith(n.toLowerCase()));if(!h)return;const a=mm[2].slice(h.length).trim();if(!a)return;const x=kRG(mm[3]);out.push({g:o.g,d:o.d,s:mm[1],h,a,r:x?x[0]+"-"+x[1]:"",rc:o.rc})});
+ return out}
+const calCur=()=>{const a=(S.cal||[]).filter(r=>kRG(r.r)).map(r=>r.g);return a.length?Math.max(...a):null};
+function calImport(t){const v=calParse(t),el=$("#kmsg");if(!v.length){el.textContent="Non ho trovato partite nel testo incollato. Apri la pagina CalendarioV4, premi Ctrl+A, Ctrl+C e incolla qui con Ctrl+V.";return false}
+ S.cal=v;S.calInfo={n:"calendario incollato",t:Date.now(),k:v.length};const pl=v.filter(r=>kRG(r.r));
+ [...new Set(pl.map(r=>r.g))].forEach(n=>{if(S.gv&&S.gv[n])S.gv[n].res=""});
+ const cur=calCur();if(cur!=null)S.gs=cur;PC={};kApply();save();
+ el.textContent="Calendario importato: "+v.length+" partite, "+pl.length+" con risultato"+(cur!=null?". Giornata attiva: "+cur+" (risultati, titoli e Match day compilati)":"")+".";
+ renderK();renderTW();draw();return true}
+const kGS=()=>{const a=new Set([...(S.cal||[]).map(r=>r.g),...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")),S.gs||1]);if(S.gx)a.add(S.gx);if(!(S.cal||[]).length)[1,2,3].forEach(n=>a.add(n));return[...a].sort((x,y)=>x-y)};
+const itD=iso=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||""))return iso||"";const q=new Date(iso+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});return q.charAt(0).toUpperCase()+q.slice(1)};
+let MCM=[],MCC=null;
+function mcFill(){const sel=$("#mcsel");if(!sel)return;MCM=(S.cal||[]).filter(r=>r.g===S.gs);sel.innerHTML=`<option value="">${MCM.length?"Scegli la partita (giornata "+S.gs+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("")}
+function autoLabels(){const g=S.gs;if(!g)return;const e=$("#gs");if(e&&/^(giornata|dopo)\s+\d+/i.test(e.value.trim()))e.value=e.value.replace(/^(giornata\s+)\d+/i,"$1"+g).replace(/^(dopo\s+)\d+/i,"$1"+g);const r=$("#rres");if(r&&document.activeElement!==r)r.value=S.res||"";mcFill()}
+$("#mcsel").onchange=e=>{const r=MCM[+e.target.value];MCC=r||null;if(!r)return;const x=kRG(r.r);S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s};["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});save();draw();cm()};
+$("#calp").addEventListener("input",e=>{const t=e.target.value;if(!t.trim())return;calImport(t);e.target.value=""});
+document.addEventListener("paste",e=>{if(!$("#k").classList.contains("on")||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;const t=(e.clipboardData||window.clipboardData).getData("text");if(!t)return;if(calImport(t))e.preventDefault()});
+
+function renderK(){const N0=kNG(),ch=[];for(const n of kGS())ch.push(`<button class="btn${n===S.gs?" p":""}" data-g="${n}">G${n}<i>${["cl","mar","amm"].map(k=>kHAS(n,k)?"●":"○").join("")}</i></button>`);ch.push('<button class="btn" data-g="+" title="Aggiungi una giornata">+</button>');$("#gch").innerHTML=ch.join("");$$("[data-gl]").forEach(e=>e.textContent=S.gs);
+ const sm={cl:a=>a.length+" squadre",mar:a=>a.length+" marcatori ("+sg(a)+" gol)",amm:a=>a.length+" ammoniti ("+a.reduce((q,e)=>q+e.t,0)+" cartellini)"};
+ ["cl","mar","amm"].forEach(k=>{const a=kGR(S.gs)[k],t=(kGR(S.gs).t||{})[k];$(`[data-ds="${k}"]`).innerHTML=a&&a.length?`<b style="color:#4ade80">✓ G${S.gs}</b> · ${sm[k](a)}<br>${TS(t)}`:`Nessun file per la giornata ${S.gs}`});
+ const cal=S.cal||[],cg=[...new Set(cal.map(r=>r.g))];$('[data-ds="cal"]').innerHTML=cal.length?`<b style="color:#4ade80">✓</b> ${cal.length} partite · giornate ${Math.min(...cg)}–${Math.max(...cg)} · ${cal.filter(r=>kRG(r.r)).length} con risultato${calCur()!=null?" (ultima: giornata "+calCur()+")":""}${S.calInfo&&S.calInfo.t?"<br>"+TS(S.calInfo.t):""}`:(S.calInfo&&!S.calInfo.k?`<b style="color:#e0a84a">⚠ ${esc(S.calInfo.n)} letto</b>, ma contiene solo l’intestazione: nessuna partita. Riesportalo dal sito quando il calendario è compilato, oppure scrivi i risultati a mano qui sotto.`:"Nessun calendario: incollalo qui sopra");
+ const rows=[...new Set([...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")),S.gs])].sort((a,b)=>a-b),cell=(n,k)=>kHAS(n,k)?`<span style="color:#4ade80">✓</span> ${new Date(kGR(n).t[k]).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} <button class="btn" data-rm="${n}|${k}" title="Elimina" style="padding:0 7px;min-height:0">×</button>`:'<span style="color:var(--mut)">—</span>',inc=[];
+ rows.forEach(n=>{const a=kGR(n).cl;if(a&&a.length){const mx=Math.max(...a.map(e=>e.g)),lo=a.filter(e=>e.g<mx);if(lo.length)inc.push(`G${n}: ${lo.map(e=>esc(e.n)+" ("+e.g+" su "+mx+")").join(", ")} con meno gare, dati incompleti`)}});
+ $("#kst").innerHTML=`<div class="card"><b>Giornate caricate</b><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="color:var(--mut);text-align:left"><th>Giornata</th><th>Classifica</th><th>Marcatori</th><th>Ammoniti</th></tr>${rows.map(n=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 0"><b>G${n}</b>${n===S.gs?" ◀":""}</td><td>${cell(n,"cl")}</td><td>${cell(n,"mar")}</td><td>${cell(n,"amm")}</td></tr>`).join("")}</table></div>${inc.map(x=>`<div class="hint" style="color:#e0a84a">⚠ ${x}</div>`).join("")}</div>`;
+ const w=wd(S.gs);if(!w){$("#kcalc").innerHTML=`<div class="card"><b>Settimana della giornata ${S.gs}</b><small>Carica i file di questa giornata per calcolare squadre, marcatori e ammoniti della settimana.</small></div>`;return}
+ const L=k=>w.pc[k]==null?'<span style="color:#e0a84a">nessuna giornata precedente, valori totali</span>':`G${S.gs} − G${w.pc[k]}`,miss=["cl","mar","amm"].filter(k=>!kHAS(S.gs,k)).map(k=>KT[k]),none=!w.tm.length&&!w.mar.length&&!w.amm.length;
+ $("#kcalc").innerHTML=`<div class="card"><b>Settimana della giornata ${S.gs}</b><small>Confronti: classifica ${L("cl")} · marcatori ${L("mar")} · ammoniti ${L("amm")}</small>
+ ${miss.length?`<div class="hint" style="color:#e0a84a">Per la giornata ${S.gs} mancano: ${miss.join(", ")}.</div>`:""}
+ ${none?'<div class="hint" style="color:#e0a84a">Nessuna variazione rispetto alla giornata precedente: controlla di aver assegnato i file alla giornata giusta.</div>':`<small>Squadre</small>${w.tm.map(e=>`<div class="hint">${esc(e.n)}: ${e.g} ${e.g>1?"gare":"gara"}, ${e.gf} fatti, ${e.gs} subiti</div>`).join("")||'<div class="hint">nessuna</div>'}<small style="margin-top:8px">Marcatori</small>${xl(w.mar,"mar",e=>`<div class="hint"><b>${esc(e.n)}</b> (${esc(e.sq)}) +${e.w}</div>`,"nessun gol")}<small style="margin-top:8px">Ammoniti</small>${xl(w.amm,"amm",e=>`<div class="hint"><b>${esc(e.n)}</b> (${esc(e.sq)}) +${e.w}</div>`,"nessuna ammonizione")}`}</div>${fvBlock("fv",1)}
+ <label for="kres">Risultati della giornata ${S.gs} (una partita per riga, es. Meceneri 3-1 Atletico Cocai)</label><textarea id="kres" rows="5">${esc(S.res||"")}</textarea><div class="hint">Arrivano dal calendario quando i risultati sono inseriti; puoi aggiungerli o correggerli a mano. Vengono confrontati con gli Excel.</div>
+ <div id="kchk"></div><div class="bar"><button class="btn" id="kcr">Ricarica dal calendario</button><button class="btn p" id="kgo">Compila il TOTW della giornata ${S.gs}</button></div>`;kChk()}
+$$("[data-dz]").forEach(z=>{const k=z.dataset.dz;z.ondragover=e=>{e.preventDefault();z.style.borderColor="var(--blue)"};z.ondragleave=()=>z.style.borderColor="";z.ondrop=e=>{e.preventDefault();z.style.borderColor="";kload([...e.dataTransfer.files],k)}});
+$$("[data-fi]").forEach(i=>i.onchange=e=>{kload([...e.target.files],i.dataset.fi);e.target.value=""});
+$("#k").addEventListener("click",e=>{const t=e.target,d=t.closest("[data-g]"),rm=t.closest("[data-rm]");
+ if(d){const g=d.dataset.g;if(g==="+"){S.gx=kNG()+1;S.gs=S.gx}else S.gs=+g;kApply();save();renderK();renderTW();draw();return}
+ if(rm){const[n,k]=rm.dataset.rm.split("|");if(!confirm("Eliminare "+KT[k]+" della giornata "+n+"?"))return;delete kGR(n)[k];if(kGR(n).t)delete kGR(n).t[k];if(!kGL().some(m=>kHAS(m,k)))S[k]=[];kApply();save();renderK();renderTW();draw();return}
+ if(t.id==="kcr"){kGV(S.gs).res="";kApply();save();renderK();renderTW();draw();return}
+ if(t.id==="kgo"){if(!kHAS(S.gs,"mar"))return alert("Carica l’Excel dei marcatori per la giornata "+S.gs+".");$("#ta").click();go("g");$("#gt").value="tw";$("#gt").dispatchEvent(new Event("change"))}});
+$("#k").addEventListener("input",e=>{if(e.target.id==="kres"){kSet(e.target.value);kChk();draw();const s=$("#tsg");if(s)s.innerHTML=sugg()}});
+document.addEventListener("click",e=>{const b=e.target.closest("[data-kx]");if(!b)return;KX[b.dataset.kx]=!KX[b.dataset.kx];renderK();const q=$("#tsg");if(q)q.innerHTML=sugg()});
+document.addEventListener("change",e=>{const p=e.target.dataset&&e.target.dataset.fvp;if(!p)return;S.fv={...FVP(),[p]:kN(e.target.value)};save();renderK();const q=$("#tsg");if(q)q.innerHTML=sugg()});
+$("#marw").addEventListener("input",e=>{if(e.target.id==="marn")S.marN=Math.max(0,parseInt(e.target.value)||0);else if(e.target.id==="mart")S.marTie=e.target.checked;else return;save();marUI();draw()});
+$("#marw").addEventListener("click",e=>{const v=e.target.dataset.mn;if(v===undefined)return;S.marN=+v;$("#marn").value=+v||"";save();marUI();draw()});
+kApply();TBU();renderK();
+week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
+if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
+if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
+/* ---- podcast: copione automatico dai dati della lega ---- */
+const POB=[["in","Intro e sigla",1],["pr","Presentazione ospiti",3],["sg","La stagione (dati)",7],["pe","Il personaggio (scheda)",7],["ff","Faccia a faccia",4],["ru","Oggetti di scena",4],["rf","Rapid fire",2],["pn","Pronostici",1.5],["ou","Saluti e sponsor",.5]];
+const POBS={in:"Intro",pr:"Ospiti",sg:"Stagione",pe:"Personaggio",ff:"Faccia a faccia",ru:"Oggetti",rf:"Rapid fire",pn:"Pronostici",ou:"Saluti"};
+const POBN=k=>(POB.find(b=>b[0]===k)||[k,k])[1],POBC={in:"#2f7bff",pr:"#5b8cff",sg:"#22c55e",pe:"#f5a524",ff:"#ec4899",ru:"#e0a84a",rf:"#14b8a6",pn:"#a78bfa",ou:"#64748b"};
+const POGD={in:"Intro e sigla",pr:"Ti presentiamo: squadra, ruolo, come arrivi alla puntata",sg:"La stagione: classifica, gol, cartellini e partite",pe:"Il personaggio: partiamo dalle risposte che ci hai mandato",ff:"Faccia a faccia: domande tra voi ospiti",ru:"Giochi con gli oggetti di scena (sorpresa!)",rf:"Rapid fire: risposte secche, d’istinto",pn:"Pronostici sulla prossima partita e sul campionato",ou:"Saluti e foto di gruppo"};
+const POCOL=["#f5a524","#22c55e","#ec4899","#a78bfa","#14b8a6","#e0a84a"];
+const POQ=[["so","Soprannome in squadra"],["rn","Ruolo e numero di maglia"],["an","Da quanti anni giochi"],["id","Il tuo idolo calcistico"],["go","Il gol più bello che hai segnato"],["pg","Il momento peggiore in campo"],["ri","Il tuo rivale (giocatore o squadra)"],["ae","Un aneddoto di spogliatoio"],["dm","Una domanda per l’altro ospite"],["cz","La canzone per entrare in campo"]];
+const PORU=["Portiere","Difensore","Centrocampista","Attaccante","Capitano","Mister","Presidente"];
+const POPROPS=()=>[{n:"Cartellino giallo e rosso",r:"Giallo = domanda scomoda, l’ospite può passare una sola volta. Rosso = deve rispondere per forza.",on:1,k:"card"},{n:"Pallone delle domande",r:"Le domande sono scritte sul pallone: l’ospite lo fa girare e risponde a quella sotto il pollice destro.",on:1,k:"ball"},{n:"Busta misteriosa",r:"Dentro c’è la domanda di un compagno di squadra o di un follower (raccoglila prima su Instagram).",on:0,k:"env"},{n:"Fischietto",r:"Si usa nel rapid fire: al fischio si passa alla domanda dopo.",on:1,k:"wh"}];
+const POGU=()=>({n:"",c:"",sq:"",ru:"",num:"",s:{}});
+const PODEF=()=>({id:"p"+Date.now().toString(36),show:"Seven Lions Podcast",ep:1,tit:"",data:"",dur:30,host:"",co:"",tono:"e",spo:"",os:[POGU(),POGU()],bl:POB.map(b=>({k:b[0],on:1,m:b[2]})),sd:{},off:{},ov:{}});
+const POBK={
+sg:["Qual è stato finora il momento più bello della stagione di {sq}?","Una partita di quest’anno che vorresti rigiocare?","Il compagno che ti sta sorprendendo di più quest’anno?","L’obiettivo di inizio stagione è ancora quello o è cambiato qualcosa?","La squadra che vi ha messo più in difficoltà finora?"],
+pe:["Come sei arrivato in {sq}?","Hai un rito scaramantico prima della partita?","Chi è il giocatore più forte con cui hai giocato?","Lavoro, famiglia e calcio: come incastri tutto?","Cosa ti ha fatto innamorare del calcio a 7?","Se fossi tu il mister di {sq}, cosa cambieresti domani?","Il terzo tempo: chi offre di solito?","Il complimento più bello che ti hanno fatto in campo?","Un consiglio a chi inizia adesso a giocare in un campionato amatori?","Scarpini: sempre gli stessi o li cambi a ogni stagione?","Chi ti viene a vedere più spesso dagli spalti?","Il gol sbagliato che ancora ti sogni di notte?"],
+cd:["arriva sempre più tardi al campo","si lamenta di più con l’arbitro","si crede più forte di quello che è","regge meno la fatica nel secondo tempo","ha il tiro più potente","esulta in modo più esagerato","passa più tempo davanti allo specchio dello spogliatoio","sbaglia più gol a porta vuota","sarebbe il miglior allenatore","finirebbe prima in panchina","organizza meglio il terzo tempo"],
+rf:["Gol di testa o di tacco?","Partita alle 20:30 o alle 22?","Erba sintetica o naturale?","Spogliatoio: musica a palla o silenzio?","Terzo tempo: birra o spritz?","Messi o Cristiano Ronaldo?","Rigore: centrale o angolato?","Scarpini neri o colorati?","Assist o gol?","Vincere 1-0 sporco o perdere 5-4 giocando bene?","Capitano o bomber?","Calzettoni su o giù?","Riscaldamento serio o due tiri in porta e via?","Pizza o kebab dopo la partita?","Tunnel o sombrero?","Pioggia o caldo afoso?"],
+pa:["La partita che non dimenticherai mai?","Il compagno più simpatico dello spogliatoio?","La tua esultanza preferita?","Il campo più brutto su cui hai giocato?","Il soprannome più strano sentito in campo?","L’avversario che temi di più?","Il gol più assurdo visto in questa lega?","Una cosa che i tuoi compagni non sanno di te?"],
+gi:["Cosa ti fa davvero arrabbiare in campo?","L’errore di cui ti penti di più in questa stagione?","Chi in squadra non passa mai la palla?","Un difetto del tuo mister?","Un arbitraggio che non hai ancora digerito?","Il compagno che salteresti volentieri all’allenamento?"]};
+const POSQ={so:"In squadra ti chiamano “{v}”: chi te l’ha dato e perché?",an:"Giochi da {v}: cosa è cambiato da quando hai iniziato?",id:"Il tuo idolo è {v}: cosa gli hai “rubato” in campo?",go:"Il gol più bello: {v}. Raccontacelo come se lo stessimo rivedendo.",pg:"Il momento peggiore: {v}. Come ti sei rialzato?",ri:"Il tuo rivale: {v}. Guarda in camera e mandagli un messaggio.",ae:"Ci hai anticipato un aneddoto di spogliatoio ({v}). Adesso raccontalo tu!",cz:"La tua canzone per entrare in campo è {v}: perché proprio questa?"};
+S.pod=S.pod||{};S.pod.cur=S.pod.cur||PODEF();S.pod.eps=S.pod.eps||[];S.pod.props=S.pod.props||POPROPS();S.pod.used=S.pod.used||{};
+const POc=()=>S.pod.cur;
+const poRng=s=>{let h=1779033703^s.length;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),3432918353);h=h<<13|h>>>19}return()=>{h=Math.imul(h^h>>>16,2246822507);h=Math.imul(h^h>>>13,3266489909);return((h^=h>>>16)>>>0)/4294967296}};
+const poShuf=(a,r)=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(r()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a};
+const poNK=n=>fvK(n||"","").split("|")[0],poTit=s=>String(s||"").toLowerCase().replace(/(^|[\s'’-])\S/g,m=>m.toUpperCase());
+const poCall=o=>(o.c||"").trim()||poTit((o.n||"").trim().split(/\s+/)[0])||"ospite";
+const poFull=o=>{const n=poTit((o.n||"").trim()),w=n.split(/\s+/),c=poCall(o).toLowerCase(),i=w.findIndex(x=>x.toLowerCase()===c);return i>0?[w[i],...w.slice(0,i),...w.slice(i+1)].join(" "):n};
+const poHL=c=>(c.host||"Conduttore").trim().toUpperCase();
+const poAmm=()=>{const n=kGL().filter(m=>kHAS(m,"amm")).pop();return n==null?[]:kGR(n).amm};
+const poTeam=sq=>sq?S.cl.findIndex(e=>kHN(e.n)===kHN(sq)):-1;
+function poMatch(sq){const k=kHN(sq),a=(S.cal||[]).filter(r=>kHN(r.h)===k||kHN(r.a)===k),pl=a.filter(r=>kRG(r.r)).sort((x,y)=>y.g-x.g||String(y.d).localeCompare(x.d)),nx=a.filter(r=>!kRG(r.r)).sort((x,y)=>x.g-y.g||String(x.d).localeCompare(y.d));return{last:pl[0],next:nx[0]}}
+const poOpp=(r,sq)=>kHN(r.h)===kHN(sq)?r.a:r.h,poSc=(r,sq)=>{const x=kRG(r.r);return kHN(r.h)===kHN(sq)?x:[x[1],x[0]]};
+function poInfo(o){const i=poTeam(o.sq),t=i>=0?S.cl[i]:null,nk=poNK(o.n),sk=kHN(o.sq),fit=e=>o.n&&poNK(e.n)===nk&&(!o.sq||kHN(e.sq)===sk),mar=S.mar||[],mp=mar.find(fit),am=poAmm().find(fit),w=wd(S.gs),ww=mp&&w?w.mar.find(fit):null,m=o.sq?poMatch(o.sq):{};
+ return{t,pos:i+1,nt:S.cl.length,mp,rk:mp?1+mar.filter(e=>e.g>mp.g).length:0,am,dd:!!(am&&am.df&&!/^(no|n|0|false|-)?$/i.test(String(am.df).trim())),ww,last:m.last,next:m.next}}
+function poChips(o){const f=poInfo(o),a=[];if(f.t)a.push(`${f.pos}° posto · ${f.t.pt} pt`);if(f.mp)a.push(`⚽ ${f.mp.g} (${f.rk}° marcatori)`);if(f.am)a.push(`🟨 ${f.am.t}${f.dd?" · diffidato":""}`);if(f.last){const x=poSc(f.last,o.sq);a.push(`ultima ${x[0]}-${x[1]} vs ${poOpp(f.last,o.sq)}`)}if(f.next)a.push(`prossima vs ${poOpp(f.next,o.sq)}`);
+ return a.length?a.map(x=>`<span class="pchip">${esc(x)}</span>`).join(""):`<span class="hint">${o.sq?"Nessun dato per questa squadra: carica gli Excel in Dati e TOTW.":"Scegli la squadra per collegare i dati del sito."}</span>`}
+const poLcf=s=>s.charAt(0).toLowerCase()+s.slice(1),poFm=m=>String(m).replace(".",",");
+const poG=c=>c.os.filter(o=>(o.n||"").trim()||o.sq);
+/* spunti dai dati: classifica, marcatori, ammoniti, calendario, scontri diretti tra gli ospiti */
+function poStag(G,N){const q=[],add=(id,to,t,p)=>q.push({id,to,t,p}),at=S.cl.length?[...S.cl].sort((a,b)=>b.gf-a.gf)[0]:null,df=S.cl.length?[...S.cl].sort((a,b)=>a.gs-b.gs)[0]:null,I=G.map(poInfo);
+ G.forEach((o,i)=>{const f=I[i],n=N[i],t=f.t;
+  if(t){if(f.pos===1)add("top"+i,i,`${t.n} è prima con ${t.pt} punti: ${n}, che effetto fa avere tutti dietro? E quanto pesa dover vincere sempre?`,9);
+   else if(f.pos===f.nt&&f.nt>2)add("bot"+i,i,`${t.n} è ultima con ${t.pt} punti. ${n}, senza giri di parole: cosa non sta funzionando e da dove si riparte?`,9);
+   else add("pos"+i,i,`${t.n} è al ${f.pos}° posto con ${t.pt} punti, a ${S.cl[0].pt-t.pt} dalla vetta. ${n}, dove può arrivare la squadra quest’anno?`,7);
+   if(at===t&&t.gf>0)add("att"+i,i,`Miglior attacco del campionato: ${t.gf} gol fatti. ${n}, qual è il segreto là davanti?`,6);
+   if(df===t&&t.g>0)add("dfs"+i,i,`Miglior difesa: solo ${t.gs} gol subiti. ${n}, chi è il muro della squadra?`,6);
+   if(t.p===0&&t.g>1)add("imb"+i,i,`Ancora imbattuti dopo ${t.g} partite: ${n}, c’è una scaramanzia di squadra che non ci state dicendo?`,6)}
+  if(f.mp)add("gol"+i,i,f.rk===1?`${n}, sei il capocannoniere con ${f.mp.g} gol. Quanto ci pensi alla classifica marcatori?`:`${n}, sei a ${f.mp.g} gol, ${f.rk}° nella classifica marcatori. Qual è stato il più bello?`,8);
+  if(f.ww&&f.ww.w>=2)add("wk"+i,i,`Nell’ultima giornata hai fatto ${f.ww.w===2?"doppietta":f.ww.w===3?"tripletta":f.ww.w+" gol"}: ${n}, raccontaci com’è andata.`,8);
+  if(f.am)add("amm"+i,i,`${f.am.t} ${f.am.t===1?"cartellino giallo":"cartellini gialli"} in stagione${f.dd?", e sei diffidato":""}: ${n}, sei tu il “cattivo” della squadra?`,f.dd?7:5);
+  if(f.last){const x=poSc(f.last,o.sq),op=poOpp(f.last,o.sq);add("lst"+i,i,x[0]>x[1]?`Ultima partita: vittoria ${x[0]}-${x[1]} contro ${op}. ${n}, cosa ha fatto la differenza?`:x[0]<x[1]?`Ultima partita: ${x[0]}-${x[1]} contro ${op}. ${n}, cosa vi siete detti nello spogliatoio dopo?`:`Pareggio ${x[0]}-${x[1]} contro ${op}: ${n}, punto guadagnato o due punti persi?`,5)}
+  if(f.next&&!G.some((p,j)=>j!==i&&p.sq&&kHN(poOpp(f.next,o.sq))===kHN(p.sq)))add("nxt"+i,i,`Prossima sfida contro ${poOpp(f.next,o.sq)}${f.next.d?", "+itD(f.next.d).toLowerCase():""}. ${n}, come la preparate?`,5)});
+ for(let i=0;i<G.length;i++)for(let j=i+1;j<G.length;j++){const a=G[i],b=G[j];if(!a.sq||!b.sq)continue;
+  if(kHN(a.sq)===kHN(b.sq)){add("st"+i+j,-1,`Giocate entrambi in ${a.sq}: ${N[i]} e ${N[j]}, chi è il vero leader dello spogliatoio?`,7);continue}
+  const key=[kHN(a.sq),kHN(b.sq)].sort().join(),hh=(S.cal||[]).filter(r=>[kHN(r.h),kHN(r.a)].sort().join()===key),pl=hh.filter(r=>kRG(r.r)),nx=hh.filter(r=>!kRG(r.r)).sort((x,y)=>x.g-y.g);
+  pl.forEach((r,z)=>{const x=kRG(r.r),wi=x[0]===x[1]?-1:kHN(x[0]>x[1]?r.h:r.a)===kHN(a.sq)?i:j;add("h2"+i+j+z,wi,`Giornata ${r.g}: ${r.h} ${x[0]}-${x[1]} ${r.a}. ${wi<0?`Finita pari: ${N[i]} e ${N[j]}, chi ha giocato meglio?`:`${N[wi]}, è il momento di sfottere un po’ ${N[wi===i?j:i]}?`}`,9)});
+  if(nx[0])add("hn"+i+j,-1,`Vi affrontate ${nx[0].d?itD(nx[0].d).toLowerCase():"alla giornata "+nx[0].g}: ${N[i]} e ${N[j]}, pronostico secco, uno a testa!`,10);
+  else if(!pl.length){const ta=S.cl[poTeam(a.sq)],tb=S.cl[poTeam(b.sq)];if(ta&&tb)add("cl"+i+j,-1,`${ta.n} e ${tb.n} sono separate da ${Math.abs(ta.pt-tb.pt)} punti: chi finisce davanti a fine stagione?`,6)}}
+ return q}
+/* genera i blocchi del copione: righe {id, w: h conduttore | x co-conduttore | d regia, to: ospite, src: d dato | s scheda | b banca} */
+function poGen(c){const G=poG(c),N=G.map(poCall),tn=c.tono,sh=c.show||"il podcast",gl=S.gs,lead=S.cl[0],top=(S.mar||[])[0],names=N.length<2?N.join(""):N.slice(0,-1).join(", ")+" e "+N[N.length-1],U=new Set(),out=[],topN=top?(G.find(o=>o.n&&poNK(o.n)===poNK(top.n))?poFull(G.find(o=>o.n&&poNK(o.n)===poNK(top.n))):poTit(top.n)):"";
+ c.bl.forEach(b=>{if(!b.on)return;const k=b.k,m=b.m;if(c.ov[k]){out.push({k,m,L:poParse(c.ov[k]),ov:1});return}
+  const r=poRng(k+"|"+(c.sd[k]||0)+"|"+G.map(o=>o.n+o.sq).join(",")),R=a=>a[Math.floor(r()*a.length)],A=[],ok=id=>!c.off[k+":"+id],nq=Math.max(1,Math.round(m/1.2)),
+   h=(id,t,to,src)=>{if(ok(id))A.push({id:k+":"+id,w:"h",t,to:to==null?-1:to,src:src||""})},d=(id,t)=>{if(ok(id))A.push({id:k+":"+id,w:"d",t,to:-1})},x=(id,t)=>{if(c.co&&ok(id))A.push({id:k+":"+id,w:"x",t,to:-1})},
+   pick=(cat,n,gi)=>{const gk=gi>=0?poNK(G[gi].n)||"_":"_",us=S.pod.used[gk]||{},a=poShuf(POBK[cat].map((t,i)=>({i,t,id:cat+i+":"+gi,u:!!us[cat+i]&&us[cat+i]!==c.id})),r).filter(q=>ok(q.id)).sort((p,q)=>p.u-q.u).slice(0,n);a.forEach(q=>U.add(gk+"|"+cat+q.i));return a};
+  if(k==="in"){d("s","🎵 Sigla (5–10 s) · luci accese · tutte le camere in REC");const co=c.co?` e con me c’è ${c.co}`:"",hn=c.host||"[il tuo nome]";
+   h("a",tn==="l"?`Benvenuti a ${sh}! Io sono ${hn}${co}, e oggi abbiamo ${G.length} ospiti che promettono scintille.`:tn==="s"?`Benvenuti a ${sh}${c.ep?", episodio "+c.ep:""}. Io sono ${hn}${co}: oggi, alla giornata ${gl}, analizziamo il campionato con ${G.length} protagonisti.`:`Benvenuti a ${sh}, il podcast della Seven Lions League${c.ep?": episodio "+c.ep:""}! Io sono ${hn}${co}.`);
+   x("x",tn==="s"?"Buonasera a tutti: oggi parliamo di numeri, ma anche di persone.":"Preparatevi, perché oggi dalle domande non si scappa!");
+   if(c.tit)h("t",`Il titolo di oggi è “${c.tit}”, e capirete presto perché.`);
+   if(lead)h("c",`Prima di cominciare, il punto sul campionato dopo la giornata ${gl}: in testa c’è ${lead.n} con ${lead.pt} punti${top?`, il capocannoniere è ${topN} (${top.sq}) con ${top.g} gol`:""}.`,-1,"d");
+   if(c.spo)h("sp",`Questa puntata è offerta da ${c.spo}.`)}
+  else if(k==="pr")G.forEach((o,i)=>{const f=poInfo(o),ru=o.ru||(o.s.rn||"").replace(/\d+/g,"").replace(/[,;·-]+\s*$/,"").trim(),nu=o.num||((o.s.rn||"").match(/\d+/)||[""])[0];
+   d("c"+i,`🎥 Inquadratura su ${N[i]}`);
+   h("p"+i,`${o.sq?`Da ${o.sq}`:"Il nostro ospite"}${ru?`, ${ru.toLowerCase()}`:""}${nu?` con il numero ${nu}`:""}: ${poFull(o)||N[i]}${o.s.so?`, per tutti “${o.s.so}”`:""}!`,i);
+   h("q"+i,f.t?`${N[i]}, ${o.sq} è al ${f.pos}° posto con ${f.t.pt} punti: come arrivate a questa puntata, in una parola?`:R([`${N[i]}, come stai? Presentati in tre parole.`,`${N[i]}, descrivi la tua squadra con un’emoji. Solo una!`]),i,f.t?"d":"")});
+  else if(k==="sg"){const C=poStag(G,N).filter(q=>ok(q.id)).map(q=>({...q,s:q.p+(c.sd[k]?r()*6:0)})).sort((a,b)=>b.s-a.s).slice(0,nq),hh=q=>q.to<0||/^(h2|hn|st|cl)/.test(q.id),by=G.map((_,i)=>C.filter(q=>!hh(q)&&q.to===i));for(let z=0;by.some(a=>a[z]);z++)by.forEach(a=>{if(a[z])h(a[z].id,a[z].t,a[z].to,"d")});C.filter(hh).forEach(q=>h(q.id,q.t,q.to,"d"));
+   const need=nq-C.length;if(need>0&&G.length)G.forEach((o,i)=>{const n=Math.floor(need/G.length)+(i<need%G.length?1:0);if(n)pick("sg",n,i).forEach(q=>h(q.id,`${N[i]}, ${poLcf(q.t.replace("{sq}",o.sq||"la tua squadra"))}`,i,"b"))})}
+  else if(k==="pe"){const q0=Math.max(1,Math.round(nq/Math.max(1,G.length))),per=G.map(()=>[]),ks=c.sd[k]?poShuf(Object.keys(POSQ),r):Object.keys(POSQ);
+   G.forEach((o,i)=>{ks.forEach(key=>{let v=(o.s[key]||"").trim();if(!v||per[i].length>=q0)return;if(key==="an"&&/^\d+$/.test(v))v+=" anni";const id="s"+key+i;if(ok(id))per[i].push({id,t:`${N[i]}, ${poLcf(POSQ[key].replace("{v}",v))}`,src:"s"})});
+    if(per[i].length<q0)pick("pe",q0-per[i].length,i).forEach(q=>per[i].push({id:q.id,t:`${N[i]}, ${poLcf(q.t.replace("{sq}",o.sq||"la tua squadra"))}`,src:"b"}))});
+   for(let z=0;z<q0;z++)per.forEach((a,i)=>{if(a[z])h(a[z].id,a[z].t,i,a[z].src)})}
+  else if(k==="ff"){const dm=G.map((o,i)=>(o.s.dm||"").trim()&&G.length>1?i:-1).filter(i=>i>=0);
+   dm.forEach(i=>{const j=(i+1)%G.length;d("dd"+i,`🔄 ${N[i]} fa una domanda a ${N[j]}`);h("dm"+i,`${N[i]}, ci avevi detto che volevi chiedere una cosa a ${N[j]}. Vai!`,i,"s");d("dq"+i,`La domanda di ${N[i]}: “${G[i].s.dm.trim()}”`)});
+   if(G.length>1){const w=G.length>2?"di voi":"dei due";d("cd",`👉 Al mio tre indicate chi ${w}… uno, due, tre!`);pick("cd",Math.max(2,Math.round(m/.7)-dm.length*2),-1).forEach(q=>h(q.id,`Chi ${w} ${q.t}?`,-1,"b"))}
+   else d("one","Servono almeno due ospiti per il faccia a faccia.")}
+  else if(k==="ru"){const pr=(S.pod.props||[]).filter(p=>p.on&&p.k!=="wh"),g0=G.length?Math.floor(r()*G.length):0;if(!pr.length)d("no","Nessun oggetto di scena attivo: accendili nella scheda “Oggetti di scena”.");
+   pr.forEach((p,pi)=>{const i=G.length?(g0+pi)%G.length:-1,n=i>=0?N[i]:"ospite";
+    if(p.k==="card"){d("a"+pi,"🟨 Prendi il cartellino giallo");h("b"+pi,`È il momento del cartellino! ${n}, domanda scomoda: puoi passare una sola volta.`,i);if(i>=0)pick("gi",1,i).forEach(q=>h(q.id,q.t,i,"b"));d("c"+pi,"🟥 Se passa: cartellino rosso, e la prossima domanda è obbligatoria")}
+    else if(p.k==="ball"){d("a"+pi,`⚽ Passa il pallone delle domande a ${n}`);h("b"+pi,`${n}, fallo girare e rispondi alla domanda sotto il pollice destro.`,i);d("c"+pi,"Da scrivere sul pallone prima di registrare: "+pick("pa",6,-1).map(q=>q.t).join(" · "))}
+    else if(p.k==="env"){d("a"+pi,"✉️ Tira fuori la busta misteriosa");h("b"+pi,`${n}, questa domanda arriva da [nome del compagno o del follower]: “[domanda]”.`,i);d("c"+pi,"Raccogli la domanda prima della registrazione (storia Instagram con il box domande)")}
+    else{d("a"+pi,`🎬 ${p.n}`);h("b"+pi,`È il momento di “${p.n}”! ${n}, tocca a te.`,i);if(p.r)d("c"+pi,p.r)}})}
+  else if(k==="rf"){const wh=(S.pod.props||[]).some(p=>p.on&&p.k==="wh");d("a",`⏱️ Rapid fire: 60 secondi${wh?", al fischio si passa alla domanda dopo":""}. Risposte secche, rispondono tutti.`);h("b",R(["Rapid fire! Niente ragionamenti, rispondete d’istinto.","Giro veloce: risposta secca, senza pensarci!"]));pick("rf",Math.min(14,Math.max(4,Math.round(m*4))),-1).forEach(q=>h(q.id,q.t,-1,"b"))}
+  else if(k==="pn"){const seen=new Set();G.forEach((o,i)=>{const f=poInfo(o),mk=f.next?f.next.g+"|"+f.next.h+"|"+f.next.a:"";
+    if(mk&&seen.has(mk))h("n"+i,`E tu, ${N[i]}? Stessa partita: pronostico opposto?`,i,"d");else h("n"+i,f.next?`${N[i]}, pronostico secco sulla prossima: ${f.next.h} – ${f.next.a}${f.next.d?" ("+itD(f.next.d).toLowerCase()+")":""}?`:`${N[i]}, pronostico secco sulla prossima partita di ${o.sq||"la tua squadra"}?`,i,f.next?"d":"");if(mk)seen.add(mk)});
+   h("t",lead?`Ultima domanda per tutti: oggi comanda ${lead.n}${top?` e il capocannoniere è ${topN}`:""}. Chi vince il campionato?`:"Ultima domanda per tutti: chi vince il campionato?",-1,lead?"d":"")}
+  else if(k==="ou"){h("a",`Grazie a ${names||"i nostri ospiti"}!${c.spo?` E grazie a ${c.spo}, che ha reso possibile questa puntata.`:""}`);
+   h("b",tn==="s"?"Ci rivediamo alla prossima puntata: seguiteci su Instagram per tutti i numeri del campionato.":"Seguiteci su Instagram, scrivete nei commenti chi volete come prossimo ospite e ricordate: for players, by players!");
+   x("x","Ciao a tutti, alla prossima!");d("c","🎵 Sigla di chiusura · foto di gruppo con gli oggetti di scena (servirà per la copertina)")}
+  out.push({k,m,L:A})});
+ POUSED=U;return out}
+let POUSED=new Set();
+function poParse(t){return String(t).split("\n").map(s=>s.trim()).filter(Boolean).map((s,i)=>{let m=s.match(/^\[(.*)\]$/);if(m)return{id:"o"+i,w:"d",t:m[1],to:-1};m=s.match(/^([^:\[\]]{1,40}):\s*(.+)$/);return m?{id:"o"+i,w:"h",lab:m[1].trim(),t:m[2],to:-1}:{id:"o"+i,w:"h",t:s,to:-1}})}
+const poLab=(l,c,N)=>l.lab||(l.w==="x"?(c.co||"Co-conduttore").toUpperCase():poHL(c)+(l.to>=0&&N[l.to]?" → "+N[l.to].toUpperCase():""));
+const poLine=(l,c,N)=>l.w==="d"?`[${l.t}]`:`${poLab(l,c,N)}: ${l.t}`;
+function poText(c,B){const G=poG(c),N=G.map(poCall),o=[`${(c.show||"Podcast").toUpperCase()} · EP. ${c.ep}${c.tit?" — "+c.tit:""}`,`Registrazione: ${c.data?itD(c.data):"da definire"} · Durata prevista: ${c.dur} min · Giornata ${S.gs}`,`Conduttore: ${c.host||"—"}${c.co?" · Co-conduttore: "+c.co:""}`,`Ospiti: ${G.map(g=>(poFull(g)||poCall(g))+(g.sq?" ("+g.sq+")":"")).join(", ")||"—"}`,""];
+ B.forEach((b,i)=>{o.push(`━━ ${i+1}. ${POBN(b.k).toUpperCase()} · ${poFm(b.m)} min ━━`);b.L.forEach(l=>o.push(poLine(l,c,N)));o.push("")});return o.join("\n")}
+/* ---- podcast: interfaccia ---- */
+let POB_=null,POED=null;const POOPEN={};
+const poList=a=>a.length<2?a.join(""):a.slice(0,-1).join(", ")+" e "+a[a.length-1];
+const poPl=o=>[...new Set([...(S.mar||[]),...poAmm()].filter(e=>!o.sq||kHN(e.sq)===kHN(o.sq)).map(e=>poTit(e.n)))].slice(0,120).map(n=>`<option value="${esc(n)}">`).join("");
+function poDirty(){const c=POc(),s=S.pod.eps.find(e=>e.id===c.id);if(!s)return poG(c).length>0;const{sv,...r}=s;return JSON.stringify(r)!==JSON.stringify(c)}
+function poAll(){poE();poO();poBl();poR();poS()}
+function poE(){const c=POc();$$("[data-pe]").forEach(i=>{if(document.activeElement!==i)i.value=c[i.dataset.pe]??""});
+ const eps=S.pod.eps;$("#parc").innerHTML=eps.length?[...eps].sort((a,b)=>b.ep-a.ep).map(e=>`<div class="row" style="padding:6px 0"><span><b>Ep. ${e.ep}</b> ${esc(e.tit||"")}<br><small>${e.data?esc(itD(e.data)):"senza data"} · ${esc(poList(poG(e).map(poCall))||"senza ospiti")}${e.id===c.id?" · aperta":""}</small></span><button class="btn pbx" data-pld="${e.id}">Apri</button><button class="btn pbx" data-pdx="${e.id}" title="Elimina">×</button></div>`).join(""):'<span class="hint">Nessuna puntata salvata.</span>';
+ const sv=eps.find(e=>e.id===c.id);$("#pst").innerHTML=`Ep. ${c.ep} · `+(sv?(poDirty()?'<span style="color:#e0a84a">modifiche non salvate</span>':"salvata "+TS(sv.sv)):"bozza")}
+function poO(){const c=POc();$("#ptn").innerHTML=S.cl.map(e=>`<option value="${esc(e.n)}">`).join("");
+ $("#pos").innerHTML=c.os.map((o,i)=>{const nf=POQ.filter(([k])=>(o.s[k]||"").trim()).length,op=POOPEN[i]!=null?POOPEN[i]:!nf;
+  return`<div class="card pgu" style="--c:${POCOL[i%POCOL.length]}"><div class="bar" style="margin:0"><b style="flex:1;color:var(--c)">Ospite ${i+1}</b>${c.os.length>2?`<button class="btn pbx" data-pox="${i}">Rimuovi</button>`:""}</div><datalist id="pdg${i}">${poPl(o)}</datalist>
+  <div class="g3" style="grid-template-columns:1fr 1fr"><div><label>Squadra</label><input list="ptn" data-po="sq" data-i="${i}" value="${esc(o.sq)}" placeholder="Dalla classifica"></div><div><label>Nome e cognome</label><input list="pdg${i}" data-po="n" data-i="${i}" value="${esc(o.n)}"></div>
+  <div><label>Ruolo</label><select data-po="ru" data-i="${i}"><option value="">—</option>${PORU.map(r=>`<option${r===o.ru?" selected":""}>${r}</option>`).join("")}</select></div><div><label>Numero di maglia</label><input data-po="num" data-i="${i}" value="${esc(o.num)}" inputmode="numeric"></div>
+  <div style="grid-column:1/-1"><label>Come lo chiami in onda</label><input data-po="c" data-i="${i}" value="${esc(o.c)}" placeholder="${esc(poCall({...o,c:""}))}"></div></div>
+  <div style="margin-top:8px" data-pch="${i}">${poChips(o)}</div>
+  <details data-pdi="${i}"${op?" open":""}><summary>Scheda personale (${nf}/${POQ.length})</summary><div class="bar" style="margin:8px 0 0;gap:6px"><button class="btn pbx" data-pwa="${i}">📲 Questionario da mandare su WhatsApp</button></div>
+  <label>Incolla qui la risposta dell’ospite: compilo i campi da solo</label><textarea data-pps="${i}" rows="2" placeholder="1. … 2. … 3. …"></textarea>
+  ${POQ.map(([k,l],n)=>`<label>${n+1}. ${l}</label><input data-pq="${k}" data-i="${i}" value="${esc(o.s[k]||"")}">`).join("")}</details></div>`}).join("")}
+function poBl(){const c=POc();$("#pbl").innerHTML=c.bl.map((b,i)=>`<div class="pkp"><input type="checkbox" data-pbo="${i}"${b.on?" checked":""} aria-label="Attiva ${POBN(b.k)}"><span style="display:flex;gap:8px;align-items:center"><i style="background:${POBC[b.k]}"></i>${POBN(b.k)}${c.ov[b.k]?' <small style="color:var(--mut)">· a mano</small>':""}</span><input type="number" min="0" step=".5" data-pbm="${i}" value="${b.m}" title="Minuti"><button class="btn pbx" data-pbu="${i}" title="Su">↑</button><button class="btn pbx" data-pbd="${i}" title="Giù">↓</button></div>`).join("")+'<div class="hint" id="pbt" style="margin-top:8px"></div>';poBlT()}
+function poBlT(){const c=POc(),tot=c.bl.filter(b=>b.on).reduce((q,b)=>q+b.m,0),e=$("#pbt");if(e)e.innerHTML=`Totale: <b>${poFm(tot)} min</b> su ${c.dur} previsti${Math.abs(tot-c.dur)>.25?` · <a href="#" data-pfit>adatta i minuti a ${c.dur}</a>`:" ✓"}`}
+function poFit(tg){const on=POc().bl.filter(b=>b.on),tot=on.reduce((q,b)=>q+b.m,0);if(!tot)return;on.forEach(b=>b.m=Math.max(.5,Math.round(b.m*tg/tot*2)/2));const df=tg-on.reduce((q,b)=>q+b.m,0),big=on.reduce((a,b)=>b.m>a.m?b:a);big.m=Math.max(.5,big.m+df)}
+function poR(){$("#prp").innerHTML=S.pod.props.map((p,i)=>`<div class="card"><div class="bar" style="margin:0;flex-wrap:nowrap"><input type="checkbox" data-prc="${i}"${p.on?" checked":""} aria-label="Attivo"><input data-prf="n" data-i="${i}" value="${esc(p.n)}" style="font-weight:600"><button class="btn pbx" data-prx="${i}" title="Elimina">×</button></div><label>Regola del gioco${p.k==="wh"?" (usato nel rapid fire)":""}</label><textarea data-prf="r" data-i="${i}" rows="2">${esc(p.r)}</textarea></div>`).join("")+'<button class="btn pbx" id="prd">Ripristina gli esempi</button>'}
+function poS(){const c=POc(),B=poGen(c),G=poG(c),N=G.map(poCall),tot=B.reduce((q,b)=>q+b.m,0),col=to=>to>=0&&G[to]?POCOL[c.os.indexOf(G[to])%POCOL.length]:"";POB_=B;
+ $("#ptl").innerHTML=B.map((b,i)=>`<div data-pj="${i}" title="${POBN(b.k)} · ${poFm(b.m)} min" style="flex:${b.m||.2};background:${POBC[b.k]}">${b.m>=2.5?esc(POBS[b.k]):""}</div>`).join("")+(tot<c.dur?`<div style="flex:${c.dur-tot};background:var(--line)" title="Tempo libero"></div>`:"");
+ const nl=B.reduce((q,b)=>q+b.L.filter(l=>l.w!=="d").length,0),nd=B.reduce((q,b)=>q+b.L.filter(l=>l.src==="d").length,0);
+ $("#ptm").innerHTML=`<b>${poFm(tot)} / ${c.dur} min</b>${tot>c.dur+.25?` <span style="color:#e0a84a">· sfora di ${poFm(tot-c.dur)} min</span>`:""} · ${nl} battute · <b>${nd}</b> spunti dai dati del sito<br>📊 dato del sito · 📝 scheda dell’ospite · 🎲 banca domande · ✕ toglie la riga (ne arriva un’altra)`;
+ if(!G.length){$("#psc").innerHTML='<p class="hint" style="margin:0">Scrivi almeno un ospite nella scheda <b>Ospiti</b>: il copione si scrive da solo, con i dati del sito.</p>';return poE()}
+ $("#psc").innerHTML=`<div style="margin-bottom:12px"><b style="font-size:19px;letter-spacing:-.01em">${esc(c.show)} · Ep. ${c.ep}</b>${c.tit?`<div>${esc(c.tit)}</div>`:""}<small style="display:block;color:var(--mut)">${c.data?esc(itD(c.data))+" · ":""}${G.map(g=>esc(poCall(g))+(g.sq?" ("+esc(g.sq)+")":"")).join(" · ")}</small></div>`+
+ B.map((b,bi)=>{const nOff=Object.keys(c.off).filter(q=>q.startsWith(b.k+":")).length;
+  return`<div class="psb" id="psb${bi}" style="--c:${POBC[b.k]}"><h4><span>${bi+1}. ${POBN(b.k)} <small>· ${poFm(b.m)} min</small></span>${b.ov?`<button class="btn pbx" data-pvr="${b.k}">Torna all’automatico</button>`:(["sg","pe","ff","rf","ru"].includes(b.k)?`<button class="btn pbx" data-psd="${b.k}">🎲 Altre domande</button>`:"")+(nOff?`<button class="btn pbx" data-pun="${b.k}">↺ ${nOff} ${nOff===1?"tolta":"tolte"}</button>`:"")}<button class="btn pbx" data-ped="${b.k}">✏️</button></h4>`+
+  (POED===b.k?`<textarea data-pet="${b.k}" rows="${Math.min(18,b.L.length+2)}">${esc(b.L.map(l=>poLine(l,c,N)).join("\n"))}</textarea><div class="hint">Una battuta per riga: NOME: testo · regia tra [parentesi quadre]</div><div class="bar" style="margin:6px 0 0"><button class="btn p pbx" data-pes="${b.k}">Salva il blocco</button><button class="btn pbx" data-pec>Annulla</button></div>`
+  :b.L.map(l=>`<div class="pl${l.w==="d"?" d":""}" style="${l.to>=0?"--c:"+col(l.to):l.w==="x"?"--c:#a78bfa":""}"><span class="w">${l.w==="d"?"🎬 regia":esc(poLab(l,c,N))}</span><span class="t">${esc(l.t)}</span>${l.src?`<span class="sr" title="${{d:"Dato dal sito",s:"Dalla scheda dell’ospite",b:"Dalla banca domande"}[l.src]}">${{d:"📊",s:"📝",b:"🎲"}[l.src]}</span>`:""}${b.ov?"":`<button class="x" data-pof="${esc(l.id)}" title="Togli questa riga">✕</button>`}</div>`).join("")||'<p class="hint">Blocco vuoto.</p>')+"</div>"}).join("");
+ poE()}
+function poPaste(i,t){const o=POc().os[i],ks=POQ.map(q=>q[0]),got={};let cur=null;
+ String(t).split(/\r?\n/).forEach(l=>{l=l.replace(/^\[[^\]]*\]\s*[^:]{1,40}:\s*/,"");const m=l.match(/^\s*\*?(\d{1,2})\s*[.)\-:°]\s*(.*)$/);if(m&&+m[1]>=1&&+m[1]<=ks.length){cur=ks[+m[1]-1];got[cur]=m[2].trim()}else if(cur&&l.trim())got[cur]+=(got[cur]?" ":"")+l.trim()});
+ if(Object.keys(got).length<2)return false;
+ Object.entries(got).forEach(([k,v])=>{v=v.replace(/\*/g,"").trim();const q=POQ.find(x=>x[0]===k)[1].toLowerCase();if((v.toLowerCase().startsWith(q.slice(0,12))||/^una domanda per/i.test(v))&&v.includes(":"))v=v.slice(v.indexOf(":")+1).trim();if(v)o.s[k]=v});
+ if(o.s.rn){const nu=(o.s.rn.match(/\d+/)||[""])[0];if(nu&&!o.num)o.num=nu;const r=PORU.find(x=>o.s.rn.toLowerCase().includes(x.toLowerCase().slice(0,5)));if(r&&!o.ru)o.ru=r}
+ return true}
+function poWa(i){const c=POc(),o=c.os[i]||POGU(),oth=c.os.filter((p,j)=>j!==i&&(p.n||p.sq)).map(poCall);
+ return`Ciao ${poCall(o)}! 🎙️ Tra pochi giorni registriamo ${c.show}${c.data?" ("+itD(c.data).toLowerCase()+")":""} e sei uno degli ospiti${oth.length?" insieme a "+poList(oth):""}.\nPer preparare l’intervista rispondi a queste domande, anche in breve, mantenendo i numeri 😄\n\n`+POQ.map(([k,l],n)=>`${n+1}. ${k==="dm"&&oth.length?"Una domanda per "+poList(oth):l}`).join("\n")+"\n\nGrazie! #ForPlayersByPlayers ⚽💚🩵"}
+function poGuest(c){const G=poG(c),B=POB_||poGen(c);return`🎙️ ${c.show} · Ep. ${c.ep}${c.tit?" — "+c.tit:""}\n📅 ${c.data?itD(c.data):"data da definire"} · circa ${c.dur} minuti\n👥 ${G.map(g=>poCall(g)+(g.sq?" ("+g.sq+")":"")).join(", ")}\n\nEcco come andrà (niente panico, si chiacchiera 😄):\n`+B.filter(b=>b.k!=="in"&&b.k!=="ou").map((b,i)=>`${i+1}. ${POGD[b.k]} · circa ${poFm(b.m)} min`).join("\n")+"\n\n👕 Porta la maglia della squadra e arriva 15 minuti prima per microfoni e luci.\n#ForPlayersByPlayers ⚽💚🩵"}
+function poCap(c){const G=poG(c),N=G.map(poCall),B=POB_||poGen(c),hk=[],tm=[...new Set(G.map(g=>g.sq).filter(Boolean))];
+ G.map(poInfo).forEach((x,i)=>{if(x.mp&&x.rk===1)hk.push(`il capocannoniere ${N[i]}`);else if(x.t&&x.pos===1)hk.push(`la capolista ${x.t.n}`)});
+ const yt=`${c.show} · Ep. ${c.ep} — ${G.map((g,i)=>N[i]+(g.sq?" ("+g.sq+")":"")).join(" e ")}${c.tit?": "+c.tit:""}`,
+  ig=P([`🎙️ Nuova puntata di ${c.show}! Ospiti: ${poList(N)}.`,`🎙️ L’episodio ${c.ep} è online: ${poList(N)} si raccontano senza filtri.`])+(hk.length?` Con noi ${poList(hk)}.`:"")+` Classifica, gol${B.some(b=>b.k==="ru")?", giochi con gli oggetti di scena":""}${B.some(b=>b.k==="ff")?", un faccia a faccia senza esclusione di colpi":""}${B.some(b=>b.k==="rf")?" e un rapid fire":""}.\n\nPuntata completa su YouTube, link in bio. Chi volete come prossimo ospite? Scrivetelo nei commenti 👇`+(tm.length?"\n\n"+tm.map(t=>"#"+t.replace(/[^\p{L}\p{N}]/gu,"")).join(" "):"")+FT;
+ return`TITOLO YOUTUBE\n${yt}\n\nCAPTION INSTAGRAM\n${ig}`}
+function poAI(c){return`Sei l’autore di un podcast di interviste sul calcio a 7 amatoriale (${c.show}, Seven Lions League · Lega Amatori Calcio Treviso). Qui sotto c’è il copione generato in automatico per l’episodio ${c.ep}.\n\nRiscrivilo in italiano parlato e naturale, con tono ${{l:"leggero e ironico",e:"equilibrato",s:"serio, da analisi"}[c.tono]||"equilibrato"}. Regole:\n- mantieni scaletta, minuti e ordine dei blocchi\n- usa solo i dati presenti (classifica, gol, cartellini, partite): non inventarne altri\n- mantieni le indicazioni di regia tra [parentesi quadre] e il formato NOME: battuta\n- aggiungi frasi di raccordo tra un blocco e l’altro\n- alla fine aggiungi 2 domande di riserva per ogni ospite\n\n${poText(c,POB_||poGen(c))}`}
+function poOut(k,i){const c=POc(),T={g:["Scaletta per gli ospiti",()=>poGuest(c)],c:["Titolo YouTube e caption Instagram",()=>poCap(c)],a:["Prompt per Claude: incollalo in una chat per rifinire il copione",()=>poAI(c)],w:[`Questionario per ${poCall(c.os[i]||{})}`,()=>poWa(i)]}[k];if(!T)return;
+ const t=T[1](),w=$("#poutw");$("#pouth").textContent=T[0];$("#poutt").value=t;w.style.display=k==="g"||k==="w"?"":"none";w.href="https://wa.me/?text="+encodeURIComponent(t);$("#pout").style.display="block";$("#pout").scrollIntoView({behavior:"smooth",block:"nearest"})}
+function poCopy(t,b){const ok=()=>{if(!b)return;const o=b.textContent;b.textContent="✓ Copiato";setTimeout(()=>b.textContent=o,1400)},fb=()=>{const a=document.createElement("textarea");a.value=t;document.body.append(a);a.select();try{document.execCommand("copy");ok()}catch(e){}a.remove()};
+ if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(ok,fb);else fb()}
+function poSave(){const c=POc(),cl=JSON.parse(JSON.stringify(c)),eps=S.pod.eps,i=eps.findIndex(e=>e.id===c.id);cl.sv=Date.now();if(i>=0)eps[i]=cl;else eps.push(cl);
+ POUSED.forEach(u=>{const[gk,q]=u.split("|"),a=S.pod.used[gk]=S.pod.used[gk]||{};if(!a[q])a[q]=c.id});save();poE();const b=$("#psv");b.textContent="✓ Salvata";setTimeout(()=>b.textContent="Salva puntata",1600)}
+/* ---- podcast: eventi ---- */
+const poSv=()=>{save();poS()};
+$("#ptb").onclick=e=>{const k=e.target.dataset.pt;if(!k)return;$$("#ptb button").forEach(b=>b.classList.toggle("on",b===e.target));$$(".pp").forEach(p=>p.classList.toggle("on",p.id==="pp_"+k));if(k==="o")poO()};
+$("#p").addEventListener("input",e=>{const t=e.target,d=t.dataset,c=POc();
+ if(d.pe){if(d.pe==="dur"){c.dur=+t.value;poFit(c.dur);poBl()}else c[d.pe]=d.pe==="ep"?Math.max(1,parseInt(t.value)||1):t.value;return poSv()}
+ if(d.po){const o=c.os[d.i];o[d.po]=t.value;const ch=$(`[data-pch="${d.i}"]`);if(ch)ch.innerHTML=poChips(o);if(d.po==="sq"){const dl=$("#pdg"+d.i);if(dl)dl.innerHTML=poPl(o)}return poSv()}
+ if(d.pq){c.os[d.i].s[d.pq]=t.value;return poSv()}
+ if(d.pps!==undefined){if(poPaste(+d.pps,t.value)){POOPEN[d.pps]=true;poO();const q=$(`[data-pq="so"][data-i="${d.pps}"]`);if(q)q.scrollIntoView({behavior:"smooth",block:"center"})}return poSv()}
+ if(d.pbm!==undefined){c.bl[d.pbm].m=Math.max(0,+t.value||0);poBlT();return poSv()}
+ if(d.prf){S.pod.props[d.i][d.prf]=t.value;return poSv()}
+ if(t.id==="poutt"){$("#poutw").href="https://wa.me/?text="+encodeURIComponent(t.value)}});
+$("#p").addEventListener("change",e=>{const t=e.target,d=t.dataset,c=POc();
+ if(d.pbo!==undefined){c.bl[d.pbo].on=t.checked?1:0;poBlT();return poSv()}
+ if(d.prc!==undefined){S.pod.props[d.prc].on=t.checked?1:0;return poSv()}});
+$("#pos").addEventListener("toggle",e=>{const p=e.target.dataset&&e.target.dataset.pdi;if(p!==undefined)POOPEN[p]=e.target.open},true);
+$("#p").addEventListener("click",e=>{const t=e.target.closest("button,a,[data-pj]");if(!t||t.closest("#tp"))return;const d=t.dataset,c=POc();
+ if(d.pof){c.off[d.pof]=1;return poSv()}
+ if(d.psd){c.sd[d.psd]=(c.sd[d.psd]||0)+1;return poSv()}
+ if(d.pun){Object.keys(c.off).forEach(q=>{if(q.startsWith(d.pun+":"))delete c.off[q]});return poSv()}
+ if(d.ped){POED=POED===d.ped?null:d.ped;poS();const a=$(`[data-pet="${d.ped}"]`);if(a)a.focus();return}
+ if(d.pes){c.ov[d.pes]=$(`[data-pet="${d.pes}"]`).value;POED=null;poBl();return poSv()}
+ if(d.pec!==undefined){POED=null;return poS()}
+ if(d.pvr){delete c.ov[d.pvr];POED=null;poBl();return poSv()}
+ if(d.pj!==undefined){const s=$("#psb"+d.pj);if(s)s.scrollIntoView({behavior:"smooth",block:"start"});return}
+ if(d.pbu!==undefined||d.pbd!==undefined){const i=+(d.pbu??d.pbd),j=d.pbu!==undefined?i-1:i+1;if(c.bl[j]){[c.bl[i],c.bl[j]]=[c.bl[j],c.bl[i]];poBl();poSv()}return}
+ if(d.pfit!==undefined){e.preventDefault();poFit(c.dur);poBl();return poSv()}
+ if(d.pox!==undefined){c.os.splice(+d.pox,1);Object.keys(POOPEN).forEach(k=>delete POOPEN[k]);poO();return poSv()}
+ if(d.pwa!==undefined)return poOut("w",+d.pwa);
+ if(d.px)return poOut(d.px);
+ if(d.prx!==undefined){S.pod.props.splice(+d.prx,1);poR();return poSv()}
+ if(t.id==="prd"){if(confirm("Ripristinare gli oggetti di scena di esempio? I tuoi verranno sostituiti.")){S.pod.props=POPROPS();poR();poSv()}return}
+ if(d.pld){if(d.pld!==c.id&&poDirty()&&!confirm("La puntata aperta ha modifiche non salvate. Aprire comunque?"))return;const s=S.pod.eps.find(x=>x.id===d.pld);if(!s)return;const n=JSON.parse(JSON.stringify(s));delete n.sv;S.pod.cur=n;POED=null;Object.keys(POOPEN).forEach(k=>delete POOPEN[k]);save();return poAll()}
+ if(d.pdx){if(!confirm("Eliminare questa puntata dall’archivio?"))return;S.pod.eps=S.pod.eps.filter(x=>x.id!==d.pdx);save();return poE()}});
+$("#poa").onclick=()=>{POc().os.push(POGU());POOPEN[POc().os.length-1]=true;poO();poSv()};
+$("#pra").onclick=()=>{const n=$("#prn").value.trim();if(!n)return $("#prn").focus();S.pod.props.push({n,r:$("#prr").value.trim(),on:1,k:"x"+Date.now().toString(36)});$("#prn").value="";$("#prr").value="";poR();poSv()};
+$("#prg").onclick=()=>{const c=POc();c.off={};POB.forEach(b=>c.sd[b[0]]=(c.sd[b[0]]||0)+1);poSv()};
+$("#psv").onclick=poSave;
+$("#pnw").onclick=()=>{const c=POc();if(poDirty()&&!confirm("La puntata aperta non è salvata. Iniziare comunque una nuova puntata?"))return;const n=PODEF();
+ Object.assign(n,{show:c.show,host:c.host,co:c.co,dur:c.dur,tono:c.tono,spo:c.spo,bl:JSON.parse(JSON.stringify(c.bl)),ep:Math.max(c.ep,...S.pod.eps.map(e=>e.ep))+1});S.pod.cur=n;POED=null;Object.keys(POOPEN).forEach(k=>delete POOPEN[k]);save();poAll();$$("#ptb button")[1].click()};
+$("#pcp").onclick=e=>{const c=POc();poCopy(poText(c,POB_||poGen(c)),e.target)};
+$("#pdl").onclick=()=>{const c=POc(),a=document.createElement("a");a.href=URL.createObjectURL(new Blob([poText(c,POB_||poGen(c))],{type:"text/plain;charset=utf-8"}));a.download=`podcast-ep${c.ep}.txt`;a.click()};
+$("#poutc").onclick=e=>poCopy($("#poutt").value,e.target);$("#poutx").onclick=()=>{$("#pout").style.display="none"};
+$("#ppr").onclick=()=>{const c=POc(),B=POB_||poGen(c),G=poG(c),N=G.map(poCall),f=document.createElement("iframe");f.style.cssText="position:fixed;right:0;bottom:0;width:0;height:0;border:0";document.body.append(f);
+ const h=`<!doctype html><html lang="it"><head><meta charset="utf-8"><title>${esc(c.show)} Ep. ${c.ep}</title><style>body{font:13px/1.5 "Inter Tight",system-ui,sans-serif;color:#050a18;margin:24px}h1{font-size:22px;margin:0}h2{font-size:11px;letter-spacing:.12em;text-transform:uppercase;border-top:2px solid #050a18;padding-top:6px;margin:20px 0 6px;display:flex;justify-content:space-between}.m{color:#53607e;margin:4px 0 0}p{margin:4px 0;display:flex;gap:12px;break-inside:avoid}b{flex:0 0 150px;font-size:10px;letter-spacing:.05em;padding-top:2px}i{color:#53607e}</style></head><body><h1>${esc(c.show)} · Ep. ${c.ep}${c.tit?" — "+esc(c.tit):""}</h1><div class="m">${c.data?esc(itD(c.data))+" · ":""}${c.dur} min · giornata ${S.gs} · Ospiti: ${esc(G.map(g=>poCall(g)+(g.sq?" ("+g.sq+")":"")).join(", "))}</div>`+
+ B.map((b,i)=>`<h2><span>${i+1}. ${esc(POBN(b.k))}</span><span>${poFm(b.m)} min</span></h2>`+b.L.map(l=>l.w==="d"?`<p><b></b><i>[${esc(l.t)}]</i></p>`:`<p><b>${esc(poLab(l,c,N))}</b><span>${esc(l.t)}</span></p>`).join("")).join("")+"</body></html>";
+ const dc=f.contentWindow.document;dc.open();dc.write(h);dc.close();setTimeout(()=>{f.contentWindow.focus();f.contentWindow.print();setTimeout(()=>f.remove(),60000)},300)};
+$("#pcv").onclick=()=>{const c=POc(),N=poG(c).map(poCall);go("g");$("#gt").value="cop";$("#gt").dispatchEvent(new Event("change"));$("#gh").value=`PODCAST|EP. ${c.ep}`;$("#gs").value=N.length?"con "+poList(N):c.show;draw();cm()};
+$("#pca").onclick=()=>{const c=POc();if(!c.data){alert("Inserisci la data di registrazione nella scheda Puntata.");return}const dt=new Date(c.data+"T12:00:00"),g=(dt.getDay()+6)%7;
+ if(!S.tipi.some(x=>x.id==="pod"))S.tipi.push({id:"pod",n:"Podcast",g,c:"YouTube (completa), Instagram (clip)",d:"Registrazione o uscita della puntata"});
+ const m=new Date(dt);m.setDate(m.getDate()-g);const key=iso(m)+"|pod";S.st[key]={s:(S.st[key]||{}).s||1,n:`🎙️ Ep. ${c.ep}${c.tit?" · "+c.tit:""} con ${poList(poG(c).map(poCall))} · registrazione ${itD(c.data).toLowerCase()}`};save();tipi();week();
+ const b=$("#pca");b.textContent="✓ Nel calendario";setTimeout(()=>b.textContent="📅 Segna in calendario",1800)};
+/* ---- teleprompter: scorrimento, specchio, tempo, telecomando Bluetooth (frecce / pagina giù) ---- */
+const TPS={y:0,run:0,sp:45,el:0,last:0,raf:0,mir:0,fs:48};
+const tpSv=()=>{S.pod.tp={sp:TPS.sp,fs:TPS.fs,mir:TPS.mir};save()},tpMax=()=>Math.max(0,$("#tpt").scrollHeight-$("#tpb").clientHeight*.5);
+function tpOpen(){const c=POc(),B=poGen(c),G=poG(c),N=G.map(poCall),col=to=>to>=0&&G[to]?POCOL[c.os.indexOf(G[to])%POCOL.length]:"#2f7bff";
+ if(!G.length)return alert("Aggiungi almeno un ospite.");
+ $("#tpt").innerHTML=`<p class="d">${esc(c.show)} · Ep. ${c.ep} — ${esc(poList(N))}</p>`+B.map((b,i)=>`<h3>${i+1}. ${esc(POBN(b.k))} · ${poFm(b.m)} min</h3>`+b.L.map(l=>l.w==="d"?`<p class="d">[${esc(l.t)}]</p>`:`<p><span class="w" style="--c:${l.w==="x"?"#a78bfa":col(l.to)}">${esc(poLab(l,c,N))}</span>${esc(l.t)}</p>`).join("")).join("")+'<p class="d">— fine —</p>';
+ Object.assign(TPS,S.pod.tp||{},{y:0,run:0,el:0});$("#tps").value=TPS.sp;$("#tpf").value=TPS.fs;$("#tp").style.setProperty("--tfs",TPS.fs+"px");$("#tp").classList.toggle("mir",!!TPS.mir);$("#tp").classList.add("on");document.body.style.overflow="hidden";tpPaint();
+ const de=document.documentElement;if(de.requestFullscreen&&!document.fullscreenElement)de.requestFullscreen().catch(()=>{})}
+function tpClose(){tpStop();$("#tp").classList.remove("on");document.body.style.overflow="";if(document.fullscreenElement&&document.exitFullscreen)document.exitFullscreen().catch(()=>{})}
+function tpPaint(){TPS.y=cl01(TPS.y,0,tpMax());$("#tpt").style.transform=`translateY(${-TPS.y}px)`;const vh=$("#tpb").clientHeight;let cur=null;$$("#tpt h3").forEach(h=>{if(h.offsetTop-TPS.y<=vh*.47)cur=h});
+ const tt=POc().dur*60;$("#tpk").innerHTML=`<small>${cur?esc(cur.textContent):"Pronti"}</small><span style="color:${TPS.el>tt?"#ff6b6b":"#fff"}">${tf(TPS.el)}</span> / ${tf(tt)}`;$("#tpg").textContent=TPS.run?"❚❚ Pausa":"▶ Avvia"}
+function tpTick(now){if(!TPS.run)return;const dt=Math.min(.1,(now-TPS.last)/1000);TPS.last=now;TPS.y+=TPS.sp*dt;TPS.el+=dt;tpPaint();TPS.raf=requestAnimationFrame(tpTick)}
+function tpGo(){if(TPS.run)return tpStop();TPS.run=1;TPS.last=performance.now();TPS.raf=requestAnimationFrame(tpTick);tpPaint()}
+function tpStop(){TPS.run=0;cancelAnimationFrame(TPS.raf);tpPaint()}
+function tpJump(dir){const vh=$("#tpb").clientHeight,hs=$$("#tpt h3").map(h=>h.offsetTop-vh*.42),y=TPS.y;const t=dir>0?hs.find(v=>v>y+5):hs.filter(v=>v<y-5).pop();TPS.y=t==null?(dir>0?tpMax():0):t;tpPaint()}
+$("#ptp").onclick=tpOpen;$("#tpx").onclick=tpClose;$("#tpg").onclick=tpGo;$("#tp0").onclick=()=>{TPS.y=0;TPS.el=0;tpPaint()};
+$("#tps").oninput=e=>{TPS.sp=+e.target.value;tpSv()};
+$("#tpf").oninput=e=>{TPS.fs=+e.target.value;$("#tp").style.setProperty("--tfs",TPS.fs+"px");tpPaint();tpSv()};
+$("#tpm").onclick=()=>{TPS.mir=TPS.mir?0:1;$("#tp").classList.toggle("mir",!!TPS.mir);tpSv()};
+let tpD=null;$("#tpb").onpointerdown=e=>{tpD={y:e.clientY,y0:TPS.y};$("#tpb").setPointerCapture(e.pointerId)};$("#tpb").onpointermove=e=>{if(tpD){TPS.y=tpD.y0-(e.clientY-tpD.y);tpPaint()}};$("#tpb").onpointerup=()=>{tpD=null};
+$("#tpb").addEventListener("wheel",e=>{e.preventDefault();TPS.y+=e.deltaY;tpPaint()},{passive:false});
+document.addEventListener("keydown",e=>{if(!$("#tp").classList.contains("on"))return;const k=e.key;
+ if(k===" "){e.preventDefault();tpGo()}else if(k==="Escape")tpClose();
+ else if(k==="ArrowRight"||k==="PageDown"){e.preventDefault();tpJump(1)}else if(k==="ArrowLeft"||k==="PageUp"){e.preventDefault();tpJump(-1)}
+ else if(k==="ArrowUp"||k==="ArrowDown"){e.preventDefault();TPS.sp=cl01(TPS.sp+(k==="ArrowUp"?5:-5),10,160);$("#tps").value=TPS.sp;tpSv()}
+ else if(k==="+"||k==="-"){TPS.fs=cl01(TPS.fs+(k==="+"?4:-4),24,96);$("#tpf").value=TPS.fs;$("#tp").style.setProperty("--tfs",TPS.fs+"px");tpPaint();tpSv()}});
+$('nav [data-t="p"]').addEventListener("click",poAll);
+poAll();
+</script>
+</body>
+</html>
