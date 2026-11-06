@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Seven Lions"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <title>Seven Lions League Social Media Tool</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Oswald:wght@600;700&family=Anton&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000;--panel:#0a0e18;--line:#1a2744;--fg:#fff;--mut:#8b98b8;--blue:#2f7bff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fff;--panel:#f2f5fb;--line:#d5def0;--fg:#050a18;--mut:#53607e;color-scheme:light}}
@@ -220,7 +220,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 </div>
 <div class="ep" id="ep_e"><div id="lyp" style="margin-top:14px"><label>Elementi sulla grafica (clicca sul disegno per selezionarli, trascinali per spostarli)</label>
 <div class="bar" id="lyl" style="margin:6px 0"></div>
-<div class="bar"><button class="btn" id="al">+ Logo</button><button class="btn" id="at">+ Testo</button><label class="btn" style="margin:0">+ Immagine<input type="file" id="ai" accept="image/*" hidden></label><button class="btn" id="rl">Ripristina elementi</button></div>
+<div class="bar"><button class="btn" id="al">+ Logo</button><button class="btn" id="at">+ Testo</button><label class="btn" style="margin:0">+ Immagine<input type="file" id="ai" accept="image/*" hidden></label><select id="asp" style="width:auto;display:none" aria-label="Aggiungi uno sponsor"></select><button class="btn" id="rl">Ripristina elementi</button></div>
 <div class="bar" id="mcb"><span class="hint" style="margin:0">Partita:</span><button class="btn" data-ma="lh">+ Logo casa</button><button class="btn" data-ma="la">+ Logo ospite</button><button class="btn" data-ma="nh">+ Nome casa</button><button class="btn" data-ma="na">+ Nome ospite</button><button class="btn" data-ma="vs">+ VS</button><button class="btn" data-ma="sc">+ Risultato</button><button class="btn" data-ma="d">+ Data</button><button class="btn" data-ma="v">+ Campo</button><button class="btn" data-ma="bx">+ Riquadro</button></div>
 <div id="lyc" class="card" style="display:none"><div id="lw_t"><label>Testo</label><input data-p="t"></div>
 <div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
@@ -249,6 +249,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <label for="olw">Spessore del contorno nei loghi bianchi</label><input type="range" id="olw" min="1" max="7">
 <p class="hint">Bianco (contorno e linee): il bordo del logo e le linee interne diventano bianchi, il resto è trasparente. Bianco pieno: sagoma tutta bianca.</p>
 <div id="ll"></div>
+<div class="bar" style="margin-top:22px"><h2 style="font-size:19px;flex:1;margin:0">Sponsor</h2><button class="btn p" id="spa">+ Aggiungi sponsor</button></div><p class="hint">Stesse opzioni dei loghi delle squadre (senza sfondo, contorno bianco, sagoma). Nelle grafiche li inserisci da Elementi › “+ Sponsor” e puoi spostarli, ridimensionarli e ricolorarli.</p><div id="spl"></div>
 </section>
 
 <section id="k"><div class="bar"><h2>Dati e TOTW</h2><a href="https://classifica.legaamatoricalciotreviso.it/" target="_blank" rel="noopener">Apri il sito della classifica</a></div>
@@ -392,7 +393,7 @@ function process(i,m){if(m==="bw")m="w";const nw=i.naturalWidth,nh=i.naturalHeig
 const logo=k=>{if(!k||!S.raw[k])return null;if(PC[k])return PC[k];const i=im(S.raw[k]);return i?(PC[k]=process(i,S.mode[k]||"o")):null};
 const dl=(x,c,cx,cy,sz)=>{const r=Math.min(sz/c.width,sz/c.height);x.drawImage(c,cx-c.width*r/2,cy-c.height*r/2,c.width*r,c.height*r)};
 function thumbs(){$$(".th").forEach(c=>{const x=c.getContext("2d");x.clearRect(0,0,56,56);const l=logo(c.dataset.th);if(l)dl(x,l,28,28,52)})}
-function renderLogos(){const ks=["__lega",...S.cl.map(e=>e.n)];
+function renderLogos(){spRender();const ks=["__lega",...S.cl.map(e=>e.n)];
  $("#ll").innerHTML=ks.map(k=>`<div class="row"><canvas class="th" width="56" height="56" data-th="${esc(k)}"></canvas><span><b>${k==="__lega"?"Logo della lega":esc(k)}</b></span><input type="file" accept="image/*" data-k="${esc(k)}" style="width:200px"><select data-k="${esc(k)}" data-m="1" style="width:190px">${MO.map(([v,l])=>`<option value="${v}"${(S.mode[k]||"o")===v?" selected":""}>${l}</option>`).join("")}</select><button class="btn" data-rm="${esc(k)}">Rimuovi</button></div>`).join("");thumbs()}
 $("#am").innerHTML=MO.map(([v,l])=>`<option value="${v}">${l}</option>`).join("");$("#tg").value=S.tol;
 $("#aa").onclick=()=>{S.cl.forEach(e=>{S.mode[e.n]=$("#am").value;delete PC[e.n]});save();renderLogos();draw()};
@@ -625,7 +626,7 @@ function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==
   if(lc){const r=Math.min(z/lc.width,z/lc.height),w=lc.width*r,h=lc.height*r;x.drawImage(lc,cx-w/2,cy-h/2,w,h);bx=[cx-w/2,cy-h/2,w,h]}
   else{x.fillStyle="rgba(255,255,255,.2)";x.beginPath();x.arc(cx,cy,z*.44,0,7);x.fill();x.fillStyle=mcCol(l);x.font=`800 ${z*.4}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText((nm||"?").slice(0,2).toUpperCase(),cx,cy);bx=[cx-z/2,cy-z/2,z,z]}}
   else if(l.k==="band"){const w=l.s*W,h=l.h*W,x0=l.x*W-w/2,y0=l.y*H-h/2;x.fillStyle=l.c||st.ac;x.beginPath();x.roundRect(x0,y0,w,h,l.r/100*h/2);x.fill();bx=[x0,y0,w,h]}
- else{const c=l.k==="img"?im(l.src):lg(l),z=l.s*W;if(c){const w=c.width||c.naturalWidth,h=c.height||c.naturalHeight,r=z/Math.max(w,h);cutDraw(x,l,c,w,h,r,W,H);bx=[l.x*W-w*r/2,l.y*H-h*r/2,w*r,h*r]}else bx=[l.x*W-z/2,l.y*H-z/2,z,z]}
+ else{const c=l.k==="img"?im(l.src):l.k==="sp"?spLg(l):lg(l),z=l.s*W;if(c){const w=c.width||c.naturalWidth,h=c.height||c.naturalHeight,r=z/Math.max(w,h);cutDraw(x,l,c,w,h,r,W,H);bx=[l.x*W-w*r/2,l.y*H-h*r/2,w*r,h*r]}else bx=[l.x*W-z/2,l.y*H-z/2,z,z]}
  x.restore();LB.push({id:l.id,x0:bx[0],y0:bx[1],x1:bx[0]+bx[2],y1:bx[1]+bx[3]})})}
 const FM=["2-3-1","3-2-1","2-2-2","3-1-2","1-3-2","2-1-3"];
 const SL=()=>{const[d,m,a]=S.tf.split("-").map(Number);return["Portiere",...Array(d).fill("Difensore"),...Array(m).fill("Centrocampista"),...Array(a).fill("Attaccante")]};
@@ -684,7 +685,7 @@ function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,
   [[r.hn,-1,r.h,r.a,2*i],[r.an,1,r.a,r.h,2*i+1]].forEach(([nm,sd,o,q,ix])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);
    const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),wt=o===q?700:o>q?800:500,ls=NF.l[ix];x.font=`${wt} ${NF.f}px ${F}`;
    x.textAlign=sd<0?"right":"left";x.fillStyle=o<q?rgba(st.tx,.75):st.tx;ls.forEach((t,k)=>x.fillText(t,nx,cy+(k-(ls.length-1)/2)*lh+NF.f*.02))})});x.restore()}
-function lyUI(){const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
+function lyUI(){spOpts();const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
  $("#lyl").innerHTML=a.map(q=>`<button class="btn${q.id===SEL?" p":""}" data-sl="${q.id}">${esc(q.k==="text"?(q.t||"Testo").slice(0,16):q.nm||"Immagine")}</button>`).join("")||'<span class="hint">Nessun elemento</span>';
  const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)||(l.k==="mt"&&l.f==="vs")?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"||l.k==="mlogo"?"none":"block";
  const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
@@ -1001,8 +1002,9 @@ const FCS={totw:{n:"TOTW nero e oro",a:"#3a3a3a",b:"#0b0b0b",bd:"#e2bd63",tx:"#f
 const fcAmm=()=>{const n=kGL().filter(m=>kHAS(m,"amm")).pop();return n==null?[]:kGR(n).amm};
 const TWK=()=>({ps:"s",cs:"totw",mv:1,...(S.twk||{})}),FCR={Portiere:"POR",Difensore:"DIF",Centrocampista:"CEN",Attaccante:"ATT"};
 /* stile carta completo: forma, colori, sfondo, dimensioni (unità: larghezza carta = 300) */
-const CDDEF=()=>({shape:"fifa",ar:1.42,cut:.11,rad:.08,bw:5,inner:1,a:"#3a3a3a",b:"#0b0b0b",ang:35,bd:"#e2bd63",tx:"#f5dfa0",mu:"#cdbb8b",ln:"#e2bd63",rays:100,bgimg:"",bgo:60,rs:44,ls:76,gs:34,gl:"col",ns:58,ny:.75,ts:18,ps:1,px:0,ms:1,sh:1});
-let CDW=null,CDE="";
+const CDDEF=()=>({shape:"fifa",ar:1.42,cut:.11,rad:.08,bw:5,inner:1,a:"#3a3a3a",b:"#0b0b0b",ang:35,bd:"#e2bd63",tx:"#f5dfa0",mu:"#cdbb8b",ln:"#e2bd63",rays:100,bgimg:"",bgo:60,font:"it",cond:.7,rs:44,ls:76,gs:34,gl:"col",ns:58,ny:.75,ts:18,ps:1,px:0,ms:1,sh:1});
+let CDW=null,CDE="";const FCF={it:['"Inter Tight",system-ui,sans-serif',800,600],bc:['"Barlow Condensed",sans-serif',800,600],os:["Oswald,sans-serif",700,600],an:["Anton,sans-serif",400,400],bb:['"Bebas Neue",sans-serif',400,400]},FLD={};
+function fcFont(k){if(!k||k==="it"||FLD[k]||!FCF[k]||!document.fonts||!document.fonts.load)return;FLD[k]=1;const f=FCF[k];Promise.all([document.fonts.load(`${f[1]} 40px ${f[0]}`),document.fonts.load(`${f[2]} 40px ${f[0]}`)]).then(()=>{draw();if(CDW&&$("#cde").classList.contains("on"))cdPrev()}).catch(()=>{})}
 function fcSt(k){if(CDW&&k===CDE)return CDW;if(S.cdz&&S.cdz[k])return{...CDDEF(),...S.cdz[k]};if(k!=="lega")return{...CDDEF(),...(FCS[k]||FCS.totw)};
  const s=S.sty,a=bgMix(s.ac,"#ffffff",.2),b=bgMix(s.ac,"#000000",.6),dk=lum(bgMix(a,b,.4))>150;return{...CDDEF(),a,b,bd:s.tx,tx:dk?"#111111":"#ffffff",mu:dk?"#333333":"#eeeeee",ln:"#ffffff"}}
 const fcNm=k=>S.cdz&&S.cdz[k]?S.cdz[k].n:(FCS[k]||{}).n||k,fcKeys=()=>[...Object.keys(FCS),...Object.keys(S.cdz||{})];
@@ -1026,14 +1028,14 @@ function fcDraw(x,X,Y,w,p,sk){const own=typeof sk==="object",K=own?sk:fcSt(p.mv&
   g=x.createLinearGradient(0,by+bh*.72,0,by+bh);g.addColorStop(0,rgba(mid,0));g.addColorStop(1,mid);x.fillStyle=g;x.fillRect(X,by+bh*.72,w,bh*.28+1)}
  else{x.fillStyle=rgba(K.tx,.18);x.beginPath();x.arc(bx+bw*.55,by+bh*.4,bh*.2,0,7);x.fill();x.beginPath();x.ellipse(bx+bw*.55,by+bh*1.02,bw*.4,bh*.42,0,Math.PI,0);x.fill()}
  x.restore();if(K.bw>0){fcPath(x,X,Y,w,h,K);x.lineWidth=K.bw*u;x.strokeStyle=K.bd;x.stroke()}if(K.inner){x.save();x.translate(X+w/2,Y+h/2);x.scale(.93,.95);x.translate(-X-w/2,-Y-h/2);fcPath(x,X,Y,w,h,K);x.restore();x.lineWidth=1.5*u;x.strokeStyle=rgba(K.bd,.55);x.stroke()}
- const T=(t,fs,wt,c,cx,cy,mw)=>{let f=fs;x.font=`${wt} ${f}px ${F}`;while(mw&&x.measureText(t).width>mw&&f>8*u){f--;x.font=`${wt} ${f}px ${F}`}x.save();if(K.sh){x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=8*u}x.fillStyle=c;x.fillText(t,cx,cy);x.restore();return f};
+ const FF=FCF[K.font]||FCF.it;fcFont(K.font);const T=(t,fs,wt,c,cx,cy,mw)=>{const w8=wt>=700?FF[1]:FF[2],cd=Math.min(1,Math.max(.4,K.cond||.7));let f=fs;x.font=`${w8} ${f}px ${FF[0]}`;let tw=x.measureText(t).width;while(mw&&tw*cd>mw&&f>8*u){f--;x.font=`${w8} ${f}px ${FF[0]}`;tw=x.measureText(t).width}const sc=mw&&tw>mw?mw/tw:1;x.save();if(K.sh){x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=8*u}x.fillStyle=c;x.translate(cx,cy);x.scale(sc,1);x.fillText(t,0,0);x.restore();return f};
  const cx=X+w*.2;let y=Y+h*.035;if(K.rs>0){y+=K.rs*u;T(p.r,K.rs*u,800,K.tx,cx,y,w*.34);y+=6*u}
  const tl=logo(p.t);if(K.ls>0){if(tl)dl(x,tl,cx,y+K.ls*u/2,K.ls*u);y+=K.ls*u+6*u}
  const nf=K.ns*u,nyB=Y+h*K.ny,ic=gList(p),gr=K.gs*u;
  if(ic.length&&gr>0){if(K.gl==="row"){let r=gr,st=r*2.35;const n=ic.length,mw=w*.88;if(n*st>mw){st=mw/n;r=st/2.35}const yy=nyB-nf*.95-r*1.1;ic.forEach((k,i)=>gIcon(x,X+w/2-(n-1)*st/2+i*st,yy,r,k))}
-  else{let r=gr,st=r*2.3;const top=y+r,room=Y+h*.64-top+st,per=Math.max(1,Math.floor(room/st)),cols=Math.ceil(ic.length/per);if(cols>2){r=r*2/cols;st=r*2.3}const pr=Math.max(1,Math.ceil(ic.length/Math.min(cols,2)));
-   ic.forEach((k,i)=>{const c=Math.floor(i/pr),rw=i%pr;gIcon(x,cols>1?X+w*(.12+c*.17):cx,top+rw*st,r,k)})}}
- const nm=p.n;T(nm,nf,800,K.tx,X+w/2,nyB,w*.9);let ty=nyB;if(p.t&&K.ts>0){ty+=K.ts*u*1.35;T(p.t,K.ts*u,600,K.mu,X+w/2,ty,w*.8)}
+  else{let r=gr,st=r*2.3,top=y+r,lim=nyB-nf*.82-r-2*u,per=Math.max(1,Math.floor((lim-top)/st)+1),cols=Math.ceil(ic.length/per);if(cols>2){r*=Math.sqrt(2/cols);st=r*2.3;top=y+r;lim=nyB-nf*.82-r-2*u;per=Math.max(1,Math.floor((lim-top)/st)+1);cols=Math.ceil(ic.length/per)}
+   const pr=Math.ceil(ic.length/cols);ic.forEach((k,i)=>{const c=Math.floor(i/pr),rw=i%pr;gIcon(x,cols>1?X+w*(.12+c*.17):cx,top+rw*st,r,k)})}}
+ const nm=p.n;T(nm,nf,800,K.tx,X+w/2,nyB,w*.92);let ty=nyB;if(p.t&&K.ts>0){ty+=K.ts*u*1.35;T(p.t,K.ts*u,600,K.mu,X+w/2,ty,w*.8)}
  if(p.mv&&K.ms>0){const pw=w*.5*K.ms,pg=34*u*K.ms,px=X+(w-pw)/2,py=Math.max(Y+h*.838,ty+8*u);g=x.createLinearGradient(0,py,0,py+pg);g.addColorStop(0,"#fff1b0");g.addColorStop(.5,"#f5c542");g.addColorStop(1,"#c98d06");x.save();x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=8*u;x.fillStyle=g;x.beginPath();x.roundRect(px,py,pw,pg,8*u*K.ms);x.fill();x.restore();x.strokeStyle="#7a5600";x.lineWidth=1.5*u;x.stroke();x.fillStyle="#3b2a00";x.font=`800 ${21*u*K.ms}px ${F}`;x.fillText("★ MVP",X+w/2,py+pg*.7)}
  x.restore()}
 function fcPitch(x,X0,y0,w,h){const[d,mm,a]=S.tf.split("-").map(Number),SLs=SL(),R=[[0]];let k=1;[d,mm,a].forEach(n=>{if(n){R.push(Array.from({length:n},(_,j)=>k+j));k+=n}});const L=fvCalc(S.gs)||[],nr=R.length,band=h/nr,sk=TWK().cs,ar=fcSt(sk).ar;
@@ -1109,7 +1111,7 @@ document.addEventListener("paste",e=>{if(!$("#g").classList.contains("on")||BS(g
 const CDF=[["Forma",[["shape","Forma","sel",[["fifa","Scudo FIFA"],["round","Arrotondata"],["rect","Rettangolo"]]],["ar","Altezza della carta","rng",1.05,1.7,.01],["cut","Angoli tagliati","rng",0,.25,.005],["rad","Arrotondamento","rng",0,.25,.005],["bw","Spessore bordo","rng",0,14,.5],["inner","Bordo interno","chk"]]],
  ["Colori",[["a","Sfumatura 1","col"],["b","Sfumatura 2","col"],["ang","Direzione sfumatura","rng",0,180,1],["bd","Bordo","col"],["tx","Nome e ruolo","col"],["mu","Squadra","col"],["ln","Riflessi","col"],["rays","Intensità riflessi","rng",0,200,1],["sh","Ombra sui testi","chk"]]],
  ["Sfondo della carta",[["bgimg","Immagine","img"],["bgo","Opacità immagine","rng",0,100,1]]],
- ["Testi e dimensioni",[["ns","Nome","rng",20,90,1],["ny","Altezza del nome","rng",.6,.9,.005],["ts","Squadra (0 = nascosta)","rng",0,40,1],["rs","Ruolo (0 = nascosto)","rng",0,90,1],["ls","Logo squadra (0 = nascosto)","rng",0,160,1],["gs","Icone gol e guanto","rng",0,60,1],["gl","Posizione icone","sel",[["col","In colonna a sinistra"],["row","In riga sopra il nome"]]],["ps","Foto: grandezza","rng",.5,1.5,.01],["px","Foto: spostamento","rng",-.2,.2,.005],["ms","Targhetta MVP (0 = nascosta)","rng",0,1.6,.05]]]];
+ ["Testi e dimensioni",[["font","Carattere","sel",[["it","Inter Tight"],["bc","Barlow Condensed"],["os","Oswald"],["an","Anton"],["bb","Bebas Neue"]]],["ns","Nome","rng",20,90,1],["cond","Nomi lunghi: compressione","rng",.5,1,.01],["ny","Altezza del nome","rng",.6,.9,.005],["ts","Squadra (0 = nascosta)","rng",0,40,1],["rs","Ruolo (0 = nascosto)","rng",0,90,1],["ls","Logo squadra (0 = nascosto)","rng",0,160,1],["gs","Icone gol e guanto","rng",0,60,1],["gl","Posizione icone","sel",[["col","In colonna a sinistra"],["row","In riga sopra il nome"]]],["ps","Foto: grandezza","rng",.5,1.5,.01],["px","Foto: spostamento","rng",-.2,.2,.005],["ms","Targhetta MVP (0 = nascosta)","rng",0,1.6,.05]]]];
 let CDK="",CDD=0;
 (function(){const d=document.createElement("div");d.id="cde";d.innerHTML=`<div class="cdp" role="dialog" aria-label="Editor delle carte"><div class="bar" style="margin-bottom:10px"><h2 style="flex:1;margin:0">Editor delle carte</h2><button class="btn" data-ce="x" aria-label="Chiudi">✕</button></div><div class="cdg"><div class="cdv"><canvas id="cdc" width="720" height="500"></canvas><div class="hint">Anteprima: un giocatore della formazione e un portiere MVP con la porta inviolata. Le modifiche si vedono anche sulla grafica.</div></div>
  <div class="cdk"><div class="g3"><div><label for="cdsel">Carta da modificare</label><select id="cdsel"></select></div><div><label for="cdn">Nome</label><input id="cdn"></div></div>`+
@@ -1192,6 +1194,19 @@ $("#twp").addEventListener("click",e=>{const b=e.target.closest("[data-twt],[dat
  if(d.twt){TWT=d.twt;$("#tsg").innerHTML=sugg();return}if(d.twf!=null){TWF=d.twf;$("#tsg").innerHTML=sugg();return}if(d.twall!=null)return twAssign();
  const p=(fvCalc(S.gs)||[])[+d.twadd];if(!p)return;const r=rlGet(p.n,p.sq),R=SL(),j=R.findIndex((x,i)=>x===r&&!S.tw2[i].n);if(j<0)return alert(`Nessun posto libero nel ruolo ${RLC[r]}: togli un nome da quel reparto o cambia modulo.`);
  const o=S.tw2[j];S.tw2[j]={n:twName(p.n),f:p.n,t:p.sq,...(o.ph&&(o.f||o.n)===p.n?{ph:o.ph,phc:o.phc}:{})};renderTW();save();draw();cm()});
+/* ---- loghi degli sponsor: stessa gestione dei loghi delle squadre, utilizzabili come elementi nelle grafiche ---- */
+const spK=s=>"__sp_"+s.id;
+function spRender(){const el=$("#spl");if(!el)return;const A=S.spn||[];
+ el.innerHTML=A.map(s=>{const k=spK(s);return`<div class="row"><canvas class="th" width="56" height="56" data-th="${esc(k)}"></canvas><span><input data-spn="${s.id}" value="${esc(s.n)}" placeholder="Nome dello sponsor" aria-label="Nome dello sponsor" style="max-width:260px"></span><input type="file" accept="image/*" data-k="${esc(k)}" style="width:200px"><select data-k="${esc(k)}" data-m="1" style="width:190px">${MO.map(([v,l])=>`<option value="${v}"${(S.mode[k]||"o")===v?" selected":""}>${l}</option>`).join("")}</select><button class="btn" data-rm="${esc(k)}">Rimuovi logo</button><button class="btn" data-spx="${s.id}" title="Elimina lo sponsor">×</button></div>`}).join("")||'<p class="hint">Nessuno sponsor: aggiungilo con “+ Aggiungi sponsor”, poi caricane il logo. Nelle grafiche lo inserisci da Elementi › “+ Sponsor”.</p>';thumbs();spOpts()}
+function spOpts(){const e=$("#asp");if(!e)return;const A=(S.spn||[]).filter(s=>S.raw[spK(s)]);e.innerHTML=`<option value="">+ Sponsor</option>`+A.map(s=>`<option value="${s.id}">${esc(s.n||"Sponsor")}</option>`).join("");e.style.display=A.length?"":"none"}
+function spLg(l){const b=logo(l.key);if(!b||!l.c)return b;const k="__ts"+l.key+l.c+(S.mode[l.key]||"o")+S.tol+(S.olw||3)+(S.raw[l.key]||"").length;
+ return PC[k]||(PC[k]=(()=>{const c=bgCv(b.width,b.height),q=c.getContext("2d");q.drawImage(b,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
+$("#spa").onclick=()=>{(S.spn=S.spn||[]).push({id:Date.now().toString(36),n:""});save();spRender();const i=$$("#spl [data-spn]").pop();if(i)i.focus()};
+$("#spl").onchange=e=>$("#ll").onchange(e);
+$("#spl").addEventListener("input",e=>{const id=e.target.dataset.spn;if(!id)return;const s=(S.spn||[]).find(s=>s.id===id);if(s){s.n=e.target.value;Object.values(S.ly).forEach(a=>a.forEach(l=>{if(l.k==="sp"&&l.key===spK(s))l.nm=s.n||"Sponsor"}));save();spOpts()}});
+$("#spl").addEventListener("click",e=>{const d=e.target.dataset;if(d.rm){delete S.raw[d.rm];delete S.mode[d.rm];PC={};save();spRender();draw()}
+ if(d.spx){const s=(S.spn||[]).find(s=>s.id===d.spx);if(!s||!confirm(`Eliminare lo sponsor${s.n?" “"+s.n+"”":""}? Sparisce anche dalle grafiche.`))return;const k=spK(s);S.spn=S.spn.filter(x=>x!==s);delete S.raw[k];delete S.mode[k];Object.keys(S.ly).forEach(g=>S.ly[g]=S.ly[g].filter(l=>!(l.k==="sp"&&l.key===k)));PC={};save();spRender();lyUI();draw()}});
+$("#asp").onchange=e=>{const s=(S.spn||[]).find(s=>s.id===e.target.value);e.target.value="";if(s)addL({k:"sp",key:spK(s),nm:s.n||"Sponsor",s:.2,y:.88})};
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
