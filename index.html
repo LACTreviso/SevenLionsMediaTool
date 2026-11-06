@@ -1230,6 +1230,20 @@ function twGkRows(l){if(TWF!=="Portiere")return"";const T=twTeam(S.gs),A=twGkX(l
  return`<div class="hint" style="margin:14px 0 2px"><strong>Portieri salvati a mano</strong> · in ordine di gol subiti dalla squadra in questa giornata${A.length?"":". Non ne hai ancora: aggiungili qui sotto."}</div>`+A.map(({v,gs,gf})=>{const inXI=S.tw2.some(x=>twSame(x,v.n,v.sq));return`<div class="twfr"><div><strong>${esc(v.n)}</strong> <span class="mut">${esc(v.sq||"")}</span><div class="twfm"><span class="twrl">POR</span><span>${gs==null?"la squadra non ha giocato questa giornata":gs===0?`🧤 porta inviolata (${gf}-0)`:`gol subiti: ${gs} (${gf}-${gs})`}</span></div></div><strong class="twfv" title="Gol subiti">${gs==null?"–":gs}</strong>${inXI?'<span class="wok">✓ nel TOTW</span>':gs==null?"<span></span>":`<button class="btn pbx" data-twgk="${esc(rlK(v.n,v.sq))}">+ TOTW</button>`}</div>`}).join("")+rlForm("f")}
 $("#twp").addEventListener("click",e=>{const b=e.target.closest("[data-twgk]");if(!b)return;const v=(S.ruoli||{})[b.dataset.twgk];if(!v)return;const j=SL().findIndex((r,i)=>r==="Portiere"&&!S.tw2[i].n);if(j<0)return alert("Il posto del portiere è già occupato: cancella il nome e riprova.");const o=S.tw2[j];S.tw2[j]={n:twName(v.n),f:v.n,t:v.sq,...(o.ph&&(o.f||o.n)===v.n?{ph:o.ph,phc:o.phc}:{})};renderTW();save();draw();cm()});
 $("#twgc").onchange=e=>{S.twk={...TWK(),gc:e.target.checked?1:0};save();draw();cm()};
+
+/* ---- TOTW: messaggio WhatsApp per raccogliere foto e Instagram dei giocatori ---- */
+function nmFull(full){const w=nmT(full);if(w.length<2||nmIn(w[0]))return poTit(w.join(" "));const a=NOMI.has(nmK(w[0])),b=NOMI.has(nmK(w[w.length-1])),cn=b&&!a?true:a&&!b?false:nmFmt()==="cn";let f,sr;
+ if(cn){let k=w.length-1;while(k>1&&NOMI.has(nmK(w[k-1])))k--;f=w.slice(k);sr=w.slice(0,k)}else{let k=1;while(k<w.length-1&&NOMI.has(nmK(w[k])))k++;f=w.slice(0,k);sr=w.slice(k)}
+ return poTit([...f,...sr].join(" "))}
+function twWaMsg(){const L=(S.twv==="k"?(S.twx||[]):S.tw2).filter(q=>q&&q.n&&String(q.n).trim()),seen=new Set(),R=[];
+ L.forEach(q=>{const n=nmFull(q.f||q.n),k=fvK(n,q.t||"");if(seen.has(k))return;seen.add(k);R.push(`* *${n}*${q.t?` della formazione *${q.t}*`:""}`)});
+ return R.length?`Ciao!\nLa *squadra della giornata ${S.gs}* è composta da:\n\n${R.join("\n")}\n\nSe mi manderete le *foto* e il *nome su Instagram* dei giocatori le inserirò nella grafica, grazie!`:""}
+$("#twr").insertAdjacentHTML("afterend",`<div id="twwa" style="margin-top:10px"><button class="btn" id="twwab" style="width:100%">💬 Messaggio WhatsApp per le foto dei giocatori</button><div id="twwao" class="card" style="display:none;margin-top:8px"><b>Messaggio per le foto</b><small>Si compila da solo con la squadra della giornata: puoi ritoccarlo qui prima di mandarlo.</small><textarea id="twwat" rows="10" style="margin-top:6px"></textarea><div class="bar" style="margin:8px 0 0"><button class="btn p" id="twwac">Copia</button><a class="btn" id="twwaw" target="_blank" rel="noopener" style="text-decoration:none">Apri WhatsApp</a><button class="btn" id="twwax">Chiudi</button></div></div></div>`);
+const twWaSet=t=>{$("#twwat").value=t;$("#twwaw").href="https://wa.me/?text="+encodeURIComponent(t)};
+$("#twwab").onclick=()=>{const t=twWaMsg();if(!t)return alert("Compila prima la squadra della giornata (anche con “Assegna tutti”): il messaggio si scrive da solo con i nomi.");twWaSet(t);const o=$("#twwao");o.style.display="block";o.scrollIntoView({behavior:"smooth",block:"nearest"})};
+$("#twwat").addEventListener("input",e=>{$("#twwaw").href="https://wa.me/?text="+encodeURIComponent(e.target.value)});
+$("#twwac").onclick=e=>poCopy($("#twwat").value,e.target);
+$("#twwax").onclick=()=>{$("#twwao").style.display="none"};
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
