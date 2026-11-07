@@ -1047,10 +1047,10 @@ function twGrid(x,W,H,y0,m,F){const A=S.twx||[],n=A.length,u=W/1080,K0=fcSt(TWK(
  const{c,rows,cw}=B,ch=cw/wd*ar,top=y0+(ah-(rows*ch+(rows-1)*gp))/2;A.forEach((q,i)=>{const row=Math.floor(i/c),inr=Math.min(c,n-row*c),col=i-row*c;fcDraw(x,W/2-(inr*cw+(inr-1)*gp)/2+col*(cw+gp),top+row*(ch+gp),cw,fcData(q,q.r,L),TWK().cs)});x.textAlign="left"}
 /* foto dei giocatori: scontornata in automatico (se non riesce resta la foto normale) */
 async function phCut(f){const src=await new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>ko("file non leggibile");r.readAsDataURL(f)});let c,cut=1,err="";
- try{c=(await cutOut(src)).c}catch(e){cut=0;err=String(e&&e.message||e);const i=await ldImg(src);c=bgCv(i.naturalWidth,i.naturalHeight);c.getContext("2d").drawImage(i,0,0)}
+ try{c=(await cutOut(src,{one:1})).c}catch(e){cut=0;err=String(e&&e.message||e);const i=await ldImg(src);c=bgCv(i.naturalWidth,i.naturalHeight);c.getContext("2d").drawImage(i,0,0)}
  const s=cut?Math.min(1,360/c.height):Math.min(1,300/Math.min(c.width,c.height)),o=bgCv(c.width*s,c.height*s);o.getContext("2d").drawImage(c,0,0,o.width,o.height);
  let d=cut?o.toDataURL("image/webp",.85):o.toDataURL("image/jpeg",.85);if(cut&&!/^data:image\/webp/.test(d))d=o.toDataURL("image/png");return{d,cut,err}}
-async function phSet(q,f,inp){const lb=inp&&inp.parentElement&&inp.parentElement.firstChild;if(lb&&lb.nodeType===3)lb.nodeValue="✂️ …";
+async function phSet(q,f,inp){const lb=inp&&inp.parentElement&&inp.parentElement.firstChild;if(lb&&lb.nodeType===3)lb.nodeValue="✂️ …";if(!POSEP)toast("Scontorno in corso: la prima volta scarico i modelli (circa 25 MB)…");
  try{const r=await phCut(f);q.ph=r.d;if(r.cut)q.phc=1;else delete q.phc;if(r.err)toast("Foto caricata senza scontorno: "+r.err)}catch(e){toast("Foto non leggibile")}renderTW();save();draw();cm()}
 function twxUI(){const A=S.twx||[],tn=[...new Set(S.cl.map(e=>e.n))],pl=[...new Set([...(S.mar||[]),...fcAmm()].map(e=>e.n))];
  return`<div class="hint">Elenco libero di carte, senza modulo: quanti giocatori vuoi, con il ruolo che vuoi. Le foto vengono scontornate da sole.</div><datalist id="twxdl">${pl.map(n=>`<option value="${esc(n)}">`).join("")}</datalist>`+A.map((q,i)=>`<div class="twxr"><select data-xr="${i}" aria-label="Ruolo">${Object.keys(FCR).map(r=>`<option value="${r}"${r===q.r?" selected":""}>${FCR[r]}</option>`).join("")}</select><input list="twxdl" data-xn="${i}" value="${esc(q.n||"")}" placeholder="Nome Cognome"><select data-xt="${i}"><option value="">Squadra</option>${tn.map(n=>`<option${n===q.t?" selected":""}>${esc(n)}</option>`).join("")}</select><input type="number" min="0" data-xg="${i}" value="${q.g??""}" placeholder="⚽${twAutoG(q)||0}" title="Gol (vuoto = dai marcatori)" aria-label="Gol"><button class="btn${twMv(q)?" mvp":""}" data-xm="${i}">★ MVP</button><button class="btn${twNI(q)?" p":""}" data-xni="${i}" title="Togli l’iniziale del nome nella grafica">Solo cognome</button><label class="btn" style="margin:0">${q.ph?"✓ Foto":"Foto"}<input type="file" accept="image/*" data-xp="${i}" hidden></label><button class="btn" data-xx="${i}" title="Togli la carta">×</button></div>`).join("")+
@@ -1084,15 +1084,46 @@ function cutDraw(x,l,c,w,h,r,W,H){const X=l.x*W-w*r/2,Y=l.y*H-h*r/2;if(l.k!=="im
  if(PCD().ol&&l.src!==l.src0){const t=Math.max(2,Math.round(Math.max(w,h)*.011));x.drawImage(olImg(c,l.id+"|"+l.src.length+"|"+t,t),X-t*r,Y-t*r,(w+2*t)*r,(h+2*t)*r);x.shadowColor="transparent"}x.drawImage(c,X,Y,w*r,h*r);x.restore()}
 /* scontorno: PNG già trasparenti restano così; le altre foto passano dal modello MediaPipe (persone, capelli inclusi) */
 let SEGP=null;const SEGV="0.10.14",SEGB=`https://cdn.jsdelivr.net/npm/@mediapipe/tasks-vision@${SEGV}`,SEGM="https://storage.googleapis.com/mediapipe-models/image_segmenter/selfie_multiclass_256x256/float32/latest/selfie_multiclass_256x256.tflite";
-function segLoad(){return SEGP=SEGP||(async()=>{const m=await import(SEGB+"/vision_bundle.mjs"),fs=await m.FilesetResolver.forVisionTasks(SEGB+"/wasm");return m.ImageSegmenter.createFromOptions(fs,{baseOptions:{modelAssetPath:SEGM,delegate:"CPU"},runningMode:"IMAGE",outputConfidenceMasks:true,outputCategoryMask:false})})().catch(e=>{SEGP=null;throw e})}
+let SEGF=null,POSEP=null;const POSEM="https://storage.googleapis.com/mediapipe-models/pose_landmarker/pose_landmarker_full/float16/latest/pose_landmarker_full.task";
+const segFs=()=>SEGF=SEGF||(async()=>{const m=await import(SEGB+"/vision_bundle.mjs");return{m,fs:await m.FilesetResolver.forVisionTasks(SEGB+"/wasm")}})().catch(e=>{SEGF=null;throw e});
+function segLoad(){return SEGP=SEGP||(async()=>{const{m,fs}=await segFs();return m.ImageSegmenter.createFromOptions(fs,{baseOptions:{modelAssetPath:SEGM,delegate:"CPU"},runningMode:"IMAGE",outputConfidenceMasks:true,outputCategoryMask:false})})().catch(e=>{SEGP=null;throw e})}
+/* scheletro delle persone: serve a tenere solo il giocatore principale quando nella foto ce ne sono altri */
+function poseLoad(){return POSEP=POSEP||(async()=>{const{m,fs}=await segFs();return m.PoseLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:POSEM,delegate:"CPU"},runningMode:"IMAGE",numPoses:4,minPoseDetectionConfidence:.35,minPosePresenceConfidence:.35,outputSegmentationMasks:false})})().catch(e=>{POSEP=null;throw e})}
 function trimA(c){const q=c.getContext("2d"),{width:w,height:h}=c,p=q.getImageData(0,0,w,h).data;let x0=w,y0=h,x1=-1,y1=-1;for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(p[(j*w+i)*4+3]>24){if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j}
  if(x1<0)return c;const m=Math.round(Math.max(w,h)*.01);x0=Math.max(0,x0-m);y0=Math.max(0,y0-m);x1=Math.min(w-1,x1+m);y1=Math.min(h-1,y1+m);const o=bgCv(x1-x0+1,y1-y0+1);o.getContext("2d").drawImage(c,-x0,-y0);return o}
-async function cutOut(src){const img=await ldImg(src),s=Math.min(1,1200/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.round(img.naturalWidth*s),h=Math.round(img.naturalHeight*s),c=bgCv(w,h),q=c.getContext("2d",{willReadFrequently:true});q.drawImage(img,0,0,w,h);
+/* una sola persona: scelgo il giocatore principale (il più grande e centrale) e gli costruisco una sagoma attorno allo scheletro.
+   capelli e viso valgono solo vicino alla sua testa, i vestiti solo vicino al suo corpo e solo se hanno i colori della sua maglia: così spariscono compagni, abbracci e chi sta dietro */
+function cutOne(C,mw,mh,W,H,P,rgb){const n=mw*mh,vis=p=>p&&(p.visibility==null||p.visibility>.35),mc=C.length>=6;let L=null,bs=0;
+ const A=new Float32Array(n);for(let k=0;k<n;k++)A[k]=C.length>1?1-C[0][k]:C[0][k];
+ P.forEach(Q=>{const v=Q.filter(p=>vis(p)&&p.x>-.02&&p.x<1.02&&p.y>-.02&&p.y<1.02);if(v.length<6)return;let x0=1,x1=0,y0=1,y1=0;v.forEach(p=>{x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)});const sc=(x1-x0+.05)*(y1-y0+.05)*v.length*(1.1-Math.min(.9,Math.abs((x0+x1)/2-.5)*1.4));if(sc>bs){bs=sc;L=Q}});
+ const Dh=new Float32Array(n).fill(1e9),Db=new Float32Array(n).fill(1e9);let u=0;
+ if(L){const X=k=>L[k].x*W,Y=k=>L[k].y*H,M=(a,b)=>[(X(a)+X(b))/2,(Y(a)+Y(b))/2],ds=(a,b)=>Math.hypot(X(a)-X(b),Y(a)-Y(b)),sm=M(11,12),hm=M(23,24),pt=k=>[X(k),Y(k)];
+  u=Math.max(ds(11,12),ds(7,8)*2.2,Math.hypot(sm[0]-hm[0],sm[1]-hm[1])*.55,4);
+  const hv=[0,1,2,3,4,5,6,7,8,9,10].filter(k=>vis(L[k])),hc=hv.length?[hv.reduce((t,k)=>t+X(k),0)/hv.length,hv.reduce((t,k)=>t+Y(k),0)/hv.length]:[sm[0],sm[1]-u*.6],rh=Math.max(ds(7,8)*.75,u*.3),
+   GH=[[hc,[hc[0],hc[1]-rh*.3],rh],[hc,sm,u*.2]],GB=[[sm,hm,u*.5],[pt(11),pt(23),u*.2],[pt(12),pt(24),u*.2],[pt(11),pt(12),u*.2]],
+   vv=(a,b)=>((L[a].visibility??1)+(L[b].visibility??1))/2>.15,av=ks=>[ks.reduce((t,k)=>t+X(k),0)/ks.length,ks.reduce((t,k)=>t+Y(k),0)/ks.length];
+  [[11,13],[13,15],[12,14],[14,16]].forEach(([a,b])=>vv(a,b)&&GB.push([pt(a),pt(b),u*.16]));[[23,25],[25,27],[24,26],[26,28]].forEach(([a,b])=>vv(a,b)&&GB.push([pt(a),pt(b),u*.21]));[[27,31],[28,32]].forEach(([a,b])=>vv(a,b)&&GB.push([pt(a),pt(b),u*.11]));
+  if((L[15].visibility??1)>.15)GB.push([pt(15),av([17,19,21]),u*.15]);if((L[16].visibility??1)>.15)GB.push([pt(16),av([18,20,22]),u*.15]);
+  const fill=(G,D)=>G.forEach(([a,b,r])=>{const vx=b[0]-a[0],vy=b[1]-a[1],l2=vx*vx+vy*vy||1e-6;for(let j=0;j<mh;j++){const py=(j+.5)/mh*H;for(let i=0;i<mw;i++){const px=(i+.5)/mw*W,t=Math.max(0,Math.min(1,((px-a[0])*vx+(py-a[1])*vy)/l2)),d=Math.hypot(px-a[0]-t*vx,py-a[1]-t*vy)-r,k=j*mw+i;if(d<D[k])D[k]=d}}});
+  fill(GH,Dh);fill(GB,Db);const mg=u*.13,pr=d=>{const t=Math.max(0,Math.min(1,d/mg));return 1-t*t*(3-2*t)};
+  /* colori della maglia del giocatore contro quelli delle altre persone (3 bit per canale) */
+  let ct=null;if(mc&&rgb){const Hm=new Float32Array(512),Ho=new Float32Array(512);let sm_=0,so=0;const bin=k=>(rgb[k*4]>>5)<<6|(rgb[k*4+1]>>5)<<3|rgb[k*4+2]>>5;
+   for(let k=0;k<n;k++){const pc=C[4][k]+C[5][k];if(pc<.4)continue;if(Db[k]<-u*.08){Hm[bin(k)]+=pc;sm_+=pc}else if(Math.min(Dh[k],Db[k])>mg){Ho[bin(k)]+=pc;so+=pc}}
+   if(so>n*.01&&sm_>n*.005){ct=new Float32Array(n);for(let k=0;k<n;k++){const b=bin(k),a=Hm[b]/sm_,o=Ho[b]/so,r=a/(a+o+1e-4);ct[k]=Db[k]<-u*.08?1:Math.max(0,Math.min(1,(r-.2)/.4))}}}
+  for(let k=0;k<n;k++){const wh=pr(Dh[k]),wb=pr(Db[k]),ws=Math.max(wh,wb);if(mc){A[k]=(C[1][k]+C[3][k])*wh+C[2][k]*ws+(C[4][k]+C[5][k])*wb*(ct?ct[k]:1)}else A[k]*=ws}}
+ /* pezzi staccati: tengo quelli attaccati al corpo (o il più grande se non ho trovato lo scheletro) */
+ const lab=new Int32Array(n).fill(-1),ar=[],core=[],st=[];let nc=0;
+ for(let k0=0;k0<n;k0++){if(lab[k0]>=0||A[k0]<=.5)continue;let a=0,c=0;lab[k0]=nc;st.push(k0);while(st.length){const k=st.pop(),i=k%mw;a++;if(Math.min(Dh[k],Db[k])<-u*.05)c=1;for(const q of[i>0?k-1:-1,i<mw-1?k+1:-1,k-mw,k+mw])if(q>=0&&q<n&&lab[q]<0&&A[q]>.5){lab[q]=nc;st.push(q)}}ar.push(a);core.push(c);nc++}
+ if(nc>1){const big=Math.max(...ar),kc=L&&core.some(Boolean),keep=ar.map((a,i)=>kc?core[i]:a>=big*.25);for(let k=0;k<n;k++){if(lab[k]>=0&&!keep[lab[k]])A[k]=0;else if(lab[k]<0&&A[k]>.05){let ok=0;const i=k%mw;for(const q of[i>0?k-1:-1,i<mw-1?k+1:-1,k-mw,k+mw])if(q>=0&&q<n&&lab[q]>=0&&keep[lab[q]])ok=1;if(!ok)A[k]=0}}}
+ return{A,one:!!L}}
+async function cutOut(src,o={}){const img=await ldImg(src),s=Math.min(1,1200/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.round(img.naturalWidth*s),h=Math.round(img.naturalHeight*s),c=bgCv(w,h),q=c.getContext("2d",{willReadFrequently:true});q.drawImage(img,0,0,w,h);
  const D=q.getImageData(0,0,w,h),p=D.data;let tr=0;for(let i=3;i<p.length;i+=16)if(p[i]<200)tr++;if(tr/(p.length/16)>.03)return{c:trimA(c),pre:1};
- const seg=await segLoad(),a=await new Promise((ok,ko)=>{try{seg.segment(c,r=>{const m=r.confidenceMasks;if(!m||!m.length)return ko("nessuna persona trovata");ok({f:Float32Array.from(m[0].getAsFloat32Array()),bg:m.length>1,mw:m[0].width,mh:m[0].height})})}catch(e){ko(e)}});
- for(let j=0;j<h;j++){const fy=j*(a.mh-1)/Math.max(1,h-1),y0=Math.floor(fy),y1=Math.min(a.mh-1,y0+1),ty=fy-y0;for(let i=0;i<w;i++){const fx=i*(a.mw-1)/Math.max(1,w-1),x0=Math.floor(fx),x1=Math.min(a.mw-1,x0+1),tx=fx-x0,F=a.f,
-  v0=F[y0*a.mw+x0]*(1-tx)+F[y0*a.mw+x1]*tx,v1=F[y1*a.mw+x0]*(1-tx)+F[y1*a.mw+x1]*tx;let v=v0*(1-ty)+v1*ty;if(a.bg)v=1-v;v=Math.max(0,Math.min(1,(v-.3)/.4));p[(j*w+i)*4+3]=Math.round(p[(j*w+i)*4+3]*v)}}
- let on=0;for(let i=3;i<p.length;i+=16)if(p[i]>128)on++;if(on/(p.length/16)<.04)throw new Error("non ho riconosciuto una persona");q.putImageData(D,0,0);return{c:trimA(c),pre:0}}
+ const seg=await segLoad(),a=await new Promise((ok,ko)=>{try{seg.segment(c,r=>{const m=r.confidenceMasks;if(!m||!m.length)return ko("nessuna persona trovata");ok({C:m.map(x=>Float32Array.from(x.getAsFloat32Array())),mw:m[0].width,mh:m[0].height})})}catch(e){ko(e)}});
+ let A=a.C.length>1?a.C[0].map(v=>1-v):a.C[0],one=0;
+ if(o.one){let P=[];try{const pl=await poseLoad();P=pl.detect(c).landmarks||[]}catch(e){P=[]}const g=bgCv(a.mw,a.mh),gx=g.getContext("2d",{willReadFrequently:true});gx.drawImage(c,0,0,a.mw,a.mh);const r=cutOne(a.C,a.mw,a.mh,w,h,P,gx.getImageData(0,0,a.mw,a.mh).data);A=r.A;one=r.one?1:0}
+ for(let j=0;j<h;j++){const fy=j*(a.mh-1)/Math.max(1,h-1),y0=Math.floor(fy),y1=Math.min(a.mh-1,y0+1),ty=fy-y0;for(let i=0;i<w;i++){const fx=i*(a.mw-1)/Math.max(1,w-1),x0=Math.floor(fx),x1=Math.min(a.mw-1,x0+1),tx=fx-x0,
+  v0=A[y0*a.mw+x0]*(1-tx)+A[y0*a.mw+x1]*tx,v1=A[y1*a.mw+x0]*(1-tx)+A[y1*a.mw+x1]*tx;let v=v0*(1-ty)+v1*ty;v=Math.max(0,Math.min(1,(v-.3)/.4));p[(j*w+i)*4+3]=Math.round(p[(j*w+i)*4+3]*v)}}
+ let on=0;for(let i=3;i<p.length;i+=16)if(p[i]>128)on++;if(on/(p.length/16)<.04)throw new Error("non ho riconosciuto una persona");q.putImageData(D,0,0);return{c:trimA(c),pre:0,one}}
 function podLay(){const A=PCQ(),[W,H]=S.sty.fmt.split("x").map(Number),n=A.length,sp=n===2?.5:Math.min(.7,.24*n);A.forEach((l,i)=>{const c=im(l.src),iw=c?c.naturalWidth:3,ih=c?c.naturalHeight:4,hh=H*(n>2?.84:.92),r=hh/ih;l.s=Math.max(iw,ih)*r/W;l.x=n<2?.5:.5+(i-(n-1)/2)*sp/(n-1);l.y=1-hh/2/H})}
 async function podCut(l){if(!l.src0)return;l.stt=SEGP?"Scontorno in corso…":"Scontorno in corso (la prima volta scarico il modello, circa 16 MB)…";podList();
  try{const r=await cutOut(l.src0);l.src=r.c.toDataURL("image/png");l.stt=r.pre?"Era già scontornata ✓":"Scontornata ✓";await ldImg(l.src)}catch(e){l.src=l.src0;l.stt="Scontorno non riuscito ("+(e&&e.message||e)+"): usa una foto già scontornata (PNG trasparente)"}
@@ -1490,17 +1521,21 @@ $('nav [data-t="p"]').addEventListener("click",poAll);
 /* ---- Podcast: stampa dalla pagina stessa (non più da un riquadro nascosto, che su iPhone, nell'app installata e su Firefox non partiva) e PDF vero da scaricare/condividere ---- */
 const PRJS="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js";let PRJ=null;
 const prJs=()=>PRJ||(PRJ=new Promise(r=>{if(window.jspdf)return r(window.jspdf.jsPDF);const s=document.createElement("script");s.src=PRJS;s.async=true;s.onload=()=>r(window.jspdf?window.jspdf.jsPDF:null);s.onerror=()=>{s.remove();PRJ=null;r(null)};document.head.append(s)}));
-const prIOSApp=()=>navigator.standalone===true;
+const prIOSApp=()=>navigator.standalone===true,prFramed=(()=>{try{return window.self!==window.top}catch(e){return true}})();
+/* dentro un riquadro (es. l'anteprima di un'app) il browser può bloccare stampa e download senza dire niente: almeno lo spiego */
+const PRBLK="Se non si apre niente: il tool è aperto dentro un’anteprima, che blocca stampa e download. Aprilo nel browser (dal tuo link GitHub Pages) e riprova.";
+function prMsg(t){toast(t);const e=$("#tst");if(e){clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),7000)}}
 const PRCSS=`#prt{font:12.5px/1.5 "Inter Tight",system-ui,sans-serif;color:#050a18}#prt h1{font-size:21px;line-height:1.2;margin:0 0 4px}#prt .m{color:#53607e;margin:0 0 8px}#prt h2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-top:2px solid #050a18;padding-top:6px;margin:18px 0 6px;display:flex;justify-content:space-between;gap:10px;break-after:avoid}#prt p{margin:3px 0;break-inside:avoid}#prt p.lp{display:flex;gap:12px}#prt p.lp b{flex:0 0 140px;font-size:10px;letter-spacing:.05em;padding-top:2px}#prt i{color:#53607e}`;
 const prHtml=B=>B.map(([k,a,b])=>k==="h1"?`<h1>${esc(a)}</h1>`:k==="m"?`<p class="m">${esc(a)}</p>`:k==="h2"?`<h2><span>${esc(a)}</span>${b?`<span>${esc(b)}</span>`:""}</h2>`:k==="lp"?`<p class="lp"><b>${esc(a)}</b><span>${esc(b)}</span></p>`:k==="li"?`<p class="lp"><b>${esc(a)}</b><i>${esc(b)}</i></p>`:`<p>${esc(a)}</p>`).join("");
-function prPrint(title,B,btn){if(prIOSApp())return prPdf(title,B,btn);let d=$("#prt");if(!d){d=document.createElement("div");d.id="prt";document.body.append(d)}
+function prPrint(title,B,btn){if(prIOSApp())return prPdf(title,B,btn);
+ if(prFramed)setTimeout(()=>prMsg(PRBLK),600);let d=$("#prt");if(!d){d=document.createElement("div");d.id="prt";document.body.append(d)}
  d.innerHTML=`<style>#prt{display:none}@media print{@page{size:A4;margin:14mm}html,body{background:#fff!important;color:#050a18!important;margin:0!important;padding:0!important;height:auto!important;min-height:0!important;overflow:visible!important}body>*:not(#prt){display:none!important}#prt{display:block!important}${PRCSS}}</style>`+prHtml(B);
  const t0=document.title,back=()=>{document.title=t0;removeEventListener("afterprint",back)};addEventListener("afterprint",back);document.title=title;
  try{window.print()}catch(e){back();prPdf(title,B,btn)}}
 /* i font base del PDF non hanno virgolette curve, emoji, stelle: li converto */
 const prT=s=>String(s==null?"":s).replace(/[‘’‚′`]/g,"'").replace(/[“”„″]/g,'"').replace(/[–—]/g,"-").replace(/…/g,"...").replace(/[•●▪]/g,"-").replace(/[★⭐]/g,"*").replace(/[→➜]/g,"»").replace(/[^\x00-\xFF]/g,"").replace(/[ \t]{2,}/g," ").replace(/\[\s+/g,"[").trim();
 async function prPdf(title,B,btn){const o=btn&&btn.textContent;if(btn&&!window.jspdf)btn.textContent="Creo il PDF…";const J=window.jspdf?window.jspdf.jsPDF:await prJs();if(btn)btn.textContent=o;
- if(!J)return alert("Non riesco a creare il PDF: la prima volta serve la connessione a internet. Riprova tra poco, oppure usa “Copia”.");
+ if(!J)return prMsg("Non riesco a creare il PDF: la prima volta serve la connessione a internet. Riprova tra poco, oppure usa “Copia”.");
  const d=new J({unit:"mm",format:"a4"}),W=210,H=297,M=16,CW=W-2*M,LW=44,pt=.3528;let y=M;
  const brk=h=>{if(y+h>H-M-4){d.addPage();y=M}},fnt=(sz,st,c)=>{d.setFont("helvetica",st);d.setFontSize(sz);d.setTextColor(...c)},
   wrap=(s,sz,st,w)=>{d.setFont("helvetica",st);d.setFontSize(sz);return d.splitTextToSize(prT(s),w)},
@@ -1517,7 +1552,7 @@ async function prPdf(title,B,btn){const o=btn&&btn.textContent;if(btn&&!window.j
  const n=d.getNumberOfPages();for(let i=1;i<=n;i++){d.setPage(i);fnt(8,"normal",MUT);d.text(prT(title),M,H-8);d.text(i+" / "+n,W-M,H-8,{align:"right"})}
  const fn=(prT(title).replace(/[\\/:*?"<>|]+/g,"").replace(/\s+/g," ").trim()||"podcast")+".pdf",blob=d.output("blob");let f=null;try{f=new File([blob],fn,{type:"application/pdf"})}catch(e){}
  if(f&&matchMedia("(pointer:coarse)").matches&&navigator.canShare&&navigator.canShare({files:[f]})){try{await navigator.share({files:[f],title:prT(title)});return}catch(e){if(e&&e.name==="AbortError")return}}
- const u=URL.createObjectURL(blob),l=document.createElement("a");l.href=u;l.download=fn;document.body.append(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);toast("PDF pronto: "+fn)}
+ const u=URL.createObjectURL(blob),l=document.createElement("a");l.href=u;l.download=fn;document.body.append(l);l.click();l.remove();setTimeout(()=>URL.revokeObjectURL(u),60000);if(prFramed)prMsg(PRBLK);else toast("PDF pronto: "+fn)}
 /* contenuti: copione e scheda di preparazione */
 function poBlocks(c){const B=POB_||poGen(c),G=poG(c),N=G.map(poCall);
  return[["h1",`${c.show} · Ep. ${c.ep}${c.tit?" — "+c.tit:""}`],["m",`${c.data?itD(c.data)+" · ":""}${c.dur} min · giornata ${S.gs} · Ospiti: ${G.map(g=>poCall(g)+(g.sq?" ("+g.sq+")":"")).join(", ")}`],
