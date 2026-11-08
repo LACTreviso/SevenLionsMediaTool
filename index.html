@@ -187,6 +187,9 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 #gqb{border-color:var(--blue)}#gql{width:56px;height:56px;flex:none;border-radius:8px;background:repeating-conic-gradient(#3a4256 0 25%,#2b3142 0 50%) 0 0/12px 12px}
 .ext nav button:not([data-t="q"]){display:none}.ext .gal,.ext #sg{display:none!important}
 #lw_lg{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:4px}
+.gqbl{display:flex;gap:8px;flex-wrap:wrap}.gqbg{position:relative;display:inline-flex;border:2px solid var(--line);border-radius:10px;background:var(--bg);padding:0;overflow:hidden;cursor:pointer;color:var(--mut);font:600 13px "Inter Tight",system-ui,sans-serif}
+.gqbg.on{border-color:var(--blue)}.gqbg>button:first-child,button.gqbg{background:none;border:0;padding:0;cursor:pointer;color:inherit;font:inherit}.gqbg img{display:block;width:96px;height:120px;object-fit:cover}.gqbg span{display:flex;width:96px;height:120px;align-items:center;justify-content:center}
+.gqbx{position:absolute;top:4px;right:4px;min-height:0!important;padding:2px 7px!important}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -262,7 +265,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <div class="ep" id="ep_e"><div id="lyp"><div class="card lyk"><div class="bar"><strong style="flex:1">Nella grafica</strong><button class="btn pbx" id="rl" title="Rimette gli elementi come all’inizio">Ripristina elementi</button></div><div class="hint" style="margin:2px 0 8px">Tocca un elemento (qui o sul disegno) per modificarlo; sul disegno lo trascini per spostarlo.</div>
 <div class="bar" id="lyl" style="margin:0"></div>
 <div id="lyc" class="card" style="display:none"><div id="lw_t"><label>Testo</label><input data-p="t"></div>
-<div id="lw_lg" style="display:none"><label for="lmd">Stile del logo</label><select id="lmd" data-p="md"><option value="">Come nella sezione Loghi</option><option value="o">Originale</option><option value="b">Senza sfondo</option><option value="w">Solo contorno</option><option value="s">Sagoma piena</option></select><div class="hint" id="lw_lgh" style="margin:4px 0 0"></div><div id="lw_lw" style="display:none"><label for="llw">Spessore del contorno</label><input type="range" id="llw" data-p="lw" min="1" max="15" step="1"></div></div><div id="lw_f" class="bar" style="display:none;margin:8px 0 0;gap:6px"><button type="button" class="btn" data-fw="b" title="Grassetto"><b>G</b> Grassetto</button><button type="button" class="btn" data-fw="i" title="Corsivo"><i style="font-family:Georgia,serif">C</i> Corsivo</button></div><div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
+<div id="lw_lg" style="display:none"><label for="lmd">Stile del logo</label><select id="lmd" data-p="md"><option value="">Come nella sezione Loghi</option><option value="o">Originale</option><option value="b">Senza sfondo</option><option value="w">Solo contorno</option><option value="s">Sagoma piena</option></select><div class="hint" id="lw_lgh" style="margin:4px 0 0"></div><div id="lw_lw" style="display:none"><label for="llw">Spessore del contorno</label><input type="range" id="llw" data-p="lw" min="1" max="15" step="1"></div></div><div id="lw_f" class="bar" style="display:none;margin:8px 0 0;gap:6px"><button type="button" class="btn" data-fw="b" title="Grassetto"><b>G</b> Grassetto</button><button type="button" class="btn" data-fw="i" title="Corsivo"><i style="font-family:Georgia,serif">C</i> Corsivo</button></div><div id="lw_ff" style="display:none"><label for="lff">Carattere</label><select id="lff" data-p="ff"></select></div><div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
 <label>Dimensione</label><input type="range" data-p="s"><div id="lw_tab" style="display:none"><label>Grandezza dei testi</label><input type="range" data-p="ts" min=".5" max="2.5" step=".05"><label>Grandezza dei loghi</label><input type="range" data-p="ls" min=".3" max="2.5" step=".05"><label>Larghezza</label><input type="range" data-p="w" min=".4" max="1" step=".01"><label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" data-p="fill"> Righe più alte fino a riempire lo spazio</label><div class="hint">Trascina la tabella sul disegno per spostarla. Il colore è quello della riga evidenziata.</div></div><div id="lw_r"><label>Altezza</label><input type="range" data-p="h" min=".05" max=".6" step=".005"><label>Angoli arrotondati</label><input type="range" data-p="r" min="0" max="100"></div><label>Opacità</label><input type="range" data-p="o" min="0" max="100">
 <label><input type="checkbox" data-p="b"> Dietro ai contenuti</label>
 <div class="bar" style="margin:8px 0 0"><button class="btn" id="ld">Duplica</button><button class="btn" id="lx">Elimina</button></div></div></div>
@@ -385,7 +388,7 @@ const SES=(()=>{try{return JSON.parse(localStorage.getItem("a7ses"))||null}catch
 let S;try{S={...DEF(),...(JSON.parse(localStorage.getItem(LK("a7v2")))||{})}}catch(e){S=DEF()}
 S.sty={...DEF().sty,...S.sty};Object.keys(S.mode||{}).forEach(k=>{if(S.mode[k]==="bw")S.mode[k]="w"});Object.keys(S.ly).forEach(k=>S.ly[k]=S.ly[k].filter(l=>l.k!=="img"||l.src));
 const BS=T=>((S.cg||[]).find(c=>c.id===T)||{}).b||T;
-const save=()=>{try{localStorage.setItem(LK("a7v2"),JSON.stringify(canonS(),(k,v)=>k==="src"?undefined:k==="raw"&&v?Object.fromEntries(Object.entries(v).filter(([x])=>!x.startsWith("ph|"))):v))}catch(e){}if(window.CLD&&CLD.dirty)CLD.dirty()};
+const save=()=>{try{localStorage.setItem(LK("a7v2"),JSON.stringify(canonS(),(k,v)=>k==="src"?undefined:k==="raw"&&v?Object.fromEntries(Object.entries(v).filter(([x])=>!/^(ph|fn|bg)\|/.test(x))):v))}catch(e){}if(window.CLD&&CLD.dirty)CLD.dirty()};
 let BG="",PC={},IC={},sd=7,CL=[],off=0;
 const rn=()=>(sd=sd*16807%2147483647)/2147483647;
 const im=s=>{if(!s)return null;let i=IC[s];if(!i){i=IC[s]=new Image();i.onload=()=>draw();i.src=s}return i.complete&&i.naturalWidth?i:null};
@@ -702,7 +705,7 @@ const gsub=s=>S.gs?String(s).replace(/^(giornata\s+)\d+/i,"$1"+S.gs).replace(/^(
 function sync(ch){const T=gT(),B=BS(T);if(ch){const q=lpTT(T)||TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=gsub(q[1])}
  $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";$("#marw").style.display=B==="mar"?"block":"none";$("#pcw").style.display=B==="pod"?"block":"none";if(B==="pod")podUI();marUI();
  if(B==="bo"){$("#gdl").textContent=T==="bo"?"Goal (Marcatore;Squadra;Minuto)":"Righe (Testo;Sottotesto;Valore)";$("#gd").value=S[T]||""}
- ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcFill();lyUI();renderLP()}
+ ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcFill();lyUI();renderLP();qrUI()}
 function sty(){bgUI();["bg","ac","tx"].forEach(k=>$("#c"+k).value=S.sty[k]);$("#ss").checked=S.sty.str;$("#dk").value=S.sty.dk;$("#po").value=S.sty.po;$("#gf").value=S.sty.fmt}
 Object.entries(PR).forEach(([k,v])=>{const b=document.createElement("button");b.className="btn";b.textContent=k;b.onclick=()=>{prApply(prGet("b:"+k));sty();save();draw();cm()};$("#pr").append(b)});
 ["bg","ac","tx"].forEach(k=>$("#c"+k).oninput=e=>{S.sty[k]=e.target.value;save();draw()});
@@ -736,8 +739,8 @@ function marUI(){const el=$("#marn");if(!el)return;const a=S.mar||[],n=+S.marN||
  $("#marh").textContent=h}
 function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0=$("#gt").value,T=BS(T0),L=W>H,m=64,u=W/1080;
  if(c.width!==W||c.height!==H){c.width=W;c.height=H}
- const x=c.getContext("2d"),F='"Inter Tight",system-ui,sans-serif',mu=rgba(st.tx,.6),tt=$("#gh").value,sb=$("#gs").value;
- LB=[];x.fillStyle=st.bg;x.fillRect(0,0,W,H);if(st.gen&&st.gen.t&&BGF[st.gen.t])x.drawImage(bgRender(W,H),0,0);const ph=im(BG);
+ const x=c.getContext("2d"),F=gqF(S.sty.ff),mu=rgba(st.tx,.6),tt=$("#gh").value,sb=$("#gs").value;
+ LB=[];x.fillStyle=st.bg;x.fillRect(0,0,W,H);if(st.gen&&st.gen.t&&BGF[st.gen.t])x.drawImage(bgRender(W,H),0,0);const ph=im(BG||(TQ&&S.sty.bgi&&S.raw[S.sty.bgi])||"");
  if(ph){const r=Math.max(W/ph.naturalWidth,H/ph.naturalHeight),w=ph.naturalWidth*r,h=ph.naturalHeight*r;x.globalAlpha=st.po/100;x.drawImage(ph,(W-w)/2,(H-h)/2,w,h);x.globalAlpha=1;x.fillStyle=`rgba(0,0,0,${st.dk/100*st.po/100})`;x.fillRect(0,0,W,H)}
  if(T==="st"){const g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,rgba(st.bg,.9));g.addColorStop(.45,rgba(st.bg,0));g.addColorStop(.78,rgba(st.ac,.4));g.addColorStop(1,rgba(st.bg,.95));x.fillStyle=g;x.fillRect(0,0,W,H);sd=3;for(let i=0;i<220;i++){x.fillStyle=rgba(st.tx,.25+rn()*.5);x.beginPath();x.arc(rn()*W,rn()*H*.8,(.4+rn()*1.1)*u,0,7);x.fill()}}
  if(st.str&&T!=="st")stripes(x,W,H,.34,st.ac);if(T==="mc")mcg(x,W,H);if(T==="pod")podBg(x,W,H);drawLy(x,W,H,1,st);
@@ -748,7 +751,7 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
  else if(T==="st"){x.textAlign="center";const g=x.createLinearGradient(0,H*.6,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.65)");x.fillStyle=g;x.fillRect(0,H*.6,W,H*.4);const sl=LY().find(l=>l.k==="stars");if(sl)stars(x,W,H,sl);
   const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
-  let it,hd,cw=78;if(T==="tw"&&S.twv==="k")twGrid(x,W,H,ty+90,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
+  let it,hd,cw=78;if(T==="tw"&&S.twv==="k")twGrid(x,W,H,ty+90,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="qr")qrv(x,W,H,ty+90,m,F,u);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
   if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
   else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:gqMarHl(e,i),c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:(twDN(p)||"Nome Cognome")+twSfx(p),sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
@@ -783,7 +786,7 @@ const gT=()=>$("#gt").value,nid=()=>"l"+Date.now().toString(36)+Math.random().to
 const defLy=T=>{const T0=T;T=BS(T);const a=[];if(T==="st")a.push({id:"stars",k:"stars",nm:"Logo a stelle",x:.5,y:.25,s:1,o:100,c:"",b:0});
  else if(T==="pod")a.push({id:"logo",k:"logo",nm:lgNm(),x:.91,y:.13,s:.1,o:100,c:"",b:0});
  else{a.push({id:"logo",k:"logo",nm:lgNm(),x:T==="mc"?.5:.89,y:.075,s:T==="mc"?.16:.11,o:100,c:"",b:0},{id:"ft",k:"text",nm:"Piè di pagina",t:lgFoot(),x:.5,y:.975,s:.02,o:60,c:"",b:0});
-  if(["cl","mar","bo","ris"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
+  if(["cl","mar","bo","ris","qr"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
  if(T==="mc"){const[W,H]=S.sty.fmt.split("x").map(Number),cg=(S.cg||[]).find(c=>c.id===T0),b=BAND();a.unshift(b,...MCL(b,W,H,cg&&cg.ft))}return[...a,...TL()]};
 const TL=()=>[{id:"tt",k:"tt",nm:"Titolo",x:null,y:null,s:1,o:100,c:"",b:0},{id:"ts",k:"ts",nm:"Sottotitolo",x:null,y:null,s:1,o:100,c:"",b:0}],BAND=()=>({id:"band",k:"band",nm:"Fascia loghi",x:.5,y:.735,s:.84,h:.176,r:18,o:90,c:"",b:1});
 const LY=()=>S.ly[gT()]||(S.ly[gT()]=lpDef(gT())||defLy(gT())),SELL=()=>LY().find(q=>q.id===SEL),rd=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})};
@@ -794,7 +797,7 @@ const undo=()=>{if(hi>0)rest(hist[--hi])},redo=()=>{if(hi<hist.length-1)rest(his
 function lg(l){return lgSt(lgK(),l)}
 function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==="ts"||l.k==="tab"||!!l.b!==!!b)return;x.save();x.globalAlpha=l.o/100;let bx;
  if(l.k==="text"||l.k==="mt"||l.k==="mname"){const fs=l.s*W;let t=l.k==="text"?l.t||"":l.k==="mname"?(S.mt[l.side]||(l.side==="h"?"Casa":"Ospite")):mtT(l);if(!t){if(EXP){x.restore();return}t=l.nm||"";x.globalAlpha*=.3}
-  x.font=`${l.it?"italic ":""}${l.wt||(l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):700)} ${fs}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||(l.k==="text"?st.tx:mcCol(l));const w=x.measureText(t).width;x.fillText(t,l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
+  x.font=`${l.it?"italic ":""}${l.wt||(l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):700)} ${fs}px ${gqF(l.ff||S.sty.ff)}`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||(l.k==="text"?st.tx:mcCol(l));const w=x.measureText(t).width;x.fillText(t,l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
  else if(l.k==="mlogo"){const z=l.s*W,cx=l.x*W,cy=l.y*H,nm=S.mt[l.side]||"",lc=l.md?lgSt(nm,l):logo(nm);
   if(lc){const r=Math.min(z/lc.width,z/lc.height),w=lc.width*r,h=lc.height*r;x.drawImage(lc,cx-w/2,cy-h/2,w,h);bx=[cx-w/2,cy-h/2,w,h]}
   else{x.fillStyle="rgba(255,255,255,.2)";x.beginPath();x.arc(cx,cy,z*.44,0,7);x.fill();x.fillStyle=mcCol(l);x.font=`800 ${z*.4}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText((nm||"?").slice(0,2).toUpperCase(),cx,cy);bx=[cx-z/2,cy-z/2,z,z]}}
@@ -816,7 +819,7 @@ function renderTW(){if(twPhFill())save();twVis();$("#tsh").checked=S.twShort!==f
  const tn=[...new Set([...S.cl.map(e=>e.n),...S.tw2.map(p=>p.t).filter(Boolean)])];$("#tn").innerHTML=tn.map(n=>`<option value="${esc(n)}">`).join("");
  $("#twr").innerHTML=S.twv==="k"?twxUI():SL().map((r,i)=>{const p=S.tw2[i];return `<div class="twrw"><small>${r}</small><input data-ti="${i}" value="${esc(p.n)}" placeholder="Nome Cognome"><select data-ts="${i}"><option value="">Squadra</option>${tn.map(n=>`<option${n===p.t?" selected":""}>${esc(n)}</option>`).join("")}</select><input type="number" min="0" data-tg="${i}" value="${p.g??""}" placeholder="⚽ ${twAutoG(p)||0}" title="Gol nella giornata (vuoto = dai marcatori)" aria-label="Gol"><button class="btn${twMv(p)?" mvp":""}" data-tmv="${i}" title="Premio MVP dell’arbitro">★ MVP</button><button class="btn${twNI(p)?" p":""}" data-tni="${i}" title="Togli l’iniziale del nome nella grafica (lo ricordo per questo giocatore)">Solo cognome</button><label class="btn" style="margin:0;padding:6px 8px">${p.ph?"✓ Foto":"Foto"}<input type="file" accept="image/*" data-tp="${i}" hidden></label>${p.ph?`<button class="btn" data-tx="${i}" style="padding:6px 8px">×</button>`:"<span></span>"}</div>`}).join("");$("#tsg").innerHTML=sugg()}
 function TX(x,W,H,ls,px,py,fs,al,id,col,wt,lh,F){const l=LY().find(q=>q.id===id);if(!l)return;const f=fs*(l.s||1),ax=l.x==null?px:l.x*W,ay=l.y==null?py:l.y*H;let w=0;
- x.save();x.globalAlpha=(l.o??100)/100;x.fillStyle=l.c||col;x.font=`${l.it?"italic ":""}${l.wt||wt} ${f}px ${F}`;x.textAlign=al;x.textBaseline="alphabetic";ls.forEach((t,i)=>{x.fillText(t,ax,ay+i*f*lh);w=Math.max(w,x.measureText(t).width)});x.restore();
+ x.save();x.globalAlpha=(l.o??100)/100;x.fillStyle=l.c||col;x.font=`${l.it?"italic ":""}${l.wt||wt} ${f}px ${l.ff?gqF(l.ff):F}`;x.textAlign=al;x.textBaseline="alphabetic";ls.forEach((t,i)=>{x.fillText(t,ax,ay+i*f*lh);w=Math.max(w,x.measureText(t).width)});x.restore();
  const x0=al==="center"?ax-w/2:ax;LB.push({id,x0,y0:ay-f*.85,x1:x0+w,y1:ay+(ls.length-1)*f*lh+f*.2,ax:px/W,ay:py/H})}
 function pitch(x,W,H,y0,m,F){const u=W/1080,st=S.sty,X0=m,w=W-2*m,h=H-y0-70*u;
  x.save();x.strokeStyle=rgba(st.tx,.5);x.lineWidth=3*u;x.beginPath();x.roundRect(X0,y0,w,h,24*u);x.stroke();x.beginPath();x.moveTo(X0,y0+h/2);x.lineTo(X0+w,y0+h/2);x.stroke();x.beginPath();x.arc(X0+w/2,y0+h/2,Math.min(w,h)*.11,0,7);x.stroke();
@@ -881,7 +884,7 @@ $("#twp").oninput=e=>{const d=e.target.dataset;if(d.ti!==undefined){S.tw2[d.ti].
 $("#tf").onchange=e=>{S.tf=e.target.value;renderTW();save();draw()};$("#tv").onchange=e=>{S.twv=e.target.value;renderTW();save();draw()};
 $("#ta").onclick=()=>{const w=wd(S.gs);if(!w||!kHAS(S.gs,"mar"))return alert("Carica l’Excel dei marcatori per la giornata "+S.gs+" (scheda Dati e TOTW).");if(w.pc.mar==null&&!confirm("Non c’è una giornata precedente con i marcatori: userei i gol di tutto il torneo. Continuare?"))return;twAssign(1)};
 $("#tres").oninput=e=>{kSet(e.target.value);$("#tsg").innerHTML=sugg()};
-$("#mcw").oninput=e=>{const k=e.target.dataset.m;if(!k)return;S.mt[k]=e.target.value;if(k==="v"&&MCC)(S.stad=S.stad||{})[MCC.s]=e.target.value;save();draw()};
+$("#mcw").oninput=e=>{const k=e.target.dataset.m;if(!k)return;S.mt[k]=e.target.value;S.mt.au=0;if(k==="v"&&MCC)(S.stad=S.stad||{})[MCC.s]=e.target.value;save();draw()};
 $("#ll").addEventListener("click",e=>{const k=e.target.dataset.rm;if(k===undefined)return;delete S.raw[k];delete S.mode[k];PC={};save();renderLogos();draw()});
 const CV=$("#cv"),pt=e=>{const r=CV.getBoundingClientRect();return[(e.clientX-r.left)*CV.width/r.width,(e.clientY-r.top)*CV.height/r.height]};
 CV.onpointerdown=e=>{const[px,py]=pt(e),h=[...LB].reverse().find(b=>px>=b.x0&&px<=b.x1&&py>=b.y0&&py<=b.y1);SEL=h?h.id:null;const l=SELL();
@@ -1045,9 +1048,9 @@ function calImport(t){const v=calParse(t),el=$("#kmsg");if(!v.length){el.textCon
 const kGS=()=>{const a=new Set([...(S.cal||[]).map(r=>r.g),...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")),S.gs||1]);if(S.gx)a.add(S.gx);if(!(S.cal||[]).length)[1,2,3].forEach(n=>a.add(n));return[...a].sort((x,y)=>x-y)};
 const itD=iso=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||""))return iso||"";const q=new Date(iso+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});return q.charAt(0).toUpperCase()+q.slice(1)};
 let MCM=[],MCC=null;
-function mcFill(){const sel=$("#mcsel");if(!sel)return;MCM=(S.cal||[]).filter(r=>r.g===S.gs);sel.innerHTML=`<option value="">${MCM.length?"Scegli la partita (giornata "+S.gs+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("")}
+function mcFill(){const sel=$("#mcsel");if(!sel)return;if(TQ&&gqCur())return gqMcFill();MCM=(S.cal||[]).filter(r=>r.g===S.gs);sel.innerHTML=`<option value="">${MCM.length?"Scegli la partita (giornata "+S.gs+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("")}
 function autoLabels(){const g=S.gs;if(!g)return;const e=$("#gs");if(e&&/^(giornata|dopo)\s+\d+/i.test(e.value.trim()))e.value=e.value.replace(/^(giornata\s+)\d+/i,"$1"+g).replace(/^(dopo\s+)\d+/i,"$1"+g);const r=$("#rres");if(r&&document.activeElement!==r)r.value=S.res||"";mcFill()}
-$("#mcsel").onchange=e=>{const r=MCM[+e.target.value];MCC=r||null;if(!r)return;const x=kRG(r.r);S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s};["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});save();draw();cm()};
+$("#mcsel").onchange=e=>{const r=MCM[+e.target.value];MCC=r||null;if(!r)return;const x=kRG(r.r);S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s};S.mt.au=0;["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});save();draw();cm()};
 $("#calp").addEventListener("input",e=>{const t=e.target.value;if(!t.trim())return;calImport(t);e.target.value=""});
 document.addEventListener("paste",e=>{if(!$("#k").classList.contains("on")||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;const t=(e.clipboardData||window.clipboardData).getData("text");if(!t)return;if(calImport(t))e.preventDefault()});
 
@@ -1482,7 +1485,7 @@ $("#k").addEventListener("click",e=>{const b=e.target.closest("[data-phx]");if(!
    Mentre la sezione è aperta i valori della squadra stanno nei campi normali di S e quelli della lega restano da parte in S.glb.
    Su disco si salva sempre la forma “lega + S.gqs”; sul cloud ogni squadra è un documento a parte (a7p/{profilo}/q/…).
    La squadra aperta è una scelta di questo dispositivo (per il profilo “social media esterno” è fissa). ---- */
-var TQ=false,GQK=["sty","ly","cg","mt","lp","lpn","marN","marTie","marOwn"],GLUI=null;
+var TQ=false,GQK=["sty","ly","cg","mt","lp","lpn","marN","marTie","marOwn","qrN"],GLUI=null;
 function gqExt(){return!!(SES&&SES.role==="ext")}
 function gqCur(){if(gqExt())return SES.team||"";try{return localStorage.getItem(LK("a7gqt"))||""}catch(e){return""}}
 function gqSetCur(t){try{localStorage.setItem(LK("a7gqt"),t)}catch(e){}}
@@ -1493,9 +1496,10 @@ function gqMig(){if(!S.gq)return;const o=S.gq;delete S.gq;S.gqs=S.gqs||{};if(o.t
 function canonS(){if(!TQ||!S.glb)return S;const t=gqCur(),o={...S,...S.glb,gqs:{...(S.gqs||{}),[t]:{...gqB(t),...gqPick(S),ui:gqUIv()}}};delete o.glb;return o}
 function gqShort(n){const w=String(n||"").replace(/\s+-\s+.*$/,"").split(/\s+/).filter(t=>t&&!/\./.test(t)&&!/^[A-Z]{1,3}$/.test(t));const s=w.join(" ");return s.length>14?w[0]:s||String(n||"")}
 function gqB(t){const L=S.glb||S;S.gqs=S.gqs||{};const b=S.gqs[t]=S.gqs[t]||{};if(b.sn==null)b.sn="";b.sty={...DEF().sty,...(b.sty||JSON.parse(JSON.stringify(L.sty||DEF().sty)))};b.ly=b.ly||{};b.mt=b.mt||{h:"",a:"",d:"",v:"",sc:""};b.lp=b.lp||{};b.lpn=b.lpn||{};
- b.cg=b.cg||[{id:"q_tv",n:"Squadra TV",b:"cop",q:"tv"},{id:"q_pc",n:"Press conference",b:"cop",q:"pc"}];return b}
+ b.cg=b.cg||[{id:"q_tv",n:"Squadra TV",b:"cop",q:"tv"},{id:"q_pc",n:"Press conference",b:"cop",q:"pc"}];
+ if(b.cgv!==2){[{id:"q_rs",n:"Risultati",b:"qr",q:"rs"},{id:"q_ft",n:"Full time",b:"mc",ft:1,q:"ft"}].forEach(c=>{if(!b.cg.some(x=>x.id===c.id))b.cg.push(c)});b.cgv=2}return b}
 function gqSN(){const t=gqCur();return((S.gqs||{})[t]||{}).sn||gqShort(t)||"Squadra"}
-function gqNames(){if(!TQ)return;const sn=gqSN();(S.cg||[]).forEach(c=>{if(c.q==="tv"){c.n=sn+" TV";TT[c.id]=[sn+"|TV","Puntata 1"]}else if(c.q==="pc"){c.n=sn+" Press Conference";TT[c.id]=[sn+"|Press Conference","Giornata 3"]}})}
+function gqNames(){if(!TQ)return;const sn=gqSN();(S.cg||[]).forEach(c=>{if(c.q==="tv"){c.n=sn+" TV";TT[c.id]=[sn+"|TV","Puntata 1"]}else if(c.q==="pc"){c.n=sn+" Press Conference";TT[c.id]=[sn+"|Press Conference","Giornata 3"]}else if(c.q==="rs"){c.n="Risultati "+sn;TT[c.id]=["Risultati "+sn,"Dopo 3 giornate"]}else if(c.q==="ft"){c.n="Full time "+sn;TT[c.id]=["FULL|TIME","Giornata 3"]}})}
 function gqIn(){S.glb=gqPick(S);const b=gqB(gqCur());GQK.forEach(k=>{S[k]=b[k]})}
 function gqOut(){if(!TQ||!S.glb)return 0;const t=gqCur();S.gqs[t]={...gqB(t),...gqPick(S),ui:gqUIv()};Object.assign(S,S.glb);delete S.glb;return 1}
 /* apre il cassetto nella vista (modello e titoli che avevi lasciato) */
@@ -1506,13 +1510,13 @@ function gMode(on){on=!!on||gqExt();if(on===TQ)return;
  else{gqOut();TQ=false;gqUI(false);renderGt(GLUI?GLUI.gt:"cl");if(GLUI){$("#gh").value=GLUI.gh;$("#gs").value=GLUI.gs;sync(false)}else sync(true)}
  SEL=null;PC={};sty();hist=[];hi=-1;cm();save()}
 /* cambio squadra: chiudo il cassetto di quella di prima e apro quello della nuova */
-function gqSwitch(t){if(gqExt()||t===gqCur())return;const was=TQ&&!!S.glb;if(was)gqOut();gqSetCur(t);if(was){gqIn();gqView()}SEL=null;PC={};sty();gqBar();draw();hist=[];hi=-1;cm();save()}
+function gqSwitch(t){if(gqExt()||t===gqCur())return;const was=TQ&&!!S.glb;if(was)gqOut();gqSetCur(t);if(was){gqIn();gqView()}SEL=null;PC={};sty();gqBar();if(typeof gqAUI==="function")gqAUI();if(typeof gqAssetsLoad==="function")gqAssetsLoad();draw();hist=[];hi=-1;cm();save()}
 /* aggiornamento dal cloud di una squadra */
 function gqRemote(t,b,busy){S.gqs=S.gqs||{};if(TQ&&S.glb&&t===gqCur()){if(busy)return 0;S.gqs[t]=b;const q=gqB(t);GQK.forEach(k=>{S[k]=q[k]});gqNames();renderGt();sync(false);sty();gqBar();draw();return 1}S.gqs[t]=b;return 1}
 /* barra della squadra in cima alla sezione */
 $("#g").insertAdjacentHTML("afterbegin",`<div id="gqb" class="card" style="display:none;margin-bottom:14px"><div class="bar" style="margin:0;gap:12px;align-items:flex-end"><canvas id="gql" width="56" height="56" aria-hidden="true"></canvas><div style="flex:1;min-width:200px"><label for="gqt">Squadra</label><select id="gqt"></select></div><div style="width:220px"><label for="gqn">Nome breve (nei titoli)</label><input id="gqn"></div></div><div class="hint" id="gqh" style="margin-bottom:0"></div></div>`);
 $("#marw").insertAdjacentHTML("beforeend",`<label id="gqmo" style="display:none;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="gqmoc"> Solo i marcatori della squadra (classifica interna)</label>`);
-function gqUI(on){$("#gqb").style.display=on?"block":"none";$("#gqmo").style.display=on?"flex":"none";["tw","pod"].forEach(v=>{const o=$(`#gt option[value="${v}"]`);if(o){o.hidden=on;o.disabled=on}});if(on)gqBar()}
+function gqUI(on){$("#gqb").style.display=on?"block":"none";if(typeof gqAUI==="function")gqAUI();if(on&&typeof gqAssetsLoad==="function")gqAssetsLoad();$("#gqmo").style.display=on?"flex":"none";["tw","pod"].forEach(v=>{const o=$(`#gt option[value="${v}"]`);if(o){o.hidden=on;o.disabled=on}});if(on)gqBar()}
 function gqBar(){const t=gqCur(),b=(S.gqs||{})[t]||{},s=$("#gqt");s.innerHTML=`<option value="">Scegli la squadra</option>`+S.cl.map(e=>`<option${e.n===t?" selected":""}>${esc(e.n)}</option>`).join("");if(t&&!S.cl.some(e=>e.n===t))s.insertAdjacentHTML("beforeend",`<option selected>${esc(t)}</option>`);s.disabled=gqExt();
  const n=$("#gqn");if(document.activeElement!==n)n.value=b.sn||"";n.placeholder=gqShort(t)||"Es. Canizzano";$("#gqmoc").checked=!!S.marOwn;
  const c=$("#gql"),x=c.getContext("2d"),l=t?logo(t):null;x.clearRect(0,0,56,56);if(l)dl(x,l,28,28,52);
@@ -1598,7 +1602,7 @@ function lyX(l){const c=$("#lyc"),q=n=>c.querySelector(`[data-p="${n}"]`),Lg=["l
 $("#lyc").addEventListener("change",e=>{if(e.target.dataset.p==="md"||e.target.dataset.p==="fill"){lyUI();draw();cm()}});
 /* ---- la tabella (classifica, marcatori, elenchi) è un elemento: si sposta, si allarga, righe, testi e loghi più grandi ---- */
 function tabL(){const a=LY();let l=a.find(q=>q.k==="tab");if(!l){l={id:"tab",k:"tab",nm:"Tabella",x:null,y:null,s:1,ts:1,ls:1,w:null,o:100,c:"",b:0};a.push(l)}return l}
-function drawTab(x,W,H,it,hd,cw0,ty,m,F,st,mu,T){const tb=tabL(),n=Math.max(it.length,1),tw=(tb.w||(W-2*m)/W)*W,cx=tb.x!=null?tb.x*W:W/2,lm=cx-tw/2,R=lm+tw,top=tb.y!=null?tb.y*H:ty+170,avail=Math.max(60,H-top-70),
+function drawTab(x,W,H,it,hd,cw0,ty,m,F,st,mu,T){const tb=tabL();if(tb.ff)F=gqF(tb.ff);const n=Math.max(it.length,1),tw=(tb.w||(W-2*m)/W)*W,cx=tb.x!=null?tb.x*W:W/2,lm=cx-tw/2,R=lm+tw,top=tb.y!=null?tb.y*H:ty+170,avail=Math.max(60,H-top-70),
   rh=tb.fill?Math.min(320,avail/n):Math.min(84*(tb.s||1),avail/n),fs=Math.min(rh*.42,30+rh*.16)*(tb.ts||1),k=Math.min(1.3,Math.max(.8,fs/35.28)),cw=cw0*k,rk=Math.max(54,fs*1.25),lz=Math.min(rh*.66,fs*1.7)*(tb.ls||1),hasL=it.some(e=>logo(e.lg)),nx=lm+rk+(hasL?lz+rh*.06:0),nc=hd.length,hc=tb.c||st.ac,it0=tb.it?"italic ":"",nw=tb.wt||600;
  x.save();x.globalAlpha=(tb.o??100)/100;x.textAlign="right";x.font=`${it0}600 ${Math.max(20,fs*.62)}px ${F}`;x.fillStyle=mu;hd.forEach((h,i)=>x.fillText(h,R-(nc-1-i)*cw,top-16));
  const mw=R-nc*cw-nx-20,NF=fitNames(x,it.map(e=>e.n),it0+nw,fs*(T==="cl"?.92:1),mw,!it.some(e=>e.sub),F,16);let SF=fs*.66;while(it.some(e=>{if(!e.sub)return 0;x.font=`${it0}400 ${SF}px ${F}`;return x.measureText(e.sub).width>mw})&&SF>12)SF--;SF=Math.min(SF,Math.max(12,NF.f*.8));
@@ -1615,10 +1619,74 @@ function drawTab(x,W,H,it,hd,cw0,ty,m,F,st,mu,T){const tb=tabL(),n=Math.max(it.l
 /* ---- grassetto e corsivo su ogni testo della grafica (titolo, sottotitolo, testi, scritte della partita, tabella) ---- */
 var FWD={text:700,tt:800,ts:500,mname:700,tab:600};
 function fwDef(l){return l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):FWD[l.k]||700}
-function lyF(l){const on=["text","tt","ts","mt","mname","tab"].includes(l.k),w=$("#lw_f");w.style.display=on?"flex":"none";if(!on)return;
+function lyF(l){const on=["text","tt","ts","mt","mname","tab"].includes(l.k),w=$("#lw_f");w.style.display=on?"flex":"none";const A=typeof gqAssets==="function"&&TQ?gqAssets().f:[],fw=$("#lw_ff");fw.style.display=on&&A.length?"block":"none";if(on&&A.length){$("#lff").innerHTML=`<option value="">Come lo stile (${esc(((A.find(o=>o.k===S.sty.ff)||{}).n)||"Inter Tight")})</option>`+A.map(o=>`<option value="${esc(o.k)}">${esc(o.n)}</option>`).join("");$("#lff").value=l.ff||""}if(!on)return;
  w.querySelector('[data-fw="b"]').classList.toggle("p",(l.wt||fwDef(l))>=700);w.querySelector('[data-fw="i"]').classList.toggle("p",!!l.it)}
 $("#lyc").addEventListener("click",e=>{const b=e.target.closest("[data-fw]");if(!b)return;const l=SELL();if(!l)return;
  if(b.dataset.fw==="b")l.wt=(l.wt||fwDef(l))>=700?400:800;else l.it=l.it?0:1;lyF(l);draw();save();cm()});
+
+/* ---- Grafiche squadra: match day automatico, grafica “Risultati” della squadra, font e sfondi propri ---- */
+function gqMatches(){const t=kHN(gqCur());if(!t)return[];return(S.cal||[]).filter(r=>kHN(r.h)===t||kHN(r.a)===t).sort((a,b)=>a.g-b.g||String(a.d).localeCompare(String(b.d)))}
+/* match day: la prossima partita della squadra; full time: l'ultima giocata. Se scegli tu una partita (o scrivi i campi) resta la tua. */
+function gqMcPick(M){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,pl=M.filter(r=>kRG(r.r)),np=M.filter(r=>!kRG(r.r));return ft?pl[pl.length-1]||M[M.length-1]:np[0]||pl[pl.length-1]}
+function gqMcFill(){const sel=$("#mcsel");MCM=gqMatches();
+ sel.innerHTML=`<option value="">${MCM.length?"Partite di "+esc(gqSN())+": scegline un’altra se vuoi":"Nessuna partita della squadra: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">G${r.g} · ${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("");
+ if(BS(gT())!=="mc")return;
+ if(S.mt.au===0){const i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a);if(i>=0){sel.value=i;MCC=MCM[i]}return}
+ const r=gqMcPick(MCM);if(!r)return;sel.value=MCM.indexOf(r);MCC=r;const x=kRG(r.r);
+ S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}
+/* grafica “Risultati” della squadra: tutte le partite giocate (o le ultime N) dal calendario */
+function qrRows(){const M=gqMatches().filter(r=>kRG(r.r)),n=+S.qrN||0;return n?M.slice(-n):M}
+function qrv(x,W,H,y0,m,F,u){const st=S.sty,t=gqCur(),R=qrRows(),tb=tabL(),it0=tb.it?"italic ":"";if(tb.ff)F=gqF(tb.ff);
+ const tw=(tb.w||(W-2*m)/W)*W,cx=tb.x!=null?tb.x*W:W/2,lm=cx-tw/2,Rr=lm+tw,top=tb.y!=null?tb.y*H:y0+70,n=Math.max(R.length,1),avail=Math.max(60,H-top-70),
+  rh=Math.min(tb.fill?320:150*(tb.s||1),avail/n),fs=Math.min(rh*.36,30+rh*.12)*(tb.ts||1),lz=Math.min(rh*.7,fs*1.9)*(tb.ls||1),gw=fs*2.1,pw=fs*3.4,ph=Math.min(rh*.62,fs*1.55),C={V:"#22c55e",N:"#94a3b8",P:"#ef4444"};
+ x.save();x.globalAlpha=(tb.o??100)/100;
+ if(!R.length){x.fillStyle=rgba(st.tx,.55);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText(t?"Nessun risultato di "+t+" nel calendario":"Scegli la squadra",cx,top+60*u);x.restore();LB.push({id:"tab",x0:lm,y0:top,x1:Rr,y1:top+100*u,ax:cx/W,ay:top/H});return}
+ const D=R.map(r=>{const home=kHN(r.h)===kHN(t),g=kRG(r.r),gf=home?+g[0]:+g[1],gs=home?+g[1]:+g[0];return{r,home,opp:home?r.a:r.h,gf,gs,e:gf>gs?"V":gf<gs?"P":"N"}}),sm={V:0,N:0,P:0};let tf=0,ts=0;D.forEach(o=>{sm[o.e]++;tf+=o.gf;ts+=o.gs});
+ x.textAlign="left";x.font=`${it0}600 ${Math.max(18,fs*.6)}px ${F}`;x.fillStyle=rgba(st.tx,.65);x.fillText(`${sm.V} vinte · ${sm.N} pareggiate · ${sm.P} perse · gol ${tf}-${ts}`,lm,top-18);
+ const hasL=D.some(o=>logo(o.opp)),nx=lm+gw+(hasL?lz+rh*.08:0),mw=Rr-pw-fs*1.6-nx-24,NF=fitNames(x,D.map(o=>o.opp),it0+(tb.wt||700),fs,mw,false,F,14),SF=Math.max(12,Math.min(fs*.62,NF.f*.8)),
+  sd=d=>/^\d{4}-\d{2}-\d{2}$/.test(d||"")?new Date(d+"T12:00:00").toLocaleDateString("it-IT",{day:"numeric",month:"short"}):"";
+ D.forEach((o,i)=>{const y=top+i*rh,cy=y+(rh-6)/2;x.fillStyle=rgba(st.tx,.14);x.fillRect(lm-18,y+rh-6,tw+36,1.5);
+  x.textAlign="left";x.fillStyle=rgba(st.tx,.6);x.font=`${it0}700 ${fs*.62}px ${F}`;x.fillText("G"+o.r.g,lm,cy+fs*.22);
+  const l=logo(o.opp);if(l)dl(x,l,lm+gw+lz/2,cy,lz);
+  const nb=cy+NF.f*.35-SF*.6;x.fillStyle=st.tx;x.font=`${it0}${tb.wt||700} ${NF.f}px ${F}`;x.fillText(o.opp,nx,nb);x.font=`${it0}400 ${SF}px ${F}`;x.fillStyle=rgba(st.tx,.65);x.fillText((o.home?"In casa":"In trasferta")+(sd(o.r.d)?" · "+sd(o.r.d):""),nx,nb+SF*1.25);
+  const px=Rr-pw;x.fillStyle=C[o.e];x.beginPath();x.roundRect(px,cy-ph/2,pw,ph,ph/2);x.fill();x.fillStyle=o.e==="N"?"#0b1220":"#fff";x.textAlign="center";x.font=`${it0}800 ${ph*.55}px ${F}`;x.fillText(o.gf+" - "+o.gs,px+pw/2,cy+ph*.2);
+  x.fillStyle=C[o.e];x.font=`${it0}800 ${fs*.8}px ${F}`;x.fillText(o.e,px-fs*.85,cy+fs*.28)});
+ x.restore();LB.push({id:"tab",x0:lm-18,y0:top-50,x1:Rr+18,y1:top+n*rh,ax:cx/W,ay:top/H})}
+$("#ep_c").insertAdjacentHTML("afterbegin",`<div id="qrw" class="card" style="display:none"><b>Risultati della squadra</b><small>Prendo le partite giocate dal calendario incollato in Dati e TOTW, dal punto di vista della squadra: V/N/P e gol.</small><div class="bar" style="margin:6px 0 0;gap:6px"><span class="hint" style="margin:0">Partite da mostrare</span><button type="button" class="btn" data-qrn="0">Tutte</button><button type="button" class="btn" data-qrn="5">Ultime 5</button><button type="button" class="btn" data-qrn="8">Ultime 8</button></div></div>`);
+function qrUI(){const on=TQ&&BS(gT())==="qr";$("#qrw").style.display=on?"block":"none";if(on)$$("#qrw [data-qrn]").forEach(b=>b.classList.toggle("p",+b.dataset.qrn===(+S.qrN||0)))}
+$("#qrw").addEventListener("click",e=>{const b=e.target.closest("[data-qrn]");if(!b)return;S.qrN=+b.dataset.qrn;qrUI();draw();save();cm()});
+/* ---- font e sfondi della squadra (al massimo 2 + 2: ognuno è un documento nel cloud) ---- */
+var FFL={};
+function gqF(k){const B='"Inter Tight",system-ui,sans-serif';if(!k)return B;const d=S.raw&&S.raw[k];if(!d)return B;let o=FFL[k];
+ if(!o||o.n!==d.length){o=FFL[k]={n:d.length,fam:"tf"+Math.abs([...k].reduce((h,c)=>(h*31+c.charCodeAt(0))|0,7)).toString(36),ok:0};try{const ff=new FontFace(o.fam,`url(${d})`);ff.load().then(f=>{document.fonts.add(f);o.ok=1;draw();if(TQ)gqAUI()}).catch(()=>{o.bad=1})}catch(e){o.bad=1}}
+ return o.ok?`"${o.fam}",${B}`:B}
+function gqAssets(){const b=(S.gqs||{})[gqCur()]||{};return{f:(b.fonts||[]).filter(o=>o&&o.k),g:(b.bgs||[]).filter(o=>o&&o.k)}}
+function gqAssetsLoad(){const ks=[];Object.values(S.gqs||{}).forEach(b=>[...((b||{}).fonts||[]),...((b||{}).bgs||[])].forEach(o=>{if(!o||!o.k)return;if(S.raw&&S.raw[o.k]){if(PHIK&&!PHIK.has(o.k)){PHIK.add(o.k);phIdb("put",o.k,S.raw[o.k])}}else ks.push(o.k)}));
+ if(ks.length)Promise.all(ks.map(k=>phIdb("get",k).then(d=>{if(d){S.raw=S.raw||{};S.raw[k]=d;return 1}}))).then(r=>{if(r.some(Boolean)){PC={};draw();if(TQ)gqAUI();save()}})}
+$("#ep_y").insertAdjacentHTML("beforeend",`<div id="gqa" class="card" style="display:none;margin-top:12px"><b>Font e sfondi della squadra</b><small>Fino a 2 font e 2 sfondi per squadra, così il cloud resta leggero. Valgono solo per le grafiche di questa squadra.</small>
+<label for="gqff">Carattere delle grafiche</label><select id="gqff"></select><div id="gqfl"></div><label class="btn" style="margin:8px 0 0" id="gqfa">+ Carica un font (.woff2, .ttf, .otf)<input type="file" id="gqfi" accept=".woff2,.woff,.ttf,.otf" hidden></label>
+<label>Sfondi</label><div id="gqbl" class="gqbl"></div><label class="btn" style="margin:8px 0 0" id="gqba">+ Carica uno sfondo<input type="file" id="gqbi" accept="image/*" hidden></label><div class="hint">Lo sfondo scelto va sotto strisce e testi: regolalo con “Opacità foto” e “Oscuramento foto” qui sopra.</div></div>`);
+function gqAUI(){const el=$("#gqa");if(!el)return;el.style.display=TQ&&gqCur()?"block":"none";if(!TQ||!gqCur())return;const A=gqAssets();
+ $("#gqff").innerHTML=`<option value="">Inter Tight (quello del tool)</option>`+A.f.map(o=>`<option value="${esc(o.k)}"${S.sty.ff===o.k?" selected":""}>${esc(o.n)}</option>`).join("");
+ $("#gqfl").innerHTML=A.f.map(o=>{gqF(o.k);const fm=(FFL[o.k]||{}).ok?FFL[o.k].fam:"";return`<div class="row" style="padding:6px 0"><span style="font:600 22px ${fm?`'${fm}',`:""}sans-serif">Aa Bb 123</span><small>${esc(o.n)}${S.raw&&S.raw[o.k]?"":" · in arrivo…"}</small><button class="btn pbx" data-gqfx="${esc(o.k)}" aria-label="Elimina il font ${esc(o.n)}">×</button></div>`}).join("")||'<div class="hint">Nessun font caricato.</div>';
+ $("#gqfa").style.display=A.f.length>=2?"none":"";
+ $("#gqbl").innerHTML=`<button type="button" class="gqbg${!S.sty.bgi?" on":""}" data-gqbu=""><span>Nessuno</span></button>`+A.g.map(o=>`<div class="gqbg${S.sty.bgi===o.k?" on":""}"><button type="button" data-gqbu="${esc(o.k)}" aria-label="Usa lo sfondo ${esc(o.n)}">${S.raw&&S.raw[o.k]?`<img src="${S.raw[o.k]}" alt="">`:"<span>…</span>"}</button><button type="button" class="btn pbx gqbx" data-gqbx="${esc(o.k)}" aria-label="Elimina lo sfondo ${esc(o.n)}">×</button></div>`).join("");
+ $("#gqba").style.display=A.g.length>=2?"none":""}
+function gqRead(f){return new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>ko();r.readAsDataURL(f)})}
+$("#gqfi").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const t=gqCur(),b=gqB(t);if((b.fonts||[]).length>=2)return alert("Puoi tenere al massimo 2 font per squadra: eliminane uno prima.");
+ if(f.size>650*1024)return alert("Questo font pesa troppo ("+Math.round(f.size/1024)+" KB, massimo 650 KB). Usa la versione .woff2, che è molto più leggera.");
+ let d;try{d=await gqRead(f)}catch(x){return alert("Font non leggibile")}const k="fn|"+t+"|"+Date.now().toString(36),n=f.name.replace(/\.[^.]+$/,"");
+ try{await new FontFace("tftest",`url(${d})`).load()}catch(x){return alert("Questo file non sembra un font valido.")}
+ S.raw[k]=d;(b.fonts=b.fonts||[]).push({k,n});PHIK.add(k);phIdb("put",k,d);if(!S.sty.ff)S.sty.ff=k;gqAUI();lyUI();draw();save();cm();toast("Font “"+n+"” caricato")};
+$("#gqbi").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const t=gqCur(),b=gqB(t);if((b.bgs||[]).length>=2)return alert("Puoi tenere al massimo 2 sfondi per squadra: eliminane uno prima.");
+ let src;try{src=await gqRead(f)}catch(x){return alert("Immagine non leggibile")}let i;try{i=await ldImg(src)}catch(x){return alert("Immagine non leggibile")}
+ let d="";for(const[mx,q]of[[1920,.85],[1600,.8],[1280,.75],[1080,.7]]){const s=Math.min(1,mx/Math.max(i.naturalWidth,i.naturalHeight)),c=bgCv(Math.round(i.naturalWidth*s),Math.round(i.naturalHeight*s));c.getContext("2d").drawImage(i,0,0,c.width,c.height);d=c.toDataURL("image/jpeg",q);if(d.length<700000)break}
+ const k="bg|"+t+"|"+Date.now().toString(36);S.raw[k]=d;(b.bgs=b.bgs||[]).push({k,n:f.name.replace(/\.[^.]+$/,"")});PHIK.add(k);phIdb("put",k,d);S.sty.bgi=k;if(!(S.sty.po>0))S.sty.po=100;sty();gqAUI();draw();save();cm();toast("Sfondo caricato e in uso")};
+$("#gqa").addEventListener("change",e=>{if(e.target.id!=="gqff")return;S.sty.ff=e.target.value;draw();save();cm()});
+$("#gqa").addEventListener("click",e=>{const u=e.target.closest("[data-gqbu]"),x=e.target.closest("[data-gqbx]"),fx=e.target.closest("[data-gqfx]"),b=gqB(gqCur());
+ if(u){S.sty.bgi=u.dataset.gqbu;gqAUI();draw();save();cm();return}
+ if(x||fx){const k=(x||fx).dataset[x?"gqbx":"gqfx"],L=x?"bgs":"fonts",o=(b[L]||[]).find(q=>q.k===k);if(!confirm("Elimino "+(x?"lo sfondo":"il font")+" “"+(o?o.n:"")+"”?"))return;b[L]=(b[L]||[]).filter(q=>q.k!==k);delete S.raw[k];PHIK.delete(k);phIdb("del",k);if(S.sty.bgi===k)S.sty.bgi="";if(S.sty.ff===k)S.sty.ff="";Object.values(S.ly||{}).forEach(a=>(a||[]).forEach(l=>{if(l&&l.ff===k)delete l.ff}));gqAUI();lyUI();draw();save();cm()}});
+setTimeout(gqAssetsLoad,500);
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
@@ -2069,9 +2137,10 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  async function commitOps(ops){let b=writeBatch(db),n=0,sz=0;for(const[t,r,d]of ops){const z=d?JSON.stringify(d).length:60;if(n&&(n>=450||sz+z>7e6)){await b.commit();b=writeBatch(db);n=0;sz=0}if(t==="d")b.delete(r);else b.set(r,d);n++;sz+=z}if(n)await b.commit()}
  async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),q=v=>JSON.stringify(v);Object.keys({...Rm,...B}).forEach(k=>{if(q(L[k])===q(B[k])&&q(Rm[k])!==q(L[k])){if(Rm[k]===undefined)delete S[k];else S[k]=Rm[k];ch=1}});lastR=pend.j;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch&&typeof gqMig==="function")gqMig();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
   if(j!==lastJ&&EXT)lastJ=j;if(j!==lastJ){if(j.length>950000){cStat("Dati troppo grandi per il cloud: elimina qualche foto o dato vecchio","e");return}ops.push(["s",SD(pid),{j,at,by:DEV}]);lastJ=j;lastR=j}
-  if(!EXT)Object.keys(raw).forEach(k=>{if(lastLg[k]!==raw[k]){ops.push(["s",doc(LG(pid),hk(k)),{k,d:raw[k]}]);lastLg[k]=raw[k]}});
+  const own=k=>!EXT||k.startsWith("fn|"+SES.team+"|")||k.startsWith("bg|"+SES.team+"|");
+  Object.keys(raw).forEach(k=>{if(own(k)&&lastLg[k]!==raw[k]){ops.push(["s",doc(LG(pid),hk(k)),{k,d:raw[k]}]);lastLg[k]=raw[k]}});
   {const Q=(typeof canonS==="function"?canonS():S).gqs||{};Object.keys(Q).forEach(t=>{if(!t||(EXT&&t!==SES.team))return;const qj=JSON.stringify(Q[t]);if(lastQ[t]!==qj){ops.push(["s",doc(QC(pid),hk("q|"+t)),{team:t,j:qj,at,by:DEV}]);lastQ[t]=qj}})}
-  if(!EXT)Object.keys(lastLg).forEach(k=>{if(!(k in raw)){ops.push(["d",doc(LG(pid),hk(k))]);delete lastLg[k]}});
+  Object.keys(lastLg).forEach(k=>{if(own(k)&&!(k in raw)){ops.push(["d",doc(LG(pid),hk(k))]);delete lastLg[k]}});
   if(!ops.length)return cStat("Sincronizzato · "+hm(),"ok");localStorage.setItem(LK("a7at"),at);pend=null;cStat(navigator.onLine?"Salvataggio nel cloud…":"Offline: salvo appena torna la rete","w");
   try{await commitOps(ops);cStat("Salvato nel cloud · "+hm(),"ok")}catch(e){lastJ=null;lastLg={};lastQ={};cStat("Errore di salvataggio: "+why(e),"e")}}
  async function pushGal(){gtmr=null;if(!ready)return;const ids=new Set(G.map(g=>g.id)),ops=[];let big=0;
