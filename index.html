@@ -180,6 +180,11 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .phi img,.phi .phn{width:42px;height:54px;flex:none;object-fit:cover;object-position:top;border-radius:6px;background:repeating-conic-gradient(#3a4256 0 25%,#2b3142 0 50%) 0 0/10px 10px}
 .phi>span{flex:1;min-width:0;font-size:12.5px;line-height:1.25}.phi b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.phi small{margin:0}
 .efed b,.efx b,.efed label b{display:inline}
+#lyo{position:fixed;inset:0;z-index:150;background:rgba(0,0,0,.6);display:none;align-items:flex-start;justify-content:center;padding:24px 12px;overflow:auto}#lyo.on{display:flex}#lyo .cdp{width:min(1120px,100%)}
+#lyo .cdk .g3{grid-template-columns:1fr 1fr}#lyo .cdr{grid-template-columns:110px minmax(0,1fr) 44px}#lyo .cdr input:not([type=range]){min-width:0}
+.lyg{border:1px solid var(--line);border-radius:10px;padding:4px 10px 6px;margin:8px 0}.lyg.on{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
+.lygh{display:block;width:100%;text-align:left;background:none;border:0;color:var(--fg);font:700 14px "Inter Tight",system-ui,sans-serif;padding:6px 0;cursor:pointer}
+#gqb{border-color:var(--blue)}#gql{width:56px;height:56px;flex:none;border-radius:8px;background:repeating-conic-gradient(#3a4256 0 25%,#2b3142 0 50%) 0 0/12px 12px}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -216,6 +221,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <nav role="tablist">
 <button role="tab" aria-selected="true" data-t="w">Settimana</button>
 <button role="tab" aria-selected="false" data-t="g">Grafiche</button>
+<button role="tab" aria-selected="false" data-t="q">Grafiche squadra</button>
 <button role="tab" aria-selected="false" data-t="b">Best of</button>
 <button role="tab" aria-selected="false" data-t="p">Podcast</button>
 <button role="tab" aria-selected="false" data-t="l">Loghi</button>
@@ -237,7 +243,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <div id="ngp" class="card" style="display:none;margin-top:8px"><label for="ngn">Nome della grafica</label><input id="ngn" placeholder="Es. Sondaggio MVP"><label for="ngb">Parti da</label><select id="ngb"><option value="cop">Copertina (titolo grande)</option><option value="pod">Copertina podcast (ritagli)</option><option value="bo">Elenco libero (righe Testo;Sottotesto;Valore)</option><option value="vuota">Vuota (titolo e sottotitolo, poi aggiungi elementi)</option><option value="mc">Match day (partita)</option><option value="ft">Full time (risultato finale)</option><option value="ris">Risultati della giornata</option><option value="tw">Formazione (campetto)</option><option value="st">Logo tra le stelle</option></select><div class="bar" style="margin:8px 0 0"><button class="btn p" id="ngc">Crea</button><button class="btn" id="ngx">Annulla</button></div></div>
 <label for="gf">Formato</label>
 <select id="gf"><option value="1080x1350">Post 4:5</option><option value="1080x1920">Storia o reel 9:16</option><option value="1080x1080">Quadrato</option><option value="1920x1080">YouTube 16:9</option></select>
-</div><div class="ep" id="ep_y"><label>Preset di stile</label><div class="bar" id="pr" style="margin-bottom:8px"></div><div class="bar" style="margin:0 0 8px;gap:6px"><button class="btn" id="sp">+ Salva come nuovo preset</button><button class="btn" id="pre_o">✏️ Modifica preset</button></div>
+<label>Impaginazione</label><div class="bar" id="lpb" style="margin:0"></div><p class="hint">Posizione e grandezza di loghi e testi, e i testi stessi: salvali come predefiniti di questo modello o come varianti da richiamare con un clic.</p></div><div class="ep" id="ep_y"><label>Preset di stile</label><div class="bar" id="pr" style="margin-bottom:8px"></div><div class="bar" style="margin:0 0 8px;gap:6px"><button class="btn" id="sp">+ Salva come nuovo preset</button></div>
 <div class="g3"><div><label for="cbg">Sfondo</label><input type="color" id="cbg"></div><div><label for="cac">Accento</label><input type="color" id="cac"></div><div><label for="ctx">Testo</label><input type="color" id="ctx"></div></div>
 <label><input type="checkbox" id="ss"> Strisce sfumate</label><div class="card" id="bgg" style="margin-top:10px"><b>Generatore di sfondi</b><small>Sfondi astratti come le grafiche FIFA o fffuel, con i colori dello stile (sfondo e accento) più un colore extra.</small><div class="bar" style="margin:6px 0 0"><select id="bgt" style="flex:1;width:auto"></select><button class="btn" id="bgr">🎲 Nuova variante</button></div><div id="bgo"><div class="g3"><div><label for="bgc3">Colore extra</label><input type="color" id="bgc3"></div><div><label for="bgk">Intensità</label><input type="range" id="bgk" min="0" max="100"></div><div><label for="bgz">Scala</label><input type="range" id="bgz" min="40" max="250"></div></div><div class="bar" style="margin:8px 0 0"><button class="btn" id="bgd">Scarica lo sfondo (PNG)</button></div></div></div>
 <label for="ph">Foto di sfondo (per le stelle, usa una foto dello stadio)</label><input type="file" id="ph" accept="image/*"><button class="btn" id="rp" style="margin-top:6px">Rimuovi foto</button>
@@ -377,15 +383,15 @@ const SES=(()=>{try{return JSON.parse(localStorage.getItem("a7ses"))||null}catch
 let S;try{S={...DEF(),...(JSON.parse(localStorage.getItem(LK("a7v2")))||{})}}catch(e){S=DEF()}
 S.sty={...DEF().sty,...S.sty};Object.keys(S.mode||{}).forEach(k=>{if(S.mode[k]==="bw")S.mode[k]="w"});Object.keys(S.ly).forEach(k=>S.ly[k]=S.ly[k].filter(l=>l.k!=="img"||l.src));
 const BS=T=>((S.cg||[]).find(c=>c.id===T)||{}).b||T;
-const save=()=>{try{localStorage.setItem(LK("a7v2"),JSON.stringify(S,(k,v)=>k==="src"?undefined:k==="raw"&&v?Object.fromEntries(Object.entries(v).filter(([x])=>!x.startsWith("ph|"))):v))}catch(e){}if(window.CLD&&CLD.dirty)CLD.dirty()};
+const save=()=>{try{localStorage.setItem(LK("a7v2"),JSON.stringify(canonS(),(k,v)=>k==="src"?undefined:k==="raw"&&v?Object.fromEntries(Object.entries(v).filter(([x])=>!x.startsWith("ph|"))):v))}catch(e){}if(window.CLD&&CLD.dirty)CLD.dirty()};
 let BG="",PC={},IC={},sd=7,CL=[],off=0;
 const rn=()=>(sd=sd*16807%2147483647)/2147483647;
 const im=s=>{if(!s)return null;let i=IC[s];if(!i){i=IC[s]=new Image();i.onload=()=>draw();i.src=s}return i.complete&&i.naturalWidth?i:null};
 const rows=t=>t.split("\n").map(l=>l.split(";").map(x=>x.trim())).filter(r=>r[0]);
 
 /* ---- navigazione ---- */
-$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));$$("section").forEach(s=>s.classList.toggle("on",s.id===b.dataset.t));
- const t=b.dataset.t;$("main").classList.toggle("wide",t==="w");if(t==="g"){sync();TBU();draw()}if(t==="l")renderLogos();if(t==="k")renderK()});
+$$("nav button").forEach(b=>b.onclick=()=>{$$("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));$$("section").forEach(s=>s.classList.toggle("on",s.id===(b.dataset.t==="q"?"g":b.dataset.t)));
+ const t=b.dataset.t;if(typeof gMode==="function")gMode(t==="q");$("main").classList.toggle("wide",t==="w");if(t==="g"||t==="q"){sync();TBU();draw()}if(t==="l")renderLogos();if(t==="k")renderK()});
 const go=t=>$$("nav button").find(b=>b.dataset.t===t).click();
 
 /* ---- settimana e tipi ---- */
@@ -691,10 +697,10 @@ $("#et").onclick=e=>{const k=e.target.dataset.et;if(!k)return;$$("#et button").f
 /* ---- editor grafiche ---- */
 const TT={pod:["NOME|& NOME","SEVEN LIONS PODCAST · EP. 1"],cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"],ris:["Risultati","Giornata 4"]};
 const gsub=s=>S.gs?String(s).replace(/^(giornata\s+)\d+/i,"$1"+S.gs).replace(/^(dopo\s+)\d+/i,"$1"+S.gs):s;
-function sync(ch){const T=gT(),B=BS(T);if(ch){const q=TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=gsub(q[1])}
+function sync(ch){const T=gT(),B=BS(T);if(ch){const q=lpTT(T)||TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=gsub(q[1])}
  $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";$("#marw").style.display=B==="mar"?"block":"none";$("#pcw").style.display=B==="pod"?"block":"none";if(B==="pod")podUI();marUI();
  if(B==="bo"){$("#gdl").textContent=T==="bo"?"Goal (Marcatore;Squadra;Minuto)":"Righe (Testo;Sottotesto;Valore)";$("#gd").value=S[T]||""}
- ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcFill();lyUI()}
+ ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcFill();lyUI();renderLP()}
 function sty(){bgUI();["bg","ac","tx"].forEach(k=>$("#c"+k).value=S.sty[k]);$("#ss").checked=S.sty.str;$("#dk").value=S.sty.dk;$("#po").value=S.sty.po;$("#gf").value=S.sty.fmt}
 Object.entries(PR).forEach(([k,v])=>{const b=document.createElement("button");b.className="btn";b.textContent=k;b.onclick=()=>{prApply(prGet("b:"+k));sty();save();draw();cm()};$("#pr").append(b)});
 ["bg","ac","tx"].forEach(k=>$("#c"+k).oninput=e=>{S.sty[k]=e.target.value;save();draw()});
@@ -704,7 +710,7 @@ $("#gf").onchange=e=>{S.sty.fmt=e.target.value;save();draw()};$("#gt").onchange=
 $("#ph").onchange=e=>{const f=e.target.files[0];if(f){BG=URL.createObjectURL(f);draw()}};
 
 function stripes(x,W,H,fade,col){for(let i=0;i<Math.floor(W/30);i++){const a=.2+.8*Math.abs(Math.sin(i*.9)*Math.cos(i*.31)),g=x.createLinearGradient(0,0,0,H*fade);g.addColorStop(0,rgba(col,a));g.addColorStop(1,rgba(col,0));x.fillStyle=g;x.fillRect(i*30+4,0,22,H*fade)}}
-function stars(x,W,H,ly){sd=7;const st=S.sty,col=ly.c||st.tx,raw=im(S.raw.__lega);let m;
+function stars(x,W,H,ly){sd=7;const st=S.sty,col=ly.c||st.tx,raw=im(S.raw[lgK()]);let m;
  if(raw)m=process(raw,"s");else{m=document.createElement("canvas");m.width=360;m.height=190;const q=m.getContext("2d");q.fillStyle="#fff";q.textAlign="center";q.font="800 130px sans-serif";q.fillText("LEGA",180,118);q.font="700 34px sans-serif";q.fillText("AMATORI TREVISO",180,170)}
  const w=m.width,h=m.height,p=m.getContext("2d").getImageData(0,0,w,h).data,on=(a,b)=>a>=0&&b>=0&&a<w&&b<h&&p[(b*w+a)*4+3]>128,E=[],I=[];
  for(let b=0;b<h;b+=2)for(let a=0;a<w;a+=2){if(!on(a,b))continue;if(!on(a-3,b)||!on(a+3,b)||!on(a,b-3)||!on(a,b+3))E.push([a,b]);else if(a%10===0&&b%10===0)I.push([a,b])}
@@ -721,7 +727,7 @@ function stars(x,W,H,ly){sd=7;const st=S.sty,col=ly.c||st.tx,raw=im(S.raw.__lega
 function wrapName(x,t,mw){if(x.measureText(t).width<=mw)return[t];const i=t.indexOf(" - ");if(i>0){const a=t.slice(0,i),b=t.slice(i+3);if(x.measureText(a).width<=mw&&x.measureText(b).width<=mw)return[a,b]}
  const w=t.split(" ");let best=null,bw=1e9;for(let k=1;k<w.length;k++){const a=w.slice(0,k).join(" "),b=w.slice(k).join(" "),m=Math.max(x.measureText(a).width,x.measureText(b).width);if(m<bw){bw=m;best=[a,b]}}return best&&bw<=mw?best:null}
 function fitNames(x,ns,wt,f0,mw,wrap,F,fmin){fmin=fmin||14;let f=Math.floor(f0);for(;;){x.font=`${wt} ${f}px ${F}`;const l=ns.map(n=>x.measureText(n).width<=mw?[n]:(wrap?wrapName(x,n,mw):null));if(l.every(Boolean)||f<=fmin)return{f,l:l.map((q,i)=>q||[ns[i]])};f--}}
-const marList=()=>{const a=S.mar||[],n=+S.marN||0;if(!n||n>=a.length)return a;let k=n;if(S.marTie)while(k<a.length&&a[k].g===a[k-1].g)k++;return a.slice(0,k)};
+const marList=()=>{const a=gqMar(S.mar||[]),n=+S.marN||0;if(!n||n>=a.length)return a;let k=n;if(S.marTie)while(k<a.length&&a[k].g===a[k-1].g)k++;return a.slice(0,k)};
 function marUI(){const el=$("#marn");if(!el)return;const a=S.mar||[],n=+S.marN||0,sh=marList().length;if(document.activeElement!==el)el.value=n||"";$("#mart").checked=!!S.marTie;
  let h=a.length?`Nella grafica: ${sh} marcatori su ${a.length}.`:"Carica l’Excel dei marcatori (scheda Dati e TOTW).";
  if(n&&n<a.length&&!S.marTie){const g=a[n-1].g,tot=a.filter(e=>e.g===g).length,dentro=a.slice(0,n).filter(e=>e.g===g).length;if(tot>dentro)h+=` ⚠ L’ultimo mostrato ha ${g} gol: altri ${tot-dentro} a pari merito restano fuori.`}
@@ -741,8 +747,8 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
   const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
   let it,hd,cw=78;if(T==="tw"&&S.twv==="k")twGrid(x,W,H,ty+90,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
-  if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:i===0,c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
-  else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:i===0,c:[e.g]}))}
+  if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
+  else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:gqMarHl(e,i),c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:(twDN(p)||"Nome Cognome")+twSfx(p),sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
   const top=ty+170,n=Math.max(it.length,1),rh=Math.min(84,(H-top-70)/n),fs=rh*.42,R=W-m,hasL=it.some(e=>logo(e.lg)),nx=m+54+(hasL?rh*.72:0),nc=hd.length;
   x.textAlign="right";x.font=`600 ${Math.max(20,fs*.7)}px ${F}`;x.fillStyle=mu;hd.forEach((h,i)=>x.fillText(h,R-(nc-1-i)*cw,top-16));
@@ -783,17 +789,17 @@ $("#dl").onclick=()=>{EXP=1;draw();$("#cv").toBlob(b=>{const a=document.createEl
 let LB=[],SEL=null,EXP=0,hist=[],hi=-1,drag=null,rq=0;
 const gT=()=>$("#gt").value,nid=()=>"l"+Date.now().toString(36)+Math.random().toString(36).slice(2,4);
 const defLy=T=>{const T0=T;T=BS(T);const a=[];if(T==="st")a.push({id:"stars",k:"stars",nm:"Logo a stelle",x:.5,y:.25,s:1,o:100,c:"",b:0});
- else if(T==="pod")a.push({id:"logo",k:"logo",nm:"Logo lega",x:.91,y:.13,s:.1,o:100,c:"",b:0});
- else{a.push({id:"logo",k:"logo",nm:"Logo lega",x:T==="mc"?.5:.89,y:.075,s:T==="mc"?.16:.11,o:100,c:"",b:0},{id:"ft",k:"text",nm:"Piè di pagina",t:"Lega Amatori Calcio Treviso",x:.5,y:.975,s:.02,o:60,c:"",b:0});
+ else if(T==="pod")a.push({id:"logo",k:"logo",nm:lgNm(),x:.91,y:.13,s:.1,o:100,c:"",b:0});
+ else{a.push({id:"logo",k:"logo",nm:lgNm(),x:T==="mc"?.5:.89,y:.075,s:T==="mc"?.16:.11,o:100,c:"",b:0},{id:"ft",k:"text",nm:"Piè di pagina",t:lgFoot(),x:.5,y:.975,s:.02,o:60,c:"",b:0});
   if(["cl","mar","bo","ris"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
  if(T==="mc"){const[W,H]=S.sty.fmt.split("x").map(Number),cg=(S.cg||[]).find(c=>c.id===T0),b=BAND();a.unshift(b,...MCL(b,W,H,cg&&cg.ft))}return[...a,...TL()]};
 const TL=()=>[{id:"tt",k:"tt",nm:"Titolo",x:null,y:null,s:1,o:100,c:"",b:0},{id:"ts",k:"ts",nm:"Sottotitolo",x:null,y:null,s:1,o:100,c:"",b:0}],BAND=()=>({id:"band",k:"band",nm:"Fascia loghi",x:.5,y:.735,s:.84,h:.176,r:18,o:90,c:"",b:1});
-const LY=()=>S.ly[gT()]||(S.ly[gT()]=defLy(gT())),SELL=()=>LY().find(q=>q.id===SEL),rd=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})};
+const LY=()=>S.ly[gT()]||(S.ly[gT()]=lpDef(gT())||defLy(gT())),SELL=()=>LY().find(q=>q.id===SEL),rd=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})};
 const snap=()=>JSON.stringify({sty:S.sty,ly:S.ly,tw2:S.tw2,twx:S.twx,twk:S.twk,pc:S.pc,tf:S.tf,twv:S.twv,mt:S.mt,gh:$("#gh").value,gs:$("#gs").value,T:gT()});
 const cm=()=>{const s=snap();if(s===hist[hi])return;hist=hist.slice(0,hi+1);hist.push(s);if(hist.length>80)hist.shift();hi=hist.length-1};
 function rest(s){const o=JSON.parse(s);Object.assign(S,{sty:o.sty,ly:o.ly,tw2:o.tw2,twx:o.twx||[],twk:o.twk,pc:o.pc,tf:o.tf,twv:o.twv,mt:o.mt});$("#gt").value=o.T;$("#gh").value=o.gh;$("#gs").value=o.gs;sty();sync(false);renderTW();save();draw()}
 const undo=()=>{if(hi>0)rest(hist[--hi])},redo=()=>{if(hi<hist.length-1)rest(hist[++hi])};
-function lg(l){const raw=im(S.raw.__lega);if(!raw)return null;if(!l.c)return logo("__lega");const md=(S.mode.__lega||"o")==="w"?"w":"s",k="__t"+l.c+md+S.raw.__lega.length+S.tol+"|"+(S.olw||3)+(S.uni!==false);
+function lg(l){const K0=lgK(),raw=im(S.raw[K0]);if(!raw)return null;if(!l.c)return logo(K0);const md=(S.mode[K0]||"o")==="w"?"w":"s",k="__t"+K0+l.c+md+S.raw[K0].length+S.tol+"|"+(S.olw||3)+(S.uni!==false);
  return PC[k]||(PC[k]=(()=>{const m=process(raw,md),c=document.createElement("canvas");c.width=m.width;c.height=m.height;const q=c.getContext("2d");q.drawImage(m,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
 function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==="ts"||!!l.b!==!!b)return;x.save();x.globalAlpha=l.o/100;let bx;
  if(l.k==="text"||l.k==="mt"||l.k==="mname"){const fs=l.s*W;let t=l.k==="text"?l.t||"":l.k==="mname"?(S.mt[l.side]||(l.side==="h"?"Casa":"Ospite")):mtT(l);if(!t){if(EXP){x.restore();return}t=l.nm||"";x.globalAlpha*=.3}
@@ -870,7 +876,7 @@ const addL=l=>{LY().push({o:100,c:"",b:0,x:.5,y:.5,id:nid(),...l});SEL=LY()[LY()
 $("#lyl").onclick=e=>{const id=e.target.dataset.sl;if(id){SEL=id;lyUI();draw()}};
 $("#lyc").oninput=e=>{const l=SELL(),p=e.target.dataset.p;if(!l||!p)return;const t=e.target.type;l[p]=t==="checkbox"?+e.target.checked:t==="range"?+e.target.value:e.target.value;if(p==="t"&&(l.k==="tt"||l.k==="ts")){$(l.k==="tt"?"#gh":"#gs").value=e.target.value;delete l.t}rd();save();if(p==="t")lyUI()};
 $("#lo").onclick=()=>{const l=SELL();if(l){l.c="";lyUI();draw();save()}};
-$("#al").onclick=()=>addL({k:"logo",nm:"Logo lega",s:.3});$("#at").onclick=()=>addL({k:"text",t:"Nuovo testo",s:.06});
+$("#al").onclick=()=>addL({k:"logo",nm:lgNm(),s:.3});$("#at").onclick=()=>addL({k:"text",t:"Nuovo testo",s:.06});
 $("#ai").onchange=e=>{const f=e.target.files[0];if(f)addL({k:"img",nm:"Immagine",s:.4,src:URL.createObjectURL(f)});e.target.value=""};
 $("#rl").onclick=()=>{delete S.ly[gT()];SEL=null;lyUI();draw();save()};
 $("#ld").onclick=()=>{const l=SELL();if(l)addL({...l,x:l.x+.04,y:l.y+.04,id:nid()})};
@@ -907,7 +913,7 @@ $("#sg").onclick=()=>{EXP=1;draw();const c=CV,k=Math.min(1,1080/Math.max(c.width
 document.addEventListener("click",e=>{const a=e.target.dataset.ga,x=e.target.dataset.gx;if(a)addG(a);if(x){G=G.filter(g=>g.id!==x);saveG();renderGal()}});
 function renderCP(){$$("#pr .cp").forEach(b=>b.remove());(S.cp||[]).forEach((p,i)=>{const b=document.createElement("button");b.className="btn cp";b.textContent=p.n;b.title="Tasto destro per eliminare";b.onclick=()=>{prApply(p);sty();save();draw();cm()};b.oncontextmenu=e=>{e.preventDefault();S.cp.splice(i,1);save();renderCP()};$("#pr").append(b)})}
 $("#sp").onclick=()=>{const n=prompt("Nome del preset?");if(n){(S.cp=S.cp||[]).push({n,v:[S.sty.bg,S.sty.ac,S.sty.tx],str:!!S.sty.str,gen:{...BGD()}});save();renderCP()}};
-$("#ex").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({v:2,S,G},(k,v)=>k==="src"?undefined:v)],{type:"application/json"}));a.download="lega-a7-config.json";a.click()};
+$("#ex").onclick=()=>{const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([JSON.stringify({v:2,S:canonS(),G},(k,v)=>k==="src"?undefined:v)],{type:"application/json"}));a.download="lega-a7-config.json";a.click()};
 $("#imc").onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const o=JSON.parse(t);if(!o.S)throw 0;S={...DEF(),...o.S};S.sty={...DEF().sty,...S.sty};G=o.G||[];save();saveG();(window.CLD&&CLD.flush?CLD.flush():Promise.resolve()).then(()=>location.reload())}catch(x){alert("File di configurazione non valido")}})};
 $("#twp").addEventListener("click",e=>{const x=e.target.dataset.tx;if(x!==undefined){S.tw2[x].nph=S.tw2[x].phk||phFind(S.tw2[x])||1;delete S.tw2[x].ph;delete S.tw2[x].phc;delete S.tw2[x].phk;renderTW();save();draw()}
  if(e.target.id==="tdf"){const r=rank();if(!r.length)return;let k=0;SL().forEach((ro,i)=>{if(ro==="Portiere")S.tw2[i].t=r[0].n;else if(ro==="Difensore")S.tw2[i].t=r[Math.min(k++,r.length-1)].n});renderTW();save();draw()}});
@@ -1451,41 +1457,10 @@ $("#twwat").addEventListener("input",e=>{$("#twwaw").href="https://wa.me/?text="
 $("#twwac").onclick=e=>poCopy($("#twwat").value,e.target);
 $("#twwax").onclick=()=>{$("#twwao").style.display="none"};
 
-/* ---- preset di stile: si modificano e si salvano in una finestra, come le carte del TOTW ----
-   preset di base (Notte, Oro…) modificabili senza perdere l’originale (S.pro), preset miei in S.cp: {n, v:[sfondo,accento,testo], str, gen} */
+/* ---- preset di stile (colori): quelli di base e i miei; applicano anche strisce e sfondo generato se salvati ---- */
 function prGet(id){if(!id)return null;if(id.startsWith("b:")){const n=id.slice(2);if(!PR[n])return null;const o=(S.pro||{})[n];return{n,b:1,v:[...(o?o.v:PR[n])],...(o&&o.str!=null?{str:o.str}:{}),...(o&&o.gen?{gen:{...o.gen}}:{})}}
  const p=(S.cp||[])[+id.slice(2)];return p?{n:p.n,v:[...p.v],...(p.str!=null?{str:p.str}:{}),...(p.gen?{gen:{...p.gen}}:{})}:null}
 function prApply(p){if(!p)return;Object.assign(S.sty,{bg:p.v[0],ac:p.v[1],tx:p.v[2]});if(p.str!=null)S.sty.str=!!p.str;if(p.gen)S.sty.gen={...p.gen}}
-var PRE={id:"",snap:null,ch:0};
-(function(){const d=document.createElement("div");d.id="pre";d.innerHTML=`<div class="cdp" role="dialog" aria-modal="true" aria-label="Preset di stile" style="width:min(980px,100%)"><div class="bar" style="margin-bottom:10px"><h2 style="flex:1;margin:0">Preset di stile</h2><button class="btn" data-pe="x" aria-label="Chiudi">✕</button></div>
-<div class="cdg"><div class="cdv"><canvas id="prc" width="540" height="675"></canvas><div class="hint">Anteprima sulla grafica aperta: le modifiche si vedono subito anche lì.</div></div>
-<div class="cdk"><div class="g3"><div><label for="prsel">Preset</label><select id="prsel"></select></div><div><label for="prnm">Nome</label><input id="prnm"></div></div>
-<details open><summary>Colori</summary><div class="cdr"><label for="prf_bg">Sfondo</label><input type="color" id="prf_bg" data-pf="bg"><span></span></div><div class="cdr"><label for="prf_ac">Accento</label><input type="color" id="prf_ac" data-pf="ac"><span></span></div><div class="cdr"><label for="prf_tx">Testo</label><input type="color" id="prf_tx" data-pf="tx"><span></span></div><div class="cdr"><label for="prf_str">Strisce sfumate</label><input type="checkbox" id="prf_str" data-pf="str" style="justify-self:start"><span></span></div></details>
-<details open><summary>Sfondo generato</summary><div class="cdr"><label for="prf_t">Tipo</label><select id="prf_t" data-pf="t"></select><span></span></div><div class="cdr"><label for="prf_c3">Colore extra</label><input type="color" id="prf_c3" data-pf="c3"><span></span></div><div class="cdr"><label for="prf_k">Intensità</label><input type="range" id="prf_k" data-pf="k" min="0" max="100"><output data-po="k"></output></div><div class="cdr"><label for="prf_z">Scala</label><input type="range" id="prf_z" data-pf="z" min="40" max="250"><output data-po="z"></output></div><div class="bar" style="margin:6px 0" data-pgv><button class="btn" data-pe="v">🎲 Nuova variante</button></div></details>
-<div class="bar cdb"><button class="btn p" data-pe="s">Salva</button><button class="btn" data-pe="n">Salva come nuovo</button><button class="btn" data-pe="r">Annulla modifiche</button><button class="btn" data-pe="d">Elimina</button></div><p class="hint" id="preh"></p></div></div></div>`;document.body.append(d)})();
-function preMatch(){const v=[S.sty.bg,S.sty.ac,S.sty.tx].map(x=>String(x).toLowerCase()).join();return[...(S.cp||[]).map((p,i)=>"c:"+i),...Object.keys(PR).map(n=>"b:"+n)].find(id=>{const p=prGet(id);return p&&p.v.map(x=>String(x).toLowerCase()).join()===v})||""}
-function preOpts(){const A=[...Object.keys(PR).map(n=>["b:"+n,n+((S.pro||{})[n]?" (modificato)":"")]),...(S.cp||[]).map((p,i)=>["c:"+i,p.n])];$("#prsel").innerHTML=`<option value="">— Stile attuale, non ancora salvato —</option>`+A.map(([v,n])=>`<option value="${v}">${esc(n)}</option>`).join("");$("#prsel").value=PRE.id}
-function preUI(){const g=BGD(),b=PRE.id.startsWith("b:"),p=prGet(PRE.id);["bg","ac","tx"].forEach(k=>$("#prf_"+k).value=S.sty[k]);$("#prf_str").checked=!!S.sty.str;$("#prf_t").value=g.t;$("#prf_c3").value=g.c3;$("#prf_k").value=g.k;$("#prf_z").value=g.z;$('#pre [data-po="k"]').textContent=g.k;$('#pre [data-po="z"]').textContent=g.z;
- ["c3","k","z"].forEach(k=>$("#prf_"+k).closest(".cdr").style.display=g.t?"":"none");$("#pre [data-pgv]").style.display=g.t?"":"none";
- const nm=$("#prnm");nm.value=p?p.n:"";nm.disabled=b;nm.placeholder=PRE.id?"":"Nome del nuovo preset";
- const del=$('#pre [data-pe="d"]');del.textContent=b?"Ripristina originale":"Elimina";del.style.display=PRE.id&&(!b||(S.pro||{})[PRE.id.slice(2)])?"":"none";$('#pre [data-pe="s"]').style.display=PRE.id?"":"none";
- $("#preh").textContent=b?"I preset di base tengono il loro nome: con “Salva come nuovo” ne fai una copia con un nome tuo.":PRE.id?"":"Questo stile non è ancora un preset: scrivi un nome e premi “Salva come nuovo”."}
-function prePrev(){const s=$("#cv"),c=$("#prc");if(!s||!c||!s.width)return;const h=Math.round(c.width*s.height/s.width);if(c.height!==h)c.height=h;const x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);x.drawImage(s,0,0,c.width,c.height)}
-function preRd(){sty();draw();PRE.ch=1;setTimeout(prePrev,40)}
-function preOpen(){SEL=null;try{lyUI()}catch(e){}draw();PRE.snap=JSON.parse(JSON.stringify(S.sty));PRE.id=preMatch();PRE.ch=0;$("#prf_t").innerHTML=$("#bgt").innerHTML;preOpts();preUI();$("#pre").classList.add("on");setTimeout(prePrev,40)}
-function preClose(){$("#pre").classList.remove("on");if(PRE.ch){save();cm()}renderCP()}
-$("#pre").addEventListener("input",e=>{const t=e.target,k=t.dataset.pf;if(!k)return;const v=t.type==="checkbox"?t.checked:t.value;
- if(k==="bg"||k==="ac"||k==="tx")S.sty[k]=v;else if(k==="str")S.sty.str=v;else{S.sty.gen={...BGD(),[k]:k==="k"||k==="z"?+v:v};const o=$(`#pre [data-po="${k}"]`);if(o)o.textContent=v;if(k==="t")preUI()}preRd()});
-$("#pre").addEventListener("change",e=>{if(e.target.id!=="prsel")return;PRE.id=e.target.value;if(PRE.id){prApply(prGet(PRE.id));preRd()}preUI()});
-$("#pre").addEventListener("click",e=>{if(e.target.id==="pre")return preClose();const b=e.target.closest("[data-pe]");if(!b)return;const a=b.dataset.pe,cur={v:[S.sty.bg,S.sty.ac,S.sty.tx],str:!!S.sty.str,gen:{...BGD()}};
- if(a==="x")return preClose();
- if(a==="v"){S.sty.gen={...BGD(),seed:Math.floor(Math.random()*1e6)};preRd();return}
- if(a==="r"){S.sty=JSON.parse(JSON.stringify(PRE.snap));PRE.id=preMatch();PRE.ch=0;preOpts();preUI();sty();draw();setTimeout(prePrev,40);return}
- if(a==="s"){if(!PRE.id)return;if(PRE.id.startsWith("b:"))(S.pro=S.pro||{})[PRE.id.slice(2)]=cur;else{const i=+PRE.id.slice(2);S.cp[i]={n:$("#prnm").value.trim()||S.cp[i].n,...cur}}PRE.snap=JSON.parse(JSON.stringify(S.sty));save();renderCP();preOpts();preUI();toast("Preset salvato");return}
- if(a==="n"){let n=PRE.id.startsWith("b:")?"":$("#prnm").value.trim();if(!n||(PRE.id&&n===(prGet(PRE.id)||{}).n))n=prompt("Nome del nuovo preset?",n?n+" 2":"");if(!n)return;(S.cp=S.cp||[]).push({n,...cur});PRE.id="c:"+(S.cp.length-1);PRE.snap=JSON.parse(JSON.stringify(S.sty));save();renderCP();preOpts();preUI();toast("Preset “"+n+"” creato");return}
- if(a==="d"){if(PRE.id.startsWith("b:")){const n=PRE.id.slice(2);if(S.pro)delete S.pro[n];prApply(prGet(PRE.id));preRd()}else{const i=+PRE.id.slice(2);if(!confirm("Elimino il preset “"+S.cp[i].n+"”?"))return;S.cp.splice(i,1);PRE.id=preMatch()}save();renderCP();preOpts();preUI()}});
-$("#pre_o").onclick=preOpen;
-document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#pre").classList.contains("on"))preClose()});
 
 /* ---- archivio foto dei giocatori: la foto messa una volta nel Team of the week torna da sola quando il giocatore ricompare ----
    immagini in S.raw["ph|…"] (sul cloud un documento ciascuna, come i loghi; sul dispositivo in IndexedDB, fuori dal localStorage), nomi e squadre in S.phm */
@@ -1510,6 +1485,97 @@ function kPhotos(){try{kPhotos0()}catch(e){console.warn(e)}}
 function kPhotos0(){const el=$("#kph");if(!el)return;const M=S.phm||{},K=Object.keys(M).sort((a,b)=>(M[a].sq||"").localeCompare(M[b].sq||"")||(M[a].n||"").localeCompare(M[b].n||""));
  el.innerHTML=`<div class="card" style="margin-top:12px"><b>📸 Foto dei giocatori${K.length?" · "+K.length:""}</b><small>Ogni foto che metti nel Team of the week la ricordo: quando il giocatore ricompare la ritrova da sola, anche sugli altri dispositivi. Per cambiarla basta caricarne una nuova.</small>${K.length?`<div class="phg">${K.map(k=>`<div class="phi">${S.raw&&S.raw[k]?`<img src="${S.raw[k]}" alt="">`:`<span class="phn" aria-hidden="true"></span>`}<span><b>${esc(String(M[k].n||"").toLowerCase().replace(/(^|[\s'’-])\S/g,m=>m.toUpperCase()))}</b><small>${esc(M[k].sq||"squadra non indicata")}</small></span><button class="btn pbx" data-phx="${esc(k)}" title="Dimentica questa foto" aria-label="Dimentica la foto di ${esc(M[k].n)}">×</button></div>`).join("")}</div>`:'<div class="hint">Ancora nessuna foto: caricale dal Team of the week con il tasto Foto.</div>'}</div>`}
 $("#k").addEventListener("click",e=>{const b=e.target.closest("[data-phx]");if(!b)return;const k=b.dataset.phx,m=(S.phm||{})[k];if(!confirm("Dimentico la foto di "+(m?m.n:"questo giocatore")+"? Resta solo nelle grafiche dove è già.")) return;phDrop(k);save();kPhotos()});
+
+/* ---- Grafiche squadra: lo stesso editor delle Grafiche, ma per una squadra sola.
+   Mentre la sezione è aperta, stile, impaginazioni, grafiche personalizzate e dati partita sono quelli della squadra (S.gq);
+   quelli della lega restano da parte in S.glb e tornano al loro posto appena esci. Su disco e sul cloud si salva sempre la forma “lega + S.gq”. ---- */
+var TQ=false,GQK=["sty","ly","cg","mt","lp","lpn","marN","marTie","marOwn"],GLUI=null;
+function gqPick(o){return Object.fromEntries(GQK.map(k=>[k,o[k]]))}
+function gqUIv(){return{gt:$("#gt").value,gh:$("#gh").value,gs:$("#gs").value}}
+function canonS(){if(!TQ||!S.glb)return S;const o={...S,...S.glb,gq:{...(S.gq||{}),...gqPick(S),ui:gqUIv()}};delete o.glb;return o}
+function gqShort(n){const w=String(n||"").replace(/\s+-\s+.*$/,"").split(/\s+/).filter(t=>t&&!/\./.test(t)&&!/^[A-Z]{1,3}$/.test(t));const s=w.join(" ");return s.length>14?w[0]:s||String(n||"")}
+function gqBucket(){const L=S.glb||S,q=S.gq=S.gq||{};q.team=q.team||"";if(q.sn==null)q.sn="";q.sty={...DEF().sty,...(q.sty||JSON.parse(JSON.stringify(L.sty||DEF().sty)))};q.ly=q.ly||{};q.mt=q.mt||{h:"",a:"",d:"",v:"",sc:""};q.lp=q.lp||{};q.lpn=q.lpn||{};
+ q.cg=q.cg||[{id:"q_tv",n:"Squadra TV",b:"cop",q:"tv"},{id:"q_pc",n:"Press conference",b:"cop",q:"pc"}];return q}
+function gqSN(){const q=S.gq||{};return q.sn||gqShort(q.team)||"Squadra"}
+/* nomi e titoli delle copertine della squadra */
+function gqNames(){if(!TQ)return;const sn=gqSN();(S.cg||[]).forEach(c=>{if(c.q==="tv"){c.n=sn+" TV";TT[c.id]=[sn+"|TV","Puntata 1"]}else if(c.q==="pc"){c.n=sn+" Press Conference";TT[c.id]=[sn+"|Press Conference","Giornata 3"]}})}
+/* entra / esci dalla modalità squadra (mantenendo la vista in cui sei) */
+function gqIn(){S.glb=gqPick(S);const q=gqBucket();GQK.forEach(k=>{S[k]=q[k]})}
+function gqOut(){if(!TQ||!S.glb)return 0;S.gq={...gqBucket(),...gqPick(S),ui:gqUIv()};Object.assign(S,S.glb);delete S.glb;return 1}
+function gqAfterLoad(){if(TQ){delete S.glb;gqIn();gqNames()}}
+function gMode(on){on=!!on;if(on===TQ)return;
+ if(on){GLUI=gqUIv();gqIn();TQ=true;gqNames();gqUI(true);const u=(S.gq&&S.gq.ui)||{},g=u.gt&&u.gt!=="tw"&&u.gt!=="pod"?u.gt:"q_tv";renderGt(g);if(u.gh!=null&&u.gt===g){$("#gh").value=u.gh;$("#gs").value=u.gs;sync(false)}else sync(true)}
+ else{gqOut();TQ=false;gqUI(false);renderGt(GLUI?GLUI.gt:"cl");if(GLUI){$("#gh").value=GLUI.gh;$("#gs").value=GLUI.gs;sync(false)}else sync(true)}
+ SEL=null;PC={};sty();hist=[];hi=-1;cm();save()}
+/* barra della squadra in cima alla sezione */
+$("#g").insertAdjacentHTML("afterbegin",`<div id="gqb" class="card" style="display:none;margin-bottom:14px"><div class="bar" style="margin:0;gap:12px;align-items:flex-end"><canvas id="gql" width="56" height="56" aria-hidden="true"></canvas><div style="flex:1;min-width:200px"><label for="gqt">Squadra</label><select id="gqt"></select></div><div style="width:220px"><label for="gqn">Nome breve (nei titoli)</label><input id="gqn"></div></div><div class="hint" id="gqh" style="margin-bottom:0"></div></div>`);
+$("#marw").insertAdjacentHTML("beforeend",`<label id="gqmo" style="display:none;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="gqmoc"> Solo i marcatori della squadra (classifica interna)</label>`);
+function gqUI(on){$("#gqb").style.display=on?"block":"none";$("#gqmo").style.display=on?"flex":"none";["tw","pod"].forEach(v=>{const o=$(`#gt option[value="${v}"]`);if(o){o.hidden=on;o.disabled=on}});if(on)gqBar()}
+function gqBar(){const q=S.gq||{},t=$("#gqt");t.innerHTML=`<option value="">Scegli la squadra</option>`+S.cl.map(e=>`<option${e.n===q.team?" selected":""}>${esc(e.n)}</option>`).join("");if(q.team&&!S.cl.some(e=>e.n===q.team))t.insertAdjacentHTML("beforeend",`<option selected>${esc(q.team)}</option>`);
+ const n=$("#gqn");if(document.activeElement!==n)n.value=q.sn||"";n.placeholder=gqShort(q.team)||"Es. Canizzano";$("#gqmoc").checked=!!S.marOwn;
+ const c=$("#gql"),x=c.getContext("2d"),l=q.team?logo(q.team):null;x.clearRect(0,0,56,56);if(l)dl(x,l,28,28,52);
+ $("#gqh").innerHTML=!q.team?"Scegli la squadra: le grafiche di questa sezione useranno il suo logo al posto di quello della lega, la evidenzieranno in classifica e nei marcatori. Modelli, stili e impaginazioni sono separati da quelli della lega.":l?"Logo della squadra al posto di quello della lega · in classifica e nei marcatori è evidenziata la squadra · modelli, stili e impaginazioni separati da quelli della lega.":`Manca il logo di ${esc(q.team)}: caricalo nella sezione <a href="#" data-gql>Loghi</a> (finché manca uso quello della lega).`}
+$("#gqb").addEventListener("change",e=>{if(e.target.id!=="gqt")return;const old=S.gq.team,nw=e.target.value,LF="Lega Amatori Calcio Treviso";S.gq.team=nw;[S.ly,...Object.values(S.lp||{}).map(p=>({x:p.ly}))].forEach(o=>Object.values(o||{}).forEach(a=>(a||[]).forEach(l=>{if(l&&l.id==="ft"&&(l.t===LF||l.t===old))l.t=nw||LF})));PC={};gqNames();renderGt();if((S.cg||[]).some(c=>c.q&&c.id===gT()))sync(true);gqBar();draw();save();cm()});
+$("#gqb").addEventListener("input",e=>{if(e.target.id!=="gqn")return;S.gq.sn=e.target.value.trim();gqNames();renderGt();if((S.cg||[]).some(c=>c.q&&c.id===gT()))sync(true);draw();save()});
+$("#gqb").addEventListener("click",e=>{if(e.target.closest("[data-gql]")){e.preventDefault();go("l")}});
+$("#gqmoc").onchange=e=>{S.marOwn=e.target.checked;save();marUI();draw();cm()};
+/* cosa cambia nel disegno */
+function lgK(){const t=TQ&&S.gq&&S.gq.team;return t&&S.raw&&S.raw[t]?t:"__lega"}
+function lgNm(){return TQ?"Logo squadra":"Logo lega"}
+function lgFoot(){return TQ&&S.gq&&S.gq.team?S.gq.team:"Lega Amatori Calcio Treviso"}
+function gqHl(n,i){const t=TQ&&S.gq&&S.gq.team;return t?kHN(n)===kHN(t):i===0}
+function gqMar(a){const t=TQ&&S.gq&&S.gq.team;return t&&S.marOwn?a.filter(e=>kHN(e.sq)===kHN(t)):a}
+function gqMarHl(e,i){const t=TQ&&S.gq&&S.gq.team;return t&&!S.marOwn?kHN(e.sq)===kHN(t):i===0}
+
+/* ---- impaginazione delle grafiche: posizione e grandezza di loghi e testi, e i testi stessi.
+   S.lp[modello] = la predefinita (si apre così ogni volta, anche con “Ripristina elementi”), S.lpn[modello] = varianti con nome. Lo stile non c'entra. ---- */
+function lpDef(T){const p=(S.lp||{})[T];return p&&p.ly?JSON.parse(JSON.stringify(p.ly)):null}
+function lpTT(T){const p=(S.lp||{})[T];return p&&p.gh!=null?[p.gh,p.gs]:null}
+function lpSnap(){return{ly:JSON.parse(JSON.stringify(LY().filter(l=>l.k!=="img"))),gh:$("#gh").value,gs:$("#gs").value}}
+function lpApply(p){const T=gT();S.ly[T]=p&&p.ly?JSON.parse(JSON.stringify(p.ly)):defLy(T);const q=p&&p.gh!=null?[p.gh,p.gs]:TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=gsub(q[1]);SEL=null;lyUI();draw();save()}
+function renderLP(){const el=$("#lpb");if(!el)return;const T=gT(),N=(S.lpn||{})[T]||[],d=!!(S.lp||{})[T];
+ el.innerHTML=`<button type="button" class="btn" data-lpa="d" title="${d?"La tua impaginazione predefinita per questo modello":"L’impaginazione originale del modello"}">${d?"Predefinita":"Originale"}</button>`+N.map((p,i)=>`<button type="button" class="btn" data-lpa="${i}">${esc(p.n)}</button>`).join("")+`<button type="button" class="btn" id="lpo">✏️ Modifica impaginazione</button>`}
+$("#lpb").addEventListener("click",e=>{if(e.target.closest("#lpo"))return lpOpen();const b=e.target.closest("[data-lpa]");if(!b)return;const T=gT(),a=b.dataset.lpa;lpApply(a==="d"?(S.lp||{})[T]||null:((S.lpn||{})[T]||[])[+a]);cm()});
+/* la finestra di modifica */
+var LPO={sel:"d",snap:null,run:0,drag:null};
+(function(){const d=document.createElement("div");d.id="lyo";d.innerHTML=`<div class="cdp" role="dialog" aria-modal="true" aria-labelledby="lyoh"><div class="bar" style="margin-bottom:10px"><h2 id="lyoh" style="flex:1;margin:0">Impaginazione</h2><button class="btn" data-lo="x" aria-label="Chiudi">✕</button></div>
+<div class="cdg"><div class="cdv"><canvas id="lyoc" width="540" height="675" style="touch-action:none;cursor:grab"></canvas><div class="hint">Trascina loghi e testi sull’anteprima per spostarli, oppure usa i cursori. Colori e sfondo non fanno parte dell’impaginazione: li scegli ogni volta nella scheda Stile.</div></div>
+<div class="cdk"><div class="g3"><div><label for="lyos">Impaginazione</label><select id="lyos"></select></div><div><label for="lyon">Nome</label><input id="lyon" placeholder="Nome della variante"></div></div><div id="lyol"></div>
+<div class="bar cdb"><button class="btn p" data-lo="s">Salva</button><button class="btn" data-lo="n">Salva come variante</button><button class="btn" data-lo="r">Annulla modifiche</button><button class="btn" data-lo="d">Elimina</button></div><p class="hint" id="lyohn"></p></div></div></div>`;document.body.append(d)})();
+var LPRG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]};
+function lpPos(l){if(l.x!=null)return[l.x,l.y];const b=LB.find(q=>q.id===l.id);return b&&b.ax!=null?[b.ax,b.ay]:[.5,.5]}
+function lpNm(l){return l.k==="text"?(l.t||"Testo").slice(0,24):l.k==="tt"?"Titolo":l.k==="ts"?"Sottotitolo":l.nm||"Elemento"}
+function lpList(){const A=LY(),p2=v=>Math.round(v*100)+"%";
+ let h=`<details open><summary>Testi</summary><div class="cdr"><label for="lyo_gh">Titolo</label><input id="lyo_gh" data-lt="gh" value="${esc($("#gh").value)}"><span></span></div><div class="cdr"><label for="lyo_gs">Sottotitolo</label><input id="lyo_gs" data-lt="gs" value="${esc($("#gs").value)}"><span></span></div>`;
+ A.filter(l=>l.k==="text").forEach(l=>{h+=`<div class="cdr"><label for="lyo_t_${l.id}">${esc(l.nm||"Testo")}</label><input id="lyo_t_${l.id}" data-lt="${l.id}" value="${esc(l.t||"")}"><span></span></div>`});
+ h+=`<p class="hint" style="margin:4px 0 8px">Nel titolo il segno | manda a capo.</p></details><details open><summary>Posizione e grandezza</summary>`;
+ A.forEach(l=>{const[x,y]=lpPos(l),R=LPRG[l.k]||[.03,1.5],I=(f,a,b,st,v,o)=>`<div class="cdr"><label for="lyo_${f}_${l.id}">${{s:"Grandezza",x:"Orizzontale",y:"Verticale",o:"Visibilità"}[f]}</label><input type="range" id="lyo_${f}_${l.id}" data-lp="${l.id}:${f}" min="${a}" max="${b}" step="${st}" value="${v}"><output data-lpo="${l.id}:${f}">${o}</output></div>`;
+  h+=`<div class="lyg${l.id===SEL?" on":""}" data-lg="${l.id}"><button type="button" class="lygh" data-lgs="${l.id}">${esc(lpNm(l))}</button>${I("s",R[0],R[1],.005,l.s,"")}${I("x",0,1,.005,x,p2(x))}${I("y",0,1,.005,y,p2(y))}${I("o",0,100,1,l.o??100,(l.o??100)+"%")}</div>`});
+ $("#lyol").innerHTML=h+"</details>"}
+function lpSync(l){const[x,y]=lpPos(l);[["x",x],["y",y]].forEach(([f,v])=>{const i=$(`#lyo [data-lp="${l.id}:${f}"]`),o=$(`#lyo [data-lpo="${l.id}:${f}"]`);if(i)i.value=v;if(o)o.textContent=Math.round(v*100)+"%"})}
+function lpHl(){$$("#lyo .lyg").forEach(g=>g.classList.toggle("on",g.dataset.lg===SEL));const g=SEL&&$(`#lyo .lyg[data-lg="${SEL}"]`);if(g)g.scrollIntoView({block:"nearest",behavior:"smooth"})}
+function lpOpts(){const T=gT(),N=(S.lpn||{})[T]||[],nm=($("#gt").selectedOptions[0]||{}).textContent||"";$("#lyoh").textContent="Impaginazione · "+nm;
+ $("#lyos").innerHTML=`<option value="d">Predefinita per ${esc(nm)}</option>`+N.map((p,i)=>`<option value="${i}">${esc(p.n)}</option>`).join("");$("#lyos").value=LPO.sel;
+ const d=LPO.sel==="d",n=$("#lyon");n.value=d?"":(N[+LPO.sel]||{}).n||"";n.disabled=d;$('#lyo [data-lo="d"]').textContent=d?"Torna all’originale":"Elimina variante";$('#lyo [data-lo="d"]').style.display=d&&!(S.lp||{})[T]?"none":"";
+ $("#lyohn").textContent=d?"La predefinita è come trovi questo modello ogni volta che lo apri (e dopo “Ripristina elementi”). Le varianti le richiami con un clic dalla scheda Impostazioni.":"Variante: la richiami con un clic dalla scheda Impostazioni."}
+function lpLoop(){if(!LPO.run)return;const s=$("#cv"),c=$("#lyoc");if(s&&c&&s.width){const h=Math.round(c.width*s.height/s.width);if(c.height!==h)c.height=h;const x=c.getContext("2d");x.clearRect(0,0,c.width,c.height);x.drawImage(s,0,0,c.width,c.height)}requestAnimationFrame(lpLoop)}
+function lpOpen(){LPO.sel="d";LPO.snap=lpSnap();draw();lpOpts();lpList();$("#lyo").classList.add("on");LPO.run=1;requestAnimationFrame(lpLoop)}
+function lpClose(){$("#lyo").classList.remove("on");LPO.run=0;LPO.drag=null;save();cm();lyUI();renderLP()}
+$("#lyo").addEventListener("input",e=>{const t=e.target,d=t.dataset;
+ if(d.lt){if(d.lt==="gh"||d.lt==="gs")$("#"+d.lt).value=t.value;else{const l=LY().find(q=>q.id===d.lt);if(l)l.t=t.value}rd();return}
+ if(d.lp){const[id,f]=d.lp.split(":"),l=LY().find(q=>q.id===id);if(!l)return;if((f==="x"||f==="y")&&l.x==null){const[x,y]=lpPos(l);l.x=x;l.y=y}l[f]=+t.value;const o=$(`#lyo [data-lpo="${d.lp}"]`);if(o&&f!=="s")o.textContent=f==="o"?t.value+"%":Math.round(t.value*100)+"%";SEL=id;lpHl();rd()}});
+$("#lyo").addEventListener("change",e=>{if(e.target.id!=="lyos")return;LPO.sel=e.target.value;const T=gT();lpApply(LPO.sel==="d"?(S.lp||{})[T]||null:((S.lpn||{})[T]||[])[+LPO.sel]);LPO.snap=lpSnap();lpOpts();lpList()});
+$("#lyo").addEventListener("click",e=>{if(e.target.id==="lyo")return lpClose();const g=e.target.closest("[data-lgs]");if(g){SEL=g.dataset.lgs;lpHl();draw();return}const b=e.target.closest("[data-lo]");if(!b)return;const a=b.dataset.lo,T=gT();
+ if(a==="x")return lpClose();
+ if(a==="r"){lpApply(LPO.snap);lpList();return}
+ if(a==="s"){if(LPO.sel==="d"){(S.lp=S.lp||{})[T]=lpSnap();toast("Salvata: “"+(($("#gt").selectedOptions[0]||{}).textContent||"")+"” si aprirà sempre così")}else{const N=(S.lpn=S.lpn||{})[T]||[],i=+LPO.sel;N[i]={n:$("#lyon").value.trim()||N[i].n,...lpSnap()};toast("Variante salvata")}LPO.snap=lpSnap();save();renderLP();lpOpts();return}
+ if(a==="n"){let n=LPO.sel==="d"?"":$("#lyon").value.trim();const N=((S.lpn=S.lpn||{})[T]=S.lpn[T]||[]);if(!n||N.some(p=>p.n===n))n=prompt("Nome della variante?",n?n+" 2":"");if(!n)return;N.push({n,...lpSnap()});LPO.sel=String(N.length-1);LPO.snap=lpSnap();save();renderLP();lpOpts();toast("Variante “"+n+"” salvata");return}
+ if(a==="d"){if(LPO.sel==="d"){if(!confirm("Torno all’impaginazione originale di questo modello? La tua predefinita viene cancellata."))return;if(S.lp)delete S.lp[T];lpApply(null)}else{const N=(S.lpn||{})[T]||[],i=+LPO.sel;if(!confirm("Elimino la variante “"+(N[i]||{}).n+"”?"))return;N.splice(i,1);LPO.sel="d"}LPO.snap=lpSnap();save();renderLP();lpOpts();lpList()}});
+(function(){const c=$("#lyoc"),pp=e=>{const r=c.getBoundingClientRect(),cv=$("#cv");return[(e.clientX-r.left)*cv.width/r.width,(e.clientY-r.top)*cv.height/r.height]};
+ c.addEventListener("pointerdown",e=>{const[px,py]=pp(e),cv=$("#cv"),h=[...LB].reverse().find(b=>px>=b.x0&&px<=b.x1&&py>=b.y0&&py<=b.y1);SEL=h?h.id:null;const l=SELL();if(l){if(l.x==null){l.x=h.ax;l.y=h.ay}LPO.drag={l,dx:px-l.x*cv.width,dy:py-l.y*cv.height};c.setPointerCapture(e.pointerId);c.style.cursor="grabbing"}lpHl();draw()});
+ c.addEventListener("pointermove",e=>{const d=LPO.drag;if(!d)return;const[px,py]=pp(e),cv=$("#cv");d.l.x=Math.min(1,Math.max(0,(px-d.dx)/cv.width));d.l.y=Math.min(1,Math.max(0,(py-d.dy)/cv.height));rd();lpSync(d.l)});
+ const up=()=>{if(LPO.drag){LPO.drag=null;c.style.cursor="grab";save()}};c.addEventListener("pointerup",up);c.addEventListener("pointercancel",up)})();
+document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#lyo").classList.contains("on"))lpClose()});
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
@@ -1945,7 +2011,7 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  const DEV=localStorage.getItem("a7dev")||(()=>{const d=Math.random().toString(36).slice(2,10);localStorage.setItem("a7dev",d);return d})();
  const hk=s=>{let h=5381;for(const c of s)h=(Math.imul(h,33)^c.codePointAt(0))>>>0;return"k"+h.toString(36)+"_"+s.length};
  const sha=async p=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode("a7|"+p)))].map(b=>b.toString(16).padStart(2,"0")).join("");
- const hm=()=>new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}),J=()=>JSON.stringify(S,(k,v)=>k==="src"||k==="raw"?undefined:v);
+ const hm=()=>new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}),J=()=>JSON.stringify(typeof canonS==="function"?canonS():S,(k,v)=>k==="src"||k==="raw"?undefined:v);
  const authOk=async()=>{if(!auth.currentUser)await new Promise(r=>{const un=onAuthStateChanged(auth,()=>{un();r()})});if(!auth.currentUser)await signInAnonymously(auth)};
  const why=e=>/operation-not-allowed|admin-restricted/.test(e&&e.code||"")?"Attiva l’accesso Anonimo in Firebase (Authentication › Metodo di accesso).":/permission/.test(e&&e.code||"")?"Permesso negato: controlla le regole di Firestore.":/offline|unavailable/.test((e&&e.code||"")+(e&&e.message||""))?"Offline: lavoro sul dispositivo e sincronizzo appena torna la rete.":(e&&e.message)||"errore";
  async function login(u,p){await authOk();const qs=await getDocs(query(collection(db,"a7p"),where("u","==",u)));const d=qs.docs.find(x=>x.data().t==="test");if(!d||d.data().ph!==await sha(p))throw"Nome utente o password errati.";return{pid:d.id,role:"test",u,n:d.data().n}}
@@ -1954,11 +2020,11 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  const localSave=()=>{mute=1;save();mute=0},localG=()=>{try{localStorage.setItem(LK("a7g"),JSON.stringify(G))}catch(e){}};
  const typing=()=>{const a=document.activeElement;return!!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest("main"))};
  function reRender(){try{PC={};kApply();TBU();renderK();week();tipi();sty();renderGt();renderTW();sync(false);renderCP();renderGal();if($("#l").classList.contains("on"))renderLogos();draw();if(typeof poAll==="function")poAll()}catch(e){console.warn(e)}}
- function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const raw=S.raw;S={...DEF(),...o,raw};S.sty={...DEF().sty,...S.sty};lastR=d.j;lastJ=J();pend=null;localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
+ function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const raw=S.raw;S={...DEF(),...o,raw};S.sty={...DEF().sty,...S.sty};if(typeof gqAfterLoad==="function")gqAfterLoad();lastR=d.j;lastJ=J();pend=null;localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
  function applyLogos(docs){const r={};docs.forEach(x=>{const d=x.data();r[d.k]=d.d});S.raw=r;lastLg={...r};PC={};localSave()}
  function applyGal(docs){const R=docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.o||0)-(b.o||0)).map(g=>({id:g.id,n:g.n,d:g.d})),ri=new Set(R.map(g=>g.id));lastGal=new Set(ri);G=[...R,...G.filter(g=>(g.d||"").length>1e6&&!ri.has(g.id))];localG();renderGal()}
  async function commitOps(ops){let b=writeBatch(db),n=0,sz=0;for(const[t,r,d]of ops){const z=d?JSON.stringify(d).length:60;if(n&&(n>=450||sz+z>7e6)){await b.commit();b=writeBatch(db);n=0;sz=0}if(t==="d")b.delete(r);else b.set(r,d);n++;sz+=z}if(n)await b.commit()}
- async function push(){tmr=null;if(!ready)return;if(pend){try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),q=v=>JSON.stringify(v);let ch=0;Object.keys({...Rm,...B}).forEach(k=>{if(q(L[k])===q(B[k])&&q(Rm[k])!==q(L[k])){if(Rm[k]===undefined)delete S[k];else S[k]=Rm[k];ch=1}});lastR=pend.j;pend=null;if(ch){localSave();reRender()}}catch(e){pend=null}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
+ async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),q=v=>JSON.stringify(v);Object.keys({...Rm,...B}).forEach(k=>{if(q(L[k])===q(B[k])&&q(Rm[k])!==q(L[k])){if(Rm[k]===undefined)delete S[k];else S[k]=Rm[k];ch=1}});lastR=pend.j;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
   if(j!==lastJ){if(j.length>950000){cStat("Dati troppo grandi per il cloud: elimina qualche foto o dato vecchio","e");return}ops.push(["s",SD(pid),{j,at,by:DEV}]);lastJ=j;lastR=j}
   Object.keys(raw).forEach(k=>{if(lastLg[k]!==raw[k]){ops.push(["s",doc(LG(pid),hk(k)),{k,d:raw[k]}]);lastLg[k]=raw[k]}});
   Object.keys(lastLg).forEach(k=>{if(!(k in raw)){ops.push(["d",doc(LG(pid),hk(k))]);delete lastLg[k]}});
