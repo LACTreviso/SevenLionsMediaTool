@@ -185,6 +185,8 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .lyg{border:1px solid var(--line);border-radius:10px;padding:4px 10px 6px;margin:8px 0}.lyg.on{border-color:var(--blue);box-shadow:0 0 0 1px var(--blue)}
 .lygh{display:block;width:100%;text-align:left;background:none;border:0;color:var(--fg);font:700 14px "Inter Tight",system-ui,sans-serif;padding:6px 0;cursor:pointer}
 #gqb{border-color:var(--blue)}#gql{width:56px;height:56px;flex:none;border-radius:8px;background:repeating-conic-gradient(#3a4256 0 25%,#2b3142 0 50%) 0 0/12px 12px}
+.ext nav button:not([data-t="q"]){display:none}.ext .gal,.ext #sg{display:none!important}
+#lw_lg{border-bottom:1px solid var(--line);padding-bottom:6px;margin-bottom:4px}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -260,8 +262,8 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <div class="ep" id="ep_e"><div id="lyp"><div class="card lyk"><div class="bar"><strong style="flex:1">Nella grafica</strong><button class="btn pbx" id="rl" title="Rimette gli elementi come all’inizio">Ripristina elementi</button></div><div class="hint" style="margin:2px 0 8px">Tocca un elemento (qui o sul disegno) per modificarlo; sul disegno lo trascini per spostarlo.</div>
 <div class="bar" id="lyl" style="margin:0"></div>
 <div id="lyc" class="card" style="display:none"><div id="lw_t"><label>Testo</label><input data-p="t"></div>
-<div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
-<label>Dimensione</label><input type="range" data-p="s"><div id="lw_r"><label>Altezza</label><input type="range" data-p="h" min=".05" max=".6" step=".005"><label>Angoli arrotondati</label><input type="range" data-p="r" min="0" max="100"></div><label>Opacità</label><input type="range" data-p="o" min="0" max="100">
+<div id="lw_lg" style="display:none"><label for="lmd">Stile del logo</label><select id="lmd" data-p="md"><option value="">Come nella sezione Loghi</option><option value="o">Originale</option><option value="b">Senza sfondo</option><option value="w">Solo contorno</option><option value="s">Sagoma piena</option></select><div class="hint" id="lw_lgh" style="margin:4px 0 0"></div><div id="lw_lw" style="display:none"><label for="llw">Spessore del contorno</label><input type="range" id="llw" data-p="lw" min="1" max="15" step="1"></div></div><div id="lw_f" class="bar" style="display:none;margin:8px 0 0;gap:6px"><button type="button" class="btn" data-fw="b" title="Grassetto"><b>G</b> Grassetto</button><button type="button" class="btn" data-fw="i" title="Corsivo"><i style="font-family:Georgia,serif">C</i> Corsivo</button></div><div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
+<label>Dimensione</label><input type="range" data-p="s"><div id="lw_tab" style="display:none"><label>Grandezza dei testi</label><input type="range" data-p="ts" min=".5" max="2.5" step=".05"><label>Grandezza dei loghi</label><input type="range" data-p="ls" min=".3" max="2.5" step=".05"><label>Larghezza</label><input type="range" data-p="w" min=".4" max="1" step=".01"><label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" data-p="fill"> Righe più alte fino a riempire lo spazio</label><div class="hint">Trascina la tabella sul disegno per spostarla. Il colore è quello della riga evidenziata.</div></div><div id="lw_r"><label>Altezza</label><input type="range" data-p="h" min=".05" max=".6" step=".005"><label>Angoli arrotondati</label><input type="range" data-p="r" min="0" max="100"></div><label>Opacità</label><input type="range" data-p="o" min="0" max="100">
 <label><input type="checkbox" data-p="b"> Dietro ai contenuti</label>
 <div class="bar" style="margin:8px 0 0"><button class="btn" id="ld">Duplica</button><button class="btn" id="lx">Elimina</button></div></div></div>
 <div class="card lya"><strong>Aggiungi alla grafica</strong><div class="bar" style="margin:8px 0 0"><button class="btn add" id="al">+ Logo</button><button class="btn add" id="at">+ Testo</button><label class="btn add" style="margin:0">+ Immagine<input type="file" id="ai" accept="image/*" hidden></label><select id="asp" style="width:auto;display:none" aria-label="Aggiungi uno sponsor"></select></div>
@@ -414,7 +416,7 @@ $("#na").onclick=()=>{const n=$("#nn").value.trim();if(!n)return;S.tipi.push({id
 function trimBox(i){const nw=i.naturalWidth,nh=i.naturalHeight,s=Math.min(1,200/Math.max(nw,nh)),w=Math.max(1,Math.round(nw*s)),h=Math.max(1,Math.round(nh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const q=c.getContext("2d",{willReadFrequently:true});q.drawImage(i,0,0,w,h);const p=q.getImageData(0,0,w,h).data,co=[0,(w-1)*4,(h-1)*w*4,(w*h-1)*4].filter(o=>p[o+3]>200),bg=co.length>2?[0,1,2].map(k=>co.reduce((a,o)=>a+p[o+k],0)/co.length):null;let x0=w,y0=h,x1=-1,y1=-1;
  for(let b=0;b<h;b++)for(let a=0;a<w;a++){const o=(b*w+a)*4;if(p[o+3]<25||bg&&Math.hypot(p[o]-bg[0],p[o+1]-bg[1],p[o+2]-bg[2])<45)continue;if(a<x0)x0=a;if(a>x1)x1=a;if(b<y0)y0=b;if(b>y1)y1=b}
  if(x1<0)return[0,0,nw,nh];x0=Math.max(0,x0-2);y0=Math.max(0,y0-2);x1=Math.min(w-1,x1+2);y1=Math.min(h-1,y1+2);return[x0/s,y0/s,Math.min(nw,(x1-x0+1)/s),Math.min(nh,(y1-y0+1)/s)]}
-function process(i,m){if(m==="bw")m="w";const nw=i.naturalWidth,nh=i.naturalHeight,[sx,sy,sw,sh]=S.uni===false?[0,0,nw,nh]:trimBox(i),s=Math.min(256/Math.max(sw,sh),4),w=Math.max(1,Math.round(sw*s)),h=Math.max(1,Math.round(sh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d",{willReadFrequently:true});x.imageSmoothingQuality="high";x.drawImage(i,sx,sy,sw,sh,0,0,w,h);if(m==="o")return c;
+function process(i,m){if(m==="bw")m="w";const fo=m==="wo";if(fo)m="w";const nw=i.naturalWidth,nh=i.naturalHeight,[sx,sy,sw,sh]=S.uni===false?[0,0,nw,nh]:trimBox(i),s=Math.min(256/Math.max(sw,sh),4),w=Math.max(1,Math.round(sw*s)),h=Math.max(1,Math.round(sh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d",{willReadFrequently:true});x.imageSmoothingQuality="high";x.drawImage(i,sx,sy,sw,sh,0,0,w,h);if(m==="o")return c;
  const d=x.getImageData(0,0,w,h),p=d.data,n=w*h;
  {const co=[0,(w-1)*4,(h-1)*w*4,(n-1)*4].filter(o=>p[o+3]>200),bg=co.length>2?[0,1,2].map(k=>co.reduce((a,o)=>a+p[o+k],0)/co.length):null,thr=S.tol*4.4,
   ok=o=>p[o+3]<10||bg&&Math.hypot(p[o]-bg[0],p[o+1]-bg[1],p[o+2]-bg[2])<thr,seen=new Uint8Array(n),st=[],
@@ -424,7 +426,7 @@ function process(i,m){if(m==="bw")m="w";const nw=i.naturalWidth,nh=i.naturalHeig
  if(m==="b"){x.putImageData(d,0,0);return c}
  const M=new Uint8Array(n),hs={};let tot=0;for(let q=0;q<n;q++)if(p[q*4+3]>=128){M[q]=1;const k=(p[q*4]>>5)*64+(p[q*4+1]>>5)*8+(p[q*4+2]>>5);hs[k]=(hs[k]||0)+1;tot++}
  const top=Math.max(0,...Object.values(hs));
- if(m==="s"||!tot||top/tot>.88){for(let o=0;o<p.length;o+=4){p[o]=p[o+1]=p[o+2]=255}x.putImageData(d,0,0);return c}
+ if(m==="s"||!tot||(!fo&&top/tot>.88)){for(let o=0;o<p.length;o+=4){p[o]=p[o+1]=p[o+2]=255}x.putImageData(d,0,0);return c}
  const E=new Uint8Array(n),cd=(a,b)=>Math.hypot(p[a]-p[b],p[a+1]-p[b+1],p[a+2]-p[b+2]);
  for(let b=0;b<h;b++)for(let a=0;a<w;a++){const q=b*w+a;if(!M[q])continue;if(a===0||b===0||a===w-1||b===h-1||!M[q-1]||!M[q+1]||!M[q-w]||!M[q+w]){E[q]=1;continue}if(cd((q-1)*4,(q+1)*4)>70||cd((q-w)*4,(q+w)*4)>70)E[q]=1}
  const r=Math.max(0,Math.floor((S.olw||3)/2)),out=new Uint8ClampedArray(n*4);
@@ -642,7 +644,7 @@ function clipFx(c,lt){const q=segAt(c,lt),s=q.s+Math.min(Math.max(lt-q.o,0),q.d)
 function repTag(x,t,BW,BH){const U=Math.min(BW,BH),fs=U*.045,px=U*.05,py=U*.07;x.save();x.globalAlpha*=Math.min(1,t/.2);x.font=`800 ${fs}px "Inter Tight",system-ui,sans-serif`;const w=x.measureText("▶ REPLAY").width+fs*1.5,h=fs*1.7;x.fillStyle=rgba(S.sty.ac,.95);x.beginPath();x.roundRect(px,py,w,h,h/2);x.fill();x.fillStyle=lum(S.sty.ac)>150?"#000":"#fff";x.textBaseline="middle";x.textAlign="left";x.fillText("▶ REPLAY",px+fs*.75,py+h/2+fs*.04);x.restore()}
 function wrapT(x,t,mw){const o=[];String(t).split("\n").forEach(p=>{let l="";p.split(" ").forEach(w=>{const q=l?l+" "+w:w;if(l&&x.measureText(q).width>mw){o.push(l);l=w}else l=q});o.push(l)});return o}
 function drawOv(x,v,lt,d,BW,BH,still){const du=v.du>0?v.du:d-v.st,t=lt-v.st;if(t<0||t>du)return;
- const U=Math.min(BW,BH),fs=Math.max(10,v.fs*U),pd=fs*.7,bw=Math.min(BW*.98,v.w*BW),ls=v.lg?fs*2.5:0;x.save();x.font=`700 ${fs}px "Inter Tight",system-ui,sans-serif`;
+ const U=Math.min(BW,BH),fs=Math.max(10,v.fs*U),pd=fs*.7,bw=Math.min(BW*.98,v.w*BW),ls=v.lg?fs*2.5:0;x.save();x.font=`${v.it?"italic ":""}${(v.bd??1)?700:400} ${fs}px "Inter Tight",system-ui,sans-serif`;
  const lines=wrapT(x,v.t||"",Math.max(40,bw-2*pd-(ls?ls+pd:0))),lh=fs*1.25,th=lines.length*lh,bh=Math.max(th,ls)+2*pd,k=still?1:Math.min(1,t/.45),ko=still?1:Math.min(1,(du-t)/.4),e=1-Math.pow(1-k,3),eb=1+2.70158*Math.pow(k-1,3)+1.70158*Math.pow(k-1,2);
  let al=1,tx=0,ty=0,sc=1,cw=1;const ai=v.ai,ao=v.ao;
  if(ai==="fa")al=e;else if(ai==="up"){ty=(1-e)*BH*.07;al=e}else if(ai==="dn"){ty=-(1-e)*BH*.07;al=e}else if(ai==="sl"){tx=(1-e)*BW*.25;al=e}else if(ai==="sr"){tx=-(1-e)*BW*.25;al=e}else if(ai==="pop"){sc=Math.max(.01,.6+.4*eb);al=Math.min(1,k*2.5)}else if(ai==="wp")cw=e;
@@ -663,7 +665,7 @@ function selO(a,f,i,j,v,l){return `<select data-${a}="${f}" data-ci="${i}" data-
 const fld=(l,h)=>`<div><label>${l}</label>${h}</div>`,ni=(a,f,i,j,v,x)=>`<input type="number" data-${a}="${f}" data-ci="${i}" data-k="${j}" value="${v}" ${x||""}>`,ri=(a,f,i,j,v,mn,mx,s)=>`<input type="range" data-${a}="${f}" data-ci="${i}" data-k="${j}" min="${mn}" max="${mx}" step="${s}" value="${v}">`;
 function ovUI(c,i){const ov=c.ov||[],sj=ov.indexOf(OSELo);let h=`<div class="sub"><label>Testi e box sulla clip</label><div class="bar" style="gap:6px;margin:4px 0">${ov.map((v,j)=>`<button class="btn${j===sj?" p":""}" data-ov="${i}:${j}">${esc((v.t||"Testo").replace(/\n/g," ").slice(0,14))}</button>`).join("")}<button class="btn" data-ova="${i}">+ Testo / box</button></div>`;
  if(sj>=0){const v=ov[sj],S1=(f,l)=>selO("o",f,i,sj,v[f],l),N1=(f,x)=>ni("o",f,i,sj,v[f],x),R1=(f,a,b,s)=>ri("o",f,i,sj,v[f],a,b,s);
-  h+=`<div class="card jp" style="margin-top:6px"><label>Testo (Invio per andare a capo)</label><textarea rows="3" data-o="t" data-ci="${i}" data-k="${sj}">${esc(v.t)}</textarea><div class="g3" style="grid-template-columns:1fr 1fr">${fld("Logo nel box",`<select data-o="lg" data-ci="${i}" data-k="${sj}"><option value="">Nessun logo</option><option value="__lega"${v.lg==="__lega"?" selected":""}>Logo della lega</option>${S.cl.map(e=>`<option value="${esc(e.n)}"${e.n===v.lg?" selected":""}>${esc(e.n)}</option>`).join("")}</select>`)}${fld("Animazione del testo",S1("at",OAT))}${fld("Box in entrata",S1("ai",OAI))}${fld("Box in uscita",S1("ao",OAO))}${fld("Inizio (s dalla partenza)",N1("st",'step=".1" min="0"'))}${fld("Durata (s, 0 = fino a fine)",N1("du",'step=".5" min="0"'))}</div>${v.at==="ty"||v.at==="wd"?`<label>Velocità di scrittura</label>${R1("cps",4,60,1)}`:""}<div class="g3"><div><label>Colore testo</label><input type="color" data-o="c" data-ci="${i}" data-k="${sj}" value="${v.c}"></div><div><label>Colore box</label><input type="color" data-o="bc" data-ci="${i}" data-k="${sj}" value="${v.bc}"></div><div><label>Opacità box</label>${R1("bo",0,100,1)}</div></div><label>Dimensione testo</label>${R1("fs",.02,.1,.002)}<label>Larghezza box</label>${R1("w",.25,.98,.01)}<label>Angoli arrotondati</label>${R1("r",0,100,1)}<label><input type="checkbox" data-o="bx" data-ci="${i}" data-k="${sj}"${v.bx?" checked":""}> Mostra il box</label><div class="hint">Trascina il box sull’anteprima per spostarlo.</div><div class="bar" style="margin:6px 0 0"><button class="btn" data-ovd="${i}:${sj}">Duplica</button><button class="btn" data-ovx="${i}:${sj}">Elimina</button></div></div>`}
+  h+=`<div class="card jp" style="margin-top:6px"><label>Testo (Invio per andare a capo)</label><textarea rows="3" data-o="t" data-ci="${i}" data-k="${sj}">${esc(v.t)}</textarea><div class="g3" style="grid-template-columns:1fr 1fr">${fld("Logo nel box",`<select data-o="lg" data-ci="${i}" data-k="${sj}"><option value="">Nessun logo</option><option value="__lega"${v.lg==="__lega"?" selected":""}>Logo della lega</option>${S.cl.map(e=>`<option value="${esc(e.n)}"${e.n===v.lg?" selected":""}>${esc(e.n)}</option>`).join("")}</select>`)}${fld("Animazione del testo",S1("at",OAT))}${fld("Box in entrata",S1("ai",OAI))}${fld("Box in uscita",S1("ao",OAO))}${fld("Inizio (s dalla partenza)",N1("st",'step=".1" min="0"'))}${fld("Durata (s, 0 = fino a fine)",N1("du",'step=".5" min="0"'))}</div>${v.at==="ty"||v.at==="wd"?`<label>Velocità di scrittura</label>${R1("cps",4,60,1)}`:""}<div class="g3"><div><label>Colore testo</label><input type="color" data-o="c" data-ci="${i}" data-k="${sj}" value="${v.c}"></div><div><label>Colore box</label><input type="color" data-o="bc" data-ci="${i}" data-k="${sj}" value="${v.bc}"></div><div><label>Opacità box</label>${R1("bo",0,100,1)}</div></div><label>Dimensione testo</label>${R1("fs",.02,.1,.002)}<label>Larghezza box</label>${R1("w",.25,.98,.01)}<label>Angoli arrotondati</label>${R1("r",0,100,1)}<label><input type="checkbox" data-o="bx" data-ci="${i}" data-k="${sj}"${v.bx?" checked":""}> Mostra il box</label><div class="bar" style="margin:8px 0 0;gap:16px"><label style="display:flex;gap:6px;align-items:center;margin:0;color:var(--fg)"><input type="checkbox" data-o="bd" data-ci="${i}" data-k="${sj}"${(v.bd??1)?" checked":""}> Grassetto</label><label style="display:flex;gap:6px;align-items:center;margin:0;color:var(--fg)"><input type="checkbox" data-o="it" data-ci="${i}" data-k="${sj}"${v.it?" checked":""}> Corsivo</label></div><div class="hint">Trascina il box sull’anteprima per spostarlo.</div><div class="bar" style="margin:6px 0 0"><button class="btn" data-ovd="${i}:${sj}">Duplica</button><button class="btn" data-ovx="${i}:${sj}">Elimina</button></div></div>`}
  return h+"</div>"}
 function efUI(c,i){const ef=c.ef||[],sj=ef.indexOf(ESELo);const b0=c.b>c.a?c.b:c.a+1,pc=k=>(k-c.a)/(b0-c.a)*100,EC={rp:"#e0a84a",sm:"#9b6bff",fl:"#2ec4b6",zm:"#ff6b9a"};
  let h=`<div class="sub"><label>Effetti sulla clip</label><div class="hint">① scegli l’effetto ② scegli la durata ③ tocca la linea del tempo: il pin 📍 e il video si posizionano lì ④ premi “Inserisci”. Tocca un blocco colorato per modificarlo.</div><div class="bar" style="gap:6px;margin:4px 0">${["rp","sm","fl","zm"].map(k=>`<button class="btn${k===EFT?" p":""}" data-efk="${k}">${EFN[k]}</button>`).join("")}</div><label>Durata: <b data-efdl>${EFD.toFixed(1)}</b> s</label><input type="range" min=".5" max="6" step=".5" value="${EFD}" data-efd><div data-tl="${i}" style="position:relative;height:44px;margin:10px 0 4px;background:var(--bg);border:1px solid var(--line);border-radius:8px;touch-action:none;cursor:crosshair;overflow:hidden">${ef.map((e,j)=>`<div data-ef="${i}:${j}" title="${EFN[e.k]}" style="position:absolute;top:${j%2?24:4}px;height:16px;left:${pc(e.a)}%;width:${Math.max(2,pc(e.b)-pc(e.a))}%;background:${EC[e.k]};border-radius:4px;outline:${j===sj?"2px solid #fff":"0"};cursor:pointer"></div>`).join("")}<div class="tlh" style="position:absolute;top:0;bottom:0;width:2px;background:#fff;left:0;pointer-events:none"></div><div class="tlp" style="position:absolute;top:-2px;transform:translateX(-50%);pointer-events:none;left:${c._pin!=null?pc(c._pin):0}%;display:${c._pin!=null?"block":"none"}">📍</div></div><div class="bar" style="margin:6px 0"><button class="btn p" data-efi="${i}">📍 Inserisci effetto qui</button></div>`;
@@ -750,17 +752,7 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
   if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
   else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:gqMarHl(e,i),c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:(twDN(p)||"Nome Cognome")+twSfx(p),sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
-  const top=ty+170,n=Math.max(it.length,1),rh=Math.min(84,(H-top-70)/n),fs=rh*.42,R=W-m,hasL=it.some(e=>logo(e.lg)),nx=m+54+(hasL?rh*.72:0),nc=hd.length;
-  x.textAlign="right";x.font=`600 ${Math.max(20,fs*.7)}px ${F}`;x.fillStyle=mu;hd.forEach((h,i)=>x.fillText(h,R-(nc-1-i)*cw,top-16));
-  const mw=R-nc*cw-nx-20,NF=fitNames(x,it.map(e=>e.n),600,fs*(T==="cl"?.92:1),mw,!it.some(e=>e.sub),F,16);let SF=fs*.66;while(it.some(e=>{if(!e.sub)return 0;x.font=`400 ${SF}px ${F}`;return x.measureText(e.sub).width>mw})&&SF>12)SF--;
-  it.forEach((e,i)=>{const y=top+i*rh,tc=e.hl?(lum(st.ac)>150?"#000":"#fff"):st.tx;
-   if(e.hl){x.fillStyle=st.ac;x.fillRect(m-18,y,W-2*m+36,rh-6)}else{x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,y+rh-6,W-2*m+36,1.5)}
-   x.fillStyle=tc;x.textAlign="left";x.font=`600 ${fs}px ${F}`;x.fillText(i+1,m,y+rh*.62);
-   const l=logo(e.lg);if(l)dl(x,l,m+54+rh*.36,y+(rh-6)/2,rh*.66);
-   const ls=NF.l[i];x.font=`600 ${NF.f}px ${F}`;
-   if(e.sub){x.fillText(e.n,nx,y+rh*.46);x.font=`400 ${SF}px ${F}`;x.fillStyle=e.hl?tc:mu;x.fillText(e.sub,nx,y+rh*.46+fs*.8)}
-   else{const lh=NF.f*1.08,b0=y+(rh-6)/2-(ls.length-1)*lh/2+NF.f*.37;ls.forEach((q,k)=>x.fillText(q,nx,b0+k*lh))}
-   x.textAlign="right";e.c.forEach((v,k)=>{const last=k===e.c.length-1;let f2=fs*(last?.95:.85),wt=last?800:400;x.font=`${wt} ${f2}px ${F}`;while(x.measureText(v).width>cw-14&&f2>14){f2--;x.font=`${wt} ${f2}px ${F}`}x.fillStyle=tc;x.fillText(v,R-(e.c.length-1-k)*cw,y+rh*.62)})})}}
+  drawTab(x,W,H,it,hd,cw,ty,m,F,st,mu,T)}}
  x.textAlign="left";drawLy(x,W,H,0,st);
  if(!EXP){const b=LB.find(q=>q.id===SEL);if(b){x.save();x.strokeStyle="#2f7bff";x.lineWidth=3*u;x.setLineDash([12*u,8*u]);x.strokeRect(b.x0-6*u,b.y0-6*u,b.x1-b.x0+12*u,b.y1-b.y0+12*u);x.restore()}} if($("#l").classList.contains("on"))thumbs()}
 
@@ -799,12 +791,11 @@ const snap=()=>JSON.stringify({sty:S.sty,ly:S.ly,tw2:S.tw2,twx:S.twx,twk:S.twk,p
 const cm=()=>{const s=snap();if(s===hist[hi])return;hist=hist.slice(0,hi+1);hist.push(s);if(hist.length>80)hist.shift();hi=hist.length-1};
 function rest(s){const o=JSON.parse(s);Object.assign(S,{sty:o.sty,ly:o.ly,tw2:o.tw2,twx:o.twx||[],twk:o.twk,pc:o.pc,tf:o.tf,twv:o.twv,mt:o.mt});$("#gt").value=o.T;$("#gh").value=o.gh;$("#gs").value=o.gs;sty();sync(false);renderTW();save();draw()}
 const undo=()=>{if(hi>0)rest(hist[--hi])},redo=()=>{if(hi<hist.length-1)rest(hist[++hi])};
-function lg(l){const K0=lgK(),raw=im(S.raw[K0]);if(!raw)return null;if(!l.c)return logo(K0);const md=(S.mode[K0]||"o")==="w"?"w":"s",k="__t"+K0+l.c+md+S.raw[K0].length+S.tol+"|"+(S.olw||3)+(S.uni!==false);
- return PC[k]||(PC[k]=(()=>{const m=process(raw,md),c=document.createElement("canvas");c.width=m.width;c.height=m.height;const q=c.getContext("2d");q.drawImage(m,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
-function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==="ts"||!!l.b!==!!b)return;x.save();x.globalAlpha=l.o/100;let bx;
+function lg(l){return lgSt(lgK(),l)}
+function drawLy(x,W,H,b,st){LY().forEach(l=>{if(l.k==="stars"||l.k==="tt"||l.k==="ts"||l.k==="tab"||!!l.b!==!!b)return;x.save();x.globalAlpha=l.o/100;let bx;
  if(l.k==="text"||l.k==="mt"||l.k==="mname"){const fs=l.s*W;let t=l.k==="text"?l.t||"":l.k==="mname"?(S.mt[l.side]||(l.side==="h"?"Casa":"Ospite")):mtT(l);if(!t){if(EXP){x.restore();return}t=l.nm||"";x.globalAlpha*=.3}
-  x.font=`${l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):700} ${fs}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||(l.k==="text"?st.tx:mcCol(l));const w=x.measureText(t).width;x.fillText(t,l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
- else if(l.k==="mlogo"){const z=l.s*W,cx=l.x*W,cy=l.y*H,nm=S.mt[l.side]||"",lc=logo(nm);
+  x.font=`${l.it?"italic ":""}${l.wt||(l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):700)} ${fs}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillStyle=l.c||(l.k==="text"?st.tx:mcCol(l));const w=x.measureText(t).width;x.fillText(t,l.x*W,l.y*H);bx=[l.x*W-w/2,l.y*H-fs*.6,w,fs*1.2]}
+ else if(l.k==="mlogo"){const z=l.s*W,cx=l.x*W,cy=l.y*H,nm=S.mt[l.side]||"",lc=l.md?lgSt(nm,l):logo(nm);
   if(lc){const r=Math.min(z/lc.width,z/lc.height),w=lc.width*r,h=lc.height*r;x.drawImage(lc,cx-w/2,cy-h/2,w,h);bx=[cx-w/2,cy-h/2,w,h]}
   else{x.fillStyle="rgba(255,255,255,.2)";x.beginPath();x.arc(cx,cy,z*.44,0,7);x.fill();x.fillStyle=mcCol(l);x.font=`800 ${z*.4}px "Inter Tight",system-ui,sans-serif`;x.textAlign="center";x.textBaseline="middle";x.fillText((nm||"?").slice(0,2).toUpperCase(),cx,cy);bx=[cx-z/2,cy-z/2,z,z]}}
   else if(l.k==="band"){const w=l.s*W,h=l.h*W,x0=l.x*W-w/2,y0=l.y*H-h/2;x.fillStyle=l.c||st.ac;x.beginPath();x.roundRect(x0,y0,w,h,l.r/100*h/2);x.fill();bx=[x0,y0,w,h]}
@@ -825,7 +816,7 @@ function renderTW(){if(twPhFill())save();twVis();$("#tsh").checked=S.twShort!==f
  const tn=[...new Set([...S.cl.map(e=>e.n),...S.tw2.map(p=>p.t).filter(Boolean)])];$("#tn").innerHTML=tn.map(n=>`<option value="${esc(n)}">`).join("");
  $("#twr").innerHTML=S.twv==="k"?twxUI():SL().map((r,i)=>{const p=S.tw2[i];return `<div class="twrw"><small>${r}</small><input data-ti="${i}" value="${esc(p.n)}" placeholder="Nome Cognome"><select data-ts="${i}"><option value="">Squadra</option>${tn.map(n=>`<option${n===p.t?" selected":""}>${esc(n)}</option>`).join("")}</select><input type="number" min="0" data-tg="${i}" value="${p.g??""}" placeholder="⚽ ${twAutoG(p)||0}" title="Gol nella giornata (vuoto = dai marcatori)" aria-label="Gol"><button class="btn${twMv(p)?" mvp":""}" data-tmv="${i}" title="Premio MVP dell’arbitro">★ MVP</button><button class="btn${twNI(p)?" p":""}" data-tni="${i}" title="Togli l’iniziale del nome nella grafica (lo ricordo per questo giocatore)">Solo cognome</button><label class="btn" style="margin:0;padding:6px 8px">${p.ph?"✓ Foto":"Foto"}<input type="file" accept="image/*" data-tp="${i}" hidden></label>${p.ph?`<button class="btn" data-tx="${i}" style="padding:6px 8px">×</button>`:"<span></span>"}</div>`}).join("");$("#tsg").innerHTML=sugg()}
 function TX(x,W,H,ls,px,py,fs,al,id,col,wt,lh,F){const l=LY().find(q=>q.id===id);if(!l)return;const f=fs*(l.s||1),ax=l.x==null?px:l.x*W,ay=l.y==null?py:l.y*H;let w=0;
- x.save();x.globalAlpha=(l.o??100)/100;x.fillStyle=l.c||col;x.font=`${wt} ${f}px ${F}`;x.textAlign=al;x.textBaseline="alphabetic";ls.forEach((t,i)=>{x.fillText(t,ax,ay+i*f*lh);w=Math.max(w,x.measureText(t).width)});x.restore();
+ x.save();x.globalAlpha=(l.o??100)/100;x.fillStyle=l.c||col;x.font=`${l.it?"italic ":""}${l.wt||wt} ${f}px ${F}`;x.textAlign=al;x.textBaseline="alphabetic";ls.forEach((t,i)=>{x.fillText(t,ax,ay+i*f*lh);w=Math.max(w,x.measureText(t).width)});x.restore();
  const x0=al==="center"?ax-w/2:ax;LB.push({id,x0,y0:ay-f*.85,x1:x0+w,y1:ay+(ls.length-1)*f*lh+f*.2,ax:px/W,ay:py/H})}
 function pitch(x,W,H,y0,m,F){const u=W/1080,st=S.sty,X0=m,w=W-2*m,h=H-y0-70*u;
  x.save();x.strokeStyle=rgba(st.tx,.5);x.lineWidth=3*u;x.beginPath();x.roundRect(X0,y0,w,h,24*u);x.stroke();x.beginPath();x.moveTo(X0,y0+h/2);x.lineTo(X0+w,y0+h/2);x.stroke();x.beginPath();x.arc(X0+w/2,y0+h/2,Math.min(w,h)*.11,0,7);x.stroke();
@@ -870,8 +861,8 @@ function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,
 function lyUI(){spOpts();const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
  $("#lyl").innerHTML=a.map(q=>`<button class="btn${q.id===SEL?" p":""}" data-sl="${q.id}">${esc(q.k==="text"?(q.t||"Testo").slice(0,16):q.nm||"Immagine")}</button>`).join("")||'<span class="hint">Nessun elemento</span>';
  const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)||(l.k==="mt"&&l.f==="vs")?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"||l.k==="mlogo"?"none":"block";
- const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
- q("o").value=l.o;q("b").checked=!!l.b;q("c").value=l.c||(l.k==="mt"||l.k==="mname"?mcCol(l):l.k==="text"||l.k==="tt"?S.sty.tx:l.k==="ts"||l.k==="band"?S.sty.ac:"#ffffff");q("t").value=l.k==="tt"?$("#gh").value:l.k==="ts"?$("#gs").value:l.t||"";if(l.k==="band"){q("h").value=l.h;q("r").value=l.r}}
+ const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={tab:[.5,4],text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
+ q("o").value=l.o;q("b").checked=!!l.b;q("c").value=l.c||(l.k==="mt"||l.k==="mname"?mcCol(l):l.k==="text"||l.k==="tt"?S.sty.tx:l.k==="ts"||l.k==="band"||l.k==="tab"?S.sty.ac:"#ffffff");q("t").value=l.k==="tt"?$("#gh").value:l.k==="ts"?$("#gs").value:l.t||"";if(l.k==="band"){q("h").value=l.h;q("r").value=l.r}lyX(l);lyF(l)}
 const addL=l=>{LY().push({o:100,c:"",b:0,x:.5,y:.5,id:nid(),...l});SEL=LY()[LY().length-1].id;lyUI();draw();save()};
 $("#lyl").onclick=e=>{const id=e.target.dataset.sl;if(id){SEL=id;lyUI();draw()}};
 $("#lyc").oninput=e=>{const l=SELL(),p=e.target.dataset.p;if(!l||!p)return;const t=e.target.type;l[p]=t==="checkbox"?+e.target.checked:t==="range"?+e.target.value:e.target.value;if(p==="t"&&(l.k==="tt"||l.k==="ts")){$(l.k==="tt"?"#gh":"#gs").value=e.target.value;delete l.t}rd();save();if(p==="t")lyUI()};
@@ -1418,7 +1409,7 @@ const spK=s=>"__sp_"+s.id;
 function spRender(){const el=$("#spl");if(!el)return;const A=S.spn||[];
  el.innerHTML=A.map(s=>{const k=spK(s);return`<div class="row"><canvas class="th" width="56" height="56" data-th="${esc(k)}"></canvas><span><input data-spn="${s.id}" value="${esc(s.n)}" placeholder="Nome dello sponsor" aria-label="Nome dello sponsor" style="max-width:260px"></span><input type="file" accept="image/*" data-k="${esc(k)}" style="width:200px"><select data-k="${esc(k)}" data-m="1" style="width:190px">${MO.map(([v,l])=>`<option value="${v}"${(S.mode[k]||"o")===v?" selected":""}>${l}</option>`).join("")}</select><button class="btn" data-rm="${esc(k)}">Rimuovi logo</button><button class="btn" data-spx="${s.id}" title="Elimina lo sponsor">×</button></div>`}).join("")||'<p class="hint">Nessuno sponsor: aggiungilo con “+ Aggiungi sponsor”, poi caricane il logo. Nelle grafiche lo inserisci da Elementi › “+ Sponsor”.</p>';thumbs();spOpts()}
 function spOpts(){const e=$("#asp");if(!e)return;const A=(S.spn||[]).filter(s=>S.raw[spK(s)]);e.innerHTML=`<option value="">+ Sponsor</option>`+A.map(s=>`<option value="${s.id}">${esc(s.n||"Sponsor")}</option>`).join("");e.style.display=A.length?"":"none"}
-function spLg(l){const b=logo(l.key);if(!b||!l.c)return b;const k="__ts"+l.key+l.c+(S.mode[l.key]||"o")+S.tol+(S.olw||3)+(S.raw[l.key]||"").length;
+function spLg(l){if(l.md)return lgSt(l.key,l);const b=logo(l.key);if(!b||!l.c)return b;const k="__ts"+l.key+l.c+(S.mode[l.key]||"o")+S.tol+(S.olw||3)+(S.raw[l.key]||"").length;
  return PC[k]||(PC[k]=(()=>{const c=bgCv(b.width,b.height),q=c.getContext("2d");q.drawImage(b,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
 $("#spa").onclick=()=>{(S.spn=S.spn||[]).push({id:Date.now().toString(36),n:""});save();spRender();const i=$$("#spl [data-spn]").pop();if(i)i.focus()};
 $("#spl").onchange=e=>$("#ll").onchange(e);
@@ -1487,45 +1478,60 @@ function kPhotos0(){const el=$("#kph");if(!el)return;const M=S.phm||{},K=Object.
 $("#k").addEventListener("click",e=>{const b=e.target.closest("[data-phx]");if(!b)return;const k=b.dataset.phx,m=(S.phm||{})[k];if(!confirm("Dimentico la foto di "+(m?m.n:"questo giocatore")+"? Resta solo nelle grafiche dove è già.")) return;phDrop(k);save();kPhotos()});
 
 /* ---- Grafiche squadra: lo stesso editor delle Grafiche, ma per una squadra sola.
-   Mentre la sezione è aperta, stile, impaginazioni, grafiche personalizzate e dati partita sono quelli della squadra (S.gq);
-   quelli della lega restano da parte in S.glb e tornano al loro posto appena esci. Su disco e sul cloud si salva sempre la forma “lega + S.gq”. ---- */
+   Ogni squadra ha il suo “cassetto” in S.gqs[squadra] (stile, impaginazioni, grafiche personalizzate, dati partita, nome breve).
+   Mentre la sezione è aperta i valori della squadra stanno nei campi normali di S e quelli della lega restano da parte in S.glb.
+   Su disco si salva sempre la forma “lega + S.gqs”; sul cloud ogni squadra è un documento a parte (a7p/{profilo}/q/…).
+   La squadra aperta è una scelta di questo dispositivo (per il profilo “social media esterno” è fissa). ---- */
 var TQ=false,GQK=["sty","ly","cg","mt","lp","lpn","marN","marTie","marOwn"],GLUI=null;
+function gqExt(){return!!(SES&&SES.role==="ext")}
+function gqCur(){if(gqExt())return SES.team||"";try{return localStorage.getItem(LK("a7gqt"))||""}catch(e){return""}}
+function gqSetCur(t){try{localStorage.setItem(LK("a7gqt"),t)}catch(e){}}
 function gqPick(o){return Object.fromEntries(GQK.map(k=>[k,o[k]]))}
 function gqUIv(){return{gt:$("#gt").value,gh:$("#gh").value,gs:$("#gs").value}}
-function canonS(){if(!TQ||!S.glb)return S;const o={...S,...S.glb,gq:{...(S.gq||{}),...gqPick(S),ui:gqUIv()}};delete o.glb;return o}
+/* versione 1 (un solo cassetto in S.gq) → un cassetto per squadra */
+function gqMig(){if(!S.gq)return;const o=S.gq;delete S.gq;S.gqs=S.gqs||{};if(o.team){if(!S.gqs[o.team]){const b={...o};delete b.team;S.gqs[o.team]=b}if(!gqExt()&&!gqCur())gqSetCur(o.team)}}
+function canonS(){if(!TQ||!S.glb)return S;const t=gqCur(),o={...S,...S.glb,gqs:{...(S.gqs||{}),[t]:{...gqB(t),...gqPick(S),ui:gqUIv()}}};delete o.glb;return o}
 function gqShort(n){const w=String(n||"").replace(/\s+-\s+.*$/,"").split(/\s+/).filter(t=>t&&!/\./.test(t)&&!/^[A-Z]{1,3}$/.test(t));const s=w.join(" ");return s.length>14?w[0]:s||String(n||"")}
-function gqBucket(){const L=S.glb||S,q=S.gq=S.gq||{};q.team=q.team||"";if(q.sn==null)q.sn="";q.sty={...DEF().sty,...(q.sty||JSON.parse(JSON.stringify(L.sty||DEF().sty)))};q.ly=q.ly||{};q.mt=q.mt||{h:"",a:"",d:"",v:"",sc:""};q.lp=q.lp||{};q.lpn=q.lpn||{};
- q.cg=q.cg||[{id:"q_tv",n:"Squadra TV",b:"cop",q:"tv"},{id:"q_pc",n:"Press conference",b:"cop",q:"pc"}];return q}
-function gqSN(){const q=S.gq||{};return q.sn||gqShort(q.team)||"Squadra"}
-/* nomi e titoli delle copertine della squadra */
+function gqB(t){const L=S.glb||S;S.gqs=S.gqs||{};const b=S.gqs[t]=S.gqs[t]||{};if(b.sn==null)b.sn="";b.sty={...DEF().sty,...(b.sty||JSON.parse(JSON.stringify(L.sty||DEF().sty)))};b.ly=b.ly||{};b.mt=b.mt||{h:"",a:"",d:"",v:"",sc:""};b.lp=b.lp||{};b.lpn=b.lpn||{};
+ b.cg=b.cg||[{id:"q_tv",n:"Squadra TV",b:"cop",q:"tv"},{id:"q_pc",n:"Press conference",b:"cop",q:"pc"}];return b}
+function gqSN(){const t=gqCur();return((S.gqs||{})[t]||{}).sn||gqShort(t)||"Squadra"}
 function gqNames(){if(!TQ)return;const sn=gqSN();(S.cg||[]).forEach(c=>{if(c.q==="tv"){c.n=sn+" TV";TT[c.id]=[sn+"|TV","Puntata 1"]}else if(c.q==="pc"){c.n=sn+" Press Conference";TT[c.id]=[sn+"|Press Conference","Giornata 3"]}})}
-/* entra / esci dalla modalità squadra (mantenendo la vista in cui sei) */
-function gqIn(){S.glb=gqPick(S);const q=gqBucket();GQK.forEach(k=>{S[k]=q[k]})}
-function gqOut(){if(!TQ||!S.glb)return 0;S.gq={...gqBucket(),...gqPick(S),ui:gqUIv()};Object.assign(S,S.glb);delete S.glb;return 1}
-function gqAfterLoad(){if(TQ){delete S.glb;gqIn();gqNames()}}
-function gMode(on){on=!!on;if(on===TQ)return;
- if(on){GLUI=gqUIv();gqIn();TQ=true;gqNames();gqUI(true);const u=(S.gq&&S.gq.ui)||{},g=u.gt&&u.gt!=="tw"&&u.gt!=="pod"?u.gt:"q_tv";renderGt(g);if(u.gh!=null&&u.gt===g){$("#gh").value=u.gh;$("#gs").value=u.gs;sync(false)}else sync(true)}
+function gqIn(){S.glb=gqPick(S);const b=gqB(gqCur());GQK.forEach(k=>{S[k]=b[k]})}
+function gqOut(){if(!TQ||!S.glb)return 0;const t=gqCur();S.gqs[t]={...gqB(t),...gqPick(S),ui:gqUIv()};Object.assign(S,S.glb);delete S.glb;return 1}
+/* apre il cassetto nella vista (modello e titoli che avevi lasciato) */
+function gqView(){const u=((S.gqs||{})[gqCur()]||{}).ui||{},g=u.gt&&u.gt!=="tw"&&u.gt!=="pod"?u.gt:"q_tv";gqNames();renderGt(g);
+ if(u.gh!=null&&u.gt===gT()){$("#gh").value=u.gh;$("#gs").value=u.gs;sync(false)}else sync(true)}
+function gMode(on){on=!!on||gqExt();if(on===TQ)return;
+ if(on){GLUI=gqUIv();gqIn();TQ=true;gqUI(true);gqView()}
  else{gqOut();TQ=false;gqUI(false);renderGt(GLUI?GLUI.gt:"cl");if(GLUI){$("#gh").value=GLUI.gh;$("#gs").value=GLUI.gs;sync(false)}else sync(true)}
  SEL=null;PC={};sty();hist=[];hi=-1;cm();save()}
+/* cambio squadra: chiudo il cassetto di quella di prima e apro quello della nuova */
+function gqSwitch(t){if(gqExt()||t===gqCur())return;const was=TQ&&!!S.glb;if(was)gqOut();gqSetCur(t);if(was){gqIn();gqView()}SEL=null;PC={};sty();gqBar();draw();hist=[];hi=-1;cm();save()}
+/* aggiornamento dal cloud di una squadra */
+function gqRemote(t,b,busy){S.gqs=S.gqs||{};if(TQ&&S.glb&&t===gqCur()){if(busy)return 0;S.gqs[t]=b;const q=gqB(t);GQK.forEach(k=>{S[k]=q[k]});gqNames();renderGt();sync(false);sty();gqBar();draw();return 1}S.gqs[t]=b;return 1}
 /* barra della squadra in cima alla sezione */
 $("#g").insertAdjacentHTML("afterbegin",`<div id="gqb" class="card" style="display:none;margin-bottom:14px"><div class="bar" style="margin:0;gap:12px;align-items:flex-end"><canvas id="gql" width="56" height="56" aria-hidden="true"></canvas><div style="flex:1;min-width:200px"><label for="gqt">Squadra</label><select id="gqt"></select></div><div style="width:220px"><label for="gqn">Nome breve (nei titoli)</label><input id="gqn"></div></div><div class="hint" id="gqh" style="margin-bottom:0"></div></div>`);
 $("#marw").insertAdjacentHTML("beforeend",`<label id="gqmo" style="display:none;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="gqmoc"> Solo i marcatori della squadra (classifica interna)</label>`);
 function gqUI(on){$("#gqb").style.display=on?"block":"none";$("#gqmo").style.display=on?"flex":"none";["tw","pod"].forEach(v=>{const o=$(`#gt option[value="${v}"]`);if(o){o.hidden=on;o.disabled=on}});if(on)gqBar()}
-function gqBar(){const q=S.gq||{},t=$("#gqt");t.innerHTML=`<option value="">Scegli la squadra</option>`+S.cl.map(e=>`<option${e.n===q.team?" selected":""}>${esc(e.n)}</option>`).join("");if(q.team&&!S.cl.some(e=>e.n===q.team))t.insertAdjacentHTML("beforeend",`<option selected>${esc(q.team)}</option>`);
- const n=$("#gqn");if(document.activeElement!==n)n.value=q.sn||"";n.placeholder=gqShort(q.team)||"Es. Canizzano";$("#gqmoc").checked=!!S.marOwn;
- const c=$("#gql"),x=c.getContext("2d"),l=q.team?logo(q.team):null;x.clearRect(0,0,56,56);if(l)dl(x,l,28,28,52);
- $("#gqh").innerHTML=!q.team?"Scegli la squadra: le grafiche di questa sezione useranno il suo logo al posto di quello della lega, la evidenzieranno in classifica e nei marcatori. Modelli, stili e impaginazioni sono separati da quelli della lega.":l?"Logo della squadra al posto di quello della lega · in classifica e nei marcatori è evidenziata la squadra · modelli, stili e impaginazioni separati da quelli della lega.":`Manca il logo di ${esc(q.team)}: caricalo nella sezione <a href="#" data-gql>Loghi</a> (finché manca uso quello della lega).`}
-$("#gqb").addEventListener("change",e=>{if(e.target.id!=="gqt")return;const old=S.gq.team,nw=e.target.value,LF="Lega Amatori Calcio Treviso";S.gq.team=nw;[S.ly,...Object.values(S.lp||{}).map(p=>({x:p.ly}))].forEach(o=>Object.values(o||{}).forEach(a=>(a||[]).forEach(l=>{if(l&&l.id==="ft"&&(l.t===LF||l.t===old))l.t=nw||LF})));PC={};gqNames();renderGt();if((S.cg||[]).some(c=>c.q&&c.id===gT()))sync(true);gqBar();draw();save();cm()});
-$("#gqb").addEventListener("input",e=>{if(e.target.id!=="gqn")return;S.gq.sn=e.target.value.trim();gqNames();renderGt();if((S.cg||[]).some(c=>c.q&&c.id===gT()))sync(true);draw();save()});
+function gqBar(){const t=gqCur(),b=(S.gqs||{})[t]||{},s=$("#gqt");s.innerHTML=`<option value="">Scegli la squadra</option>`+S.cl.map(e=>`<option${e.n===t?" selected":""}>${esc(e.n)}</option>`).join("");if(t&&!S.cl.some(e=>e.n===t))s.insertAdjacentHTML("beforeend",`<option selected>${esc(t)}</option>`);s.disabled=gqExt();
+ const n=$("#gqn");if(document.activeElement!==n)n.value=b.sn||"";n.placeholder=gqShort(t)||"Es. Canizzano";$("#gqmoc").checked=!!S.marOwn;
+ const c=$("#gql"),x=c.getContext("2d"),l=t?logo(t):null;x.clearRect(0,0,56,56);if(l)dl(x,l,28,28,52);
+ $("#gqh").innerHTML=!t?"Scegli la squadra: le grafiche di questa sezione useranno il suo logo al posto di quello della lega e la evidenzieranno in classifica e nei marcatori. Ogni squadra ha modelli, stili e impaginazioni suoi.":(gqExt()?`Profilo social media esterno: qui crei le grafiche di <b>${esc(t)}</b>. `:"")+(l?"Logo della squadra al posto di quello della lega · in classifica e nei marcatori è evidenziata la squadra · modelli, stili e impaginazioni di questa squadra.":`Manca il logo di ${esc(t)}: `+(gqExt()?"chiedi all’admin di caricarlo (intanto uso quello della lega).":`caricalo nella sezione <a href="#" data-gql>Loghi</a> (intanto uso quello della lega).`))}
+$("#gqb").addEventListener("change",e=>{if(e.target.id==="gqt")gqSwitch(e.target.value)});
+$("#gqb").addEventListener("input",e=>{if(e.target.id!=="gqn")return;const t=gqCur();gqB(t).sn=e.target.value.trim();gqNames();renderGt();if((S.cg||[]).some(c=>c.q&&c.id===gT()))sync(true);draw();save()});
 $("#gqb").addEventListener("click",e=>{if(e.target.closest("[data-gql]")){e.preventDefault();go("l")}});
 $("#gqmoc").onchange=e=>{S.marOwn=e.target.checked;save();marUI();draw();cm()};
 /* cosa cambia nel disegno */
-function lgK(){const t=TQ&&S.gq&&S.gq.team;return t&&S.raw&&S.raw[t]?t:"__lega"}
+function lgK(){const t=TQ&&gqCur();return t&&S.raw&&S.raw[t]?t:"__lega"}
 function lgNm(){return TQ?"Logo squadra":"Logo lega"}
-function lgFoot(){return TQ&&S.gq&&S.gq.team?S.gq.team:"Lega Amatori Calcio Treviso"}
-function gqHl(n,i){const t=TQ&&S.gq&&S.gq.team;return t?kHN(n)===kHN(t):i===0}
-function gqMar(a){const t=TQ&&S.gq&&S.gq.team;return t&&S.marOwn?a.filter(e=>kHN(e.sq)===kHN(t)):a}
-function gqMarHl(e,i){const t=TQ&&S.gq&&S.gq.team;return t&&!S.marOwn?kHN(e.sq)===kHN(t):i===0}
+function lgFoot(){const t=TQ&&gqCur();return t||"Lega Amatori Calcio Treviso"}
+function gqHl(n,i){const t=TQ&&gqCur();return t?kHN(n)===kHN(t):i===0}
+function gqMar(a){const t=TQ&&gqCur();return t&&S.marOwn?a.filter(e=>kHN(e.sq)===kHN(t)):a}
+function gqMarHl(e,i){const t=TQ&&gqCur();return t&&!S.marOwn?kHN(e.sq)===kHN(t):i===0}
+gqMig();
+/* profilo “social media esterno”: vede solo Grafiche squadra, della sua squadra */
+if(gqExt()){document.body.classList.add("ext");setTimeout(()=>go("q"),0)}
+if(gqExt()){const h=$("#imc")&&$("#imc").closest("label");if(h)h.style.display="none";if($("#ex"))$("#ex").style.display="none"}
 
 /* ---- impaginazione delle grafiche: posizione e grandezza di loghi e testi, e i testi stessi.
    S.lp[modello] = la predefinita (si apre così ogni volta, anche con “Ripristina elementi”), S.lpn[modello] = varianti con nome. Lo stile non c'entra. ---- */
@@ -1542,7 +1548,7 @@ var LPO={sel:"d",snap:null,run:0,drag:null};
 <div class="cdg"><div class="cdv"><canvas id="lyoc" width="540" height="675" style="touch-action:none;cursor:grab"></canvas><div class="hint">Trascina loghi e testi sull’anteprima per spostarli, oppure usa i cursori. Colori e sfondo non fanno parte dell’impaginazione: li scegli ogni volta nella scheda Stile.</div></div>
 <div class="cdk"><div class="g3"><div><label for="lyos">Impaginazione</label><select id="lyos"></select></div><div><label for="lyon">Nome</label><input id="lyon" placeholder="Nome della variante"></div></div><div id="lyol"></div>
 <div class="bar cdb"><button class="btn p" data-lo="s">Salva</button><button class="btn" data-lo="n">Salva come variante</button><button class="btn" data-lo="r">Annulla modifiche</button><button class="btn" data-lo="d">Elimina</button></div><p class="hint" id="lyohn"></p></div></div></div>`;document.body.append(d)})();
-var LPRG={text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]};
+var LPRG={tab:[.5,4],text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]};
 function lpPos(l){if(l.x!=null)return[l.x,l.y];const b=LB.find(q=>q.id===l.id);return b&&b.ax!=null?[b.ax,b.ay]:[.5,.5]}
 function lpNm(l){return l.k==="text"?(l.t||"Testo").slice(0,24):l.k==="tt"?"Titolo":l.k==="ts"?"Sottotitolo":l.nm||"Elemento"}
 function lpList(){const A=LY(),p2=v=>Math.round(v*100)+"%";
@@ -1576,6 +1582,43 @@ $("#lyo").addEventListener("click",e=>{if(e.target.id==="lyo")return lpClose();c
  c.addEventListener("pointermove",e=>{const d=LPO.drag;if(!d)return;const[px,py]=pp(e),cv=$("#cv");d.l.x=Math.min(1,Math.max(0,(px-d.dx)/cv.width));d.l.y=Math.min(1,Math.max(0,(py-d.dy)/cv.height));rd();lpSync(d.l)});
  const up=()=>{if(LPO.drag){LPO.drag=null;c.style.cursor="grab";save()}};c.addEventListener("pointerup",up);c.addEventListener("pointercancel",up)})();
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#lyo").classList.contains("on"))lpClose()});
+
+/* ---- loghi personalizzabili uno per uno: originale, senza sfondo, solo contorno (con il suo spessore) o sagoma, nel colore che vuoi ---- */
+function lgSt(K,l){const raw=im(S.raw[K]);if(!raw)return null;const md=l.md||"";if(!md&&!l.c)return logo(K);
+ const m2=md||((S.mode[K]||"o")==="w"?"w":"s"),lw=l.lw||S.olw||3,tint=!!l.c&&(m2==="w"||m2==="s"),k="__t"+K+"|"+m2+"|"+(tint?l.c:"")+"|"+lw+"|"+S.raw[K].length+"|"+S.tol+"|"+(S.uni!==false);
+ return PC[k]||(PC[k]=(()=>{const o=S.olw;S.olw=lw;let m;try{m=process(raw,m2==="w"?"wo":m2)}finally{S.olw=o}if(!tint)return m;const c=document.createElement("canvas");c.width=m.width;c.height=m.height;const q=c.getContext("2d");q.drawImage(m,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
+/* controlli in più nel riquadro dell'elemento selezionato */
+function lyX(l){const c=$("#lyc"),q=n=>c.querySelector(`[data-p="${n}"]`),Lg=["logo","mlogo","sp"].includes(l.k),T=l.k==="tab";
+ $("#lw_lg").style.display=Lg?"block":"none";
+ if(Lg){q("md").value=l.md||"";q("lw").value=l.lw||S.olw||3;$("#lw_lw").style.display=l.md==="w"?"block":"none";$("#lw_c").style.display=l.md==="o"||l.md==="b"||(l.k==="mlogo"&&!l.md)?"none":"block";
+  $("#lw_lgh").textContent=l.md==="w"?"Il colore qui sotto colora il contorno.":l.md==="s"?"Il colore qui sotto colora tutta la sagoma.":l.md?"":"Come impostato nella sezione Loghi; scegline uno per cambiare solo questo."}
+ $("#lw_tab").style.display=T?"block":"none";if(T){q("ts").value=l.ts||1;q("ls").value=l.ls||1;q("w").value=l.w||.88;q("fill").checked=!!l.fill}
+ const bl=q("b").closest("label");if(bl)bl.style.display=T?"none":"";$("#ld").style.display=$("#lx").style.display=T?"none":"";
+ const sl=q("s").previousElementSibling;if(sl&&sl.tagName==="LABEL")sl.textContent=T?"Altezza delle righe":"Dimensione"}
+$("#lyc").addEventListener("change",e=>{if(e.target.dataset.p==="md"||e.target.dataset.p==="fill"){lyUI();draw();cm()}});
+/* ---- la tabella (classifica, marcatori, elenchi) è un elemento: si sposta, si allarga, righe, testi e loghi più grandi ---- */
+function tabL(){const a=LY();let l=a.find(q=>q.k==="tab");if(!l){l={id:"tab",k:"tab",nm:"Tabella",x:null,y:null,s:1,ts:1,ls:1,w:null,o:100,c:"",b:0};a.push(l)}return l}
+function drawTab(x,W,H,it,hd,cw0,ty,m,F,st,mu,T){const tb=tabL(),n=Math.max(it.length,1),tw=(tb.w||(W-2*m)/W)*W,cx=tb.x!=null?tb.x*W:W/2,lm=cx-tw/2,R=lm+tw,top=tb.y!=null?tb.y*H:ty+170,avail=Math.max(60,H-top-70),
+  rh=tb.fill?Math.min(320,avail/n):Math.min(84*(tb.s||1),avail/n),fs=Math.min(rh*.42,30+rh*.16)*(tb.ts||1),k=Math.min(1.3,Math.max(.8,fs/35.28)),cw=cw0*k,rk=Math.max(54,fs*1.25),lz=Math.min(rh*.66,fs*1.7)*(tb.ls||1),hasL=it.some(e=>logo(e.lg)),nx=lm+rk+(hasL?lz+rh*.06:0),nc=hd.length,hc=tb.c||st.ac,it0=tb.it?"italic ":"",nw=tb.wt||600;
+ x.save();x.globalAlpha=(tb.o??100)/100;x.textAlign="right";x.font=`${it0}600 ${Math.max(20,fs*.62)}px ${F}`;x.fillStyle=mu;hd.forEach((h,i)=>x.fillText(h,R-(nc-1-i)*cw,top-16));
+ const mw=R-nc*cw-nx-20,NF=fitNames(x,it.map(e=>e.n),it0+nw,fs*(T==="cl"?.92:1),mw,!it.some(e=>e.sub),F,16);let SF=fs*.66;while(it.some(e=>{if(!e.sub)return 0;x.font=`${it0}400 ${SF}px ${F}`;return x.measureText(e.sub).width>mw})&&SF>12)SF--;SF=Math.min(SF,Math.max(12,NF.f*.8));
+ it.forEach((e,i)=>{const y=top+i*rh,cy=y+(rh-6)/2,tc=e.hl?(lum(hc)>150?"#000":"#fff"):st.tx;
+  if(e.hl){x.fillStyle=hc;x.fillRect(lm-18,y,tw+36,rh-6)}else{x.fillStyle=rgba(st.tx,.14);x.fillRect(lm-18,y+rh-6,tw+36,1.5)}
+  x.fillStyle=tc;x.textAlign="left";x.font=`${it0}600 ${fs}px ${F}`;x.fillText(i+1,lm,cy+fs*.35);
+  const l=logo(e.lg);if(l)dl(x,l,lm+rk+lz/2,cy,lz);
+  const L2=NF.l[i];x.font=`${it0}${nw} ${NF.f}px ${F}`;
+  if(e.sub){const nb=cy+NF.f*.35-SF*.6;x.fillText(e.n,nx,nb);x.font=`${it0}400 ${SF}px ${F}`;x.fillStyle=e.hl?tc:mu;x.fillText(e.sub,nx,nb+SF*1.25)}
+  else{const lh=NF.f*1.08,b0=cy-(L2.length-1)*lh/2+NF.f*.37;L2.forEach((q,j)=>x.fillText(q,nx,b0+j*lh))}
+  x.textAlign="right";e.c.forEach((v,j)=>{const last=j===e.c.length-1;let f2=fs*(last?.95:.85),wt=it0+(last?800:400);x.font=`${wt} ${f2}px ${F}`;while(x.measureText(v).width>cw-14&&f2>14){f2--;x.font=`${wt} ${f2}px ${F}`}x.fillStyle=tc;x.fillText(v,R-(e.c.length-1-j)*cw,cy+fs*.35)})});
+ x.restore();LB.push({id:"tab",x0:lm-18,y0:top-50,x1:R+18,y1:top+n*rh,ax:cx/W,ay:top/H})}
+
+/* ---- grassetto e corsivo su ogni testo della grafica (titolo, sottotitolo, testi, scritte della partita, tabella) ---- */
+var FWD={text:700,tt:800,ts:500,mname:700,tab:600};
+function fwDef(l){return l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):FWD[l.k]||700}
+function lyF(l){const on=["text","tt","ts","mt","mname","tab"].includes(l.k),w=$("#lw_f");w.style.display=on?"flex":"none";if(!on)return;
+ w.querySelector('[data-fw="b"]').classList.toggle("p",(l.wt||fwDef(l))>=700);w.querySelector('[data-fw="i"]').classList.toggle("p",!!l.it)}
+$("#lyc").addEventListener("click",e=>{const b=e.target.closest("[data-fw]");if(!b)return;const l=SELL();if(!l)return;
+ if(b.dataset.fw==="b")l.wt=(l.wt||fwDef(l))>=700?400:800;else l.it=l.it?0:1;lyF(l);draw();save();cm()});
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
@@ -1968,7 +2011,7 @@ let CST=["",""];
 function cStat(t,c){CST=[t,c||""];const b=$("#acb");if(b){b.querySelector(".dot2").className="dot2 "+(c||"");b.title=t}const s=$("#ast");if(s)s.textContent=t}
 function toast(t){const e=$("#tst");e.textContent=t;e.classList.add("on");clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),2600)}
 function setSes(s){const fin=()=>{if(s)localStorage.setItem("a7ses",JSON.stringify(s));else localStorage.removeItem("a7ses");location.reload()};window.CLD&&CLD.flush?CLD.flush().then(fin,fin):fin()}
-const ADM_FOOT=()=>`<div class="bar" style="margin-top:16px;gap:8px"><button class="btn" data-ax="exp">Esporta configurazione</button><button class="btn" data-ax="imp">Importa</button>${SES?'<button class="btn" data-ax="out">Esci da questo dispositivo</button>':""}</div>`;
+const ADM_FOOT=()=>`<div class="bar" style="margin-top:16px;gap:8px">${SES&&SES.role==="ext"?"":'<button class="btn" data-ax="exp">Esporta configurazione</button><button class="btn" data-ax="imp">Importa</button>'}${SES?'<button class="btn" data-ax="out">Esci da questo dispositivo</button>':""}</div>`;
 const ADM_HEAD=t=>`<div class="bar"><h2 style="margin:0;flex:1">${t}</h2><button class="btn" data-ax="close" aria-label="Chiudi">✕</button></div>`;
 const FB_RULES=`rules_version = '2';
 service cloud.firestore {
@@ -1988,7 +2031,7 @@ $("#adm").addEventListener("click",e=>{if(e.target.id==="adm")return $("#adm").c
  else if(a.ax==="out"&&confirm("Uscire dal profilo su questo dispositivo? I dati restano nel cloud."))setSes(null)});
 document.addEventListener("keydown",e=>{if(e.key==="Escape")$("#adm").classList.remove("on")});
 (function(){const h=$("#ex").parentElement,b=document.createElement("button");b.className="btn acc";b.id="acb";
- b.innerHTML=`<span class="dot2"></span><span>${esc(!FB_CFG.projectId?"Cloud non attivo":SES?(SES.pid==="main"?"Profilo condiviso":"Prova · "+SES.n):"Accedi")}</span>`;b.onclick=admOpen;h.prepend(b);
+ b.innerHTML=`<span class="dot2"></span><span>${esc(!FB_CFG.projectId?"Cloud non attivo":SES?(SES.role==="ext"?"Social · "+(typeof gqShort==="function"?gqShort(SES.team):SES.team||SES.n):SES.pid==="main"?"Profilo condiviso":"Prova · "+SES.n):"Accedi")}</span>`;b.onclick=admOpen;h.prepend(b);
  cStat(FB_CFG.projectId?"Collegamento al cloud…":"Cloud non attivo: dati solo su questo dispositivo",FB_CFG.projectId?"w":"");
  if(SES&&SES.pid!=="main"){const t=document.createElement("div");t.className="tbn";t.innerHTML=`<span>🧪 Profilo di prova «${esc(SES.n)}»: le modifiche restano qui e non toccano il profilo condiviso.</span>${SES.role==="admin"?'<button data-tb="main">Torna al profilo condiviso</button>':""}`;
   t.onclick=e=>{if(e.target.dataset.tb)setSes({pid:"main",role:"admin",u:ADMIN.u,n:"Principale"})};$("nav").before(t)}
@@ -2007,29 +2050,30 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  try{[A,AU,F]=await Promise.all(["app","auth","firestore"].map(m=>import(U(m))))}catch(e){cStat("Cloud non raggiungibile: lavoro su questo dispositivo","e");return}
  const{initializeApp}=A,{getAuth,signInAnonymously,onAuthStateChanged}=AU,{initializeFirestore,getFirestore,persistentLocalCache,persistentMultipleTabManager,doc,getDoc,setDoc,getDocs,collection,query,where,onSnapshot,writeBatch}=F;
  const app=initializeApp(FB_CFG),auth=getAuth(app);let db;try{db=initializeFirestore(app,{localCache:persistentLocalCache({tabManager:persistentMultipleTabManager()})})}catch(e){db=getFirestore(app)}
- const P=id=>doc(db,"a7p",id),SD=id=>doc(db,"a7p",id,"d","state"),LG=id=>collection(db,"a7p",id,"lg"),GL=id=>collection(db,"a7p",id,"gal");
+ const QC=id=>collection(db,"a7p",id,"q"),P=id=>doc(db,"a7p",id),SD=id=>doc(db,"a7p",id,"d","state"),LG=id=>collection(db,"a7p",id,"lg"),GL=id=>collection(db,"a7p",id,"gal");
  const DEV=localStorage.getItem("a7dev")||(()=>{const d=Math.random().toString(36).slice(2,10);localStorage.setItem("a7dev",d);return d})();
  const hk=s=>{let h=5381;for(const c of s)h=(Math.imul(h,33)^c.codePointAt(0))>>>0;return"k"+h.toString(36)+"_"+s.length};
  const sha=async p=>[...new Uint8Array(await crypto.subtle.digest("SHA-256",new TextEncoder().encode("a7|"+p)))].map(b=>b.toString(16).padStart(2,"0")).join("");
- const hm=()=>new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}),J=()=>JSON.stringify(typeof canonS==="function"?canonS():S,(k,v)=>k==="src"||k==="raw"?undefined:v);
+ const hm=()=>new Date().toLocaleTimeString("it-IT",{hour:"2-digit",minute:"2-digit"}),J=()=>JSON.stringify(typeof canonS==="function"?canonS():S,(k,v)=>k==="src"||k==="raw"||k==="gqs"?undefined:v);
  const authOk=async()=>{if(!auth.currentUser)await new Promise(r=>{const un=onAuthStateChanged(auth,()=>{un();r()})});if(!auth.currentUser)await signInAnonymously(auth)};
  const why=e=>/operation-not-allowed|admin-restricted/.test(e&&e.code||"")?"Attiva l’accesso Anonimo in Firebase (Authentication › Metodo di accesso).":/permission/.test(e&&e.code||"")?"Permesso negato: controlla le regole di Firestore.":/offline|unavailable/.test((e&&e.code||"")+(e&&e.message||""))?"Offline: lavoro sul dispositivo e sincronizzo appena torna la rete.":(e&&e.message)||"errore";
- async function login(u,p){await authOk();const qs=await getDocs(query(collection(db,"a7p"),where("u","==",u)));const d=qs.docs.find(x=>x.data().t==="test");if(!d||d.data().ph!==await sha(p))throw"Nome utente o password errati.";return{pid:d.id,role:"test",u,n:d.data().n}}
+ async function login(u,p){await authOk();const qs=await getDocs(query(collection(db,"a7p"),where("u","==",u)));const d=qs.docs.find(x=>x.data().t==="test"||x.data().t==="ext");if(!d||d.data().ph!==await sha(p))throw"Nome utente o password errati.";const v=d.data();return v.t==="ext"?{pid:"main",role:"ext",u,n:v.n,team:v.team,x:d.id}:{pid:d.id,role:"test",u,n:v.n}}
  if(!SES){window.CLD={login};authOk().then(()=>cStat("Pronto per l’accesso","ok"),e=>cStat(why(e),"e"));return}
- const pid=SES.pid;let lastR=null,lastJ=null,lastLg={},lastGal=new Set(),tmr=null,gtmr=null,pend=null,ready=false,mute=0,subs=0;
+ const pid=SES.pid,EXT=SES.role==="ext";let lastQ={},lastR=null,lastJ=null,lastLg={},lastGal=new Set(),tmr=null,gtmr=null,pend=null,ready=false,mute=0,subs=0;
  const localSave=()=>{mute=1;save();mute=0},localG=()=>{try{localStorage.setItem(LK("a7g"),JSON.stringify(G))}catch(e){}};
  const typing=()=>{const a=document.activeElement;return!!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest("main"))};
  function reRender(){try{PC={};kApply();TBU();renderK();week();tipi();sty();renderGt();renderTW();sync(false);renderCP();renderGal();if($("#l").classList.contains("on"))renderLogos();draw();if(typeof poAll==="function")poAll()}catch(e){console.warn(e)}}
- function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const raw=S.raw;S={...DEF(),...o,raw};S.sty={...DEF().sty,...S.sty};if(typeof gqAfterLoad==="function")gqAfterLoad();lastR=d.j;lastJ=J();pend=null;localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
+ function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const tq=typeof gqOut==="function"&&gqOut(),raw=S.raw,gqs=S.gqs;S={...DEF(),...o,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};if(typeof gqMig==="function")gqMig();if(tq)gqIn();lastR=d.j;lastJ=J();pend=null;localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
  function applyLogos(docs){const r={};docs.forEach(x=>{const d=x.data();r[d.k]=d.d});S.raw=r;lastLg={...r};PC={};localSave()}
  function applyGal(docs){const R=docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.o||0)-(b.o||0)).map(g=>({id:g.id,n:g.n,d:g.d})),ri=new Set(R.map(g=>g.id));lastGal=new Set(ri);G=[...R,...G.filter(g=>(g.d||"").length>1e6&&!ri.has(g.id))];localG();renderGal()}
  async function commitOps(ops){let b=writeBatch(db),n=0,sz=0;for(const[t,r,d]of ops){const z=d?JSON.stringify(d).length:60;if(n&&(n>=450||sz+z>7e6)){await b.commit();b=writeBatch(db);n=0;sz=0}if(t==="d")b.delete(r);else b.set(r,d);n++;sz+=z}if(n)await b.commit()}
- async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),q=v=>JSON.stringify(v);Object.keys({...Rm,...B}).forEach(k=>{if(q(L[k])===q(B[k])&&q(Rm[k])!==q(L[k])){if(Rm[k]===undefined)delete S[k];else S[k]=Rm[k];ch=1}});lastR=pend.j;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
-  if(j!==lastJ){if(j.length>950000){cStat("Dati troppo grandi per il cloud: elimina qualche foto o dato vecchio","e");return}ops.push(["s",SD(pid),{j,at,by:DEV}]);lastJ=j;lastR=j}
-  Object.keys(raw).forEach(k=>{if(lastLg[k]!==raw[k]){ops.push(["s",doc(LG(pid),hk(k)),{k,d:raw[k]}]);lastLg[k]=raw[k]}});
-  Object.keys(lastLg).forEach(k=>{if(!(k in raw)){ops.push(["d",doc(LG(pid),hk(k))]);delete lastLg[k]}});
+ async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),q=v=>JSON.stringify(v);Object.keys({...Rm,...B}).forEach(k=>{if(q(L[k])===q(B[k])&&q(Rm[k])!==q(L[k])){if(Rm[k]===undefined)delete S[k];else S[k]=Rm[k];ch=1}});lastR=pend.j;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch&&typeof gqMig==="function")gqMig();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
+  if(j!==lastJ&&EXT)lastJ=j;if(j!==lastJ){if(j.length>950000){cStat("Dati troppo grandi per il cloud: elimina qualche foto o dato vecchio","e");return}ops.push(["s",SD(pid),{j,at,by:DEV}]);lastJ=j;lastR=j}
+  if(!EXT)Object.keys(raw).forEach(k=>{if(lastLg[k]!==raw[k]){ops.push(["s",doc(LG(pid),hk(k)),{k,d:raw[k]}]);lastLg[k]=raw[k]}});
+  {const Q=(typeof canonS==="function"?canonS():S).gqs||{};Object.keys(Q).forEach(t=>{if(!t||(EXT&&t!==SES.team))return;const qj=JSON.stringify(Q[t]);if(lastQ[t]!==qj){ops.push(["s",doc(QC(pid),hk("q|"+t)),{team:t,j:qj,at,by:DEV}]);lastQ[t]=qj}})}
+  if(!EXT)Object.keys(lastLg).forEach(k=>{if(!(k in raw)){ops.push(["d",doc(LG(pid),hk(k))]);delete lastLg[k]}});
   if(!ops.length)return cStat("Sincronizzato · "+hm(),"ok");localStorage.setItem(LK("a7at"),at);pend=null;cStat(navigator.onLine?"Salvataggio nel cloud…":"Offline: salvo appena torna la rete","w");
-  try{await commitOps(ops);cStat("Salvato nel cloud · "+hm(),"ok")}catch(e){lastJ=null;lastLg={};cStat("Errore di salvataggio: "+why(e),"e")}}
+  try{await commitOps(ops);cStat("Salvato nel cloud · "+hm(),"ok")}catch(e){lastJ=null;lastLg={};lastQ={};cStat("Errore di salvataggio: "+why(e),"e")}}
  async function pushGal(){gtmr=null;if(!ready)return;const ids=new Set(G.map(g=>g.id)),ops=[];let big=0;
   G.forEach((g,i)=>{if(!lastGal.has(g.id)){if((g.d||"").length>1e6){big++;return}ops.push(["s",doc(GL(pid),g.id),{n:g.n,d:g.d,o:Date.now()+i}]);lastGal.add(g.id)}});
   [...lastGal].forEach(id=>{if(!ids.has(id)){ops.push(["d",doc(GL(pid),id)]);lastGal.delete(id)}});
@@ -2042,38 +2086,44 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  addEventListener("pagehide",()=>{if(tmr){clearTimeout(tmr);push()}if(gtmr){clearTimeout(gtmr);pushGal()}});
  document.addEventListener("visibilitychange",()=>{if(document.hidden&&tmr){clearTimeout(tmr);push()}});
  document.addEventListener("focusout",()=>setTimeout(()=>{if(pend&&!typing()&&!tmr)applyState(pend)},120));
- async function pushAll(){lastJ=null;lastLg={};lastGal=new Set();ready=true;await push();await pushGal()}
+ async function pushAll(){lastJ=null;lastLg={};lastQ={};lastGal=new Set();ready=true;await push();await pushGal()}
  async function start(){try{cStat("Collegamento al cloud…","w");await authOk();
    const pd=await getDoc(P(pid));if(!pd.exists()){if(pid!=="main"){alert("Questo profilo di prova è stato eliminato.");return setSes(null)}await setDoc(P("main"),{n:"Principale",t:"main",c:Date.now()})}
    const sd=await getDoc(SD(pid)),la=+localStorage.getItem(LK("a7at"))||0,first=!localStorage.getItem(LK("a7sync")),has=!!((S.cl||[]).length||Object.keys(S.raw||{}).length||Object.keys(S.gv||{}).length||G.length);
    let up=!sd.exists();
    if(!up&&first&&has&&J()!==sd.data().j)up=confirm("Nel cloud c’è già il profilo condiviso, ma questo dispositivo ha dati suoi mai sincronizzati.\n\nOK = carica nel cloud i dati di QUESTO dispositivo (sostituiscono quelli condivisi)\nAnnulla = usa i dati del cloud anche qui");
    else if(!up&&!first&&la>(sd.data().at||0))up=true;
+   if(EXT)up=false;
+   const qd=(await getDocs(QC(pid))).docs;
    if(up){await pushAll();toast(sd.exists()?"Dati di questo dispositivo caricati nel cloud":"Profilo condiviso creato con i dati di questo dispositivo")}
-   else{applyState(sd.data());applyLogos((await getDocs(LG(pid))).docs);applyGal((await getDocs(GL(pid))).docs);reRender();ready=true}
+   else{applyState(sd.data());applyQ(qd);applyLogos((await getDocs(LG(pid))).docs);applyGal((await getDocs(GL(pid))).docs);reRender();ready=true}
+   if(Object.keys(S.gqs||{}).some(t=>t&&!(t in lastQ)&&(!EXT||t===SES.team)))dirty();
    localStorage.setItem(LK("a7sync"),"1");cStat("Sincronizzato · "+hm(),"ok");if(!subs)listen()}
   catch(e){cStat(why(e),"e");setTimeout(start,15000)}}
+ function applyQ(docs){docs.forEach(x=>{const d=x.data();if(!d||!d.team||d.j===lastQ[d.team])return;let b;try{b=JSON.parse(d.j)}catch(e){return}if(typeof gqRemote==="function"&&gqRemote(d.team,b,!!tmr||typing()))lastQ[d.team]=d.j})}
  function listen(){subs=1;const er=e=>cStat(why(e),"e");
+  onSnapshot(QC(pid),qs=>{if(qs.metadata.hasPendingWrites)return;const ch=qs.docChanges().filter(c=>c.type!=="removed").map(c=>c.doc);if(ch.length){applyQ(ch);localSave()}},er);
   onSnapshot(SD(pid),s=>{if(!s.exists()||s.metadata.hasPendingWrites)return;const d=s.data();if(d.j===lastR||d.j===lastJ)return;if(tmr||typing()){pend=d;return}applyState(d);if(d.by!==DEV)toast("Aggiornato da un altro dispositivo")},er);
   onSnapshot(LG(pid),qs=>{if(qs.metadata.hasPendingWrites)return;let ch=0;qs.docChanges().forEach(c=>{const d=c.doc.data();if(c.type==="removed"){if(d.k in S.raw){delete S.raw[d.k];ch=1}delete lastLg[d.k]}else{if(S.raw[d.k]!==d.d){S.raw[d.k]=d.d;ch=1}lastLg[d.k]=d.d}});if(ch){PC={};localSave();if($("#l").classList.contains("on"))renderLogos();draw()}},er);
   onSnapshot(GL(pid),qs=>{if(qs.metadata.hasPendingWrites||gtmr)return;if(qs.docs.map(x=>x.id).sort().join()!==[...lastGal].sort().join())applyGal(qs.docs)},er)}
  /* ---- pannello profilo / admin ---- */
  async function panel(c){const A=SES.role==="admin";
-  c.innerHTML=ADM_HEAD(A?"Profili · admin":"Profilo")+`<p class="hint">Aperto: <b>${esc(pid==="main"?"Profilo condiviso (principale)":"Prova · "+SES.n)}</b><br><span id="ast">${esc(CST[0])}</span></p>`+
-  (A?`<div id="apl" class="hint">Carico i profili…</div><div class="card" style="margin-top:12px"><b>+ Nuovo profilo di prova</b><small>Parte da una copia del profilo condiviso (dati, loghi, preset, calendario; le grafiche salvate no). Chi entra con questo utente lavora solo sulla copia.</small><div class="g3"><div><label>Nome</label><input id="anm" placeholder="Es. Prova Marco"></div><div><label>Utente</label><input id="anu" autocapitalize="none" spellcheck="false"></div><div><label>Password</label><input id="anp"></div></div><div class="bar" style="margin:10px 0 0"><button class="btn p" data-ac="1">Crea profilo di prova</button><span class="hint" id="anm2" style="margin:0"></span></div></div>`:"")+ADM_FOOT();
+  c.innerHTML=ADM_HEAD(A?"Profili · admin":"Profilo")+`<p class="hint">Aperto: <b>${esc(EXT?"Social media esterno · "+SES.n+" ("+(SES.team||"")+")":pid==="main"?"Profilo condiviso (principale)":"Prova · "+SES.n)}</b><br><span id="ast">${esc(CST[0])}</span></p>`+
+  (A?`<div id="apl" class="hint">Carico i profili…</div><div class="card" style="margin-top:12px"><b>+ Nuovo profilo</b><div class="g3" style="grid-template-columns:1fr 1fr"><div><label for="atp">Tipo</label><select id="atp"><option value="test">Profilo di prova (copia del condiviso)</option><option value="ext">Social media esterno (solo Grafiche squadra)</option></select></div><div id="atw" style="display:none"><label for="atm">Squadra</label><select id="atm">${S.cl.map(e=>`<option>${esc(e.n)}</option>`).join("")}</select></div></div><small id="ath">Parte da una copia del profilo condiviso (dati, loghi, preset, calendario; le grafiche salvate no). Chi entra con questo utente lavora solo sulla copia.</small><div class="g3"><div><label>Nome</label><input id="anm" placeholder="Es. Prova Marco"></div><div><label>Utente</label><input id="anu" autocapitalize="none" spellcheck="false"></div><div><label>Password</label><input id="anp"></div></div><div class="bar" style="margin:10px 0 0"><button class="btn p" data-ac="1">Crea profilo</button><span class="hint" id="anm2" style="margin:0"></span></div></div>`:"")+ADM_FOOT();
   if(A)listP()}
  async function listP(){const el=$("#apl");if(!el)return;try{await authOk();const ps=(await getDocs(collection(db,"a7p"))).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.t==="main"?-1:b.t==="main"?1:(a.c||0)-(b.c||0));
-   el.innerHTML=ps.map(p=>`<div class="row" style="padding:8px 0"><span><b>${esc(p.t==="main"?"Profilo condiviso":p.n||p.id)}</b>${p.id===pid?' <span style="color:#4ade80">· aperto</span>':""}<br><small>${p.t==="main"?"Principale · utente admin · lo vedono tutti i dispositivi":"Prova · utente "+esc(p.u||"")+" · creato "+new Date(p.c||0).toLocaleDateString("it-IT")}</small></span>${p.id!==pid?`<button class="btn pbx" data-ao="${p.id}" data-an="${esc(p.n||"")}">Apri</button>`:""}${p.t==="test"?`<button class="btn pbx" data-ar="${p.id}">Ricopia dal condiviso</button>${p.id!==pid?`<button class="btn pbx" data-ad="${p.id}">Elimina</button>`:""}`:""}</div>`).join("")}catch(e){el.textContent="Non riesco a leggere i profili: "+why(e)}}
+   el.innerHTML=ps.map(p=>`<div class="row" style="padding:8px 0"><span><b>${esc(p.t==="main"?"Profilo condiviso":p.n||p.id)}</b>${p.id===pid?' <span style="color:#4ade80">· aperto</span>':""}<br><small>${p.t==="main"?"Principale · utente admin · lo vedono tutti i dispositivi":p.t==="ext"?"Social media esterno · "+esc(p.team||"")+" · utente "+esc(p.u||"")+" · solo Grafiche squadra":"Prova · utente "+esc(p.u||"")+" · creato "+new Date(p.c||0).toLocaleDateString("it-IT")}</small></span>${p.id!==pid&&p.t!=="ext"?`<button class="btn pbx" data-ao="${p.id}" data-an="${esc(p.n||"")}">Apri</button>`:""}${p.t==="ext"?`<button class="btn pbx" data-ad="${p.id}" data-ax2="1">Elimina</button>`:""}${p.t==="test"?`<button class="btn pbx" data-ar="${p.id}">Ricopia dal condiviso</button>${p.id!==pid?`<button class="btn pbx" data-ad="${p.id}">Elimina</button>`:""}`:""}</div>`).join("")}catch(e){el.textContent="Non riesco a leggere i profili: "+why(e)}}
  async function wipe(id,all){const b=writeBatch(db);for(const c of[LG(id),GL(id)])(await getDocs(c)).forEach(d=>b.delete(d.ref));b.delete(SD(id));if(all)b.delete(P(id));await b.commit()}
  async function copyMain(dst){if(pid==="main")await flush();const s=await getDoc(SD("main")),ops=[];if(s.exists())ops.push(["s",SD(dst),{...s.data(),at:Date.now(),by:"copia"}]);(await getDocs(LG("main"))).forEach(d=>ops.push(["s",doc(LG(dst),d.id),d.data()]));await commitOps(ops)}
+ $("#adm").addEventListener("change",e=>{if(e.target.id!=="atp")return;const x=e.target.value==="ext";$("#atw").style.display=x?"":"none";$("#ath").textContent=x?"Chi entra con questo utente vede solo Grafiche squadra, sempre della squadra scelta, con i dati e i loghi del profilo condiviso. Non può modificare classifica, loghi, Best of né le altre sezioni.":"Parte da una copia del profilo condiviso (dati, loghi, preset, calendario; le grafiche salvate no). Chi entra con questo utente lavora solo sulla copia."});
  $("#adm").addEventListener("click",async e=>{const t=e.target.closest("[data-ao],[data-ar],[data-ad],[data-ac]");if(!t||SES.role!=="admin")return;const d=t.dataset,m=$("#anm2");
   try{if(d.ao)return setSes(d.ao==="main"?{pid:"main",role:"admin",u:ADMIN.u,n:"Principale"}:{pid:d.ao,role:"admin",u:ADMIN.u,n:d.an});
    if(d.ar){if(!confirm("Ricopiare il profilo condiviso in questo profilo di prova? Le sue modifiche andranno perse."))return;t.disabled=true;t.textContent="Copio…";await wipe(d.ar,0);await copyMain(d.ar);toast("Profilo di prova ricopiato");return listP()}
-   if(d.ad){if(!confirm("Eliminare questo profilo di prova e tutti i suoi dati?"))return;t.disabled=true;await wipe(d.ad,1);toast("Profilo eliminato");return listP()}
+   if(d.ad){if(d.ax2){if(!confirm("Eliminare questo profilo social media esterno? Le grafiche della squadra restano."))return;t.disabled=true;const b=writeBatch(db);b.delete(P(d.ad));await b.commit();toast("Profilo eliminato");return listP()}if(!confirm("Eliminare questo profilo di prova e tutti i suoi dati?"))return;t.disabled=true;await wipe(d.ad,1);toast("Profilo eliminato");return listP()}
    if(d.ac){const n=$("#anm").value.trim(),u=$("#anu").value.trim().toLowerCase(),p=$("#anp").value;
     if(!n||!u||!p)return m.textContent="Compila nome, utente e password.";if(!/^[a-z0-9._-]{2,30}$/.test(u))return m.textContent="Utente: solo lettere minuscole, numeri, punto, trattino.";if(u===ADMIN.u)return m.textContent="Questo nome utente è riservato.";
     if(!(await getDocs(query(collection(db,"a7p"),where("u","==",u)))).empty)return m.textContent="Nome utente già usato.";
-    t.disabled=true;m.textContent="Creo e copio i dati…";const id="t"+Date.now().toString(36);await setDoc(P(id),{n,u,ph:await sha(p),t:"test",c:Date.now()});await copyMain(id);
+    const tp=$("#atp").value,tm=$("#atm").value;if(tp==="ext"&&!tm)return m.textContent="Scegli la squadra.";t.disabled=true;if(tp==="ext"){m.textContent="Creo il profilo…";await setDoc(P("x"+Date.now().toString(36)),{n,u,ph:await sha(p),t:"ext",team:tm,c:Date.now()})}else{m.textContent="Creo e copio i dati…";const id="t"+Date.now().toString(36);await setDoc(P(id),{n,u,ph:await sha(p),t:"test",c:Date.now()});await copyMain(id)}
     ["anm","anu","anp"].forEach(i=>$("#"+i).value="");m.textContent=`✓ Creato: si entra con utente «${u}» e la password scelta.`;t.disabled=false;listP()}}
   catch(x){if(m)m.textContent="Errore: "+why(x);t.disabled=false}});
  addEventListener("online",()=>{if(!ready)start();else if(tmr){clearTimeout(tmr);push()}});
