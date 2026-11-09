@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#000000"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"><meta name="apple-mobile-web-app-title" content="Seven Lions"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="icon-192.png"><link rel="apple-touch-icon" href="icon-192.png">
 <title>Seven Lions League Social Media Tool</title>
-<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Oswald:wght@600;700&family=Anton&family=Bebas+Neue&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@400;600;800&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;800&family=Oswald:wght@600;700&family=Anton&family=Bebas+Neue&family=Cormorant+Garamond:wght@500;700&family=Playfair+Display:wght@700;900&family=Cinzel:wght@600;800&display=swap" rel="stylesheet">
 <style>
 :root{--bg:#000;--panel:#0a0e18;--line:#1a2744;--fg:#fff;--mut:#8b98b8;--blue:#2f7bff;color-scheme:dark;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
 @media (prefers-color-scheme:light){:root:not([data-theme="dark"]){--bg:#fff;--panel:#f2f5fb;--line:#d5def0;--fg:#050a18;--mut:#53607e;color-scheme:light}}
@@ -814,7 +814,7 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
  else if(T==="st"){x.textAlign="center";const g=x.createLinearGradient(0,H*.6,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.65)");x.fillStyle=g;x.fillRect(0,H*.6,W,H*.4);const sl=LY().find(l=>l.k==="stars");if(sl)stars(x,W,H,sl);
   const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
-  let it,hd,cw=78;if(T==="tw"&&S.twv==="k")twGrid(x,W,H,ty+90,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,ty+90,m,F);else if(T==="an")anv(x,W,H,ty+90,m,F,u);else if(T==="tos")tosv(x,W,H,ty+90,m,F);else if(T==="qr")qrv(x,W,H,ty+90,m,F,u);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
+  let it,hd,cw=78;const yc=Math.max(ty+90,...LB.filter(b=>(b.id==="tt"||b.id==="ts")&&b.y0<H*.45).map(b=>b.y1+34*u));if(T==="tw"&&S.twv==="k")twGrid(x,W,H,yc,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,yc,m,F);else if(T==="an")anv(x,W,H,ty+90,m,F,u);else if(T==="tos")tosv(x,W,H,yc,m,F);else if(T==="qr")qrv(x,W,H,ty+90,m,F,u);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
   if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
   else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:gqMarHl(e,i),c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:(twDN(p)||"Nome Cognome")+twSfx(p),sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
@@ -927,7 +927,7 @@ function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,
 function lyUI(){spOpts();const a=LY(),l=SELL();if(SEL&&!l)SEL=null;$("#mcw").style.display=BS(gT())==="mc"||a.some(q=>["mlogo","mname","mt"].includes(q.k))?"block":"none";
  $("#lyl").innerHTML=a.map(q=>`<button class="btn${q.id===SEL?" p":""}" data-sl="${q.id}">${esc(q.k==="text"?(q.t||"Testo").slice(0,16):q.nm||"Immagine")}</button>`).join("")||'<span class="hint">Nessun elemento</span>';
  const c=$("#lyc");c.style.display=l?"block":"none";if(!l)return;$("#lw_t").style.display=["text","tt","ts"].includes(l.k)||(l.k==="mt"&&l.f==="vs")?"block":"none";$("#lw_r").style.display=l.k==="band"?"block":"none";$("#lw_c").style.display=l.k==="img"||l.k==="mlogo"?"none":"block";
- const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={tab:[.5,4],text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
+ const q=n=>c.querySelector(`[data-p=${n}]`),s=q("s");const RG={tab:[.5,4],text:[.01,.2],stars:[.3,2.5],tt:[.3,4],ts:[.3,6],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]}[l.k]||[.03,1.5];s.min=RG[0];s.max=RG[1];s.step=.005;s.value=l.s;
  q("o").value=l.o;q("b").checked=!!l.b;q("c").value=l.c||(l.k==="mt"||l.k==="mname"?mcCol(l):l.k==="text"||l.k==="tt"?S.sty.tx:l.k==="ts"||l.k==="band"||l.k==="tab"?S.sty.ac:"#ffffff");q("t").value=l.k==="tt"?$("#gh").value:l.k==="ts"?$("#gs").value:l.t||"";if(l.k==="band"){q("h").value=l.h;q("r").value=l.r}lyX(l);lyF(l);lyFx(l)}
 const addL=l=>{LY().push({o:100,c:"",b:0,x:.5,y:.5,id:nid(),...l});SEL=LY()[LY().length-1].id;lyUI();draw();save()};
 $("#lyl").onclick=e=>{const id=e.target.dataset.sl;if(id){SEL=id;lyUI();draw()}};
@@ -1617,7 +1617,7 @@ var LPO={sel:"d",snap:null,run:0,drag:null};
 <div class="cdg"><div class="cdv"><canvas id="lyoc" width="540" height="675" style="touch-action:none;cursor:grab"></canvas><div class="hint">Trascina loghi e testi sull’anteprima per spostarli, oppure usa i cursori. Colori e sfondo non fanno parte dell’impaginazione: li scegli ogni volta nella scheda Stile.</div></div>
 <div class="cdk"><div class="g3"><div><label for="lyos">Impaginazione</label><select id="lyos"></select></div><div><label for="lyon">Nome</label><input id="lyon" placeholder="Nome della variante"></div></div><div id="lyol"></div>
 <div class="bar cdb"><button class="btn p" data-lo="s">Salva</button><button class="btn" data-lo="n">Salva come variante</button><button class="btn" data-lo="r">Annulla modifiche</button><button class="btn" data-lo="d">Elimina</button></div><p class="hint" id="lyohn"></p></div></div></div>`;document.body.append(d)})();
-var LPRG={tab:[.5,4],text:[.01,.2],stars:[.3,2.5],tt:[.3,3],ts:[.3,3],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]};
+var LPRG={tab:[.5,4],text:[.01,.2],stars:[.3,2.5],tt:[.3,4],ts:[.3,6],band:[.05,1.2],mlogo:[.03,.5],mname:[.01,.12],mt:[.01,.2]};
 function lpPos(l){if(l.x!=null)return[l.x,l.y];const b=LB.find(q=>q.id===l.id);return b&&b.ax!=null?[b.ax,b.ay]:[.5,.5]}
 function lpNm(l){return l.k==="text"?(l.t||"Testo").slice(0,24):l.k==="tt"?"Titolo":l.k==="ts"?"Sottotitolo":l.nm||"Elemento"}
 function lpList(){const A=LY(),p2=v=>Math.round(v*100)+"%";
@@ -1684,7 +1684,7 @@ function drawTab(x,W,H,it,hd,cw0,ty,m,F,st,mu,T){const tb=tabL();if(tb.ff)F=gqF(
 /* ---- grassetto e corsivo su ogni testo della grafica (titolo, sottotitolo, testi, scritte della partita, tabella) ---- */
 var FWD={text:700,tt:800,ts:500,mname:700,tab:600};
 function fwDef(l){return l.k==="mt"?(l.f==="v"?400:l.f==="d"?700:800):FWD[l.k]||700}
-function lyF(l){const on=["text","tt","ts","mt","mname","tab"].includes(l.k),w=$("#lw_f");w.style.display=on?"flex":"none";const A=typeof gqAssets==="function"&&TQ?gqAssets().f:[],fw=$("#lw_ff");fw.style.display=on&&A.length?"block":"none";if(on&&A.length){$("#lff").innerHTML=`<option value="">Come lo stile (${esc(((A.find(o=>o.k===S.sty.ff)||{}).n)||"Inter Tight")})</option>`+A.map(o=>`<option value="${esc(o.k)}">${esc(o.n)}</option>`).join("");$("#lff").value=l.ff||""}if(!on)return;
+function lyF(l){const on=["text","tt","ts","mt","mname","tab"].includes(l.k),w=$("#lw_f");w.style.display=on?"flex":"none";const A=typeof gqAssets==="function"&&TQ?gqAssets().f:[],fw=$("#lw_ff"),tx=on&&l.k!=="tab";fw.style.display=tx||on&&A.length?"block":"none";if(tx||on&&A.length){$("#lff").innerHTML=`<option value="">Come lo stile (${esc(((A.find(o=>o.k===S.sty.ff)||{}).n)||"Inter Tight")})</option>`+(typeof GFN!=="undefined"?`<optgroup label="Caratteri del tool">${Object.entries(GFN).map(([k,v])=>`<option value="${k}">${esc(v[0])}</option>`).join("")}</optgroup>`:"")+(A.length?`<optgroup label="Font della squadra">${A.map(o=>`<option value="${esc(o.k)}">${esc(o.n)}</option>`).join("")}</optgroup>`:"");$("#lff").value=l.ff||""}if(!on)return;
  w.querySelector('[data-fw="b"]').classList.toggle("p",(l.wt||fwDef(l))>=700);w.querySelector('[data-fw="i"]').classList.toggle("p",!!l.it)}
 $("#lyc").addEventListener("click",e=>{const b=e.target.closest("[data-fw]");if(!b)return;const l=SELL();if(!l)return;
  if(b.dataset.fw==="b")l.wt=(l.wt||fwDef(l))>=700?400:800;else l.it=l.it?0:1;lyF(l);draw();save();cm()});
@@ -1722,7 +1722,7 @@ function qrUI(){const on=TQ&&BS(gT())==="qr";$("#qrw").style.display=on?"block":
 $("#qrw").addEventListener("click",e=>{const b=e.target.closest("[data-qrn]");if(!b)return;S.qrN=+b.dataset.qrn;qrUI();draw();save();cm()});
 /* ---- font e sfondi della squadra (al massimo 2 + 2: ognuno è un documento nel cloud) ---- */
 var FFL={};
-function gqF(k){const B='"Inter Tight",system-ui,sans-serif';if(!k)return B;const d=S.raw&&S.raw[k];if(!d)return B;let o=FFL[k];
+function gqF(k){const B='"Inter Tight",system-ui,sans-serif';if(!k)return B;if(k.slice(0,2)==="g:"&&typeof gfF==="function")return gfF(k);const d=S.raw&&S.raw[k];if(!d)return B;let o=FFL[k];
  if(!o||o.n!==d.length){o=FFL[k]={n:d.length,fam:"tf"+Math.abs([...k].reduce((h,c)=>(h*31+c.charCodeAt(0))|0,7)).toString(36),ok:0};try{const ff=new FontFace(o.fam,`url(${d})`);ff.load().then(f=>{document.fonts.add(f);o.ok=1;draw();if(TQ)gqAUI()}).catch(()=>{o.bad=1})}catch(e){o.bad=1}}
  return o.ok?`"${o.fam}",${B}`:B}
 function gqAssets(){const b=(S.gqs||{})[gqCur()]||{};return{f:(b.fonts||[]).filter(o=>o&&o.k),g:(b.bgs||[]).filter(o=>o&&o.k)}}
@@ -1801,7 +1801,7 @@ function tosTf(tf){const o=tosS(),R0=tosSL(o.tf),R1=tosSL(tf),old=o.p.map((q,i)=
 /* pannello in Contenuti */
 $("#twp").insertAdjacentHTML("afterend",`<div id="tosw" style="display:none"><div class="card"><b>Team of the season</b><small>I migliori della stagione. Sulla carta, al posto dei gol, c’è il numero di volte in cui il giocatore è entrato nel Team of the week.</small>
 <div class="g3" style="align-items:end"><div><label for="tostf">Modulo</label><select id="tostf"></select></div><div><label for="tosvw">Vista</label><select id="tosvw"><option value="c">Campetto</option><option value="g">Solo carte</option></select></div><div><label for="toscs">Stile delle carte</label><select id="toscs"></select></div></div>
-<div class="bar" style="margin:10px 0 0"><button class="btn p" id="tosa">⚡ Componi in automatico</button><button class="btn" id="tosce">✏️ Modifica le carte</button><button class="btn" id="tosx">Svuota</button></div></div>
+<div class="bar" style="margin:10px 0 0"><button class="btn p" id="tosa">⚡ Componi in automatico</button><button class="btn" id="tosce">✏️ Modifica le carte</button><button class="btn" id="tostt" title="“Team” in serif oro champagne e “OF THE SEASON” condensato bianco">✨ Titolo in stile copertina</button><button class="btn" id="tosx">Svuota</button></div></div>
 <div id="tosr"></div><div id="tosh" class="card" style="margin-top:12px"></div></div>`);
 function tosUI(){const w=$("#tosw");if(!w||w.style.display==="none")return;const o=tosS(),R=tosSL(),P=tosPool();if(tosFill())save();
  $("#tostf").innerHTML=TOSF().map(f=>`<option${f===o.tf?" selected":""}>${f}</option>`).join("");$("#tosvw").value=o.v;
@@ -1827,7 +1827,7 @@ $("#tosw").addEventListener("change",async e=>{const t=e.target,d=t.dataset,o=to
  if((i=d.op)!=null&&t.files&&t.files[0]){const q=o.p[i],f=t.files[0],lb=t.parentElement&&t.parentElement.firstChild;if(!q.n)return alert("Scrivi prima il nome del giocatore.");if(lb&&lb.nodeType===3)lb.nodeValue="✂️ …";if(!POSEP)toast("Scontorno in corso: la prima volta scarico i modelli (circa 25 MB)…");
   try{const r=await phCut(f);q.ph=r.d;if(r.cut)q.phc=1;else delete q.phc;phStore(q);delete q.ph;delete q.nph;if(r.err)toast("Foto caricata senza scontorno: "+r.err)}catch(x){toast("Foto non leggibile")}tosUI();save();draw();cm()}});
 $("#tosw").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset,o=tosS();
- if(b.id==="tosa")return tosAuto();if(b.id==="tosce"){CDTOS=1;CDPL=null;cdLoad(o.cs);$("#cde").classList.add("on");return}
+ if(b.id==="tosa")return tosAuto();if(b.id==="tostt")return tosTitle();if(b.id==="tosce"){CDTOS=1;CDPL=null;cdLoad(o.cs);$("#cde").classList.add("on");return}
  if(b.id==="tosx"){if(o.p.some(q=>q.n)&&!confirm("Svuoto il Team of the season?"))return;o.p=[];tosS();tosUI();draw();save();cm();return}
  if(d.ox!=null){o.p[+d.ox]={n:"",t:""};tosUI();draw();save();cm();return}
  if(d.oaz!=null){if(!confirm("Tolgo la giornata "+d.oaz+" dall’archivio? Le presenze si ricalcolano."))return;delete S.twa[d.oaz];tosUI();draw();save();twaUI();return}
@@ -2394,7 +2394,7 @@ function anCapt(){const ms=anMatches(),g=anCur();if(!ms.length)return"Ecco le pa
  return`Si torna in campo: ecco il programma della giornata ${g}! ⚽`+Object.entries(by).map(([d,a])=>"\n\n📅 "+(itD(d)||"Data da definire")+a.map(r=>`\n${r.h} – ${r.a}${kRG(r.r)?" ("+r.r+")":""}${(S.stad||{})[r.s]||r.s?" · "+((S.stad||{})[r.s]||r.s):""}`).join("")).join("")+P(["\n\nI vostri pronostici nei commenti!","\n\nQual è la partita da non perdere?","\n\nVenite a fare il tifo: chi vince secondo voi?"])}
 
 /* ---- effetti sui testi (oro, argento, bagliore, rilievo 3D, contorno, ombra, sfumato) ---- */
-const FXT=[["","Nessuno"],["oro","Oro (regale)"],["arg","Argento"],["neon","Bagliore"],["3d","Rilievo 3D"],["out","Solo contorno"],["omb","Ombra morbida"],["acc","Sfumato con l’accento"]];
+const FXT=[["","Nessuno"],["oro","Oro (regale)"],["cha","Oro champagne inciso"],["arg","Argento"],["neon","Bagliore"],["3d","Rilievo 3D"],["out","Solo contorno"],["omb","Ombra morbida"],["acc","Sfumato con l’accento"]];
 function fxOf(l){if(l&&l.fx!=null)return l.fx;return l&&l.k==="tt"&&BS(gT())==="tw"?"oro":""}
 let FXC=null;const fxCv=(w,h)=>{const c=FXC||(FXC=document.createElement("canvas"));c.width=Math.max(1,Math.ceil(w));c.height=Math.max(1,Math.ceil(h));return c};
 function fxText(x,t,X,Y,fx,fs,col){if(!fx||!t){x.fillText(t,X,Y);return}const m=x.measureText(t),w=m.width,asc=m.actualBoundingBoxAscent||fs*.75,dsc=m.actualBoundingBoxDescent||fs*.2,al=x.textAlign,L=al==="center"?X-w/2:al==="right"||al==="end"?X-w:X,top=Y-asc,bot=Y+dsc,ac=S.sty&&S.sty.ac||"#2f7bff";x.save();x.lineJoin="round";x.miterLimit=2;
@@ -2404,6 +2404,11 @@ function fxText(x,t,X,Y,fx,fs,col){if(!fx||!t){x.fillText(t,X,Y);return}const m=
   const p=Math.ceil(fs*.1),c=fxCv(w+2*p,asc+dsc+2*p),q=c.getContext("2d");q.clearRect(0,0,c.width,c.height);q.font=x.font;q.textAlign="left";q.textBaseline="alphabetic";q.fillStyle="#fff";q.fillText(t,p,p+asc);q.globalCompositeOperation="source-in";const s=q.createLinearGradient(0,0,c.width,c.height*1.6);
   [[0,0],[.4,0],[.47,.8],[.53,0],[1,0]].forEach(([o,a])=>s.addColorStop(o,`rgba(255,255,255,${a})`));q.fillStyle=s;q.fillRect(0,0,c.width,c.height);q.globalCompositeOperation="source-over";x.globalAlpha*=.75;x.drawImage(c,L-p,top-p);
   x.globalAlpha/=.75;x.strokeStyle=fx==="oro"?"rgba(255,248,214,.55)":"rgba(255,255,255,.6)";x.lineWidth=Math.max(1,fs*.012);x.strokeText(t,X,Y)}
+ else if(fx==="cha"){const o=Math.max(1,fs*.014),g=x.createLinearGradient(0,top,0,bot);[[0,"#fffaf0"],[.22,"#efe2b4"],[.48,"#c2a865"],[.6,"#e6d39c"],[.8,"#a68a48"],[1,"#6e5a2a"]].forEach(([p,c])=>g.addColorStop(p,c));
+  x.save();x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=fs*.06;x.shadowOffsetX=fs*.025;x.shadowOffsetY=fs*.04;x.fillStyle="#4a3b17";x.fillText(t,X+o,Y+o);x.restore();
+  x.fillStyle="#fffbe8";x.fillText(t,X-o,Y-o);x.fillStyle="#5c4a1e";x.fillText(t,X+o*.7,Y+o*.7);x.fillStyle=g;x.fillText(t,X,Y);
+  const p=Math.ceil(fs*.1),c=fxCv(w+2*p,asc+dsc+2*p),q=c.getContext("2d");q.clearRect(0,0,c.width,c.height);q.font=x.font;q.textAlign="left";q.textBaseline="alphabetic";q.fillStyle="#fff";q.fillText(t,p,p+asc);q.globalCompositeOperation="source-in";const s=q.createLinearGradient(0,0,c.width*.6,c.height);
+  [[0,0],[.3,.0],[.42,.55],[.5,0],[1,0]].forEach(([oo,a])=>s.addColorStop(oo,`rgba(255,255,240,${a})`));q.fillStyle=s;q.fillRect(0,0,c.width,c.height);x.globalAlpha*=.6;x.drawImage(c,L-p,top-p)}
  else if(fx==="neon"){x.shadowColor=ac;x.shadowBlur=fs*.45;x.fillStyle=col;x.fillText(t,X,Y);x.shadowBlur=fs*.18;x.fillText(t,X,Y);x.shadowBlur=0;x.fillText(t,X,Y)}
  else if(fx==="3d"){const d=Math.max(2,Math.round(fs*.07)),dk=bgMix(ac,"#000000",.45);x.fillStyle=dk;for(let i=d;i>0;i--)x.fillText(t,X+i*.6,Y+i);x.fillStyle=col;x.fillText(t,X,Y);x.strokeStyle="rgba(0,0,0,.25)";x.lineWidth=Math.max(1,fs*.012);x.strokeText(t,X,Y)}
  else if(fx==="out"){x.strokeStyle=col;x.lineWidth=Math.max(2,fs*.045);x.strokeText(t,X,Y)}
@@ -2433,6 +2438,13 @@ $("#lyc").addEventListener("click",e=>{const b=e.target.closest("[data-tal],[dat
  if(b.dataset.tal){const a=b.dataset.tal;l.x=(a==="left"?B.x0:a==="right"?B.x1:(B.x0+B.x1)/2)/W;l.al=a}
  else{const g=b.dataset.pga,dx=g==="l"?GDM-B.x0:g==="c"?W/2-(B.x0+B.x1)/2:g==="r"?W-GDM-B.x1:0,dy=g==="t"?GDM-B.y0:g==="m"?H/2-(B.y0+B.y1)/2:g==="b"?H-GDM-B.y1:0;l.x+=dx/W;l.y+=dy/H;GD={v:dx?[g==="l"?GDM:g==="r"?W-GDM:W/2]:[],h:dy?[g==="t"?GDM:g==="b"?H-GDM:H/2]:[]};gdEnd()}
  draw();lyFx(l);save();cm()});
+/* ---- caratteri del tool per ogni testo (anche nelle grafiche della lega), compresi due serif eleganti ---- */
+var GFN={"g:it":["Inter Tight",'"Inter Tight",system-ui,sans-serif'],"g:bc":["Barlow Condensed",'"Barlow Condensed",sans-serif'],"g:os":["Oswald",'Oswald,sans-serif'],"g:an":["Anton (condensato pesante)",'Anton,Impact,sans-serif'],"g:bb":["Bebas Neue",'"Bebas Neue",Impact,sans-serif'],"g:cg":["Cormorant Garamond (classico)",'"Cormorant Garamond",Garamond,Georgia,serif'],"g:pf":["Playfair Display (elegante)",'"Playfair Display",Georgia,serif'],"g:ci":["Cinzel (romano, maiuscolo)",'Cinzel,Georgia,serif']},GFL={};
+function gfF(k){const f=GFN[k];if(!f)return'"Inter Tight",system-ui,sans-serif';if(!GFL[k]&&document.fonts&&document.fonts.load){GFL[k]=1;Promise.all([400,700,800].map(w=>document.fonts.load(`${w} 40px ${f[1]}`))).then(()=>{if(typeof draw==="function")draw()}).catch(()=>{})}return f[1]}
+/* ---- Team of the season: titolo in stile copertina (“Team” serif oro champagne, “OF THE SEASON” condensato bianco) ---- */
+function tosTitle(){const a=LY(),tt=a.find(l=>l.k==="tt"),ts=a.find(l=>l.k==="ts");if(!tt||!ts)return;const[W,H]=S.sty.fmt.split("x").map(Number),sq=H/W;
+ $("#gh").value="Team";$("#gs").value="OF THE SEASON";Object.assign(tt,{ff:"g:cg",fx:"cha",wt:700,it:0,al:"center",x:.5,y:sq>1.5?.195:sq>1.1?.245:.28,s:sq>1.5?3:sq>1.1?3.1:2.3,c:"",o:100});Object.assign(ts,{ff:"g:an",fx:"omb",wt:400,it:0,al:"center",x:.5,y:sq>1.5?.262:sq>1.1?.345:.42,s:sq>1.5?3.3:sq>1.1?3.5:2.7,c:"#ffffff",o:100});
+ lyUI();draw();save();cm();toast("Titolo in stile copertina: lo sistemi in Elementi")}
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
