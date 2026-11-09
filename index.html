@@ -1113,9 +1113,9 @@ function calImport(t){const v=calParse(t),el=$("#kmsg");if(!v.length){el.textCon
 const kGS=()=>{const a=new Set([...(S.cal||[]).map(r=>r.g),...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")),S.gs||1]);if(S.gx)a.add(S.gx);if(!(S.cal||[]).length)[1,2,3].forEach(n=>a.add(n));return[...a].sort((x,y)=>x-y)};
 const itD=iso=>{if(!/^\d{4}-\d{2}-\d{2}$/.test(iso||""))return iso||"";const q=new Date(iso+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"});return q.charAt(0).toUpperCase()+q.slice(1)};
 let MCM=[],MCC=null;
-function mcFill(){const sel=$("#mcsel");if(!sel)return;if(TQ&&gqCur())return gqMcFill();MCM=(S.cal||[]).filter(r=>r.g===S.gs);sel.innerHTML=`<option value="">${MCM.length?"Scegli la partita (giornata "+S.gs+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("")}
-function autoLabels(){const g=S.gs;if(!g)return;const e=$("#gs");if(e&&/^(giornata|dopo)\s+\d+/i.test(e.value.trim()))e.value=e.value.replace(/^(giornata\s+)\d+/i,"$1"+g).replace(/^(dopo\s+)\d+/i,"$1"+g);const r=$("#rres");if(r&&document.activeElement!==r)r.value=S.res||"";mcFill()}
-$("#mcsel").onchange=e=>{const r=MCM[+e.target.value];MCC=r||null;if(!r)return;const x=kRG(r.r);S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s};S.mt.au=0;["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});save();draw();cm()};
+function mcFill(){const sel=$("#mcsel");if(!sel)return;if(TQ&&gqCur())return gqMcFill();return mcFillL()}
+function autoLabels(){const g=S.gs;if(!g)return;const e=$("#gs");if(e&&/^(giornata|dopo)\s+\d+/i.test(e.value.trim()))e.value=e.value.replace(/^(giornata\s+)\d+/i,"$1"+g).replace(/^(dopo\s+)\d+/i,"$1"+g);const r=$("#rres");if(r&&document.activeElement!==r)r.value=S.res||"";mcFill();if(BS(gT())==="an"&&typeof anUI==="function")anUI()}
+$("#mcsel").onchange=e=>{const r=MCM[+e.target.value];MCC=r||null;if(!r)return;const x=kRG(r.r);S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s};S.mt.au=0;["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcSub(r.g);save();draw();cm()};
 $("#calp").addEventListener("input",e=>{const t=e.target.value;if(!t.trim())return;calImport(t);e.target.value=""});
 document.addEventListener("paste",e=>{if(!$("#k").classList.contains("on")||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;const t=(e.clipboardData||window.clipboardData).getData("text");if(!t)return;if(calImport(t))e.preventDefault()});
 
@@ -1698,8 +1698,8 @@ function gqMcPick(M){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,pl=M.fi
 function gqMcFill(){const sel=$("#mcsel");MCM=gqMatches();
  sel.innerHTML=`<option value="">${MCM.length?"Partite di "+esc(gqSN())+": scegline un’altra se vuoi":"Nessuna partita della squadra: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">G${r.g} · ${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("");
  if(BS(gT())!=="mc")return;
- if(S.mt.au===0){const i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a);if(i>=0){sel.value=i;MCC=MCM[i]}return}
- const r=gqMcPick(MCM);if(!r)return;sel.value=MCM.indexOf(r);MCC=r;const x=kRG(r.r);
+ if(S.mt.au===0){const i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a);if(i>=0){sel.value=i;MCC=MCM[i];mcSub(MCC.g)}return}
+ const r=gqMcPick(MCM);if(!r)return;sel.value=MCM.indexOf(r);MCC=r;mcSub(r.g);const x=kRG(r.r);
  S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}
 /* grafica “Risultati” della squadra: tutte le partite giocate (o le ultime N) dal calendario */
 function qrRows(){const M=gqMatches().filter(r=>kRG(r.r)),n=+S.qrN||0;return n?M.slice(-n):M}
@@ -2488,6 +2488,17 @@ $("#lgmw").addEventListener("click",e=>{const b=e.target.closest("[data-lgm]");i
 $("#lgmw").addEventListener("input",e=>{if(!e.target.hasAttribute("data-lgmc"))return;S.lgm="cus";S.lgmc=e.target.value;PC={};save();draw()});
 $("#lgmw").addEventListener("change",e=>{if(e.target.hasAttribute("data-lgmc")){lgmUI();renderLogos()}});
 lgmUI();
+
+/* ---- Match day della lega: punta alla prossima giornata da giocare (il Full time resta sulla giornata con i risultati) ---- */
+function mcGT(){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft;if(ft)return S.gs;const n=typeof anDef==="function"?anDef():null;return n??S.gs}
+function mcSub(g){const e=$("#gs");if(e&&g!=null&&BS(gT())==="mc"&&/^giornata \d+$/i.test(e.value.trim())&&e.value.trim()!=="Giornata "+g)e.value="Giornata "+g}
+function mcFillL(){const sel=$("#mcsel"),g=mcGT(),all=S.cal||[],G=[...new Set(all.map(r=>r.g))],ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft;MCM=[];
+ const grp=n=>{const ms=all.filter(r=>r.g===n);if(!ms.length)return"";return`<optgroup label="Giornata ${n}${n===g?(ft?" · giocata":" · prossima"):""}">`+ms.map(r=>{MCM.push(r);return`<option value="${MCM.length-1}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`}).join("")+"</optgroup>"};
+ sel.innerHTML=`<option value="">${all.length?"Scegli la partita (giornata "+g+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+grp(g)+G.filter(n=>n!==g).sort((a,b)=>Math.abs(a-g)-Math.abs(b-g)||a-b).map(grp).join("");
+ let i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a&&r.g===g);
+ /* match day: se la partita mostrata non è della prossima giornata, metto la prima ancora da giocare (resta la tua scelta se è di quella giornata) */
+ if(i<0&&!ft&&BS(gT())==="mc"&&g!=null){const ms=MCM.filter(r=>r.g===g),r=ms.find(r=>!kRG(r.r))||ms[0];if(r){i=MCM.indexOf(r);S.mt={...S.mt,h:r.h,a:r.a,sc:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}}
+ if(i>=0){sel.value=i;MCC=MCM[i]}if(BS(gT())==="mc")mcSub(ft?S.gs:g)}
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
