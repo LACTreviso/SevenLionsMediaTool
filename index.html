@@ -253,6 +253,8 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .pcvn{display:flex;gap:6px;align-items:center;color:var(--fg);font-size:13px;min-width:0}.pcvn span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.pcvn input{min-height:0}
 .pcvt{padding:0;border:2px solid var(--line);border-radius:8px;overflow:hidden;background:#000;cursor:pointer;width:86px;height:108px;display:flex;align-items:center;justify-content:center;color:var(--mut)}.pcvt img{width:100%;height:100%;object-fit:cover;display:block}
 .pcvt.on{border-color:var(--blue);box-shadow:0 0 0 2px rgba(47,123,255,.35)}.pcvt.off{opacity:.35}
+.lmt{flex-wrap:wrap}.lmtb{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0;position:relative;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
+.lmtb.on{border-color:#fff;box-shadow:0 0 0 2px var(--blue)}.lmtc input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;min-height:0;padding:0}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -328,7 +330,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <div class="ep" id="ep_e"><div id="lyp"><div class="card lyk"><div class="bar"><strong style="flex:1">Nella grafica</strong><button class="btn pbx" id="rl" title="Rimette gli elementi come all’inizio">Ripristina elementi</button></div><div class="hint" style="margin:2px 0 8px">Tocca un elemento (qui o sul disegno) per modificarlo; sul disegno lo trascini per spostarlo.</div>
 <div class="bar" id="lyl" style="margin:0"></div>
 <div id="lyc" class="card" style="display:none"><div id="lw_t"><label>Testo</label><input data-p="t"></div>
-<div id="lw_lg" style="display:none"><label for="lmd">Stile del logo</label><select id="lmd" data-p="md"><option value="">Come nella sezione Loghi</option><option value="o">Originale</option><option value="b">Senza sfondo</option><option value="w">Solo contorno</option><option value="s">Sagoma piena</option></select><div class="hint" id="lw_lgh" style="margin:4px 0 0"></div><div id="lw_lw" style="display:none"><label for="llw">Spessore del contorno</label><input type="range" id="llw" data-p="lw" min="1" max="15" step="1"></div></div><div id="lw_f" class="bar" style="display:none;margin:8px 0 0;gap:6px"><button type="button" class="btn" data-fw="b" title="Grassetto"><b>G</b> Grassetto</button><button type="button" class="btn" data-fw="i" title="Corsivo"><i style="font-family:Georgia,serif">C</i> Corsivo</button></div><div id="lw_ff" style="display:none"><label for="lff">Carattere</label><select id="lff" data-p="ff"></select></div><div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
+<div id="lw_lg" style="display:none"><label for="lmd">Stile del logo</label><select id="lmd" data-p="md"><option value="">Come nella sezione Loghi</option><option value="o">Originale</option><option value="b">Senza sfondo</option><option value="w">Solo contorno</option><option value="s">Sagoma piena</option><option value="m">Metallo in rilievo</option></select><div class="hint" id="lw_lgh" style="margin:4px 0 0"></div><div id="lw_lw" style="display:none"><label for="llw">Spessore del contorno</label><input type="range" id="llw" data-p="lw" min="1" max="15" step="1"></div></div><div id="lw_f" class="bar" style="display:none;margin:8px 0 0;gap:6px"><button type="button" class="btn" data-fw="b" title="Grassetto"><b>G</b> Grassetto</button><button type="button" class="btn" data-fw="i" title="Corsivo"><i style="font-family:Georgia,serif">C</i> Corsivo</button></div><div id="lw_ff" style="display:none"><label for="lff">Carattere</label><select id="lff" data-p="ff"></select></div><div id="lw_c"><label>Colore</label><div class="bar" style="margin:0"><input type="color" data-p="c" style="width:80px;padding:2px"><button class="btn" id="lo">Colore originale</button></div></div>
 <label>Dimensione</label><input type="range" data-p="s"><div id="lw_tab" style="display:none"><label>Grandezza dei testi</label><input type="range" data-p="ts" min=".5" max="2.5" step=".05"><label>Grandezza dei loghi</label><input type="range" data-p="ls" min=".3" max="2.5" step=".05"><label>Larghezza</label><input type="range" data-p="w" min=".4" max="1" step=".01"><label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" data-p="fill"> Righe più alte fino a riempire lo spazio</label><div class="hint">Trascina la tabella sul disegno per spostarla. Il colore è quello della riga evidenziata.</div></div><div id="lw_r"><label>Altezza</label><input type="range" data-p="h" min=".05" max=".6" step=".005"><label>Angoli arrotondati</label><input type="range" data-p="r" min="0" max="100"></div><label>Opacità</label><input type="range" data-p="o" min="0" max="100">
 <label><input type="checkbox" data-p="b"> Dietro ai contenuti</label>
 <div class="bar" style="margin:8px 0 0"><button class="btn" id="ld">Duplica</button><button class="btn" id="lx">Elimina</button></div></div></div>
@@ -427,7 +429,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <script>
 const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
 const GG=["Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato","Domenica"],ST=["Da fare","In lavorazione","Pronto","Pubblicato"];
-const MO=[["o","Originale"],["b","Senza sfondo"],["w","Bianco (contorno e linee)"],["s","Bianco pieno (sagoma)"]];
+const MO=[["o","Originale"],["b","Senza sfondo"],["w","Bianco (contorno e linee)"],["s","Bianco pieno (sagoma)"],["m","Metallo in rilievo"]];
 const PR={Notte:["#000000","#2f7bff","#ffffff"],Oro:["#0b1220","#c9a45c","#f4ead2"],Giorno:["#f4f7ff","#1646d9","#060b1c"],Campo:["#04170d","#22c55e","#f2fff6"],Fuoco:["#140505","#ff5a2a","#fff4ee"]};
 const rgb=h=>[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)),rgba=(h,a)=>`rgba(${rgb(h)},${a})`,lum=h=>{const[r,g,b]=rgb(h);return .3*r+.59*g+.11*b};
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
@@ -482,7 +484,7 @@ $("#na").onclick=()=>{const n=$("#nn").value.trim();if(!n)return;S.tipi.push({id
 function trimBox(i){const nw=i.naturalWidth,nh=i.naturalHeight,s=Math.min(1,200/Math.max(nw,nh)),w=Math.max(1,Math.round(nw*s)),h=Math.max(1,Math.round(nh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const q=c.getContext("2d",{willReadFrequently:true});q.drawImage(i,0,0,w,h);const p=q.getImageData(0,0,w,h).data,co=[0,(w-1)*4,(h-1)*w*4,(w*h-1)*4].filter(o=>p[o+3]>200),bg=co.length>2?[0,1,2].map(k=>co.reduce((a,o)=>a+p[o+k],0)/co.length):null;let x0=w,y0=h,x1=-1,y1=-1;
  for(let b=0;b<h;b++)for(let a=0;a<w;a++){const o=(b*w+a)*4;if(p[o+3]<25||bg&&Math.hypot(p[o]-bg[0],p[o+1]-bg[1],p[o+2]-bg[2])<45)continue;if(a<x0)x0=a;if(a>x1)x1=a;if(b<y0)y0=b;if(b>y1)y1=b}
  if(x1<0)return[0,0,nw,nh];x0=Math.max(0,x0-2);y0=Math.max(0,y0-2);x1=Math.min(w-1,x1+2);y1=Math.min(h-1,y1+2);return[x0/s,y0/s,Math.min(nw,(x1-x0+1)/s),Math.min(nh,(y1-y0+1)/s)]}
-function process(i,m){if(m==="bw")m="w";const fo=m==="wo";if(fo)m="w";const nw=i.naturalWidth,nh=i.naturalHeight,[sx,sy,sw,sh]=S.uni===false?[0,0,nw,nh]:trimBox(i),s=Math.min(256/Math.max(sw,sh),4),w=Math.max(1,Math.round(sw*s)),h=Math.max(1,Math.round(sh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d",{willReadFrequently:true});x.imageSmoothingQuality="high";x.drawImage(i,sx,sy,sw,sh,0,0,w,h);if(m==="o")return c;
+function process(i,m){if(m==="m")return lgMetal(process(i,"b"),S.lgm||"oro",S.lgmc);if(m==="bw")m="w";const fo=m==="wo";if(fo)m="w";const nw=i.naturalWidth,nh=i.naturalHeight,[sx,sy,sw,sh]=S.uni===false?[0,0,nw,nh]:trimBox(i),s=Math.min(256/Math.max(sw,sh),4),w=Math.max(1,Math.round(sw*s)),h=Math.max(1,Math.round(sh*s)),c=document.createElement("canvas");c.width=w;c.height=h;const x=c.getContext("2d",{willReadFrequently:true});x.imageSmoothingQuality="high";x.drawImage(i,sx,sy,sw,sh,0,0,w,h);if(m==="o")return c;
  const d=x.getImageData(0,0,w,h),p=d.data,n=w*h;
  {const co=[0,(w-1)*4,(h-1)*w*4,(n-1)*4].filter(o=>p[o+3]>200),bg=co.length>2?[0,1,2].map(k=>co.reduce((a,o)=>a+p[o+k],0)/co.length):null,thr=S.tol*4.4,
   ok=o=>p[o+3]<10||bg&&Math.hypot(p[o]-bg[0],p[o+1]-bg[1],p[o+2]-bg[2])<thr,seen=new Uint8Array(n),st=[],
@@ -1653,15 +1655,15 @@ $("#lyo").addEventListener("click",e=>{if(e.target.id==="lyo")return lpClose();c
 document.addEventListener("keydown",e=>{if(e.key==="Escape"&&$("#lyo").classList.contains("on"))lpClose()});
 
 /* ---- loghi personalizzabili uno per uno: originale, senza sfondo, solo contorno (con il suo spessore) o sagoma, nel colore che vuoi ---- */
-function lgSt(K,l){const raw=im(S.raw[K]);if(!raw)return null;const md=l.md||"";if(!md&&!l.c)return logo(K);
+function lgSt(K,l){const raw=im(S.raw[K]);if(!raw)return null;const md=l.md||"";if(md==="m"){const k="__m"+K+"|"+(l.mt||"oro")+"|"+(l.mt==="cus"?l.mc:"")+"|"+S.raw[K].length+"|"+S.tol+"|"+(S.uni!==false);return PC[k]||(PC[k]=lgMetal(process(raw,"b"),l.mt||"oro",l.mc))}if(!md&&!l.c)return logo(K);
  const m2=md||((S.mode[K]||"o")==="w"?"w":"s"),lw=l.lw||S.olw||3,tint=!!l.c&&(m2==="w"||m2==="s"),k="__t"+K+"|"+m2+"|"+(tint?l.c:"")+"|"+lw+"|"+S.raw[K].length+"|"+S.tol+"|"+(S.uni!==false);
  return PC[k]||(PC[k]=(()=>{const o=S.olw;S.olw=lw;let m;try{m=process(raw,m2==="w"?"wo":m2)}finally{S.olw=o}if(!tint)return m;const c=document.createElement("canvas");c.width=m.width;c.height=m.height;const q=c.getContext("2d");q.drawImage(m,0,0);q.globalCompositeOperation="source-in";q.fillStyle=l.c;q.fillRect(0,0,c.width,c.height);return c})())}
 /* controlli in più nel riquadro dell'elemento selezionato */
 function lyX(l){const c=$("#lyc"),q=n=>c.querySelector(`[data-p="${n}"]`),Lg=["logo","mlogo","sp"].includes(l.k),T=l.k==="tab";
  $("#lw_lg").style.display=Lg?"block":"none";
- if(Lg){q("md").value=l.md||"";q("lw").value=l.lw||S.olw||3;$("#lw_lw").style.display=l.md==="w"?"block":"none";$("#lw_c").style.display=l.md==="o"||l.md==="b"||(l.k==="mlogo"&&!l.md)?"none":"block";
-  $("#lw_lgh").textContent=l.md==="w"?"Il colore qui sotto colora il contorno.":l.md==="s"?"Il colore qui sotto colora tutta la sagoma.":l.md?"":"Come impostato nella sezione Loghi; scegline uno per cambiare solo questo."}
- $("#lw_tab").style.display=T?"block":"none";if(T){q("ts").value=l.ts||1;q("ls").value=l.ls||1;q("w").value=l.w||.88;q("fill").checked=!!l.fill}
+ if(Lg){q("md").value=l.md||"";q("lw").value=l.lw||S.olw||3;$("#lw_lw").style.display=l.md==="w"?"block":"none";$("#lw_c").style.display=l.md==="o"||l.md==="b"||l.md==="m"||(l.k==="mlogo"&&!l.md)?"none":"block";
+  $("#lw_lgh").textContent=l.md==="m"?"Metallo con rilievo e riflesso: i dettagli del logo restano. Scegli il metallo qui sotto.":l.md==="w"?"Il colore qui sotto colora il contorno.":l.md==="s"?"Il colore qui sotto colora tutta la sagoma.":l.md?"":"Come impostato nella sezione Loghi; scegline uno per cambiare solo questo."}
+ if(typeof lgMetUI==="function")lgMetUI(l);$("#lw_tab").style.display=T?"block":"none";if(T){q("ts").value=l.ts||1;q("ls").value=l.ls||1;q("w").value=l.w||.88;q("fill").checked=!!l.fill}
  const bl=q("b").closest("label");if(bl)bl.style.display=T?"none":"";$("#ld").style.display=$("#lx").style.display=T?"none":"";
  const sl=q("s").previousElementSibling;if(sl&&sl.tagName==="LABEL")sl.textContent=T?"Altezza delle righe":"Dimensione"}
 $("#lyc").addEventListener("change",e=>{if(e.target.dataset.p==="md"||e.target.dataset.p==="fill"){lyUI();draw();cm()}});
@@ -2445,6 +2447,37 @@ function gfF(k){const f=GFN[k];if(!f)return'"Inter Tight",system-ui,sans-serif';
 function tosTitle(){const a=LY(),tt=a.find(l=>l.k==="tt"),ts=a.find(l=>l.k==="ts");if(!tt||!ts)return;const[W,H]=S.sty.fmt.split("x").map(Number),sq=H/W;
  $("#gh").value="Team";$("#gs").value="OF THE SEASON";Object.assign(tt,{ff:"g:cg",fx:"cha",wt:700,it:0,al:"center",x:.5,y:sq>1.5?.195:sq>1.1?.245:.28,s:sq>1.5?3:sq>1.1?3.1:2.3,c:"",o:100});Object.assign(ts,{ff:"g:an",fx:"omb",wt:400,it:0,al:"center",x:.5,y:sq>1.5?.262:sq>1.1?.345:.42,s:sq>1.5?3.3:sq>1.1?3.5:2.7,c:"#ffffff",o:100});
  lyUI();draw();save();cm();toast("Titolo in stile copertina: lo sistemi in Elementi")}
+
+/* ---- loghi in metallo con rilievo (oro, champagne, argento, bronzo, acciaio, oro rosa o un colore tuo): i dettagli del logo restano,
+   con smusso sui bordi, luce dall'alto a sinistra e un riflesso, come le scritte in oro ---- */
+const LGMET={oro:["Oro",["#4a2e06","#9a6714","#d99a2b","#ffe38a","#fffbe6"]],cha:["Oro champagne",["#3f3214","#86713a","#c2a865","#efe2b4","#fffaf0"]],arg:["Argento",["#232931","#5f6a78","#a7b1be","#e3e8ee","#ffffff"]],bro:["Bronzo",["#2f1709","#703d1d","#b8733f","#e6ad7f","#fde4cf"]],acc:["Acciaio scuro",["#0d1014","#30373f","#646e7a","#a5aeb9","#eef1f4"]],ros:["Oro rosa",["#43231d","#8f5449","#d39a8a","#f3cdc2","#fff3ef"]]};
+function lgMetPal(k,c){if(k==="cus"&&/^#[0-9a-f]{6}$/i.test(c||""))return[bgMix(c,"#000000",.8),bgMix(c,"#000000",.45),c,bgMix(c,"#ffffff",.55),"#ffffff"];return(LGMET[k]||LGMET.oro)[1]}
+function lgMetal(src,k,c){if(!src||!src.width)return src;const sc=Math.min(2,512/Math.max(src.width,src.height)),w=Math.max(1,Math.round(src.width*sc)),h=Math.max(1,Math.round(src.height*sc)),o=bgCv(w,h),q=o.getContext("2d",{willReadFrequently:true});q.imageSmoothingQuality="high";q.drawImage(src,0,0,w,h);
+ const D=q.getImageData(0,0,w,h),p=D.data,n=w*h,A=new Float32Array(n),Lu=new Float32Array(n),vs=[];for(let i=0;i<n;i++){const a=p[i*4+3]/255;A[i]=a;const l=(.299*p[i*4]+.587*p[i*4+1]+.114*p[i*4+2])/255;Lu[i]=l;if(a>.5&&i%5===0)vs.push(l)}
+ vs.sort((a,b)=>a-b);const lo=vs.length?vs[Math.floor(vs.length*.04)]:0,hi=vs.length?vs[Math.floor(vs.length*.96)]:1,rg=hi-lo,uni=rg<.1;
+ /* altezza = alfa sfocata (due passate di box blur), per lo smusso dei bordi */
+ const r=Math.max(2,Math.round(Math.min(w,h)*.024)),blur=(S0)=>{const T=new Float32Array(n),O=new Float32Array(n);for(let y=0;y<h;y++){let s=0;for(let x=-r;x<=r;x++)s+=S0[y*w+Math.min(w-1,Math.max(0,x))];for(let x=0;x<w;x++){T[y*w+x]=s/(2*r+1);s+=S0[y*w+Math.min(w-1,x+r+1)]-S0[y*w+Math.max(0,x-r)]}}
+  for(let x=0;x<w;x++){let s=0;for(let y=-r;y<=r;y++)s+=T[Math.min(h-1,Math.max(0,y))*w+x];for(let y=0;y<h;y++){O[y*w+x]=s/(2*r+1);s+=T[Math.min(h-1,y+r+1)*w+x]-T[Math.max(0,y-r)*w+x]}}return O},H=blur(blur(A));
+ const pal=lgMetPal(k,c).map(h2=>[parseInt(h2.slice(1,3),16),parseInt(h2.slice(3,5),16),parseInt(h2.slice(5,7),16)]),LUT=new Uint8Array(256*3);for(let i=0;i<256;i++){const t=i/255*(pal.length-1),j=Math.min(pal.length-2,Math.floor(t)),f=t-j;for(let ch=0;ch<3;ch++)LUT[i*3+ch]=Math.round(pal[j][ch]*(1-f)+pal[j+1][ch]*f)}
+ const VB=[[0,.92],[.25,.78],[.5,.45],[.62,.84],[.85,.4],[1,.22]],vb=t=>{for(let i=1;i<VB.length;i++)if(t<=VB[i][0]){const[a,b]=[VB[i-1],VB[i]],f=(t-a[0])/(b[0]-a[0]);return a[1]+(b[1]-a[1])*f}return VB[VB.length-1][1]},kb=r*2.4;
+ for(let y=0;y<h;y++){const v=vb(y/(h-1||1));for(let x=0;x<w;x++){const i=y*w+x;if(A[i]<=.01)continue;const ln=uni?.62:Math.max(0,Math.min(1,(Lu[i]-lo)/rg));let b=uni?v:.42*v+.58*ln;
+  const gx=H[y*w+Math.min(w-1,x+1)]-H[y*w+Math.max(0,x-1)],gy=H[Math.min(h-1,y+1)*w+x]-H[Math.max(0,y-1)*w+x];b+=.42*Math.max(-1,Math.min(1,(-gx-gy)*kb));
+  if(H[i]<.5)b*=.62+.76*H[i];const d=x/w*.6+y/h*.4;b+=.2*Math.max(0,1-Math.abs(d-.58)/.09);b=Math.max(0,Math.min(1,b));const li=Math.round(b*255)*3;p[i*4]=LUT[li];p[i*4+1]=LUT[li+1];p[i*4+2]=LUT[li+2]}}
+ q.putImageData(D,0,0);return o}
+/* scelta del metallo nel pannello dell'elemento */
+const lgMetBtns=(sel,cus,attr)=>Object.entries(LGMET).map(([k,[n,P]])=>`<button type="button" class="lmtb${sel===k?" on":""}" ${attr}="${k}" title="${n}" aria-label="${n}" style="background:linear-gradient(160deg,${P[4]},${P[3]} 30%,${P[1]} 55%,${P[3]} 70%,${P[0]})"></button>`).join("")+`<label class="lmtb lmtc${sel==="cus"?" on":""}" title="Colore tuo" style="background:linear-gradient(160deg,#fff,${cus||"#2f7bff"} 45%,#000)"><input type="color" ${attr}c value="${cus||"#2f7bff"}" aria-label="Colore del metallo"></label>`;
+$("#lw_lg").insertAdjacentHTML("beforeend",`<div id="lw_mt" style="display:none"><label>Metallo</label><div class="bar lmt" id="lmtw" style="margin:0;gap:8px"></div><div class="hint" style="margin:4px 0 0">Oro, champagne, argento, bronzo, acciaio, oro rosa, oppure scegli un colore tuo (l’ultimo).</div></div>`);
+function lgMetUI(l){const w=$("#lw_mt");if(!w)return;const on=["logo","mlogo","sp"].includes(l.k)&&l.md==="m";w.style.display=on?"block":"none";if(on)$("#lmtw").innerHTML=lgMetBtns(l.mt||"oro",l.mc,"data-lmt")}
+$("#lw_mt").addEventListener("click",e=>{const b=e.target.closest("[data-lmt]");if(!b||b.tagName==="INPUT")return;const l=SELL();if(!l)return;l.mt=b.dataset.lmt;lgMetUI(l);draw();save();cm()});
+$("#lw_mt").addEventListener("input",e=>{if(!e.target.hasAttribute("data-lmtc"))return;const l=SELL();if(!l)return;l.mt="cus";l.mc=e.target.value;draw();save()});
+$("#lw_mt").addEventListener("change",e=>{if(e.target.hasAttribute("data-lmtc")){const l=SELL();if(l)lgMetUI(l);cm()}});
+/* nella sezione Loghi: lo stile “Metallo in rilievo” per tutte le squadre, con il metallo scelto qui */
+$("#aa").parentElement.insertAdjacentHTML("afterend",`<div class="card" id="lgmw" style="margin-top:10px"><b>Metallo in rilievo</b><small>Per i loghi con lo stile “Metallo in rilievo” (in classifica, nelle carte, ovunque). Nelle singole grafiche puoi scegliere un metallo diverso per ogni logo da Elementi.</small><div class="bar lmt" id="lgmb" style="margin:8px 0 0;gap:8px"></div></div>`);
+function lgmUI(){const e=$("#lgmb");if(e)e.innerHTML=lgMetBtns(S.lgm||"oro",S.lgmc,"data-lgm")}
+$("#lgmw").addEventListener("click",e=>{const b=e.target.closest("[data-lgm]");if(!b||b.tagName==="INPUT")return;S.lgm=b.dataset.lgm;PC={};lgmUI();save();renderLogos();draw()});
+$("#lgmw").addEventListener("input",e=>{if(!e.target.hasAttribute("data-lgmc"))return;S.lgm="cus";S.lgmc=e.target.value;PC={};save();draw()});
+$("#lgmw").addEventListener("change",e=>{if(e.target.hasAttribute("data-lgmc")){lgmUI();renderLogos()}});
+lgmUI();
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
