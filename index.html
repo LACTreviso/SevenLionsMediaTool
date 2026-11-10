@@ -255,6 +255,8 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .pcvt.on{border-color:var(--blue);box-shadow:0 0 0 2px rgba(47,123,255,.35)}.pcvt.off{opacity:.35}
 .lmt{flex-wrap:wrap}.lmtb{width:38px;height:38px;border-radius:50%;border:2px solid var(--line);cursor:pointer;padding:0;position:relative;flex:none;box-shadow:inset 0 0 0 1px rgba(0,0,0,.35)}
 .lmtb.on{border-color:#fff;box-shadow:0 0 0 2px var(--blue)}.lmtc input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;min-height:0;padding:0}
+.tcw{margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:10px;background:rgba(47,123,255,.04)}.tch{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
+.tcc{width:100%;height:auto;max-height:70vh;object-fit:contain;display:block;border-radius:8px;border:1px solid var(--line);background:#000}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -2499,6 +2501,52 @@ function mcFillL(){const sel=$("#mcsel"),g=mcGT(),all=S.cal||[],G=[...new Set(al
  /* match day: se la partita mostrata non è della prossima giornata, metto la prima ancora da giocare (resta la tua scelta se è di quella giornata) */
  if(i<0&&!ft&&BS(gT())==="mc"&&g!=null){const ms=MCM.filter(r=>r.g===g),r=ms.find(r=>!kRG(r.r))||ms[0];if(r){i=MCM.indexOf(r);S.mt={...S.mt,h:r.h,a:r.a,sc:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}}
  if(i>=0){sel.value=i;MCC=MCM[i]}if(BS(gT())==="mc")mcSub(ft?S.gs:g)}
+
+/* ---- Podcast: scheda di presentazione della squadra ospite, stagione scorsa e quest'anno a confronto (grafica da scaricare o mettere nel video) ---- */
+var TCF={};const TCFM={"169":[1920,1080,"16:9 (video)"],"45":[1080,1350,"4:5"],"916":[1080,1920,"9:16"]};
+function tcSeason(){const n=((S.pod&&S.pod.prev)||{}).name||"",m=n.match(/^(\d{4})\s*[-/]\s*(\d{2,4})$/);return m?`${+m[1]+1}-${String((+m[2].slice(-2)+1)%100).padStart(2,"0")}`:"Quest’anno"}
+function tcData(t){const P=S.pod.prev||{cl:[],top:[]},pv=pvFind(t),PL=P.cl||[],i=poTeam(t),cu=i>=0?S.cl[i]:null,CL=S.cl,rk=(L,e,k,a)=>e?1+L.filter(x=>a?x[k]<e[k]:x[k]>e[k]).length:null,pm=(e,k)=>e&&e.g?e[k]/e.g:null;
+ const tp=pv?(P.top||[]).find(x=>tmScore(x.sq,t)>=.5||tmScore(x.sq,pv.n)>=.5):null,mk=(S.mar||[]).filter(m=>kHN(m.sq)===kHN(t)).sort((a,b)=>b.g-a.g)[0];
+ return{t,pv,cu,pos0:pv?PL.indexOf(pv)+1:null,n0:PL.length,pos1:cu?i+1:null,n1:CL.length,a0:rk(PL,pv,"gf"),d0:rk(PL,pv,"gs",1),a1:rk(CL,cu,"gf"),d1:rk(CL,cu,"gs",1),ppg0:pm(pv,"pt"),ppg1:pm(cu,"pt"),gf0:pm(pv,"gf"),gf1:pm(cu,"gf"),gs0:pm(pv,"gs"),gs1:pm(cu,"gs"),tp,mk,s0:P.name||"Stagione scorsa",s1:tcSeason()}}
+function tcDraw(c,t,fk){const[W,H]=TCFM[fk]||TCFM["169"];if(c.width!==W||c.height!==H){c.width=W;c.height=H}const x=c.getContext("2d"),st=S.sty,D=tcData(t),u=Math.min(W,H)/1080,L=W>H,F='"Inter Tight",system-ui,sans-serif',m=(L?90:64)*u,mu=rgba(st.tx,.62),f2=v=>v==null?"–":(Math.round(v*100)/100).toFixed(2).replace(".",","),fo=n=>n==null?"–":n+"ª";
+ x.fillStyle=st.bg;x.fillRect(0,0,W,H);if(st.gen&&st.gen.t&&typeof BGF!=="undefined"&&BGF[st.gen.t])x.drawImage(bgRender(W,H),0,0);if(st.str)stripes(x,W,H,.34,st.ac);
+ let g=x.createLinearGradient(0,0,0,H);g.addColorStop(0,rgba(st.bg,.2));g.addColorStop(.3,rgba(st.bg,.75));g.addColorStop(1,rgba(st.bg,.92));x.fillStyle=g;x.fillRect(0,0,W,H);
+ /* intestazione */
+ const hh=(L?190:250)*u,ls=hh*.82,tl=logo(t),lx=m;if(tl)dl(x,tl,lx+ls/2,m+ls/2,ls);const ll=logo("__lega");if(ll)dl(x,ll,W-m-60*u,m+50*u,110*u);
+ const tx0=tl?lx+ls+30*u:m,tw=W-tx0-m-(L?140:120)*u;x.textBaseline="alphabetic";x.textAlign="left";x.fillStyle=st.ac;x.font=`700 ${30*u}px ${F}`;x.fillText("SCHEDA SQUADRA",tx0,m+40*u);
+ let fs=(L?84:72)*u,ln=[t];x.font=`800 ${fs}px ${F}`;if(!L&&x.measureText(t).width>tw){const w=t.split(/\s+/);let bst=null;for(let i=1;i<w.length;i++){const a=w.slice(0,i).join(" "),c2=w.slice(i).join(" "),mx=Math.max(x.measureText(a).width,x.measureText(c2).width);if(!bst||mx<bst.mx)bst={mx,l:[a,c2]}}if(bst)ln=bst.l}
+ while(ln.some(q=>x.measureText(q).width>tw)&&fs>34*u){fs-=2;x.font=`800 ${fs}px ${F}`}x.fillStyle=st.tx;ln.forEach((q,i)=>x.fillText(q,tx0,m+40*u+fs*1.02+i*fs*1.02));
+ x.fillStyle=mu;x.font=`500 ${26*u}px ${F}`;x.fillText(`${D.s0} e ${D.s1} a confronto`,tx0,m+40*u+fs*1.02*ln.length+42*u);
+ /* colonne */
+ const top=m+hh+30*u,bot=H-m-40*u,cx=W/2,cw=Math.min(W*.33,(L?520:380)*u),lw=(L?300:250)*u,xl=cx-lw/2-24*u,xr=cx+lw/2+24*u;
+ x.textAlign="right";x.fillStyle=mu;x.font=`800 ${30*u}px ${F}`;x.fillText(D.s0.toUpperCase(),xl,top);x.font=`500 ${22*u}px ${F}`;x.fillText(D.pv?"classifica finale":"non c’era",xl,top+30*u);
+ x.textAlign="left";x.fillStyle=st.ac;x.font=`800 ${30*u}px ${F}`;x.fillText(D.s1.toUpperCase(),xr,top);x.fillStyle=mu;x.font=`500 ${22*u}px ${F}`;x.fillText(D.cu?`dopo ${D.cu.g} ${D.cu.g===1?"partita":"partite"}`:"nessun dato",xr,top+30*u);
+ const sg=n=>n==null?"–":(n>0?"+":"")+n,bomb=(o,n)=>o?`${String(nmShort(o.n)).toUpperCase()} ${n||o.g}`:"–",R=[
+  {l:"Posizione",a:D.pos0?`${fo(D.pos0)} su ${D.n0}`:"–",b:D.pos1?`${fo(D.pos1)} su ${D.n1}`:"–",c:D.pos0&&D.pos1?Math.sign(D.pos0/D.n0-D.pos1/D.n1):null},
+  {l:"Punti",a:D.pv?D.pv.pt:"–",b:D.cu?D.cu.pt:"–"},
+  {l:"Partite (V-N-P)",a:D.pv?`${D.pv.g} (${D.pv.v}-${D.pv.nn}-${D.pv.p})`:"–",b:D.cu?`${D.cu.g} (${D.cu.v}-${D.cu.nn}-${D.cu.p})`:"–"},
+  {l:"Punti a partita",a:f2(D.ppg0),b:f2(D.ppg1),v0:D.ppg0,v1:D.ppg1},
+  {l:"Gol fatti a partita",a:f2(D.gf0),b:f2(D.gf1),v0:D.gf0,v1:D.gf1,s0:D.pv?D.pv.gf+" tot.":"",s1:D.cu?D.cu.gf+" tot.":""},
+  {l:"Gol subiti a partita",a:f2(D.gs0),b:f2(D.gs1),v0:D.gs0,v1:D.gs1,inv:1,s0:D.pv?D.pv.gs+" tot.":"",s1:D.cu?D.cu.gs+" tot.":""},
+  {l:"Differenza reti",a:D.pv?sg(D.pv.dr):"–",b:D.cu?sg(D.cu.dr):"–",c:D.pv&&D.cu&&D.cu.g?Math.sign(D.cu.dr/D.cu.g-D.pv.dr/D.pv.g):null},
+  {l:"Attacco · difesa",a:D.pv?`${D.a0}º · ${D.d0}ª`:"–",b:D.cu?`${D.a1}º · ${D.d1}ª`:"–"},
+  {l:"Bomber",a:bomb(D.tp),b:bomb(D.mk)}],n=R.length,rh=(bot-(top+60*u))/n;
+ R.forEach((r,i)=>{const y=top+60*u+i*rh,cy=y+rh/2;x.fillStyle=rgba(st.tx,i%2?.035:.075);x.beginPath();x.roundRect(m-10*u,y+4*u,W-2*m+20*u,rh-8*u,12*u);x.fill();
+  if(r.v0!=null&&r.v1!=null){const mx=Math.max(r.v0,r.v1,.01)*1.15,bw=(cw-20*u),bh=rh*.5;x.fillStyle=rgba(st.tx,.16);x.beginPath();x.roundRect(xl-bw*r.v0/mx,cy-bh/2,bw*r.v0/mx,bh,6*u);x.fill();x.fillStyle=rgba(st.ac,.45);x.beginPath();x.roundRect(xr,cy-bh/2,bw*r.v1/mx,bh,6*u);x.fill();
+   r.c=Math.abs(r.v1-r.v0)<.1?0:(r.v1>r.v0)!==!!r.inv?1:-1}
+  const vf=Math.min(rh*.42,(L?44:40)*u),lf=Math.min(rh*.3,26*u),sf=vf*.55;x.textBaseline="middle";
+  x.textAlign="center";x.fillStyle=mu;x.font=`700 ${lf}px ${F}`;x.fillText(r.l.toUpperCase(),cx,cy,lw);
+  x.textAlign="right";x.fillStyle=rgba(st.tx,.85);x.font=`800 ${vf}px ${F}`;x.fillText(String(r.a),xl-12*u,cy,cw);if(r.s0){const w0=x.measureText(String(r.a)).width;x.font=`600 ${sf}px ${F}`;x.fillStyle=mu;x.fillText(r.s0,xl-12*u-w0-12*u,cy+vf*.06)}
+  x.textAlign="left";x.fillStyle=st.tx;x.font=`800 ${vf}px ${F}`;const bx=xr+12*u;x.fillText(String(r.b),bx,cy,cw-60*u);let w2=Math.min(x.measureText(String(r.b)).width,cw-60*u);if(r.s1){x.font=`600 ${sf}px ${F}`;x.fillStyle=mu;x.fillText(r.s1,bx+w2+12*u,cy+vf*.06);w2+=12*u+x.measureText(r.s1).width}
+  if(r.c!=null){const ax=bx+w2+18*u,ay=cy;x.fillStyle=r.c>0?"#22c55e":r.c<0?"#ef4444":mu;x.beginPath();if(r.c>0){x.moveTo(ax,ay+vf*.25);x.lineTo(ax+vf*.32,ay-vf*.3);x.lineTo(ax+vf*.64,ay+vf*.25)}else if(r.c<0){x.moveTo(ax,ay-vf*.25);x.lineTo(ax+vf*.32,ay+vf*.3);x.lineTo(ax+vf*.64,ay-vf*.25)}else{x.rect(ax,ay-vf*.08,vf*.6,vf*.16)}x.fill()}});
+ x.textBaseline="alphabetic";x.textAlign="center";x.fillStyle=mu;x.font=`600 ${22*u}px ${F}`;x.fillText(`${((S.pod&&S.pod.cur)||{}).show||"Seven Lions Podcast"} · Lega Amatori Calcio Treviso`,W/2,H-m*.55);x.textAlign="left"}
+function tcBlock(T){const fk=TCF[T.k]||"169";return`<div class="tcw"><div class="tch"><b>📊 Scheda di presentazione</b><span class="hint" style="margin:0">da mostrare in puntata o sui social</span></div><canvas class="tcc" data-tcv="${esc(T.k)}" data-tct="${esc(T.t)}" width="1920" height="1080"></canvas><div class="bar" style="margin:6px 0 0;gap:6px">${["169","45","916"].map(k=>[k,TCFM[k]]).map(([k,f])=>`<button class="btn pbx${k===fk?" p":""}" data-tcf="${k}" data-tck="${esc(T.k)}">${f[2]}</button>`).join("")}<span style="flex:1"></span><button class="btn pbx" data-tcd="${esc(T.k)}">⬇ Scarica PNG</button><button class="btn pbx" data-tcp="${esc(T.k)}" title="Va nella galleria del podcast; se il video è aperto in Edit podcast la metto dove sei arrivato">🎬 Aggiungi al podcast</button></div></div>`}
+function tcAll(){$$("#pprep canvas[data-tcv]").forEach(c=>{try{tcDraw(c,c.dataset.tct,TCF[c.dataset.tcv]||"169")}catch(e){console.warn(e)}})}
+$("#pprep").addEventListener("click",e=>{const b=e.target.closest("[data-tcf],[data-tcd],[data-tcp]");if(!b)return;const d=b.dataset,k=d.tck||d.tcd||d.tcp,c=$(`#pprep canvas[data-tcv="${CSS.escape(k)}"]`);if(!c)return;const t=c.dataset.tct;
+ if(d.tcf){TCF[k]=d.tcf;b.parentElement.querySelectorAll("[data-tcf]").forEach(q=>q.classList.toggle("p",q===b));tcDraw(c,t,d.tcf);return}
+ if(d.tcd){c.toBlob(bl=>{const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download=`scheda-${peSlug(t)||"squadra"}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000)});return}
+ if(d.tcp){const s=Math.min(1,1920/Math.max(c.width,c.height)),o=bgCv(c.width*s,c.height*s);o.getContext("2d").drawImage(c,0,0,o.width,o.height);const g={id:nid(),n:"Scheda "+t,d:o.toDataURL("image/jpeg",.9)};G.push(g);if(!saveG()){G.pop();return}renderGal();
+  const P=typeof peP==="function"?peP():null;if(P&&PE.f){pePush();P.ins.push({id:"i"+Date.now().toString(36),g:g.id,t:+peV().currentTime.toFixed(2),d:8});peSave();pePush();toast(`Scheda nel video a ${peTf(peV().currentTime)} (8 s): la sposti in Edit podcast`)}else toast("Scheda aggiunta: la trovi in Edit podcast › Grafiche");b.textContent="✓ Aggiunta";setTimeout(()=>b.textContent="🎬 Aggiungi al podcast",1800)}});
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
@@ -2836,10 +2884,10 @@ function prepR(){const el=$("#pprep");if(!el)return;const md=S.pod.pm||"p";el.st
  const D=prepData(c),ns=Object.keys(c.star||{}).length;
  el.innerHTML=`<div class="card prs"><strong style="font-size:18px">${esc(c.show)} · Ep. ${c.ep}</strong><span class="mut" style="display:block">${c.data?esc(itD(c.data))+" · ":""}${G.map(g=>esc(poFull(g)||poCall(g))+(g.ru?" ("+esc(g.ru.toLowerCase())+")":"")).join(" · ")}</span><p class="hint" style="margin:6px 0 0">Una base per prepararti e per la chiacchierata prima di registrare. Segna con ★ gli spunti che vuoi usare in puntata${ns?` (${ns} segnati: li trovi in testa al blocco “La stagione” del Copione)`:""}.</p><div class="bar" style="margin:8px 0 0"><button class="btn pbx" data-pex="c">Copia la scheda</button><button class="btn pbx" data-pex="p">🖨 Stampa</button><button class="btn pbx" data-pex="d" title="Crea un file PDF da salvare o condividere (funziona anche su iPhone)">📄 PDF</button></div></div>`+
  `<div class="card prs"><h4>🏆 La lega</h4>${D.L.facts.map(f=>`<p>${esc(f)}</p>`).join("")}<div class="psl">${prSp(c,D.L.sp)}</div></div>`+
- D.T.map(T=>`<div class="card prs"><h4>🛡️ ${esc(T.t)}</h4>${T.f.map(f=>`<p>${f}</p>`).join("")}<label>Cosa è cambiato nella squadra rispetto all’anno scorso (giocatori, allenatore, obiettivi)</label><textarea data-ptn="${esc(T.k)}" rows="2" placeholder="Lo chiedi fuori onda o lo sai già: resta salvato per la squadra">${esc(S.pod.tn[T.k]||"")}</textarea><div class="psl">${prSp(c,T.s)}</div></div>`).join("")+
+ D.T.map(T=>`<div class="card prs"><h4>🛡️ ${esc(T.t)}</h4>${T.f.map(f=>`<p>${f}</p>`).join("")}${typeof tcBlock==="function"?tcBlock(T):""}<label>Cosa è cambiato nella squadra rispetto all’anno scorso (giocatori, allenatore, obiettivi)</label><textarea data-ptn="${esc(T.k)}" rows="2" placeholder="Lo chiedi fuori onda o lo sai già: resta salvato per la squadra">${esc(S.pod.tn[T.k]||"")}</textarea><div class="psl">${prSp(c,T.s)}</div></div>`).join("")+
  D.GU.map(g=>`<div class="card prs"><h4>🎙️ ${esc(poFull(g.o)||g.n)}</h4>${g.f.map(f=>`<p>${f}</p>`).join("")}${g.s.length?`<div class="psl">${prSp(c,g.s)}</div>`:'<p class="hint">Nessun dato su questo ospite: compila la scheda personale (questionario WhatsApp) nella scheda Ospiti.</p>'}</div>`).join("")+
  (D.X.length?`<div class="card prs"><h4>⚔️ Tra gli ospiti</h4><div class="psl">${prSp(c,D.X)}</div></div>`:"")+
- `<div class="card prs"><h4>☕ Fuori onda, per rompere il ghiaccio</h4><ul>${OFFQ.map(q=>`<li>${esc(q)}</li>`).join("")}</ul><label>Temi emersi fuori onda (uno per riga: finiscono nel copione)</label><textarea data-ptm rows="3" placeholder="Es. ha segnato il primo gol della lega con un tacco">${esc(c.temi||"")}</textarea></div>`}
+ `<div class="card prs"><h4>☕ Fuori onda, per rompere il ghiaccio</h4><ul>${OFFQ.map(q=>`<li>${esc(q)}</li>`).join("")}</ul><label>Temi emersi fuori onda (uno per riga: finiscono nel copione)</label><textarea data-ptm rows="3" placeholder="Es. ha segnato il primo gol della lega con un tacco">${esc(c.temi||"")}</textarea></div>`;if(typeof tcAll==="function")tcAll()}
 function prepText(c){const D=prepData(c),G=poG(c),st=c.star||{},sp=a=>a.map(q=>`${st[q.id]?"★":"•"} ${q.t}`),cl=h=>String(h).replace(/<[^>]+>/g,"");
  return[`SCHEDA DI PREPARAZIONE · ${c.show} · Ep. ${c.ep}`,`${c.data?itD(c.data)+" · ":""}${G.map(g=>(poFull(g)||poCall(g))+(g.ru?" ("+g.ru+")":"")).join(", ")}`,"","LA LEGA",...D.L.facts,...sp(D.L.sp),...D.T.flatMap(T=>["",`SQUADRA: ${T.t}`,...T.f.map(cl),...(S.pod.tn[T.k]?["Cambiamenti: "+S.pod.tn[T.k]]:[]),...sp(T.s)]),
   ...D.GU.flatMap(g=>["",`OSPITE: ${poFull(g.o)||g.n}`,...g.f.map(cl),...sp(g.s)]),...(D.X.length?["","TRA GLI OSPITI",...sp(D.X)]:[]),"","FUORI ONDA",...OFFQ.map(q=>"• "+q),...(c.temi?["","TEMI EMERSI",...c.temi.split("\n").filter(Boolean).map(t=>"• "+t)]:[])].join("\n")}
