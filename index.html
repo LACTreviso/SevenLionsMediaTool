@@ -257,6 +257,7 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .lmtb.on{border-color:#fff;box-shadow:0 0 0 2px var(--blue)}.lmtc input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;min-height:0;padding:0}
 .tcw{margin:10px 0;padding:10px;border:1px solid var(--line);border-radius:10px;background:rgba(47,123,255,.04)}.tch{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap;margin-bottom:8px}
 .tcc{width:100%;height:auto;max-height:70vh;object-fit:contain;display:block;border-radius:8px;border:1px solid var(--line);background:#000}
+.tipe{margin:8px 0;border-color:var(--blue)}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -477,8 +478,10 @@ function week(){const m=mon(off),k=iso(m),e=new Date(m);e.setDate(e.getDate()+6)
  $$(".st").forEach(b=>b.onclick=()=>{const v=S.st[b.dataset.k]||{s:0,n:""};v.s=(v.s+1)%4;S.st[b.dataset.k]=v;save();week()});
  $$("[data-n]").forEach(t=>t.oninput=()=>{const v=S.st[t.dataset.n]||{s:0,n:""};v.n=t.value;S.st[t.dataset.n]=v;save()})}
 $("#pw").onclick=()=>{off--;week()};$("#nw").onclick=()=>{off++;week()};$("#tw").onclick=()=>{off=0;week()};
-function tipi(){$("#tl").innerHTML=S.tipi.map((t,i)=>`<div class="row"><span><b>${esc(t.n)}</b><br><small>${GG[t.g]} · ${esc(t.c)}</small></span><button class="btn" data-x="${i}">Elimina</button></div>`).join("");
- $$("#tl [data-x]").forEach(b=>b.onclick=()=>{S.tipi.splice(+b.dataset.x,1);save();tipi();week()})}
+var TIPE=-1;function tipi(){$("#tl").innerHTML=S.tipi.map((t,i)=>i===TIPE?`<div class="card tipe" data-te="${i}"><div class="f"><div><label for="te_n">Nome</label><input id="te_n" value="${esc(t.n)}"></div><div><label for="te_g">Giorno</label><select id="te_g">${GG.map((n,k)=>`<option value="${k}"${k===t.g?" selected":""}>${n}</option>`).join("")}</select></div><div><label for="te_c">Canali</label><input id="te_c" value="${esc(t.c||"")}"></div></div><label for="te_d">Note fisse (opzionale)</label><input id="te_d" value="${esc(t.d||"")}"><div class="bar" style="margin:10px 0 0"><button class="btn p" data-ts="${i}">Salva</button><button class="btn" data-tq>Annulla</button></div></div>`:`<div class="row"><span><b>${esc(t.n)}</b><br><small>${GG[t.g]} · ${esc(t.c)}${t.d?" · "+esc(t.d):""}</small></span><span class="bar" style="margin:0;gap:6px;flex-wrap:nowrap"><button class="btn" data-tm="${i}">Modifica</button><button class="btn" data-x="${i}">Elimina</button></span></div>`).join("");
+ $$("#tl [data-x]").forEach(b=>b.onclick=()=>{const t=S.tipi[+b.dataset.x];if(!confirm("Elimino “"+t.n+"”?"))return;S.tipi.splice(+b.dataset.x,1);TIPE=-1;save();tipi();week()});
+ $$("#tl [data-tm]").forEach(b=>b.onclick=()=>{TIPE=+b.dataset.tm;tipi();const n=$("#te_n");if(n)n.focus()});$$("#tl [data-tq]").forEach(b=>b.onclick=()=>{TIPE=-1;tipi()});
+ $$("#tl [data-ts]").forEach(b=>b.onclick=()=>{const t=S.tipi[+b.dataset.ts],n=$("#te_n").value.trim();if(!n)return alert("Scrivi il nome.");Object.assign(t,{n,g:+$("#te_g").value,c:$("#te_c").value.trim()||"Instagram",d:$("#te_d").value.trim()});TIPE=-1;save();tipi();week();toast("“"+n+"” aggiornato: ora esce di "+GG[t.g].toLowerCase())})}
 $("#ng").innerHTML=GG.map((n,i)=>`<option value="${i}">${n}</option>`).join("");
 $("#na").onclick=()=>{const n=$("#nn").value.trim();if(!n)return;S.tipi.push({id:"x"+Date.now(),n,g:+$("#ng").value,c:$("#nc").value||"Instagram",d:$("#nd").value});["nn","nc","nd"].forEach(i=>$("#"+i).value="");save();tipi();week()};
 
@@ -2547,6 +2550,27 @@ $("#pprep").addEventListener("click",e=>{const b=e.target.closest("[data-tcf],[d
  if(d.tcd){c.toBlob(bl=>{const a=document.createElement("a");a.href=URL.createObjectURL(bl);a.download=`scheda-${peSlug(t)||"squadra"}.png`;a.click();setTimeout(()=>URL.revokeObjectURL(a.href),30000)});return}
  if(d.tcp){const s=Math.min(1,1920/Math.max(c.width,c.height)),o=bgCv(c.width*s,c.height*s);o.getContext("2d").drawImage(c,0,0,o.width,o.height);const g={id:nid(),n:"Scheda "+t,d:o.toDataURL("image/jpeg",.9)};G.push(g);if(!saveG()){G.pop();return}renderGal();
   const P=typeof peP==="function"?peP():null;if(P&&PE.f){pePush();P.ins.push({id:"i"+Date.now().toString(36),g:g.id,t:+peV().currentTime.toFixed(2),d:8});peSave();pePush();toast(`Scheda nel video a ${peTf(peV().currentTime)} (8 s): la sposti in Edit podcast`)}else toast("Scheda aggiunta: la trovi in Edit podcast › Grafiche");b.textContent="✓ Aggiunta";setTimeout(()=>b.textContent="🎬 Aggiungi al podcast",1800)}});
+
+/* ---- Podcast: scheda di preparazione più leggibile (grassetti, colori per sezione, domande segnate in evidenza) con la scheda grafica della squadra ---- */
+function prRuns(h){const R=[],dec=s=>s.replace(/&lt;/g,"<").replace(/&gt;/g,">").replace(/&quot;/g,'"').replace(/&#0?39;/g,"'").replace(/&amp;/g,"&");let b=0,m=0;
+ String(h).split(/(<\/?(?:strong|b|span)[^>]*>)/).forEach(p=>{if(!p)return;if(/^<(strong|b)[\s>]/.test(p)||p==="<b>"||p==="<strong>"){b++;return}if(/^<\/(strong|b)>/.test(p)){b=Math.max(0,b-1);return}if(/^<span/.test(p)){m++;return}if(/^<\/span>/.test(p)){m=Math.max(0,m-1);return}
+  dec(p).split(/(\((?:meglio|peggio|stabile)\))/).forEach(q=>{if(!q)return;const c=/\(meglio\)/.test(q)?"g":/\(peggio\)/.test(q)?"r":/\(stabile\)/.test(q)?"m":m?"m":"";R.push({t:q,b:b>0||c==="g"||c==="r"?1:0,c})})});
+ if(R.length===1&&!R[0].b&&!R[0].c){const t=R[0].t,i=t.indexOf(":");if(i>0&&i<45)return[{t:t.slice(0,i+1),b:1,c:""},...prNum(t.slice(i+1))]}
+ return R.flatMap(r=>r.b||r.c?[r]:prNum(r.t))}
+/* numeri importanti in grassetto: posizioni, punti, gol */
+function prNum(t){const o=[];String(t).split(/(\d+ª\s+su\s+\d+|\d+[ªº°]|\d+(?:,\d+)?\s+(?:punti|punto|gol|partite|partita|vittorie))/).forEach((q,i)=>{if(q)o.push({t:q,b:i%2?1:0,c:""})});return o}
+function tcImg(t){try{const c=document.createElement("canvas");tcDraw(c,t,"169");const o=bgCv(1280,720);o.getContext("2d").drawImage(c,0,0,1280,720);return o.toDataURL("image/jpeg",.84)}catch(e){console.warn(e);return null}}
+function prepBlocksR(c){const D=prepData(c),G=poG(c),st=c.star||{},B=[],ns=Object.keys(st).filter(k=>st[k]).length,qs=a=>a.forEach(q=>B.push(["q",q.t,st[q.id]?1:0]));
+ B.push(["kick","Scheda di preparazione"],["h1",`${c.show} · Ep. ${c.ep}${c.tit?" — "+c.tit:""}`]);
+ const meta=[];if(c.data)meta.push({t:itD(c.data),b:1,c:""},{t:"  ·  ",b:0,c:"m"});G.forEach((g,i)=>{if(i)meta.push({t:"  ·  ",b:0,c:"m"});meta.push({t:poFull(g)||poCall(g),b:1,c:""});if(g.ru)meta.push({t:" ("+g.ru+")",b:0,c:"m"})});B.push(["rich",meta,10]);
+ if(ns)B.push(["legend",`In evidenza le ${ns===1?"domanda segnata":ns+" domande segnate"} per la puntata`]);
+ B.push(["h2k","La lega","lega"]);D.L.facts.forEach(f=>B.push(["rich",prRuns(esc(f))]));qs(D.L.sp);
+ D.T.forEach(T=>{B.push(["h2k","Squadra: "+T.t,"sq"]);const im=typeof tcDraw==="function"?tcImg(T.t):null;if(im)B.push(["img",im,9/16]);T.f.forEach(f=>B.push(["rich",prRuns(f)]));if((S.pod.tn[T.k]||"").trim())B.push(["note","Cambiamenti: "+S.pod.tn[T.k].trim()]);qs(T.s)});
+ D.GU.forEach(g=>{B.push(["h2k","Ospite: "+(poFull(g.o)||g.n),"os"]);g.f.forEach((f,i)=>B.push(["rich",i?prRuns(f):prRuns(f).map(r=>({...r,c:"m"}))]));qs(g.s)});
+ if(D.X.length){B.push(["h2k","Tra gli ospiti","x"]);qs(D.X)}
+ B.push(["h2k","Fuori onda, per rompere il ghiaccio","fo"]);OFFQ.forEach(q=>B.push(["q",q,0]));
+ if((c.temi||"").trim()){B.push(["h2k","Temi emersi fuori onda","fo"]);c.temi.split("\n").map(t=>t.trim()).filter(Boolean).forEach(t=>B.push(["q",t,1]))}
+ return B}
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
@@ -2797,8 +2821,11 @@ const prIOSApp=()=>navigator.standalone===true,prFramed=(()=>{try{return window.
 /* dentro un riquadro (es. l'anteprima di un'app) il browser può bloccare stampa e download senza dire niente: almeno lo spiego */
 const PRBLK="Se non si apre niente: il tool è aperto dentro un’anteprima, che blocca stampa e download. Aprilo nel browser (dal tuo link GitHub Pages) e riprova.";
 function prMsg(t){toast(t);const e=$("#tst");if(e){clearTimeout(e._t);e._t=setTimeout(()=>e.classList.remove("on"),7000)}}
-const PRCSS=`#prt{font:12.5px/1.5 "Inter Tight",system-ui,sans-serif;color:#050a18}#prt h1{font-size:21px;line-height:1.2;margin:0 0 4px}#prt .m{color:#53607e;margin:0 0 8px}#prt h2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-top:2px solid #050a18;padding-top:6px;margin:18px 0 6px;display:flex;justify-content:space-between;gap:10px;break-after:avoid}#prt p{margin:3px 0;break-inside:avoid}#prt p.lp{display:flex;gap:12px}#prt p.lp b{flex:0 0 140px;font-size:10px;letter-spacing:.05em;padding-top:2px}#prt i{color:#53607e}`;
-const prHtml=B=>B.map(([k,a,b])=>k==="h1"?`<h1>${esc(a)}</h1>`:k==="m"?`<p class="m">${esc(a)}</p>`:k==="h2"?`<h2><span>${esc(a)}</span>${b?`<span>${esc(b)}</span>`:""}</h2>`:k==="lp"?`<p class="lp"><b>${esc(a)}</b><span>${esc(b)}</span></p>`:k==="li"?`<p class="lp"><b>${esc(a)}</b><i>${esc(b)}</i></p>`:`<p>${esc(a)}</p>`).join("");
+const PRCSS=`#prt{font:12.5px/1.5 "Inter Tight",system-ui,sans-serif;color:#050a18}#prt h1{font-size:21px;line-height:1.2;margin:0 0 4px}#prt .m{color:#53607e;margin:0 0 8px}#prt h2{font-size:11px;letter-spacing:.1em;text-transform:uppercase;border-top:2px solid #050a18;padding-top:6px;margin:18px 0 6px;display:flex;justify-content:space-between;gap:10px;break-after:avoid}#prt p{margin:3px 0;break-inside:avoid}#prt p.lp{display:flex;gap:12px}#prt p.lp b{flex:0 0 140px;font-size:10px;letter-spacing:.05em;padding-top:2px}#prt i{color:#53607e}#prt *{-webkit-print-color-adjust:exact;print-color-adjust:exact}#prt .kk{font-size:10px;font-weight:800;letter-spacing:.12em;color:#1d4ed8;text-transform:uppercase}#prt .lg{color:#53607e;font-size:11px}#prt .lg:first-letter{color:#d99606}
+#prt h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;margin:18px 0 6px;padding:6px 10px;border-left:5px solid;border-radius:4px;break-after:avoid}#prt h3.k-lega{background:#eaf0ff;border-color:#1d4ed8;color:#172554}#prt h3.k-sq{background:#e7f7f0;border-color:#059669;color:#064e3b}#prt h3.k-os{background:#f1eafe;border-color:#7c3aed;color:#3b0764}#prt h3.k-x{background:#fdf3e3;border-color:#d97706;color:#78350f}#prt h3.k-fo{background:#eef1f5;border-color:#475569;color:#1e293b}
+#prt .q{margin:3px 0;padding:2px 6px}#prt .q.on{background:#fff5d6;border-radius:4px}#prt .q.on:first-letter{color:#d99606}#prt .g{color:#048c5a}#prt .r{color:#c82828}#prt .m,#prt span.m{color:#53607e}#prt .im{width:100%;border-radius:6px;margin:6px 0;break-inside:avoid}#prt .nt{background:#f3f4f6;border-left:3px solid #53607e;padding:5px 8px;font-style:italic}#prt .mm{color:#53607e}`;
+const prRH=R=>R.map(r=>{const t=esc(r.t);return r.b?`<b class="${r.c||""}">${t}</b>`:r.i?`<i>${t}</i>`:r.c?`<span class="${r.c}">${t}</span>`:t}).join("");
+const prHtml=B=>B.map(([k,a,b])=>k==="kick"?`<div class="kk">${esc(a)}</div>`:k==="legend"?`<p class="lg">★ ${esc(a)}</p>`:k==="h2k"?`<h3 class="k-${b}">${esc(a)}</h3>`:k==="rich"?`<p${b?' class="mm"':""}>${prRH(a)}</p>`:k==="q"?`<p class="q${b?" on":""}">${b?"★":"–"} ${b?`<b>${esc(a)}</b>`:esc(a)}</p>`:k==="img"?`<img class="im" src="${a}" alt="">`:k==="note"?`<p class="nt">${esc(a)}</p>`:k==="h1"?`<h1>${esc(a)}</h1>`:k==="m"?`<p class="m">${esc(a)}</p>`:k==="h2"?`<h2><span>${esc(a)}</span>${b?`<span>${esc(b)}</span>`:""}</h2>`:k==="lp"?`<p class="lp"><b>${esc(a)}</b><span>${esc(b)}</span></p>`:k==="li"?`<p class="lp"><b>${esc(a)}</b><i>${esc(b)}</i></p>`:`<p>${esc(a)}</p>`).join("");
 function prPrint(title,B,btn){if(prIOSApp())return prPdf(title,B,btn);
  if(prFramed)setTimeout(()=>prMsg(PRBLK),600);let d=$("#prt");if(!d){d=document.createElement("div");d.id="prt";document.body.append(d)}
  d.innerHTML=`<style>#prt{display:none}@media print{@page{size:A4;margin:14mm}html,body{background:#fff!important;color:#050a18!important;margin:0!important;padding:0!important;height:auto!important;min-height:0!important;overflow:visible!important}body>*:not(#prt){display:none!important}#prt{display:block!important}${PRCSS}}</style>`+prHtml(B);
@@ -2806,12 +2833,18 @@ function prPrint(title,B,btn){if(prIOSApp())return prPdf(title,B,btn);
  try{window.print()}catch(e){back();prPdf(title,B,btn)}}
 /* i font base del PDF non hanno virgolette curve, emoji, stelle: li converto */
 const prT=s=>String(s==null?"":s).replace(/[‘’‚′`]/g,"'").replace(/[“”„″]/g,'"').replace(/[–—]/g,"-").replace(/…/g,"...").replace(/[•●▪]/g,"-").replace(/[★⭐]/g,"*").replace(/[→➜]/g,"»").replace(/[^\x00-\xFF]/g,"").replace(/[ \t]{2,}/g," ").replace(/\[\s+/g,"[").trim();
+const PRK={lega:{bar:[29,78,216],bg:[234,240,255],tx:[23,37,84]},sq:{bar:[5,150,105],bg:[231,247,240],tx:[6,78,59]},os:{bar:[124,58,237],bg:[241,234,254],tx:[59,7,100]},x:{bar:[217,119,6],bg:[253,243,227],tx:[120,53,15]},fo:{bar:[71,85,105],bg:[238,241,245],tx:[30,41,59]}};
+function prStar(d,cx,cy,r,c){const P=[];for(let i=0;i<10;i++){const a=-Math.PI/2+i*Math.PI/5,q=i%2?r*.45:r;P.push([cx+Math.cos(a)*q,cy+Math.sin(a)*q])}d.setFillColor(...c);const rel=P.slice(1).map((p,i)=>[p[0]-P[i][0],p[1]-P[i][1]]);d.lines(rel,P[0][0],P[0][1],[1,1],"F",true)}
 async function prPdf(title,B,btn){const o=btn&&btn.textContent;if(btn&&!window.jspdf)btn.textContent="Creo il PDF…";const J=window.jspdf?window.jspdf.jsPDF:await prJs();if(btn)btn.textContent=o;
  if(!J)return prMsg("Non riesco a creare il PDF: la prima volta serve la connessione a internet. Riprova tra poco, oppure usa “Copia”.");
  const d=new J({unit:"mm",format:"a4"}),W=210,H=297,M=16,CW=W-2*M,LW=44,pt=.3528;let y=M;
  const brk=h=>{if(y+h>H-M-4){d.addPage();y=M}},fnt=(sz,st,c)=>{d.setFont("helvetica",st);d.setFontSize(sz);d.setTextColor(...c)},
   wrap=(s,sz,st,w)=>{d.setFont("helvetica",st);d.setFontSize(sz);return d.splitTextToSize(prT(s),w)},
-  put=(L,sz,st,c,x,lh)=>{fnt(sz,st,c);L.forEach(l=>{brk(lh);d.text(l,x,y+sz*pt*.82);y+=lh})},INK=[5,10,24],MUT=[83,96,126];
+  put=(L,sz,st,c,x,lh)=>{fnt(sz,st,c);L.forEach(l=>{brk(lh);d.text(l,x,y+sz*pt*.82);y+=lh})},INK=[5,10,24],MUT=[83,96,126],BLU=[29,78,216],AMB=[217,150,6],GRN=[4,140,90],RED=[200,40,40],
+  richL=(R,sz,w)=>{const toks=[];R.forEach(r=>((/^\s/.test(r.t)?" ":"")+prT(r.t)+(/\s$/.test(r.t)&&prT(r.t)?" ":"")).split(/(\s+)/).forEach(q=>{if(q)toks.push({t:q,b:r.b,c:r.c,i:r.i,sp:/^\s+$/.test(q)})}));const lines=[[]];let lw=0;
+   toks.forEach(k=>{d.setFont("helvetica",k.b?(k.i?"bolditalic":"bold"):k.i?"italic":"normal");d.setFontSize(sz);if(k.sp){const L=lines[lines.length-1];if(L.length){const tw=d.getTextWidth(" ");L.push({...k,t:" ",w:tw});lw+=tw}return}const tw=d.getTextWidth(k.t);
+    if(lw+tw>w&&lines[lines.length-1].length){const L=lines[lines.length-1];while(L.length&&L[L.length-1].sp)L.pop();lines.push([]);lw=0}lines[lines.length-1].push({...k,w:tw});lw+=tw});return lines.filter(L=>L.length)},
+  drawL=(Ls,sz,x0,lh,base)=>Ls.forEach(L=>{brk(lh);let x=x0;L.forEach(q=>{fnt(sz,q.b?(q.i?"bolditalic":"bold"):q.i?"italic":"normal",q.c==="m"?MUT:q.c==="g"?GRN:q.c==="r"?RED:q.c==="a"?BLU:base);d.text(q.t,x,y+sz*pt*.82);x+=q.w});y+=lh});
  B.forEach(([k,a,b])=>{
   if(k==="h1"){put(wrap(a,18,"bold",CW),18,"bold",INK,M,18*pt*1.25);y+=1}
   else if(k==="m"){put(wrap(a,9.5,"normal",CW),9.5,"normal",MUT,M,9.5*pt*1.4);y+=2}
@@ -2820,6 +2853,13 @@ async function prPdf(title,B,btn){const o=btn&&btn.textContent;if(btn&&!window.j
   else if(k==="lp"||k==="li"){const sz=10.5,lh=sz*pt*1.42,ls=8,llh=ls*pt*1.35,La=a?wrap(a,ls,"bold",LW-3):[],Lb=wrap(b,sz,k==="li"?"italic":"normal",CW-LW);
    brk(Math.min(Math.max(La.length*llh,Lb.length*lh),60));const y0=y;fnt(ls,"bold",INK);La.forEach((l,i)=>d.text(l,M,y0+.6+i*llh+ls*pt*.82));
    put(Lb,sz,k==="li"?"italic":"normal",k==="li"?MUT:INK,M+LW,lh);y=Math.max(y,y0+La.length*llh)+1}
+  else if(k==="kick"){brk(6);fnt(8.5,"bold",BLU);d.text(prT(a).toUpperCase(),M,y+8.5*pt*.82,{charSpace:.5});y+=8.5*pt*1.6}
+  else if(k==="legend"){brk(6);prStar(d,M+1.8,y+1.6,1.7,AMB);fnt(9,"normal",MUT);d.text(prT(a),M+5,y+9*pt*.82);y+=9*pt*1.7}
+  else if(k==="h2k"){const K=PRK[b]||PRK.lega;y+=5;const L=wrap(String(a).toUpperCase(),10.5,"bold",CW-10),lh=10.5*pt*1.3,h=L.length*lh+4.4;brk(h+16);d.setFillColor(...K.bg);d.roundedRect(M,y,CW,h,1.6,1.6,"F");d.setFillColor(...K.bar);d.rect(M,y,1.8,h,"F");fnt(10.5,"bold",K.tx);L.forEach((l,i)=>d.text(l,M+5,y+2.2+i*lh+10.5*pt*.82));y+=h+2.6}
+  else if(k==="rich"){const sz=b||10.5,lh=sz*pt*1.45,Ls=richL(a,sz,CW);brk(Math.min(Ls.length*lh,30));drawL(Ls,sz,M,lh,INK);y+=.9}
+  else if(k==="q"){const sz=10.5,lh=sz*pt*1.42,Ls=richL([{t:a,b:b?1:0}],sz,CW-8),h=Ls.length*lh+(b?2.4:.6);brk(h);if(b){d.setFillColor(255,245,214);d.roundedRect(M,y-.4,CW,h,1.4,1.4,"F");prStar(d,M+3.2,y+lh*.5+.6,1.8,AMB)}else{d.setFillColor(170,178,196);d.circle(M+3.2,y+lh*.5,.7,"F")}const y0=y;y+=b?1:0;drawL(Ls,sz,M+7,lh,INK);y=Math.max(y,y0+h)+.6}
+  else if(k==="img"){const h=CW*(b||9/16);brk(h+4);try{d.addImage(a,"JPEG",M,y,CW,h)}catch(e){}y+=h+3.5}
+  else if(k==="note"){const sz=10,lh=sz*pt*1.42,Ls=richL([{t:a,i:1}],sz,CW-9),h=Ls.length*lh+3;brk(h);d.setFillColor(243,244,246);d.roundedRect(M,y,CW,h,1.4,1.4,"F");d.setFillColor(...MUT);d.rect(M,y,1.2,h,"F");const y0=y;y+=1.5;drawL(Ls,sz,M+5,lh,INK);y=y0+h+1.4}
   else{put(wrap(a,10.5,"normal",CW),10.5,"normal",INK,M,10.5*pt*1.42);y+=.8}});
  const n=d.getNumberOfPages();for(let i=1;i<=n;i++){d.setPage(i);fnt(8,"normal",MUT);d.text(prT(title),M,H-8);d.text(i+" / "+n,W-M,H-8,{align:"right"})}
  const fn=(prT(title).replace(/[\\/:*?"<>|]+/g,"").replace(/\s+/g," ").trim()||"podcast")+".pdf",blob=d.output("blob");let f=null;try{f=new File([blob],fn,{type:"application/pdf"})}catch(e){}
@@ -2906,7 +2946,7 @@ $("#pctx").addEventListener("change",async e=>{const t=e.target,P=S.pod.prev=S.p
 $("#pctx").addEventListener("click",e=>{if(e.target.id!=="pvpa")return;const v=pvParse($("#pvpc").value);if(!v.length)return alert("Non ho trovato righe di classifica: servono nome e 8 numeri (punti, G, V, N, P, GF, GS, DR).");S.pod.prev.cl=v;save();ctxUI();prepR();toast(`Classifica letta: ${v.length} squadre`)});
 $("#pprep").addEventListener("input",e=>{const t=e.target;if(t.dataset.ptn!=null){S.pod.tn[t.dataset.ptn]=t.value;save()}else if(t.dataset.ptm!=null){POc().temi=t.value;save()}});
 $("#pprep").addEventListener("change",e=>{if(e.target.matches("textarea"))poS()});
-$("#pprep").addEventListener("click",e=>{const x=e.target.closest("[data-pex]");if(x){const c=POc(),t=prepText(c);if(x.dataset.pex==="c")return poCopy(t,x);const tt=`${c.show} - Scheda Ep. ${c.ep}`;return x.dataset.pex==="d"?prPdf(tt,prepBlocks(c),x):prPrint(tt,prepBlocks(c),x)}const b=e.target.closest("[data-pst]");if(!b)return;const c=POc(),id=b.dataset.pst;c.star=c.star||{};if(c.star[id])delete c.star[id];else{const q=b.nextElementSibling.textContent;c.star[id]={t:q,to:+b.dataset.to}}save();poS()});
+$("#pprep").addEventListener("click",e=>{const x=e.target.closest("[data-pex]");if(x){const c=POc(),t=prepText(c);if(x.dataset.pex==="c")return poCopy(t,x);const tt=`${c.show} - Scheda Ep. ${c.ep}`;return x.dataset.pex==="d"?prPdf(tt,(typeof prepBlocksR==="function"?prepBlocksR:prepBlocks)(c),x):prPrint(tt,(typeof prepBlocksR==="function"?prepBlocksR:prepBlocks)(c),x)}const b=e.target.closest("[data-pst]");if(!b)return;const c=POc(),id=b.dataset.pst;c.star=c.star||{};if(c.star[id])delete c.star[id];else{const q=b.nextElementSibling.textContent;c.star[id]={t:q,to:+b.dataset.to}}save();poS()});
 $("#pmd").addEventListener("click",e=>{const m=e.target.closest("[data-pm]");if(!m)return;S.pod.pm=m.dataset.pm;save();poS()});
 $("#ptb").addEventListener("click",e=>{if(e.target.dataset.pt==="x")ctxUI()});
 
