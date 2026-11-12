@@ -2030,14 +2030,28 @@ function peVoice(){const e=PE.env;if(!e)return;const n=e.length,sm=new Float32Ar
  PE.ps=runs().filter(([s,t,v])=>!v&&t-s>=15).map(([s,t])=>[s/PEB,t/PEB]);Object.assign(PE,{fl,hi,thr,vo})}
 /* ---- persone: le trovo con il modello delle pose (fino a 4) su alcuni fotogrammi e preparo un'inquadratura per ognuna, più le coppie ---- */
 async function peGrab(t,mw){const v=peV();v.pause();await new Promise(r=>{v.addEventListener("seeked",r,{once:true});v.currentTime=t});const s=Math.min(1,(mw||1280)/v.videoWidth),c=bgCv(v.videoWidth*s,v.videoHeight*s);c.getContext("2d").drawImage(v,0,0,c.width,c.height);return c}
-async function peDetect(quiet){const P=peP();if(!P||PE.busy)return;PE.busy="d";peStat("Cerco le persone nell'inquadratura…");const v=peV(),t0=v.currentTime,A=v.videoWidth/v.videoHeight,pts=[];
- try{const pose=await poseLoad();for(const k of[.2,.4,.6,.8]){let t=PE.dur*k;const cu=peCutAt(t);if(cu)t=Math.min(PE.dur-1,cu[1]+1);const c=await peGrab(t,1280);let r;try{r=pose.detect(c)}catch(e){continue}
-   (r.landmarks||[]).forEach(L=>{const g=i=>L[i]&&(L[i].visibility==null||L[i].visibility>.3)?L[i]:null,no=g(0),l=g(11),rr=g(12),e1=g(7),e2=g(8);if(!no)return;const sw=l&&rr?Math.abs(l.x-rr.x):e1&&e2?Math.abs(e1.x-e2.x)*2.4:.08;pts.push({x:no.x,y:no.y,s:Math.max(.03,sw)})})}}
+/* il modello delle pose sul fotogramma intero si ferma a 2-3 persone quando sono piccole: lo passo anche su riquadri più stretti
+   (a tutta altezza e, attorno alle teste, ingranditi) e poi tengo una sola rilevazione per persona, quella più al centro del suo riquadro */
+function peDetF(pose,c){const Wc=c.width,Hc=c.height,raw=[];
+ const run=(x0,y0,w,h)=>{w=Math.min(w,Wc);h=Math.min(h,Hc);x0=Math.max(0,Math.min(Wc-w,x0));y0=Math.max(0,Math.min(Hc-h,y0));let t=c;
+  if(w<Wc-1||h<Hc-1){t=bgCv(Math.round(w),Math.round(h));t.getContext("2d").drawImage(c,x0,y0,w,h,0,0,t.width,t.height)}let r;try{r=pose.detect(t)}catch(e){return}
+  (r.landmarks||[]).forEach(L=>{const g=i=>L[i]&&(L[i].visibility==null||L[i].visibility>.3)?L[i]:null,no=g(0),l=g(11),rr=g(12),e1=g(7),e2=g(8);if(!no||no.x<0||no.x>1||no.y<0||no.y>1)return;
+   const dl=x0>1?no.x*w:1e9,dr=x0+w<Wc-1?(1-no.x)*w:1e9,dt=y0>1?no.y*h:1e9,ed=Math.min(dl,dr,dt);if(ed<Wc*.03)return;
+   const sw=l&&rr?Math.abs(l.x-rr.x)*w/Wc:e1&&e2?Math.abs(e1.x-e2.x)*2.4*w/Wc:.08;raw.push({x:(x0+no.x*w)/Wc,y:(y0+no.y*h)/Hc,s:Math.max(.03,sw),q:ed})})};
+ run(0,0,Wc,Hc);if(Wc/Hc>1.2)[0,.5,1].forEach(k=>run((Wc-Hc)*k,0,Hc,Hc));
+ const ys=raw.map(p=>p.y).sort((a,b)=>a-b),cy=ys.length?ys[ys.length>>1]:.45,Z=Hc*.6;if(Wc>Z*1.5){const n=Math.ceil((Wc-Z)/(Z*.5))+1;for(let i=0;i<n;i++)run((Wc-Z)*i/(n-1),cy*Hc-Z*.4,Z,Z)}
+ const out=[];raw.sort((a,b)=>b.q-a.q).forEach(p=>{if(!out.some(o=>Math.abs(o.x-p.x)<Math.max(.03,Math.min(o.s,p.s)*.6)&&Math.abs(o.y-p.y)<.08))out.push(p)});return out}
+async function peDetect(quiet){const P=peP();if(!P||PE.busy)return;PE.busy="d";peStat("Cerco le persone nell'inquadratura…");const v=peV(),t0=v.currentTime,A=v.videoWidth/v.videoHeight,pts=[],T=[.2,.4,.6,.8];let nf=0;
+ try{const pose=await poseLoad();for(let fi=0;fi<T.length;fi++){let t=PE.dur*T[fi];const cu=peCutAt(t);if(cu)t=Math.min(PE.dur-1,cu[1]+1);peStat(`Cerco le persone nell'inquadratura… ${fi+1} di ${T.length}`);
+   const c=await peGrab(t,1280),fp=peDetF(pose,c);if(fp.length)nf++;fp.forEach(p=>pts.push({...p,f:fi}));await new Promise(r=>setTimeout(r,0))}}
  catch(e){console.warn(e)}v.currentTime=t0;
- const cl=[];pts.sort((a,b)=>a.x-b.x).forEach(p=>{const c=cl.find(c=>Math.abs(c.x-p.x)<.07);if(c){c.n++;c.x+=(p.x-c.x)/c.n;c.y+=(p.y-c.y)/c.n;c.s+=(p.s-c.s)/c.n}else cl.push({...p,n:1})});
- let ps=cl.filter(c=>c.n>=Math.min(2,Math.max(1,Math.floor(pts.length/Math.max(1,cl.length)/2)))).sort((a,b)=>a.x-b.x).slice(0,6);const auto=ps.length>0;if(!auto)ps=[0,1,2,3].map(i=>({x:(i+.5)/4,y:.4,s:.09}));
+ const cl=[];pts.sort((a,b)=>a.x-b.x).forEach(p=>{const c=cl.find(c=>Math.abs(c.x-p.x)<Math.max(.035,Math.min(.07,c.s*.7))&&Math.abs(c.y-p.y)<.15);if(c){c.k++;c.x+=(p.x-c.x)/c.k;c.y+=(p.y-c.y)/c.k;c.s+=(p.s-c.s)/c.k;c.fs.add(p.f)}else cl.push({...p,k:1,fs:new Set([p.f])})});
+ let ps=cl.filter(c=>c.fs.size>=(nf>=3?2:1)).sort((a,b)=>a.x-b.x).slice(0,6);const auto=ps.length>0;if(!auto)ps=[0,1,2,3].map(i=>({x:(i+.5)/4,y:.4,s:.09}));
  const box=p=>{const h=Math.min(1,Math.max(.25,p.s*A*2.3)),w=Math.min(1,h/A*16/9);return[Math.min(1-w,Math.max(0,p.x-w/2)),Math.min(1-h,Math.max(0,p.y-h*.36)),w,h].map(v=>+v.toFixed(4))};
- peDo(()=>{const old=P.sh.filter(s=>/^p\d$/.test(s.id)),keep=P.sh.filter(s=>s.id!=="a"&&!/^p\d$|^c\d$/.test(s.id));P.sh=[P.sh[0]];ps.forEach((p,i)=>{const o=old[i]||{};P.sh.push({id:"p"+(i+1),n:o.n||"Persona "+(i+1),sub:o.sub||"",r:box(p)})});
+ peDo(()=>{const old=P.sh.filter(s=>/^p\d$/.test(s.id)),keep=P.sh.filter(s=>s.id!=="a"&&!/^p\d$|^c\d$/.test(s.id)),mp={},used=new Set();P.sh=[P.sh[0]];
+  /* nomi e regia restano alla persona giusta: abbino i vecchi riquadri a quelli nuovi per posizione */
+  ps.forEach((p,i)=>{let o=null,bd=.1;old.forEach(s=>{if(used.has(s.id))return;const d=Math.abs(s.r[0]+s.r[2]/2-p.x);if(d<bd){bd=d;o=s}});if(o){used.add(o.id);mp[o.id]="p"+(i+1)}o=o||{};P.sh.push({id:"p"+(i+1),n:o.n||"Persona "+(i+1),sub:o.sub||"",r:box(p)})});
+  old.forEach(s=>{if(!mp[s.id])mp[s.id]="__x"});P.sw=P.sw.map(w=>mp[w.s]?{...w,s:mp[w.s]}:w);(P.cl||[]).forEach(c=>{["pa","pb"].forEach(k=>{if(c[k]&&mp[c[k]]){if(mp[c[k]]==="__x")delete c[k];else c[k]=mp[c[k]]}})});
   if(ps.length>=4){[[0,1],[2,3]].forEach(([a,b],j)=>{const A2=P.sh[a+1].r,B2=P.sh[b+1].r,x0=Math.min(A2[0],B2[0]),x1=Math.max(A2[0]+A2[2],B2[0]+B2[2]),cy=(A2[1]+A2[3]/2+B2[1]+B2[3]/2)/2,w=x1-x0+.02,h=Math.min(1,w*A*9/16);const w2=Math.min(1,w);P.sh.push({id:"c"+(j+1),n:j?"Coppia destra":"Coppia sinistra",r:[Math.min(1-w2,Math.max(0,x0-.01)),Math.min(1-h,Math.max(0,cy-h*.45)),w2,h].map(v=>+v.toFixed(4))})})}
   P.sh.push(...keep);P.sw=P.sw.filter(w=>P.sh.some(s=>s.id===w.s))});
  PE.busy="";peStat("");if(!quiet||!auto)toast(auto?`Trovate ${ps.length} persone: controlla i riquadri in “Inquadrature”`:"Non ho trovato le persone in automatico: ho preparato 4 riquadri da sistemare a mano");peUI()}
