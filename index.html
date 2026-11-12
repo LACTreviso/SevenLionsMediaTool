@@ -1324,7 +1324,12 @@ function podBg(x,W,H){const o=PCD(),L=o.bg==="l"?["__lega"]:o.bg==="t"?[o.t1,o.t
 function podv(x,W,H,u,F,fit){const st=S.sty,k=Math.min(W,H)/1080,ls=($("#gh").value||"OSPITI").toUpperCase().split("|"),lh=.9,s=Math.min(...ls.map(q=>fit(q,H*.26,W*.9,800))),y0=H*.935-(ls.length-1)*s*lh;
  x.save();x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=34*k;x.shadowOffsetY=6*k;TX(x,W,H,ls,W/2,y0,s,"center","tt",st.tx,800,lh,F);x.restore();
  x.save();x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=14*k;TX(x,W,H,[($("#gs").value||"").toUpperCase()],56*k,92*k,40*k,"left","ts",st.tx,800,1,F);x.restore()}
-const OLC={};function olImg(c,key,t){if(OLC[key])return OLC[key];const w=c.naturalWidth||c.width,h=c.naturalHeight||c.height,o=bgCv(w+2*t,h+2*t),q=o.getContext("2d");for(let a=0;a<24;a++){const an=a*Math.PI/12;q.drawImage(c,t+Math.cos(an)*t,t+Math.sin(an)*t)}q.globalCompositeOperation="source-in";q.fillStyle="#fff";q.fillRect(0,0,o.width,o.height);return OLC[key]=o}
+/* contorno bianco morbido: allargo la sagoma con una sfocatura e la taglio a soglia, così segue la persona senza riprendere ogni scalino;
+   se la persona è tagliata in basso (busto) lungo il taglio il contorno non c'è */
+const OLC={};function olImg(c,key,t){if(OLC[key])return OLC[key];const w=c.naturalWidth||c.width,h=c.naturalHeight||c.height,W2=w+2*t,H2=h+2*t,o=bgCv(W2,H2),q=o.getContext("2d",{willReadFrequently:true});q.drawImage(c,t,t);
+ const D=q.getImageData(0,0,W2,H2),p=D.data,n=W2*H2,a=new Float32Array(n);for(let k=0;k<n;k++)a[k]=p[k*4+3]/255;const lr=(t+h-1)*W2;let bo=0;for(let i=t;i<t+w;i++)if(a[lr+i]>.5)bo++;const bc=bo>w*.12;
+ if(bc)for(let j=t+h;j<H2;j++)for(let i=0;i<W2;i++)a[j*W2+i]=a[lr+i];const b=gbl(a,W2,H2,t*.7);
+ for(let k=0;k<n;k++){const j=k/W2|0,v=bc&&j>=t+h?0:Math.max(0,Math.min(1,(b[k]-.05)/.07));p[k*4]=p[k*4+1]=p[k*4+2]=255;p[k*4+3]=Math.round(v*255)}q.putImageData(D,0,0);return OLC[key]=o}
 function cutDraw(x,l,c,w,h,r,W,H){const X=l.x*W-w*r/2,Y=l.y*H-h*r/2;if(l.k!=="img"||!l.cut)return x.drawImage(c,X,Y,w*r,h*r);x.save();x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=W*.02;x.shadowOffsetY=W*.006;
  if(PCD().ol&&l.src!==l.src0){const t=Math.max(2,Math.round(Math.max(w,h)*.011));x.drawImage(olImg(c,l.id+"|"+l.src.length+"|"+t,t),X-t*r,Y-t*r,(w+2*t)*r,(h+2*t)*r);x.shadowColor="transparent"}x.drawImage(c,X,Y,w*r,h*r);x.restore()}
 /* scontorno: PNG già trasparenti restano così; le altre foto passano dal modello MediaPipe (persone, capelli inclusi) */
@@ -1334,8 +1339,33 @@ const segFs=()=>SEGF=SEGF||(async()=>{const m=await import(SEGB+"/vision_bundle.
 function segLoad(){return SEGP=SEGP||(async()=>{const{m,fs}=await segFs();return m.ImageSegmenter.createFromOptions(fs,{baseOptions:{modelAssetPath:SEGM,delegate:"CPU"},runningMode:"IMAGE",outputConfidenceMasks:true,outputCategoryMask:false})})().catch(e=>{SEGP=null;throw e})}
 /* scheletro delle persone: serve a tenere solo il giocatore principale quando nella foto ce ne sono altri */
 function poseLoad(){return POSEP=POSEP||(async()=>{const{m,fs}=await segFs();return m.PoseLandmarker.createFromOptions(fs,{baseOptions:{modelAssetPath:POSEM,delegate:"CPU"},runningMode:"IMAGE",numPoses:4,minPoseDetectionConfidence:.35,minPosePresenceConfidence:.35,outputSegmentationMasks:false})})().catch(e=>{POSEP=null;throw e})}
-function trimA(c){const q=c.getContext("2d"),{width:w,height:h}=c,p=q.getImageData(0,0,w,h).data;let x0=w,y0=h,x1=-1,y1=-1;for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(p[(j*w+i)*4+3]>24){if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j}
- if(x1<0)return c;const m=Math.round(Math.max(w,h)*.01);x0=Math.max(0,x0-m);y0=Math.max(0,y0-m);x1=Math.min(w-1,x1+m);y1=Math.min(h-1,y1+m);const o=bgCv(x1-x0+1,y1-y0+1);o.getContext("2d").drawImage(c,-x0,-y0);return o}
+function trimA(c,nb){const q=c.getContext("2d"),{width:w,height:h}=c,p=q.getImageData(0,0,w,h).data;let x0=w,y0=h,x1=-1,y1=-1;for(let j=0;j<h;j++)for(let i=0;i<w;i++)if(p[(j*w+i)*4+3]>24){if(i<x0)x0=i;if(i>x1)x1=i;if(j<y0)y0=j;if(j>y1)y1=j}
+ if(x1<0)return c;const m=Math.round(Math.max(w,h)*.01);x0=Math.max(0,x0-m);y0=Math.max(0,y0-m);x1=Math.min(w-1,x1+m);y1=Math.min(h-1,y1+(nb?0:m));const o=bgCv(x1-x0+1,y1-y0+1);o.getContext("2d").drawImage(c,-x0,-y0);return o}
+/* ---- rifinitura dello scontorno a piena risoluzione ----
+   la maschera del modello è 256×256: la ingrandisco, la aggancio ai bordi veri della foto (filtro guidato), tolgo i pezzetti staccati,
+   riempio i buchi piccoli (riflessi sugli occhiali, loghi) e arrotondo il contorno, così non resta il bordo "a scalini" né le schegge */
+function bxb(a,w,h,r){r=Math.max(1,Math.round(r));const t=new Float32Array(a.length),o=new Float32Array(a.length),d=1/(2*r+1);
+ for(let j=0;j<h;j++){const R=j*w;let s=0;for(let i=-r;i<=r;i++)s+=a[R+Math.min(w-1,Math.max(0,i))];for(let i=0;i<w;i++){t[R+i]=s*d;s+=a[R+Math.min(w-1,i+r+1)]-a[R+Math.max(0,i-r)]}}
+ for(let i=0;i<w;i++){let s=0;for(let j=-r;j<=r;j++)s+=t[Math.min(h-1,Math.max(0,j))*w+i];for(let j=0;j<h;j++){o[j*w+i]=s*d;s+=t[Math.min(h-1,j+r+1)*w+i]-t[Math.max(0,j-r)*w+i]}}return o}
+const gbl=(a,w,h,sg)=>{const r=Math.max(1,Math.round(sg-.5));return bxb(bxb(bxb(a,w,h,r),w,h,r),w,h,r)};
+function cutLab(B,w,h,v){const n=w*h,L=new Int32Array(n).fill(-1),ar=[],bd=[],st=[];let nc=0;
+ for(let k0=0;k0<n;k0++){if(L[k0]>=0||B[k0]!==v)continue;let a=0,e=0;L[k0]=nc;st.push(k0);while(st.length){const k=st.pop(),i=k%w,j=(k-i)/w;a++;if(!i||!j||i===w-1||j===h-1)e=1;
+  if(i>0&&L[k-1]<0&&B[k-1]===v){L[k-1]=nc;st.push(k-1)}if(i<w-1&&L[k+1]<0&&B[k+1]===v){L[k+1]=nc;st.push(k+1)}if(j>0&&L[k-w]<0&&B[k-w]===v){L[k-w]=nc;st.push(k-w)}if(j<h-1&&L[k+w]<0&&B[k+w]===v){L[k+w]=nc;st.push(k+w)}}
+  ar.push(a);bd.push(e);nc++}return{L,ar,bd}}
+function cutRef(p,w,h,A,mw,mh,yc){const n=w*h,M=Math.max(w,h),I=new Float32Array(n),Pm=new Float32Array(n);
+ for(let j=0;j<h;j++){const fy=Math.max(0,(j+.5)*mh/h-.5),y0=Math.min(mh-1,Math.floor(fy)),y1=Math.min(mh-1,y0+1),ty=fy-y0;for(let i=0;i<w;i++){const fx=Math.max(0,(i+.5)*mw/w-.5),x0=Math.min(mw-1,Math.floor(fx)),x1=Math.min(mw-1,x0+1),tx=fx-x0,k=j*w+i;
+  Pm[k]=(A[y0*mw+x0]*(1-tx)+A[y0*mw+x1]*tx)*(1-ty)+(A[y1*mw+x0]*(1-tx)+A[y1*mw+x1]*tx)*ty;I[k]=(p[k*4]*.3+p[k*4+1]*.55+p[k*4+2]*.15)/255}}
+ /* filtro guidato (He et al.): i bordi della maschera seguono quelli dell'immagine */
+ const r=Math.max(2,Math.round(M*.008)),e=.002,II=new Float32Array(n),IP=new Float32Array(n);for(let k=0;k<n;k++){II[k]=I[k]*I[k];IP[k]=I[k]*Pm[k]}
+ const mI=bxb(I,w,h,r),mP=bxb(Pm,w,h,r),mII=bxb(II,w,h,r),mIP=bxb(IP,w,h,r),a=new Float32Array(n),b=new Float32Array(n);
+ for(let k=0;k<n;k++){const v=mII[k]-mI[k]*mI[k],c=mIP[k]-mI[k]*mP[k];a[k]=c/(v+e);b[k]=mP[k]-a[k]*mI[k]}const ma=bxb(a,w,h,r),mb=bxb(b,w,h,r);
+ const ycp=yc!=null&&yc<h-2?Math.max(2,Math.round(yc)):h,B=new Uint8Array(n);for(let k=0;k<n;k++)B[k]=(k/w|0)<ycp&&ma[k]*I[k]+mb[k]>.5?1:0;
+ /* pezzi staccati fuori, buchi piccoli dentro */
+ const F=cutLab(B,w,h,1);if(F.ar.length>1){const big=Math.max(...F.ar);for(let k=0;k<n;k++)if(B[k]&&F.ar[F.L[k]]<big*.15)B[k]=0}
+ const fg=B.reduce((t,v)=>t+v,0),G=cutLab(B,w,h,0);for(let k=0;k<n;k++)if(!B[k]){const c=G.L[k];if(!G.bd[c]&&G.ar[c]<fg*.025)B[k]=1}
+ /* contorno arrotondato; sotto il taglio orizzontale ripeto l'ultima riga così il taglio resta netto */
+ const Bf=new Float32Array(n);for(let k=0;k<n;k++){const j=k/w|0;Bf[k]=B[j<ycp?k:(ycp-1)*w+k%w]}const S=gbl(Bf,w,h,Math.max(1.2,M*.003));
+ let on=0;for(let k=0;k<n;k++){const j=k/w|0,v=j>=ycp?0:Math.max(0,Math.min(1,(S[k]-.65)*3+.5));p[k*4+3]=Math.round(p[k*4+3]*v);if(v>.5)on++}return on/n}
 /* una sola persona: scelgo il giocatore principale (il più grande e centrale) e gli costruisco una sagoma attorno allo scheletro.
    capelli e viso valgono solo vicino alla sua testa, i vestiti solo vicino al suo corpo e solo se hanno i colori della sua maglia: così spariscono compagni, abbracci e chi sta dietro */
 function cutOne(C,mw,mh,W,H,P,rgb){const n=mw*mh,vis=p=>p&&(p.visibility==null||p.visibility>.35),mc=C.length>=6;let L=null,bs=0;
@@ -1361,14 +1391,30 @@ function cutOne(C,mw,mh,W,H,P,rgb){const n=mw*mh,vis=p=>p&&(p.visibility==null||
  for(let k0=0;k0<n;k0++){if(lab[k0]>=0||A[k0]<=.5)continue;let a=0,c=0;lab[k0]=nc;st.push(k0);while(st.length){const k=st.pop(),i=k%mw;a++;if(Math.min(Dh[k],Db[k])<-u*.05)c=1;for(const q of[i>0?k-1:-1,i<mw-1?k+1:-1,k-mw,k+mw])if(q>=0&&q<n&&lab[q]<0&&A[q]>.5){lab[q]=nc;st.push(q)}}ar.push(a);core.push(c);nc++}
  if(nc>1){const big=Math.max(...ar),kc=L&&core.some(Boolean),keep=ar.map((a,i)=>kc?core[i]:a>=big*.25);for(let k=0;k<n;k++){if(lab[k]>=0&&!keep[lab[k]])A[k]=0;else if(lab[k]<0&&A[k]>.05){let ok=0;const i=k%mw;for(const q of[i>0?k-1:-1,i<mw-1?k+1:-1,k-mw,k+mw])if(q>=0&&q<n&&lab[q]>=0&&keep[lab[q]])ok=1;if(!ok)A[k]=0}}}
  return{A,one:!!L}}
+/* persona dal video del podcast (seduta al tavolo): tengo quello che il modello vede come persona vicino al suo scheletro,
+   divido dai vicini con lo scheletro più vicino e taglio in orizzontale all'altezza dei fianchi (via gambe, tavolo e bottiglie) */
+function cutSk(L,W,H){const vis=p=>p&&(p.visibility==null||p.visibility>.35),X=k=>L[k].x*W,Y=k=>L[k].y*H,M=(a,b)=>[(X(a)+X(b))/2,(Y(a)+Y(b))/2],ds=(a,b)=>Math.hypot(X(a)-X(b),Y(a)-Y(b)),sm=M(11,12),hm=M(23,24),pt=k=>[X(k),Y(k)];
+ const u=Math.max(ds(11,12),ds(7,8)*2.2,Math.hypot(sm[0]-hm[0],sm[1]-hm[1])*.55,4),hv=[0,1,2,3,4,5,6,7,8,9,10].filter(k=>vis(L[k])),hc=hv.length?[hv.reduce((t,k)=>t+X(k),0)/hv.length,hv.reduce((t,k)=>t+Y(k),0)/hv.length]:[sm[0],sm[1]-u*.6],rh=Math.max(ds(7,8)*.75,u*.3),
+  G=[[hc,[hc[0],hc[1]-rh*.3],rh],[hc,sm,u*.2],[sm,hm,u*.5],[pt(11),pt(23),u*.2],[pt(12),pt(24),u*.2],[pt(11),pt(12),u*.2]],vv=(a,b)=>((L[a].visibility??1)+(L[b].visibility??1))/2>.15;
+ [[11,13],[13,15],[12,14],[14,16]].forEach(([a,b])=>vv(a,b)&&G.push([pt(a),pt(b),u*.16]));return{G,u,sy:sm[1],hy:hm[1]}}
+function cutDist(G,mw,mh,W,H){const D=new Float32Array(mw*mh).fill(1e9);G.forEach(([a,b,r])=>{const vx=b[0]-a[0],vy=b[1]-a[1],l2=vx*vx+vy*vy||1e-6;for(let j=0;j<mh;j++){const py=(j+.5)/mh*H;for(let i=0;i<mw;i++){const px=(i+.5)/mw*W,t=Math.max(0,Math.min(1,((px-a[0])*vx+(py-a[1])*vy)/l2)),d=Math.hypot(px-a[0]-t*vx,py-a[1]-t*vy)-r,k=j*mw+i;if(d<D[k])D[k]=d}}});return D}
+function cutVid(C,mw,mh,W,H,P,ct,oth){const n=mw*mh,vis=p=>p&&(p.visibility==null||p.visibility>.35),A=new Float32Array(n);
+ /* dove la classe più probabile è lo sfondo (bottiglie, tavolo, oggetti davanti) abbasso la fiducia: restano fuori */
+ for(let k=0;k<n;k++){if(C.length<2){A[k]=C[0][k];continue}let bg=1;for(let j=1;j<C.length;j++)if(C[j][k]>C[0][k]){bg=0;break}A[k]=(1-C[0][k])*(bg?.5:1)}
+ let li=-1,bs=0;P.forEach((Q,qi)=>{const v=Q.filter(p=>vis(p)&&p.x>-.02&&p.x<1.02&&p.y>-.02&&p.y<1.02);if(v.length<6)return;let x0=1,x1=0,y0=1,y1=0;v.forEach(p=>{x0=Math.min(x0,p.x);x1=Math.max(x1,p.x);y0=Math.min(y0,p.y);y1=Math.max(y1,p.y)});const sc=(x1-x0+.05)*(y1-y0+.05)*v.length*(1.1-Math.min(.9,Math.abs((x0+x1)/2-.5)*1.4));if(sc>bs){bs=sc;li=qi}});
+ if(li<0)return{A,one:false,yc:null};const m=cutSk(P[li],W,H),u=m.u,Dm=cutDist(m.G,mw,mh,W,H),Do=new Float32Array(n).fill(1e9);
+ P.forEach((Q,qi)=>{if(qi===li||Q.filter(vis).length<6)return;const D=cutDist(cutSk(Q,W,H).G,mw,mh,W,H);for(let k=0;k<n;k++)if(D[k]<Do[k])Do[k]=D[k]});
+ /* i vicini che conosco dalle inquadrature (anche se nel ritaglio se ne vede solo un pezzo e il modello non li riconosce) */
+ const L0=P[li],hx=(L0[0].x)*W;(oth||[]).forEach(([x,y,s])=>{const X=x*W,Y=y*H,uo=s*W;if(Math.abs(X-hx)<u*.6)return;const D=cutDist([[[X,Y],[X,Y],uo*.45],[[X,Y+uo*.7],[X,Y+uo*2.2],uo*.55]],mw,mh,W,H);for(let k=0;k<n;k++)if(D[k]<Do[k])Do[k]=D[k]});
+ const cl=v=>Math.max(0,Math.min(1,v));for(let k=0;k<n;k++){const dm=Dm[k],wv=Do[k]>=1e8?1:cl(.5+(Do[k]-dm)/(u*.3)),wd=dm<u*.45?1:cl(1-(dm-u*.45)/(u*.3));A[k]*=wv*wd}
+ const yv=Math.min(m.sy+u*2,Math.max(m.sy+u*.9,m.hy+u*.12)),yc=ct==="n"?H:ct==="v"?yv:Math.min(yv,m.sy+u);return{A,one:true,yc:yc<H*.97?yc:null}}
 async function cutOut(src,o={}){const img=await ldImg(src),s=Math.min(1,1200/Math.max(img.naturalWidth,img.naturalHeight)),w=Math.round(img.naturalWidth*s),h=Math.round(img.naturalHeight*s),c=bgCv(w,h),q=c.getContext("2d",{willReadFrequently:true});q.drawImage(img,0,0,w,h);
  const D=q.getImageData(0,0,w,h),p=D.data;let tr=0;for(let i=3;i<p.length;i+=16)if(p[i]<200)tr++;if(tr/(p.length/16)>.03)return{c:trimA(c),pre:1};
  const seg=await segLoad(),a=await new Promise((ok,ko)=>{try{seg.segment(c,r=>{const m=r.confidenceMasks;if(!m||!m.length)return ko("nessuna persona trovata");ok({C:m.map(x=>Float32Array.from(x.getAsFloat32Array())),mw:m[0].width,mh:m[0].height})})}catch(e){ko(e)}});
  let A=a.C.length>1?a.C[0].map(v=>1-v):a.C[0],one=0;
- if(o.one){let P=[];try{const pl=await poseLoad();P=pl.detect(c).landmarks||[]}catch(e){P=[]}const g=bgCv(a.mw,a.mh),gx=g.getContext("2d",{willReadFrequently:true});gx.drawImage(c,0,0,a.mw,a.mh);const r=cutOne(a.C,a.mw,a.mh,w,h,P,gx.getImageData(0,0,a.mw,a.mh).data);A=r.A;one=r.one?1:0}
- for(let j=0;j<h;j++){const fy=j*(a.mh-1)/Math.max(1,h-1),y0=Math.floor(fy),y1=Math.min(a.mh-1,y0+1),ty=fy-y0;for(let i=0;i<w;i++){const fx=i*(a.mw-1)/Math.max(1,w-1),x0=Math.floor(fx),x1=Math.min(a.mw-1,x0+1),tx=fx-x0,
-  v0=A[y0*a.mw+x0]*(1-tx)+A[y0*a.mw+x1]*tx,v1=A[y1*a.mw+x0]*(1-tx)+A[y1*a.mw+x1]*tx;let v=v0*(1-ty)+v1*ty;v=Math.max(0,Math.min(1,(v-.3)/.4));p[(j*w+i)*4+3]=Math.round(p[(j*w+i)*4+3]*v)}}
- let on=0;for(let i=3;i<p.length;i+=16)if(p[i]>128)on++;if(on/(p.length/16)<.04)throw new Error("non ho riconosciuto una persona");q.putImageData(D,0,0);return{c:trimA(c),pre:0,one}}
+ let yc=null;if(o.one){let P=[];try{const pl=await poseLoad();P=pl.detect(c).landmarks||[]}catch(e){P=[]}
+  if(o.vid){const r=cutVid(a.C,a.mw,a.mh,w,h,P,o.ct,o.oth);A=r.A;one=r.one?1:0;yc=r.yc}else{const g=bgCv(a.mw,a.mh),gx=g.getContext("2d",{willReadFrequently:true});gx.drawImage(c,0,0,a.mw,a.mh);const r=cutOne(a.C,a.mw,a.mh,w,h,P,gx.getImageData(0,0,a.mw,a.mh).data);A=r.A;one=r.one?1:0}}
+ const fr=cutRef(p,w,h,A,a.mw,a.mh,yc);if(fr<.03)throw new Error("non ho riconosciuto una persona");q.putImageData(D,0,0);return{c:trimA(c,yc!=null),pre:0,one}}
 function podLay(){const A=PCQ(),[W,H]=S.sty.fmt.split("x").map(Number),n=A.length,sp=n===2?.5:Math.min(.7,.24*n);A.forEach((l,i)=>{const c=im(l.src),iw=c?c.naturalWidth:3,ih=c?c.naturalHeight:4,hh=H*(n>2?.84:.92),r=hh/ih;l.s=Math.max(iw,ih)*r/W;l.x=n<2?.5:.5+(i-(n-1)/2)*sp/(n-1);l.y=1-hh/2/H})}
 async function podCut(l){if(!l.src0)return;l.stt=SEGP?"Scontorno in corso…":"Scontorno in corso (la prima volta scarico il modello, circa 16 MB)…";podList();
  try{const r=await cutOut(l.src0);l.src=r.c.toDataURL("image/png");l.stt=r.pre?"Era già scontornata ✓":"Scontornata ✓";await ldImg(l.src)}catch(e){l.src=l.src0;l.stt="Scontorno non riuscito ("+(e&&e.message||e)+"): usa una foto già scontornata (PNG trasparente)"}
@@ -2372,7 +2418,10 @@ $("#twp").addEventListener("change",e=>{const d=e.target.dataset;if(d.tcs!=null)
 var PCV={m:null,th:{},pick:{},on:{},busy:0,key:"",st:""};
 const pcvPeople=()=>{const P=peP();return P&&PE.f?P.sh.filter(s=>/^p\d$/.test(s.id)):[]};
 function peSrcAt(o){let acc=0;for(const[a,b]of peKeep(0,PE.dur)){if(o<=acc+(b-a))return a+(o-acc);acc+=b-a}return PE.dur*.5}
-function pcvRect(s){const r=s.r,cx=r[0]+r[2]/2,w=Math.min(1,r[2]*1.1),top=Math.max(0,r[1]-r[3]*.1),h=Math.min(1-top,r[3]*1.55);return[Math.min(1-w,Math.max(0,cx-w/2)),top,w,h]}
+/* le altre persone (dalle inquadrature) in coordinate del ritaglio: servono a staccare il vicino quando si tocca */
+function pcvPc(s){const A=(PE.w||16)/(PE.h||9),r=s.r;return s.pc||[r[0]+r[2]/2,r[1]+r[3]*.36,r[3]/(A*2.3)]}
+function pcvOth(s,R){return pcvPeople().filter(q=>q.id!==s.id).map(q=>{const[x,y,z]=pcvPc(q);return[(x-R[0])/R[2],(y-R[1])/R[3],z/R[2]]}).filter(([x,y])=>x>-.5&&x<1.5&&y>-.5&&y<1.5)}
+function pcvRect(s){const r=s.r,cx=r[0]+r[2]/2,w=Math.min(1,r[2]*1.1),top=Math.max(0,r[1]-r[3]*.1),h=Math.min(1-top,r[3]*1.45);return[Math.min(1-w,Math.max(0,cx-w/2)),top,w,h]}
 function pcvInit(){if(PCV.m&&PCV.key===PE.key)return;PCV.key=PE.key;const L=peOut(PE.dur);PCV.m=[.22,.5,.78].map(f=>+peSrcAt(L*f).toFixed(2));PCV.th={};PCV.pick={};PCV.on={};
  const pp=pcvPeople(),os=((S.pod&&S.pod.cur&&S.pod.cur.os)||[]).map(o=>kHN(o.n)).filter(Boolean),g=pp.filter(s=>{const n=kHN(s.n);return n&&os.some(o=>o.includes(n)||n.includes(o))});(g.length?g:pp.slice(0,2)).forEach(s=>PCV.on[s.id]=1);pp.forEach(s=>PCV.pick[s.id]=0)}
 async function pcvThumbs(){if(PCV.busy||!PE.f)return;PCV.busy=1;PCV.st="Preparo le anteprime dal video…";pcvUI();const v=peV(),t0=v.currentTime,pp=pcvPeople();
@@ -2385,12 +2434,12 @@ function pcvUI(){const pc=$("#pcw");if(!pc)return;let el=$("#pcvw");if(!el){pc.q
  el.innerHTML=`<b>🎬 Dalla puntata</b><small>Spunta chi va in copertina e, per ognuno, clicca il momento in cui viene meglio. Lo scontorno dal video originale, con il contorno bianco; poi lo sistemi a mano come sempre.</small>
  <div class="pcvg" style="grid-template-columns:minmax(110px,1fr) repeat(${PCV.m.length},86px)"><span></span>${PCV.m.map((t,i)=>`<div class="pcvh"><button class="btn pbx" data-pcvm="${i}" data-d="-6" aria-label="Momento ${i+1} prima">◀</button><span>${peTf(t)}</span><button class="btn pbx" data-pcvm="${i}" data-d="6" aria-label="Momento ${i+1} dopo">▶</button></div>`).join("")}
  ${pp.map(s=>`<label class="pcvn"><input type="checkbox" data-pcvo="${s.id}"${PCV.on[s.id]?" checked":""}> <span>${esc(s.n||s.id)}</span></label>`+PCV.m.map((t,i)=>{const th=PCV.th[s.id+"|"+i];return`<button class="pcvt${PCV.pick[s.id]===i?" on":""}${PCV.on[s.id]?"":" off"}" data-pcvp="${s.id}|${i}" title="${esc(s.n||"")} a ${peTf(t)}">${th?`<img src="${th}" alt="">`:"<span>…</span>"}</button>`}).join("")).join("")}</div>
- <div class="bar" style="margin:8px 0 0;gap:8px"><button class="btn p" id="pcvx"${n&&!PCV.busy?"":" disabled"}>✂️ Metti in copertina${n?" ("+n+")":""}</button><button class="btn" id="pcvr"${PCV.busy?" disabled":""} title="Altri tre momenti a caso">🎲 Altri momenti</button><span class="hint" style="margin:0">${esc(PCV.st)}</span></div>`;
+ <div class="bar" style="margin:8px 0 0;gap:8px"><button class="btn p" id="pcvx"${n&&!PCV.busy?"":" disabled"}>✂️ Metti in copertina${n?" ("+n+")":""}</button><button class="btn" id="pcvr"${PCV.busy?" disabled":""} title="Altri tre momenti a caso">🎲 Altri momenti</button><label class="hint" style="margin:0 0 0 4px" for="pcvc">Taglio</label><select id="pcvc" style="width:auto;min-height:36px">${[["b","a mezzo busto"],["v","alla vita"],["n","intero"]].map(([k,t])=>`<option value="${k}"${(PCD().ct||"b")===k?" selected":""}>${t}</option>`).join("")}</select><span class="hint" style="margin:0">${esc(PCV.st)}</span></div>`;
  if(miss&&!PCV.busy)setTimeout(pcvThumbs,30)}
 async function pcvExtract(){const pp=pcvPeople().filter(s=>PCV.on[s.id]);if(!pp.length||PCV.busy)return;PCV.busy=1;const v=peV(),t0=v.currentTime,A=LY(),out=[];let k=0;
  try{const by={};pp.forEach(s=>{(by[PCV.pick[s.id]||0]=by[PCV.pick[s.id]||0]||[]).push(s)});
   for(const i of Object.keys(by)){const c=await peGrab(PCV.m[+i],4096);for(const s of by[i]){k++;PCV.st=`Scontorno ${k} di ${pp.length}…`+(SEGP?"":" (la prima volta scarico il modello)");pcvUI();const r=pcvRect(s),sx=r[0]*c.width,sy=r[1]*c.height,sw=r[2]*c.width,sh=r[3]*c.height,sc=Math.min(1,1400/Math.max(sw,sh)),o=bgCv(sw*sc,sh*sc);o.getContext("2d").drawImage(c,sx,sy,sw,sh,0,0,o.width,o.height);
-    const src0=o.toDataURL("image/jpeg",.92);let src=src0,stt="";try{const q=await cutOut(src0,{one:1});src=q.c.toDataURL("image/png");stt="Dal video ("+peTf(PCV.m[+i])+") · scontornato ✓"}catch(e){stt="Scontorno non riuscito: "+(e&&e.message||e)}await ldImg(src);out.push({s,l:{id:nid(),k:"img",nm:s.n||"Ospite",cut:1,pv:1,src,src0,x:.5,y:.55,s:.5,o:100,c:"",b:1,stt}})}}}
+    const src0=o.toDataURL("image/jpeg",.92);let src=src0,stt="";try{const q=await cutOut(src0,{one:1,vid:1,ct:PCD().ct||"b",oth:pcvOth(s,r)});src=q.c.toDataURL("image/png");stt="Dal video ("+peTf(PCV.m[+i])+") · scontornato ✓"}catch(e){stt="Scontorno non riuscito: "+(e&&e.message||e)}await ldImg(src);out.push({s,l:{id:nid(),k:"img",nm:s.n||"Ospite",cut:1,pv:1,src,src0,x:.5,y:.55,s:.5,o:100,c:"",b:1,stt}})}}}
  catch(e){console.warn(e);toast("Non riesco a prendere le immagini dal video")}v.currentTime=t0;PCV.busy=0;PCV.st="";
  if(out.length){for(let j=A.length-1;j>=0;j--)if(A[j].pv)A.splice(j,1);const ord=pcvPeople().map(s=>s.id);out.sort((a,b)=>ord.indexOf(a.s.id)-ord.indexOf(b.s.id)).forEach(o=>A.push(o.l));podLay();podList();
   const nm=out.map(o=>o.s.n).filter(n=>n&&!/^Persona \d+$/.test(n)).map(n=>n.trim().split(/\s+/)[0].toUpperCase());if(nm.length===out.length&&/^NOME\|?\s*&\s*NOME$/i.test($("#gh").value.trim())){$("#gh").value=nm.length>1?nm.slice(0,-1).join(", ")+"|& "+nm[nm.length-1]:nm[0]}
@@ -2400,7 +2449,7 @@ $("#pcw").addEventListener("click",e=>{const b=e.target.closest("[data-pcvgo],[d
  if(d.pcvm!=null){const i=+d.pcvm;let t=Math.max(0,Math.min(PE.dur-.1,PCV.m[i]+(+d.d)));const cu=peCutAt(t);if(cu)t=+d.d>0?Math.min(PE.dur-.1,cu[1]+.1):Math.max(0,cu[0]-.1);PCV.m[i]=+t.toFixed(2);pcvPeople().forEach(s=>delete PCV.th[s.id+"|"+i]);pcvUI();return}
  if(d.pcvp){const[id,i]=d.pcvp.split("|");PCV.pick[id]=+i;PCV.on[id]=1;pcvUI();return}
  if(b.id==="pcvr"){const L=peOut(PE.dur);PCV.m=PCV.m.map((t,i)=>+peSrcAt(L*(i+Math.random())/PCV.m.length).toFixed(2));PCV.th={};pcvUI();return}if(b.id==="pcvx")pcvExtract()});
-$("#pcw").addEventListener("change",e=>{const d=e.target.dataset;if(d.pcvo){PCV.on[d.pcvo]=e.target.checked?1:0;pcvUI()}});
+$("#pcw").addEventListener("change",e=>{const d=e.target.dataset;if(d.pcvo){PCV.on[d.pcvo]=e.target.checked?1:0;pcvUI()}if(e.target.id==="pcvc"){S.pc={...PCD(),ct:e.target.value};save()}});
 /* dall'Edit podcast: “Copertina con queste persone” */
 $("#e").addEventListener("click",e=>{if(!e.target.closest("#pecov"))return;go("g");const s=$("#gt");s.value="pod";s.dispatchEvent(new Event("change"));$('#et [data-et="c"]').click();setTimeout(()=>{const w=$("#pcvw");if(w)w.scrollIntoView({behavior:"smooth",block:"center"})},150)});
 
