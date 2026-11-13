@@ -1760,11 +1760,13 @@ $("#lyc").addEventListener("click",e=>{const b=e.target.closest("[data-fw]");if(
 /* ---- Grafiche squadra: match day automatico, grafica “Risultati” della squadra, font e sfondi propri ---- */
 function gqMatches(){const t=kHN(gqCur());if(!t)return[];return(S.cal||[]).filter(r=>kHN(r.h)===t||kHN(r.a)===t).sort((a,b)=>a.g-b.g||String(a.d).localeCompare(String(b.d)))}
 /* match day: la prossima partita della squadra; full time: l'ultima giocata. Se scegli tu una partita (o scrivi i campi) resta la tua. */
-function gqMcPick(M){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,pl=M.filter(r=>kRG(r.r)),np=M.filter(r=>!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r)&&!(String(r.d)>new Date().toISOString().slice(0,10))));return ft?pl[pl.length-1]||M[M.length-1]:np[0]||pl[pl.length-1]}
+function gqMcPick(M){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,td=iso(new Date(new Date().setHours(12))),rp=r=>typeof rvPend==="function"&&rvPend(r),pl=M.filter(r=>kRG(r.r)||!rp(r)&&/^\d{4}-/.test(r.d||"")&&r.d<=td),np=M.filter(r=>!kRG(r.r)&&!(rp(r)&&!(String(r.d)>td))&&!(ft&&pl.includes(r)));
+ /* full time: l'ultima partita giocata (anche se il risultato non è ancora nel calendario); match day: la prossima */
+ return ft?pl.sort((a,b)=>String(a.d).localeCompare(String(b.d)))[pl.length-1]||M[M.length-1]:np.filter(r=>!(/^\d{4}-/.test(r.d||"")&&r.d<td))[0]||np[0]||pl[pl.length-1]}
 function gqMcFill(){const sel=$("#mcsel");MCM=gqMatches();
  sel.innerHTML=`<option value="">${MCM.length?"Partite di "+esc(gqSN())+": scegline un’altra se vuoi":"Nessuna partita della squadra: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">G${r.g} · ${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":(typeof rvPend==="function"&&rvPend(r))?" (rinviata)":""}</option>`).join("");
  if(BS(gT())!=="mc")return;
- if(S.mt.au===0){const i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a);if(i>=0){sel.value=i;MCC=MCM[i];mcSub(MCC.g)}return}
+ if(S.mt.au===0&&(typeof mcMine!=="function"||mcMine())){const i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a);if(i>=0){sel.value=i;MCC=MCM[i];mcSub(MCC.g);return}}
  const r=gqMcPick(MCM);if(!r)return;sel.value=MCM.indexOf(r);MCC=r;mcSub(r.g);const x=kRG(r.r);
  S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}
 /* grafica “Risultati” della squadra: tutte le partite giocate (o le ultime N) dal calendario */
@@ -1996,8 +1998,8 @@ function peLabels(cl){const P=peP();if(!P)return[];const ck=PE.rev+"|"+(cl?cl.id
   Object.values(seg).forEach(a=>{const g=a.find(q=>q.e-q.t>=2)||a[0];r.push({a:g.t+.3,b:Math.min(g.t+4.6,Math.max(g.e,g.t+2.3)),s:g.s})})}
  PE.lab=r;PE.labK=ck;return r}
 /* grafiche inserite: {id,g,t,d} — la grafica copre il video per d secondi (l'audio continua) */
-const peGal=id=>G.find(g=>g.id===id),peImg=g=>{if(!g)return null;let i=PE.img[g.id];if(!i){i=PE.img[g.id]=new Image();i.onload=()=>peDraw();i.src=g.d}return i.complete&&i.naturalWidth?i:null};
-function peInsAt(t){const P=peP();return P?P.ins.find(n=>t>=n.t&&t<n.t+n.d&&peGal(n.g))||null:null}
+const peGal=id=>id==="__yt"?(typeof peYtG==="function"?peYtG():null):G.find(g=>g.id===id),peImg=g=>{if(!g)return null;let i=PE.img[g.id];if(!i){i=PE.img[g.id]=new Image();i.onload=()=>peDraw();i.src=g.d}return i.complete&&i.naturalWidth?i:null};
+function peInsAt(t){const P=peP();return P?P.ins.find(n=>n.g!=="__yt"&&t>=n.t&&t<n.t+n.d&&peGal(n.g))||null:null}
 /* ---- disegno di un fotogramma (anteprima ed esportazione usano la stessa funzione) ---- */
 function peFit(r,A,sw,sh){const cx=(r[0]+r[2]/2)*sw,cy=(r[1]+r[3]/2)*sh;let h=r[3]*sh,w=h*A;if(w>sw){w=sw;h=w/A}if(h>sh){h=sh;w=h*A}return{x:Math.min(Math.max(0,cx-w/2),sw-w),y:Math.min(Math.max(0,cy-h/2),sh-h),w,h}}
 function peZoom(q,k){const w=q.w*k,h=q.h*k;return{x:q.x+(q.w-w)/2,y:q.y+(q.h-h)/2,w,h}}
@@ -2014,6 +2016,7 @@ function peRender(x,W,H,src,sw,sh,t,cl){const P=peP();if(!P||!src)return;const{s
   x.translate((1-k)*-40*u,0);x.fillStyle="rgba(8,12,22,.86)";x.beginPath();x.roundRect(bx,by,bw,bh,10*u);x.fill();x.fillStyle=S.sty&&S.sty.ac||"#2f7bff";x.fillRect(bx,by,8*u,bh);x.fillStyle="#fff";x.font=`800 ${fs}px ${F}`;x.textBaseline="top";x.fillText(lb.s.n,bx+fs*.6,by+fs*.18);if(lb.s.sub){x.fillStyle="rgba(255,255,255,.75)";x.font=`600 ${sf}px ${F}`;x.fillText(lb.s.sub,bx+fs*.6,by+fs*1.2)}x.setTransform(1,0,0,1,0,0);x.globalAlpha=1}
  if(cl&&cl.tt&&W<H*1.2){const fs=64*u,mw=W*.86;x.font=`800 ${fs}px ${F}`;const ws=cl.tt.split(/\s+/),ln=[];let c="";ws.forEach(w=>{const q=c?c+" "+w:w;if(x.measureText(q).width>mw&&c){ln.push(c);c=w}else c=q});if(c)ln.push(c);const lh=fs*1.18,y0=H*.1;x.textAlign="center";x.textBaseline="middle";
   ln.slice(0,3).forEach((l,i)=>{const w=x.measureText(l).width+fs*.6,y=y0+i*lh;x.fillStyle="#fff";x.beginPath();x.roundRect(W/2-w/2,y-lh/2+4*u,w,lh-8*u,12*u);x.fill();x.fillStyle="#0b0f19";x.fillText(l,W/2,y+2*u)});x.textAlign="left"}
+ if(!cl&&typeof peYtAll==="function")peYtAll(x,W,H,t);
  x.restore()}
 /* ---- anteprima ---- */
 function peDraw(){const v=peV();if(!v||!PE.f||typeof PEI!=="undefined"&&PEI&&PEI.run)return;if(PE.view==="v"){const c=$("#pecv"),x=c.getContext("2d");if(PE.es!=null)return peShotEd(x,c.width,c.height);peRender(x,c.width,c.height,v.readyState>=2?v:null,v.videoWidth,v.videoHeight,v.currentTime,null);
@@ -2151,7 +2154,7 @@ function peSide(){const el=$("#pesb"),P=peP();if(!el||!P)return;$$("#pest [data-
   <datalist id="pegl">${nm.map(n=>`<option value="${esc(n)}">`).join("")}</datalist>`+P.sh.map((s,i)=>`<div class="pesr${PE.es===i?" on":""}"><span class="pedot" style="background:${PEC[i%PEC.length]}">${i}</span>${s.id==="a"?`<b style="flex:1">Tutti <span class="hint" style="margin:0;font-weight:400">· ${peAFull()?"tutto il fotogramma":"stretta sulle persone"}</span></b><button class="btn pbx" data-psa="auto" title="Stringo l’inquadratura larga attorno alle persone rilevate, tagliando quello che c’è intorno">✨ Stringi sulle persone</button>${peAFull()?"":`<button class="btn pbx" data-psa="full" title="Torna a tutto il fotogramma">↺</button>`}<button class="btn pbx${PE.es===i?" p":""}" data-pse="${i}">${PE.es===i?"Fine":"Riquadro"}</button>`:`<input data-psn="${i}" value="${esc(s.n||"")}" list="pegl" placeholder="Nome" aria-label="Nome dell’inquadratura ${i}"><input data-pss="${i}" value="${esc(s.sub||"")}" placeholder="Squadra o ruolo" aria-label="Sotto il nome"><button class="btn pbx${PE.es===i?" p":""}" data-pse="${i}">${PE.es===i?"Fine":"Riquadro"}</button><button class="btn pbx" data-psx="${i}" title="Elimina" aria-label="Elimina l’inquadratura ${i}">×</button>`}</div>${PE.es===i?`<div class="pesz"><label for="pesz">Grandezza</label><input type="range" id="pesz" min="${s.id==="a"?.3:.12}" max="1" step=".01" value="${s.r[3]}"></div>`:""}`).join("")+
   `<label class="pechk" style="margin-top:10px"><input type="checkbox" id="pelt"${P.lt?" checked":""}> Sottopancia con nome e squadra la prima volta che la persona entra in scena</label><label class="pechk"><input type="checkbox" id="pemv"${P.mv?" checked":""}> Movimento leggero: zoom lento su ogni inquadratura</label><div class="hint">Cambi di inquadratura: ${P.sw.length} ${P.sw.length?'<button class="btn pbx" id="peswx">Togli tutta la regia</button>':""}</div>`}
  else if(PE.tab==="gr"){const g=G.slice().reverse();h=(typeof peIEd==="function"?peIEd():"")+`<div class="card"><b>Grafiche nel video</b><small>Coprono il video per qualche secondo mentre l’audio continua. Le prepari in Grafiche con “Aggiungi al podcast”. Trascinale sulla traccia Grafiche della timeline (o cliccale per metterle a ${peTf(t)}), poi tira i bordi per la durata.</small><div class="pegg">${g.map(q=>`<button data-peg="${q.id}" draggable="true" title="Trascinala sulla timeline, o clicca per metterla a ${peTf(t)}"><img src="${q.d}" alt="${esc(q.n)}"></button>`).join("")||'<span class="hint">Nessuna grafica: creane una in Grafiche e premi “Aggiungi al podcast”.</span>'}</div><div class="bar" style="margin:8px 0 0;gap:6px"><button class="btn pbx" id="peup">📁 Carica un’immagine</button><span class="hint" style="margin:0">per esempio la grafica di una settimana fa che hai già pubblicato</span><input type="file" id="peupf" accept="image/*" hidden></div></div>
-  <div class="card"><b>Nel video${P.ins.length?" · "+P.ins.length:""}</b>${P.ins.slice().sort((a,b)=>a.t-b.t).map(n=>{const q=peGal(n.g);return`<div class="peir${PE.si===n.id?" on":""}">${q?`<img src="${q.d}" alt="">`:'<span class="hint">grafica eliminata</span>'}<button class="pelk" data-pij="${n.id}">${peTf(n.t,1)}</button><input type="number" min="1" max="120" step=".5" value="${n.d}" data-pid="${n.id}" aria-label="Durata in secondi"><span class="hint" style="margin:0">s</span><button class="btn pbx" data-pij="${n.id}" title="Modifica: ritaglio, riquadro, effetti">✏️</button><button class="btn pbx" data-pim="${n.id}" title="Sposta qui (${peTf(t)})">⤓ qui</button><button class="btn pbx" data-pix="${n.id}" aria-label="Togli">×</button></div>`}).join("")||'<div class="hint">Nessuna.</div>'}</div>`+(typeof peTcUI==="function"?peTcUI():"")}
+  <div class="card"><b>Nel video${P.ins.length?" · "+P.ins.length:""}</b>${P.ins.slice().sort((a,b)=>a.t-b.t).map(n=>{const q=peGal(n.g);return`<div class="peir${PE.si===n.id?" on":""}">${q?`<img src="${q.d}" alt="">`:'<span class="hint">grafica eliminata</span>'}<button class="pelk" data-pij="${n.id}">${peTf(n.t,1)}</button><input type="number" min="1" max="120" step=".5" value="${n.d}" data-pid="${n.id}" aria-label="Durata in secondi"><span class="hint" style="margin:0">s</span><button class="btn pbx" data-pij="${n.id}" title="Modifica: ritaglio, riquadro, effetti">✏️</button><button class="btn pbx" data-pim="${n.id}" title="Sposta qui (${peTf(t)})">⤓ qui</button><button class="btn pbx" data-pix="${n.id}" aria-label="Togli">×</button></div>`}).join("")||'<div class="hint">Nessuna.</div>'}</div>`+(typeof peYtUI==="function"?peYtUI():"")+(typeof peTcUI==="function"?peTcUI():"")}
  else if(PE.tab==="in")h=typeof peIUI==="function"?peIUI():"";
  else if(PE.tab==="ex")h=typeof peExUI==="function"?peExUI():"";
  if(el.dataset.h!==h){const ae=document.activeElement,id=ae&&ae.dataset&&Object.keys(ae.dataset)[0],iv=id?ae.dataset[id]:null;el.innerHTML=h;el.dataset.h=h;if(id){const n=el.querySelector(`[data-${id.replace(/[A-Z]/g,m=>"-"+m.toLowerCase())}="${iv}"]`);if(n&&n.tagName==="INPUT"&&n.type!=="checkbox"){n.focus();try{n.setSelectionRange(n.value.length,n.value.length)}catch(e){}}}};if(typeof peCropDraw==="function")peCropDraw();if(typeof peIThumb==="function")peIThumb()}
@@ -2337,7 +2340,7 @@ function peClipUI0(P){const cl=peClipCur(),v=peV();$("#pecn").textContent="Le tu
   ${cl.lay==="two"?`<div class="g3" style="grid-template-columns:1fr 1fr"><div><label for="pec_a">Sopra</label><select id="pec_a" data-pck="pa">${opt(cl.pa||"p1")}</select></div><div><label for="pec_b">Sotto</label><select id="pec_b" data-pck="pb">${opt(cl.pb||"p2")}</select></div></div>`:""}
   <label for="pec_z">Zoom sulle persone</label><input type="range" id="pec_z" data-pck="z" min=".6" max="1.6" step=".05" value="${cl.z||1}">
   <div class="hint">${peTf(cl.a,1)} – ${peTf(cl.b,1)} · durata ${peTf(peLen(cl.a,cl.b),1)}${peKeep(cl.a,cl.b).length>1?" (dentro ci sono parti scartate: le salto)":""}. Le inquadrature seguono la regia del Video completo.</div>
-  <div class="bar" style="margin:10px 0 0;gap:6px"><button class="btn p" id="pecx1">⬇ Esporta questa clip</button><button class="btn" id="pecxa">⬇ Esporta tutte (${P.cl.length})</button></div><div id="pecxs" class="hint"></div></div>`;
+  ${typeof peEsUI==="function"?peEsUI():""}<div class="bar" style="margin:10px 0 0;gap:6px"><button class="btn p" id="pecx1">⬇ Esporta questa clip</button><button class="btn" id="pecxa">⬇ Esporta tutte (${P.cl.length})</button></div><div id="pecxs" class="hint"></div></div>`;
  peClipTL();peClipDraw()}
 $("#pec").addEventListener("click",e=>{const b=e.target.closest("button,[data-pecs]");if(!b)return;const d=b.dataset,P=peP();if(!P)return;
  if(b.id==="pefind"){if(!PE.vo)return;PE.sug=peFind($("#pelen").value);PE.tc=null;peClipUI();if(!PE.sug.length)toast("Nessun tratto adatto con questa durata");return}
@@ -2374,13 +2377,14 @@ async function peRun(o){const M=PE.M,v=M.v,a=M.a&&/^mp4a/.test(M.a.codec)?M.a:nu
  const fps=Math.max(15,Math.min(60,Math.round(v.fps)||30));let ec=null;for(const c of o.W*o.H>2.3e6?["avc1.640033","avc1.4d0033"]:["avc1.640028","avc1.4d0028","avc1.42e028"]){const t={codec:c,width:o.W,height:o.H,bitrate:o.br,framerate:fps,latencyMode:"quality",avc:{format:"avc"}};try{if((await VideoEncoder.isConfigSupported(t)).supported){ec=t;break}}catch(e){}}if(!ec)throw new Error("NOENC");
  const Mx=await peLib();await peImgsReady();const target=o.ws?new Mx.FileSystemWritableFileStreamTarget(o.ws):new Mx.ArrayBufferTarget();
  const mux=new Mx.Muxer({target,video:{codec:"avc",width:o.W,height:o.H,frameRate:fps},...(a?{audio:{codec:"aac",numberOfChannels:a.ch,sampleRate:a.asr||a.sr}}:{}),fastStart:o.ws?false:"in-memory",firstTimestampBehavior:"cross-track-offset"});
- let err=null,R=null,lastKey=-9,aF=true,done=0;const tot=o.ranges.reduce((s,r)=>s+r[1]-r[0],0)+(o.intro?o.intro.d:0)||1,enc=new VideoEncoder({output:(ch,meta)=>{try{mux.addVideoChunk(ch,meta)}catch(e){err=e}},error:e=>{err=e}});enc.configure(ec);
+ let err=null,R=null,lastKey=-9,aF=true,done=0,aEnd=0;const tot=o.ranges.reduce((s,r)=>s+r[1]-r[0],0)+(o.intro?o.intro.d:0)||1,enc=new VideoEncoder({output:(ch,meta)=>{try{mux.addVideoChunk(ch,meta)}catch(e){err=e}},error:e=>{err=e}});enc.configure(ec);
  const cv=bgCv(o.W,o.H),x=cv.getContext("2d"),rot=v.rot||0,rc=rot?bgCv(rot%180?v.h:v.w,rot%180?v.w:v.h):null,rx=rc&&rc.getContext("2d");
- const addA=up=>{if(!a||!R)return;while(R.ai<R.A.length&&R.A[R.ai].t<=up){const q=R.A[R.ai++];try{mux.addAudioChunkRaw(q.data,"key",Math.round(q.t*1e6),Math.round(q.d*1e6),aF?{decoderConfig:{codec:a.codec,sampleRate:a.asr||a.sr,numberOfChannels:a.ch,...(a.desc?{description:a.desc}:{})}}:undefined);aF=false}catch(e){err=e}}};
+ const addA=up=>{if(!a||!R)return;while(R.ai<R.A.length&&R.A[R.ai].t<=up){const q=R.A[R.ai++];aEnd=Math.max(aEnd,q.t+q.d);try{mux.addAudioChunkRaw(q.data,"key",Math.round(q.t*1e6),Math.round(q.d*1e6),aF?{decoderConfig:{codec:a.codec,sampleRate:a.asr||a.sr,numberOfChannels:a.ch,...(a.desc?{description:a.desc}:{})}}:undefined);aF=false}catch(e){err=e}}};
  const dec=new VideoDecoder({output:fr=>{const t=fr.timestamp/1e6;if(!R||err||PEX&&PEX.cancel||t<R.s-.001||t>=R.e-.001){fr.close();return}const ot=R.ob+(t-R.s);let src=fr,sw=fr.displayWidth,sh=fr.displayHeight;
    if(rot){rx.save();rx.translate(rc.width/2,rc.height/2);rx.rotate(rot*Math.PI/180);rx.drawImage(fr,-sw/2,-sh/2,sw,sh);rx.restore();src=rc;sw=rc.width;sh=rc.height}
    try{peRender(x,o.W,o.H,src,sw,sh,t,o.cl)}catch(e){err=e}fr.close();const vf=new VideoFrame(cv,{timestamp:Math.round(ot*1e6),duration:Math.round(1e6/fps)}),kf=ot-lastKey>=2;if(kf)lastKey=ot;try{enc.encode(vf,{keyFrame:kf})}catch(e){err=e}vf.close();addA(ot+.25);done=ot},error:e=>{err=e}});dec.configure(vc);
  let ob=0;const bs=(arr,n,t)=>{let lo=0,hi=n;while(lo<hi){const m=(lo+hi)>>1;if(arr[m]<t)lo=m+1;else hi=m}return lo};
+ if(o.outro&&a&&!peSil(a)){try{dec.close();enc.close()}catch(e){}throw new Error("NOSIL")}
  /* intro: fotogrammi disegnati e, sotto, audio muto in AAC (stesso formato dell'originale, così l'audio della puntata resta a tempo) */
  if(o.intro){const sr=a?a.asr||a.sr:48000,af=1024/sr,na=a?Math.max(1,Math.round(o.intro.d/af)):0,Di=a?na*af:o.intro.d,nf=Math.max(1,Math.round(Di*fps)),sil=a?peSil(a):null;if(a&&!sil){try{dec.close();enc.close()}catch(e){}throw new Error("NOSIL")}
   for(let i=0;i<nf;i++){if(err||PEX&&PEX.cancel)break;const ti=i/fps;try{peIDraw(x,o.W,o.H,ti)}catch(e){err=e}const vf=new VideoFrame(cv,{timestamp:Math.round(ti*1e6),duration:Math.round(1e6/fps)}),kf=ti-lastKey>=2;if(kf)lastKey=ti;try{enc.encode(vf,{keyFrame:kf})}catch(e){err=e}vf.close();
@@ -2393,6 +2397,10 @@ async function peRun(o){const M=PE.M,v=M.v,a=M.a&&/^mp4a/.test(M.a.codec)?M.a:nu
   for await(const q of mp4Samples(file,v,k,K)){if(err||PEX&&PEX.cancel)break;dec.decode(new EncodedVideoChunk({type:v.key[q.i]?"key":"delta",timestamp:Math.round(v.pts[q.i]*1e6),duration:Math.round(v.dur[q.i]*1e6),data:q.data}));
    while(!err&&(dec.decodeQueueSize>8||enc.encodeQueueSize>8))await peDq(dec.decodeQueueSize>8?dec:enc);if(o.onp)o.onp(Math.min(.995,done/tot))}
   if(!err&&!(PEX&&PEX.cancel)){await dec.flush();addA(Infinity)}ob+=e-s}
+ /* schermata finale delle clip: l'ultimo fotogramma sfocato con il messaggio, audio muto sotto */
+ if(o.outro&&!err&&!(PEX&&PEX.cancel)){const snap=bgCv(o.W,o.H);snap.getContext("2d").drawImage(cv,0,0);const D=o.outro.d,nf=Math.max(1,Math.round(D*fps));
+  for(let i=0;i<nf;i++){if(err||PEX&&PEX.cancel)break;const ti=i/fps;try{peEsDraw(x,o.W,o.H,ti,snap)}catch(e){err=e}const vf=new VideoFrame(cv,{timestamp:Math.round((ob+ti)*1e6),duration:Math.round(1e6/fps)}),kf=ob+ti-lastKey>=2;if(kf)lastKey=ob+ti;try{enc.encode(vf,{keyFrame:kf})}catch(e){err=e}vf.close();while(!err&&enc.encodeQueueSize>8)await peDq(enc)}
+  if(a){const sr=a.asr||a.sr,af=1024/sr,sil=peSil(a),n=Math.max(1,Math.round((ob+D-aEnd)/af));for(let i=0;i<n&&!err;i++){try{mux.addAudioChunkRaw(sil,"key",Math.round((aEnd+i*af)*1e6),Math.round(af*1e6),aF?{decoderConfig:{codec:a.codec,sampleRate:sr,numberOfChannels:a.ch,...(a.desc?{description:a.desc}:{})}}:undefined);aF=false}catch(e){err=e}}}}
  if(PEX&&PEX.cancel){try{dec.close();enc.close()}catch(e){}throw new Error("CANCEL")}if(err){try{dec.close();enc.close()}catch(e){}throw err}
  await enc.flush();dec.close();enc.close();mux.finalize();if(o.ws){await o.ws.close();return null}return new Blob([target.buffer],{type:"video/mp4"})}
 /* tempo reale (ripiego): riproduce le parti tenute e registra l'anteprima */
@@ -2402,7 +2410,8 @@ async function peRT(o){const v=peV(),cv=bgCv(o.W,o.H),x=cv.getContext("2d"),fps=
  const tot=o.ranges.reduce((s,r)=>s+r[1]-r[0],0)+(o.intro?o.intro.d:0)||1;let done=0,paint=()=>{peRender(x,o.W,o.H,v,v.videoWidth,v.videoHeight,v.currentTime,o.cl)};v.pause();v.playbackRate=1;
  try{if(o.intro){rec.start(1000);const D=o.intro.d,t0=performance.now();await new Promise(r=>{const f=()=>{const t=(performance.now()-t0)/1000;if(PEX&&PEX.cancel||t>=D)return r();peIDraw(x,o.W,o.H,t);if(o.onp)o.onp(Math.min(.995,t/tot));requestAnimationFrame(f)};f()});rec.pause();done=D}
   for(const[s,e]of o.ranges){if(PEX&&PEX.cancel)break;await new Promise(r=>{v.addEventListener("seeked",r,{once:true});v.currentTime=s});paint();if(rec.state==="inactive")rec.start(1000);else rec.resume();await v.play();
-   await new Promise(r=>{const f=()=>{if(PEX&&PEX.cancel||v.currentTime>=e-.02||v.ended){v.pause();return r()}paint();if(o.onp)o.onp(Math.min(.995,(done+v.currentTime-s)/tot));requestAnimationFrame(f)};f()});rec.pause();done+=e-s}}
+   await new Promise(r=>{const f=()=>{if(PEX&&PEX.cancel||v.currentTime>=e-.02||v.ended){v.pause();return r()}paint();if(o.onp)o.onp(Math.min(.995,(done+v.currentTime-s)/tot));requestAnimationFrame(f)};f()});rec.pause();done+=e-s}
+  if(o.outro&&!(PEX&&PEX.cancel)){const snap=bgCv(o.W,o.H);snap.getContext("2d").drawImage(cv,0,0);rec.resume();const D=o.outro.d,t0=performance.now();await new Promise(r=>{const f=()=>{const t=(performance.now()-t0)/1000;if(PEX&&PEX.cancel||t>=D)return r();peEsDraw(x,o.W,o.H,t,snap);requestAnimationFrame(f)};f()});rec.pause()}}
  finally{const b=await new Promise(r=>{rec.onstop=()=>r(new Blob(ch,{type:mt.split(";")[0]}));if(rec.state!=="inactive")rec.stop();else r(null)});PE.as.disconnect(dst);PE.as.connect(ac.destination);if(PEX&&PEX.cancel)throw new Error("CANCEL");return{b,ext:/mp4/.test(mt)?"mp4":"webm"}}}
 /* un fotogramma AAC-LC muto (1024 campioni), come lo usano i player per riempire i buchi */
 function peSil(a){if(!/^mp4a\.40\.2$/i.test(a.codec||""))return null;return a.ch===1?new Uint8Array([0,200,0,128,35,128]):a.ch===2?new Uint8Array([33,0,73,144,2,25,0,35,128]):null}
@@ -2420,10 +2429,10 @@ async function peExFull(){const P=peP();if(!P||PEX)return;const R=PERES[P.res||"
  catch(e){const c=e.message==="CANCEL";PEX=null;if(ws)try{await ws.abort()}catch(x){}if(!c){console.warn(e);alert("Esportazione non riuscita: "+(e.message||e))}$("#pexs").innerHTML=c?'<div class="hint">Esportazione annullata.</div>':""}
  finally{PEX=null;const b=$("#pexv");if(b)b.disabled=false}}
 async function peExClip(list){const P=peP();if(!P||PEX||!list.length)return;let dir=null;if(list.length>1&&"showDirectoryPicker" in window){try{dir=await showDirectoryPicker({mode:"readwrite"})}catch(e){if(e&&e.name==="AbortError")return}}
- PEX={cancel:false,what:"clip",t0:performance.now()};const fast=peFast();let n=0;peV().pause();
+ PEX={cancel:false,what:"clip",t0:performance.now()};const fast=peFast(),outro=typeof peEsO==="function"&&peEsO().on?{d:peEsO().d}:null;let n=0;peV().pause();
  try{for(const c of list){if(PEX.cancel)break;const f=PEF[c.f||"916"],ranges=peKeep(c.a,c.b),i=P.cl.indexOf(c)+1,nm=`${peName()}-clip${String(i).padStart(2,"0")}${c.tt||c.n?"-"+peSlug(c.tt||c.n):""}`,lbl=list.length>1?`Clip ${n+1} di ${list.length} · `:"";PEX.t0=performance.now();
    const onp=q=>peProg("#pecxs",q,PEX.t0,lbl);onp(0);let blob,ext="mp4";
-   try{if(!fast)throw new Error("NOFAST");blob=await peRun({ranges,W:f[0],H:f[1],br:f[0]*f[1]>2e6?10e6:8e6,cl:c,onp})}catch(e){if(!/^(NODEC|NOENC|NOFAST)$/.test(e.message))throw e;const r=await peRT({ranges,W:f[0],H:f[1],br:8e6,cl:c,onp});blob=r.b;ext=r.ext}
+   try{if(!fast)throw new Error("NOFAST");blob=await peRun({ranges,W:f[0],H:f[1],br:f[0]*f[1]>2e6?10e6:8e6,cl:c,onp,outro})}catch(e){if(!/^(NODEC|NOENC|NOFAST|NOSIL)$/.test(e.message))throw e;const r=await peRT({ranges,W:f[0],H:f[1],br:8e6,cl:c,onp,outro});blob=r.b;ext=r.ext}
    if(dir){const h=await dir.getFileHandle(nm+"."+ext,{create:true}),w=await h.createWritable();await w.write(blob);await w.close()}else peDl(blob,nm+"."+ext);n++}
   $("#pecxs").innerHTML=`<div class="hint">✓ ${n} ${n===1?"clip esportata":"clip esportate"}${dir?" nella cartella scelta":""}.</div>`}
  catch(e){if(e.message!=="CANCEL"){console.warn(e);alert("Esportazione non riuscita: "+(e.message||e))}$("#pecxs").innerHTML=e.message==="CANCEL"?'<div class="hint">Esportazione annullata.</div>':""}finally{PEX=null}}
@@ -2606,16 +2615,40 @@ $("#lgmw").addEventListener("input",e=>{if(!e.target.hasAttribute("data-lgmc"))r
 $("#lgmw").addEventListener("change",e=>{if(e.target.hasAttribute("data-lgmc")){lgmUI();renderLogos()}});
 lgmUI();
 
-/* ---- Match day della lega: punta alla prossima giornata da giocare (il Full time resta sulla giornata con i risultati) ---- */
-function mcGT(){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft;if(ft)return S.gs;const n=typeof anDef==="function"?anDef():null;return n??S.gs}
-function mcSub(g){const e=$("#gs");if(e&&g!=null&&BS(gT())==="mc"&&/^giornata \d+$/i.test(e.value.trim())&&e.value.trim()!=="Giornata "+g)e.value="Giornata "+g}
-function mcFillL(){const sel=$("#mcsel"),g=mcGT(),all=S.cal||[],G=[...new Set(all.map(r=>r.g))],ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft;MCM=[];
- const grp=n=>{const ms=all.filter(r=>r.g===n);if(!ms.length)return"";return`<optgroup label="Giornata ${n}${n===g?(ft?" · giocata":" · prossima"):""}">`+ms.map(r=>{MCM.push(r);return`<option value="${MCM.length-1}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":(typeof rvPend==="function"&&rvPend(r))?" (rinviata)":""}</option>`}).join("")+"</optgroup>"};
+/* ---- Match day e Full time della lega ----
+   Match day: la prossima giornata da giocare. Full time: la giornata delle partite appena giocate (anche se il risultato
+   non è ancora nel calendario), con la partita più recente già scelta, il risultato se c'è e il "Giornata N" giusto. */
+const mcToday=()=>iso(new Date(new Date().setHours(12))),mcIsFT=()=>!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,mcRv=r=>typeof rvRec==="function"&&!!rvRec(r);
+function ftG(){const C=S.cal||[];if(!C.length)return S.gs;const td=mcToday(),D=/^\d{4}-\d\d-\d\d$/;let b=null;
+ [...new Set(C.map(r=>r.g))].sort((x,y)=>x-y).forEach(n=>{const ds=C.filter(r=>r.g===n&&!r.rc&&!mcRv(r)).map(r=>r.d).filter(d=>D.test(d||"")).sort();if(ds[0]&&ds[0]<=td)b=n});
+ const c=calCur();return b==null?(c??S.gs):Math.max(b,c??b)}
+function mcGT(){if(mcIsFT())return ftG();const n=typeof anDef==="function"?anDef():null;return n??S.gs}
+/* "Giornata N" nel sottotitolo, anche dentro un testo più lungo ("Full time · Giornata 7", "7ª giornata") */
+function mcSub(g){const e=$("#gs");if(!e||g==null||BS(gT())!=="mc")return;const v=e.value,n=v.replace(/(giornata\s+)\d+/i,"$1"+g).replace(/\b\d+(\s*[ªa°]?\s+giornata)/i,g+"$1");if(n!==v)e.value=n}
+/* una scelta fatta a mano resta finché è recente (12 ore) o è della giornata giusta; altrimenti scelgo io */
+const mcMine=()=>S.mt&&S.mt.au===0&&S.mt.at&&Date.now()-S.mt.at<432e5&&!!S.mt.mf===mcIsFT();
+function ftPick(ms){const td=mcToday(),ok=ms.filter(r=>!(typeof rvPend==="function"&&rvPend(r))),pl=ok.filter(r=>kRG(r.r)||String(r.d||"")<=td);
+ return pl.sort((a,b)=>String(b.d).localeCompare(String(a.d))||(kRG(b.r)?1:0)-(kRG(a.r)?1:0))[0]||ok[0]||ms[0]}
+function mcSetFrom(r,ft){const x=kRG(r.r);S.mt={...S.mt,h:r.h,a:r.a,sc:x?x[0]+" - "+x[1]:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};delete S.mt.at;["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}
+function mcFillL(){const sel=$("#mcsel"),g=mcGT(),all=S.cal||[],G=[...new Set(all.map(r=>r.g))],ft=mcIsFT();MCM=[];
+ const grp=n=>{const ms=all.filter(r=>r.g===n);if(!ms.length)return"";return`<optgroup label="Giornata ${n}${n===g?(ft?" · appena giocata":" · prossima"):""}">`+ms.map(r=>{MCM.push(r);return`<option value="${MCM.length-1}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":(typeof rvPend==="function"&&rvPend(r))?" (rinviata)":""}</option>`}).join("")+"</optgroup>"};
  sel.innerHTML=`<option value="">${all.length?"Scegli la partita (giornata "+g+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+grp(g)+G.filter(n=>n!==g).sort((a,b)=>Math.abs(a-g)-Math.abs(b-g)||a-b).map(grp).join("");
- let i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a&&r.g===g);
- /* match day: se la partita mostrata non è della prossima giornata, metto la prima ancora da giocare (resta la tua scelta se è di quella giornata) */
- if(i<0&&!ft&&BS(gT())==="mc"&&g!=null){const ms=MCM.filter(r=>r.g===g),r=ms.find(r=>!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r)))||ms[0];if(r){i=MCM.indexOf(r);S.mt={...S.mt,h:r.h,a:r.a,sc:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}}
- if(i>=0){sel.value=i;MCC=MCM[i]}if(BS(gT())==="mc")mcSub(ft?S.gs:g)}
+ const same=r=>kHN(r.h)===kHN(S.mt.h)&&kHN(r.a)===kHN(S.mt.a);let i=MCM.findIndex(r=>same(r)&&r.g===g);if(i<0&&mcMine())i=MCM.findIndex(same);
+ if(i<0&&BS(gT())==="mc"){const q=S[ft?"mtF":"mtM"],j=q&&Date.now()-q.at<432e5?MCM.findIndex(r=>kHN(r.h)===kHN(q.h)&&kHN(r.a)===kHN(q.a)&&r.g===q.g):-1;if(j>=0){i=j;mcSetFrom(MCM[j],ft);S.mt.au=0;S.mt.at=q.at;S.mt.mf=ft?1:0;if(!ft&&!kRG(MCM[j].r)){S.mt.sc="";const e=$('[data-m="sc"]');if(e)e.value=""}}}
+ if(i<0&&BS(gT())==="mc"&&g!=null){const ms=MCM.filter(r=>r.g===g),r=ft?ftPick(ms):ms.find(r=>!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r)))||ms[0];if(r){i=MCM.indexOf(r);mcSetFrom(r,ft);if(!ft){S.mt.sc="";const e=$('[data-m="sc"]');if(e)e.value=""}}}
+ if(i>=0){sel.value=i;MCC=MCM[i];
+  /* full time: il risultato arriva dal calendario (se l'hai scritto tu a mano resta il tuo) */
+  if(ft&&BS(gT())==="mc"){const x=kRG(MCC.r),sc=x?x[0]+" - "+x[1]:"";if(sc&&S.mt.sc!==sc&&(!S.mt.sc||S.mt.au!==0||!mcMine())){S.mt.sc=sc;const e=$('[data-m="sc"]');if(e)e.value=sc}}}
+ if(BS(gT())==="mc")mcSub(i>=0?MCC.g:g);mcHint()}
+/* sotto la scelta della partita: cosa manca */
+function mcHint(){let el=$("#mcsh");if(!el){const s=$("#mcsel");if(!s)return;s.insertAdjacentHTML("afterend",'<div class="hint" id="mcsh" style="margin:4px 0 0"></div>');el=$("#mcsh")}
+ const ft=mcIsFT(),r=MCC;el.innerHTML=ft&&r&&BS(gT())==="mc"&&!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r))?`Il risultato di ${esc(r.h)} – ${esc(r.a)} non è ancora nel calendario: copia la pagina CalendarioV4 (Ctrl+A, Ctrl+C) e premi Ctrl+V qui, oppure scrivilo sotto.`:""}
+/* scelte fatte a mano: le ricordo per 12 ore */
+$("#mcw").addEventListener("input",e=>{if(e.target.dataset.m&&S.mt){S.mt.at=Date.now();S.mt.mf=mcIsFT()?1:0}});
+{const sel=$("#mcsel");sel.addEventListener("change",()=>{const r=MCM[+sel.value];if(S.mt&&sel.value!==""&&r){S.mt.at=Date.now();S.mt.mf=mcIsFT()?1:0;S[mcIsFT()?"mtF":"mtM"]={h:r.h,a:r.a,g:r.g,at:S.mt.at};save()}mcHint()})}
+/* il calendario si può incollare anche dalle Grafiche (fuori dai campi di testo): risultati aggiornati al volo */
+document.addEventListener("paste",e=>{if(!$("#g").classList.contains("on")||/INPUT|TEXTAREA|SELECT/.test(e.target.tagName)||e.target.isContentEditable)return;const t=(e.clipboardData||window.clipboardData).getData("text");if(!t)return;
+ if(calImport(t)){e.preventDefault();const n=(S.cal||[]).filter(r=>kRG(r.r)).length;toast(`Calendario aggiornato: ${n} risultati`);mcFill();draw()}});
 
 /* ---- Podcast: scheda di presentazione della squadra ospite, stagione scorsa e quest'anno a confronto (grafica da scaricare o mettere nel video) ---- */
 var TCF={};const TCFM={"169":[1920,1080,"16:9 (video)"],"45":[1080,1350,"4:5"],"916":[1080,1920,"9:16"]};
@@ -2710,7 +2743,7 @@ function peRain(x,X,Y,w,h,t,u,id){let sd=0;for(const ch of String(id))sd=(sd*31+
  for(let i=0;i<14;i++){const a=prn(sd+i+1500),b=prn(sd+i+1700),c=prn(sd+i+1900),r=(4+9*c)*u,dx=X+a*w,dy=Y+((b*h+t*(6+30*c*c)*u)%h);
   const g=x.createRadialGradient(dx-r*.3,dy-r*.35,r*.1,dx,dy,r);g.addColorStop(0,"rgba(255,255,255,.55)");g.addColorStop(.5,"rgba(200,215,240,.18)");g.addColorStop(1,"rgba(0,0,0,.25)");x.fillStyle=g;x.beginPath();x.ellipse(dx,dy,r*.85,r,0,0,Math.PI*2);x.fill()}}
 /* ---- pannello: modifica della grafica selezionata ---- */
-function peIEd(){const P=peP(),n=P&&P.ins.find(q=>q.id===PE.si),g=n&&peGal(n.g);if(!n||!g)return"";const fx=n.fx||{},p=n.ly==="p";
+function peIEd(){const P=peP(),n=P&&P.ins.find(q=>q.id===PE.si),g=n&&peGal(n.g);if(!n||!g)return"";if(n.g==="__yt"&&typeof peYtEd==="function")return peYtEd(n);const fx=n.fx||{},p=n.ly==="p";
  return`<div class="card peie"><div class="bar" style="margin:0;gap:8px"><b style="flex:1">✏️ Modifica: ${esc(g.n||"grafica")}</b><button class="btn pbx" data-pie="go">▶ Guarda</button><button class="btn pbx" data-pie="x" aria-label="Chiudi la modifica">✕</button></div>
  <small>Trascina sulla grafica per tenerne solo un pezzo (per esempio un solo giocatore). La grafica nella galleria resta intera.</small><canvas id="pecrop" class="pecrop"></canvas>
  <div class="bar" style="margin:4px 0 0;gap:6px"><span class="hint" style="margin:0">${n.cr?"Ritagliata":"Grafica intera"}</span>${n.cr?'<button class="btn pbx" data-pie="cr0">↺ Tutta la grafica</button>':""}</div>
@@ -2932,6 +2965,89 @@ function rvMt(){const r=MCC;if(!r||!S.mt||kHN(S.mt.h)!==kHN(r.h)||kHN(S.mt.a)!==
 {const mf=mcFill;mcFill=function(){mf();rvMt()};const sel=$("#mcsel"),oc=sel.onchange;sel.onchange=e=>{oc&&oc(e);rvMt();draw()}}
 /* all'avvio e quando apri Dati e TOTW: se ci sono partite senza risultato ancora da chiarire, te lo chiedo */
 setTimeout(()=>rvAsk(),3500);document.addEventListener("click",e=>{const b=e.target.closest('nav [data-t="k"]');if(b)setTimeout(()=>rvAsk(),300)});
+
+/* ---- Edit podcast · “Mi piace e iscriviti” nel video completo (YouTube) e schermata finale nelle clip ----
+   Iscriviti: un'animazione in stile YouTube (il cursore mette mi piace, si iscrive e attiva la campanella) con il logo della lega,
+   da mettere sulla timeline come le grafiche (traccia Grafiche) e da spostare/ridimensionare sull'anteprima.
+   Schermata finale: alla fine di ogni clip, per qualche secondo, il fotogramma finale sfocato con il logo e “Guarda l’episodio completo”. */
+const PEYTD={n:"Lega Amatori Calcio Treviso",h:"@LegaAmatoriCalcioTreviso50"},peYtO=()=>({...PEYTD,...(S.yt||{})});
+const YTP={th:new Path2D("M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l3.02-7.05c.09-.23.14-.47.14-.73v-2z"),
+ bell:new Path2D("M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"),
+ cur:new Path2D("M3 2 L3 19.5 L7.6 15.2 L10.7 22 L13.6 20.7 L10.5 14 L16.8 14 Z")};
+const ytEB=k=>{k=Math.max(0,Math.min(1,k));const c=1.70158;return 1+(c+1)*Math.pow(k-1,3)+c*Math.pow(k-1,2)};
+/* la scheda in uno spazio 1000×200, poi scalata; dt = secondi dall'inizio, D = durata */
+function ytCard(x,X,Y,w,dt,D,dark){const o=peYtO(),k=w/1000,f=Math.max(.55,Math.min(1,(D-.5)/3.8)),T=v=>v*f,P=(a,b,t)=>Math.max(0,Math.min(1,(t-a)/(b-a)));
+ const ain=ytEB(dt/.45),aout=1-P(D-.4,D,dt),al=Math.min(1,dt/.25)*aout,sc=(.62+.38*ain)*(1-.15*(1-aout));if(al<=0)return;
+ const liked=dt>=T(1.3),sub=dt>=T(2.15),bell=dt>=T(2.9),fg=dark?"#fff":"#0f0f0f",mu=dark?"#aaa":"#606060",bt=dark?"#272727":"#f2f2f2",F='"Inter Tight",system-ui,sans-serif';
+ x.save();x.globalAlpha=al;x.translate(X+w/2,Y+100*k);x.scale(sc*k,sc*k);x.translate(-500,-100);
+ x.shadowColor="rgba(0,0,0,.35)";x.shadowBlur=40;x.shadowOffsetY=10;x.fillStyle=dark?"rgba(18,18,18,.95)":"#fff";x.beginPath();x.roundRect(0,0,1000,200,100);x.fill();x.shadowColor="transparent";
+ /* logo della lega */
+ x.fillStyle="#fff";x.beginPath();x.arc(100,100,74,0,7);x.fill();x.strokeStyle=dark?"#3a3a3a":"#e5e5e5";x.lineWidth=3;x.stroke();const L=typeof logo==="function"?logo("__lega"):null;if(L){x.save();x.beginPath();x.arc(100,100,72,0,7);x.clip();dl(x,L,100,100,112);x.restore()}
+ const fit=(t,wt,s0,mw)=>{let s=s0;do{x.font=`${wt} ${s}px ${F}`;s-=2}while(x.measureText(t).width>mw&&s>16);return s+2};x.textBaseline="alphabetic";x.textAlign="left";
+ fit(o.n,800,44,430);x.fillStyle=fg;x.fillText(o.n,195,94,440);fit(o.h,500,31,430);x.fillStyle=mu;x.fillText(o.h,195,140,440);
+ /* mi piace */
+ const lp=liked?1+.25*Math.sin(Math.min(1,P(T(1.3),T(1.6),dt))*Math.PI):1;x.fillStyle=bt;x.beginPath();x.arc(690,100,52,0,7);x.fill();
+ x.save();x.translate(690,100);x.scale(lp*2.3,lp*2.3);x.translate(-12,-11.5);x.fillStyle=liked?"#065fd4":fg;x.fill(YTP.th);x.restore();
+ /* iscriviti → iscritto con campanella */
+ const sp=sub?1+.08*Math.sin(Math.min(1,P(T(2.15),T(2.4),dt))*Math.PI):1;x.save();x.translate(870,100);x.scale(sp,sp);x.fillStyle=sub?bt:"#cc0000";x.beginPath();x.roundRect(-108,-48,216,96,48);x.fill();
+ x.textAlign="center";x.textBaseline="middle";if(!sub){x.font=`800 32px ${F}`;x.fillStyle="#fff";x.fillText("ISCRIVITI",0,2,190)}
+ else{x.font=`800 28px ${F}`;x.fillStyle=fg;x.fillText("ISCRITTO",26,2,136);const wg=bell?Math.sin((dt-T(2.9))*28)*.45*Math.max(0,1-(dt-T(2.9))/.8):0;x.save();x.translate(-68,0);x.rotate(wg);x.scale(1.6,1.6);x.translate(-12,-12);x.fillStyle=bell?"#065fd4":fg;x.fill(YTP.bell);x.restore()}x.restore();
+ /* cursore: mi piace, iscriviti, campanella */
+ const pts=[[T(.75),1080,300],[T(1.2),705,118],[T(1.65),705,118],[T(2.05),880,118],[T(2.5),880,118],[T(2.8),812,112],[T(3.3),812,112],[T(3.75),1080,300]],clk=[T(1.25),T(2.1),T(2.85)];
+ if(dt>pts[0][0]&&dt<pts[7][0]){let i=0;while(i<pts.length-2&&dt>pts[i+1][0])i++;const[a0,x0,y0]=pts[i],[a1,x1,y1]=pts[i+1],e=P(a0,a1,dt),q=e*e*(3-2*e),cx=x0+(x1-x0)*q,cy=y0+(y1-y0)*q,pr=clk.some(c=>dt>=c-.02&&dt<c+.1);
+  clk.forEach(c=>{const r=P(c,c+.4,dt);if(r>0&&r<1){x.strokeStyle=`rgba(${dark?"255,255,255":"0,0,0"},${.35*(1-r)})`;x.lineWidth=6;x.beginPath();x.arc(cx,cy,10+60*r,0,7);x.stroke()}});
+  x.save();x.globalAlpha=al*Math.min(1,P(pts[0][0],pts[0][0]+.2,dt))*(1-P(T(3.5),T(3.75),dt));x.translate(cx,cy);x.scale(pr?3.4:3.8,pr?3.4:3.8);x.translate(-3,-2);x.fillStyle="#fff";x.strokeStyle="#000";x.lineWidth=1.3;x.lineJoin="round";x.fill(YTP.cur);x.stroke(YTP.cur);x.restore()}
+ x.restore()}
+/* nella timeline e negli elenchi la vedo come una grafica della galleria */
+let PEYG=null;function peYtG(){const L=typeof logo==="function"?logo("__lega"):null,k=(L?1:0)+"|"+peYtO().n+"|"+(S.yt&&S.yt.dk?1:0);if(PEYG&&PEYG.k===k)return PEYG;const c=bgCv(520,120),x=c.getContext("2d");x.fillStyle="#0b1222";x.fillRect(0,0,520,120);ytCard(x,10,10,500,3.2,8,S.yt&&S.yt.dk);
+ if(PEYG&&PE.img)delete PE.img.__yt;return PEYG={id:"__yt",n:"Mi piace e iscriviti",d:c.toDataURL("image/png"),yt:1,k}}
+function peYtAll(x,W,H,t){const P=peP();if(!P)return;P.ins.forEach(n=>{if(n.g!=="__yt"||t<n.t||t>=n.t+n.d)return;const w=W*(n.ps||.46),h=w*.2,mg=Math.min(W,H)*.03,X=Math.max(mg,Math.min(W-w-mg,(n.px??.3)*W-w/2)),Y=Math.max(mg,Math.min(H-h-mg,(n.py??.86)*H-h/2));ytCard(x,X,Y,w,t-n.t,n.d,!!(S.yt&&S.yt.dk));
+ if(n.id===PE.si)PE.insR={id:n.id,x:X,y:Y,w,h,W,H}})}
+function peYtUI(){return`<div class="card"><b>▶️ Mi piace e iscriviti</b><small>L’animazione di YouTube con il logo della lega: il cursore mette mi piace, si iscrive e attiva la campanella. La metto a ${peTf(peV().currentTime)} per 5 s: poi la sposti e la allunghi sulla timeline e la trascini dove vuoi nell’inquadratura. Solo nel video completo.</small><div class="bar" style="margin:6px 0 0;gap:6px"><button class="btn pbx p" data-peyt>+ Mettila qui</button></div></div>`}
+function peYtEd(n){const o=peYtO();return`<div class="card peie"><div class="bar" style="margin:0;gap:8px"><b style="flex:1">✏️ Mi piace e iscriviti</b><button class="btn pbx" data-pie="go">▶ Guarda</button><button class="btn pbx" data-pie="x" aria-label="Chiudi la modifica">✕</button></div>
+ <small>Trascinala sull’anteprima per spostarla (rotellina per la grandezza). Dura ${String(n.d).replace(".",",")} s: le animazioni stanno nei primi 4 secondi.</small>
+ <div class="pesz" style="padding:6px 0 0"><label for="pieps">Grandezza</label><input type="range" id="pieps" min=".2" max=".85" step=".01" value="${n.ps||.46}"></div>
+ <div class="bar" style="margin:4px 0 0;gap:6px">${[["tl","↖"],["tr","↗"],["c","●"],["bl","↙"],["br","↘"]].map(([k,t])=>`<button class="btn pbx" data-piep="${k}" aria-label="Posizione ${k}">${t}</button>`).join("")}</div>
+ <label for="peytn">Nome del canale</label><input id="peytn" value="${esc(o.n)}"><label for="peyth">Nome utente</label><input id="peyth" value="${esc(o.h)}">
+ <label class="pechk"><input type="checkbox" id="peytd"${S.yt&&S.yt.dk?" checked":""}> Versione scura</label><div class="hint">Il canale: <a href="https://www.youtube.com/${esc(o.h)}" target="_blank" rel="noopener">youtube.com/${esc(o.h)}</a>. Nome e versione valgono per tutte.</div></div>`}
+$("#pesb").addEventListener("click",e=>{if(!e.target.closest("[data-peyt]"))return;const P=peP();if(!P)return;const at=+peV().currentTime.toFixed(2),id="i"+Date.now().toString(36);
+ peDo(()=>P.ins.push({id,g:"__yt",t:at,d:+Math.min(5,Math.max(1,PE.dur-at)).toFixed(2),ly:"p",ps:.46,px:.3,py:.86}));PE.si=id;peSeek(at+.05);peUI();toast("“Mi piace e iscriviti” a "+peTf(at)+": trascinala dove vuoi nell’anteprima")});
+$("#pesb").addEventListener("change",e=>{const t=e.target;if(t.id==="peytn"||t.id==="peyth"){S.yt={...(S.yt||{}),[t.id==="peytn"?"n":"h"]:t.value.trim()||PEYTD[t.id==="peytn"?"n":"h"]};PE.rev++;save();peUI()}else if(t.id==="peytd"){S.yt={...(S.yt||{}),dk:t.checked?1:0};PE.rev++;save();peUI()}});
+$("#pesb").addEventListener("input",e=>{const t=e.target;if(t.id==="peytn"||t.id==="peyth"){S.yt={...(S.yt||{}),[t.id==="peytn"?"n":"h"]:t.value};peDraw()}});
+/* ---- schermata finale delle clip ---- */
+const peEsO=()=>{const P=peP(),o=P&&P.es||{};return{on:o.on!==0,t1:o.t1||"Guarda l’episodio completo",t2:o.t2||"clicca sul link in bio!",d:Math.max(2,Math.min(6,+o.d||3))}};
+let PEESB=null;
+function peEsDraw(x,W,H,t,snap){const o=peEsO(),st=S.sty||{},ac=st.ac||"#2f7bff";let u=Math.min(W,H)/1080;const F='"Inter Tight",system-ui,sans-serif',P=(a,b)=>Math.max(0,Math.min(1,(t-a)/(b-a))),c=peP()&&S.pod&&S.pod.cur||{};
+ x.save();x.fillStyle="#000";x.fillRect(0,0,W,H);
+ if(snap){const b=PEESB&&PEESB.width===48?PEESB:(PEESB=bgCv(48,Math.max(8,Math.round(48*H/W))));b.height=Math.max(8,Math.round(48*H/W));b.getContext("2d").drawImage(snap,0,0,b.width,b.height);x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";x.drawImage(b,0,0,W,H);
+  const k=1-P(0,.45);if(k>0){x.globalAlpha=k;x.drawImage(snap,0,0,W,H);x.globalAlpha=1}}
+ x.fillStyle=`rgba(4,8,18,${.35+.3*P(0,.45)})`;x.fillRect(0,0,W,H);const g=x.createLinearGradient(0,H*.45,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,rgba(ac,.45));x.fillStyle=g;x.fillRect(0,H*.45,W,H*.55);
+ const vert=H>W*1.15;if(vert)u*=1.3;const ls=o.t1.split("|"),show=[(c.show||"Seven Lions Podcast"),c.ep?"EP. "+c.ep:""].filter(Boolean).join(" · ").toUpperCase(),lz=(vert?300:240)*u,fs0=(vert?86:76)*u,mw=W*.86;
+ const fit=(t,wt,s)=>{do{x.font=`${wt} ${s}px ${F}`;s-=2}while(x.measureText(t).width>mw&&s>14);return s+2};let fs=Math.min(...ls.map(q=>fit(q,800,fs0)));
+ /* se una riga sola è troppo lunga la vado a capo */
+ let L=ls;if(L.length===1&&fs<fs0*.72){const w=o.t1.split(" "),m=Math.ceil(w.length/2);L=[w.slice(0,m).join(" "),w.slice(m).join(" ")];fs=Math.min(...L.map(q=>fit(q,800,fs0)))}
+ const ps=46*u,ph=ps*1.9,hT=36*u+18*u+lz+40*u+L.length*fs*1.1+34*u+ph,y0=(H-hT)/2,ease=a=>ytEB(P(a,a+.5));
+ x.textAlign="center";x.textBaseline="alphabetic";const up=(a,dy)=>{const e=P(a,a+.45);x.globalAlpha=e;return(1-e)*dy*u};
+ let y=y0+30*u,dy=up(.2,30);x.font=`700 ${30*u}px ${F}`;x.fillStyle="rgba(255,255,255,.8)";x.fillText(show,W/2,y+dy,mw);
+ y+=18*u;const lg=typeof logo==="function"?logo("__lega"):null,ls2=lz*(.6+.4*ease(.1));x.globalAlpha=P(.1,.35);if(lg){x.save();x.shadowColor="rgba(0,0,0,.5)";x.shadowBlur=30*u;dl(x,lg,W/2,y+lz/2,ls2);x.restore()}y+=lz+40*u;
+ dy=up(.35,40);x.font=`800 ${fs}px ${F}`;x.fillStyle="#fff";x.shadowColor="rgba(0,0,0,.45)";x.shadowBlur=18*u;L.forEach((q,i)=>x.fillText(q,W/2,y+fs*(i+.85)*1.1-fs*.1+dy,mw));x.shadowBlur=0;y+=L.length*fs*1.1+34*u;
+ const e2=P(.55,1),pulse=1+.045*Math.sin(Math.max(0,t-1)*5.5)*P(1,1.3);x.globalAlpha=e2;x.font=`800 ${ps}px ${F}`;let tw=x.measureText(o.t2).width,fz=ps;if(tw>mw-ps*2.6){fz=ps*(mw-ps*2.6)/tw;x.font=`800 ${fz}px ${F}`;tw=x.measureText(o.t2).width}const pw=tw+ps*2.6;
+ x.save();x.translate(W/2,y+ph/2+(1-ytEB(e2))*30*u);x.scale(pulse,pulse);x.fillStyle=ac;x.shadowColor=rgba(ac,.6);x.shadowBlur=30*u;x.beginPath();x.roundRect(-pw/2,-ph/2,pw,ph,ph/2);x.fill();x.shadowBlur=0;const fc=lum(ac)>150?"#000":"#fff";x.fillStyle=fc;x.textBaseline="middle";x.textAlign="left";x.fillText(o.t2,-pw/2+ps*1.65,ph*.04);
+ /* freccia verso l'alto che rimbalza (il link in bio è in cima al profilo) */
+ const ax=-pw/2+ps*.95,ay=-Math.abs(Math.sin(t*4.2))*ph*.12;x.strokeStyle=fc;x.lineWidth=Math.max(2,5*u);x.lineCap="round";x.lineJoin="round";x.beginPath();x.moveTo(ax,ay+ps*.42);x.lineTo(ax,ay-ps*.4);x.moveTo(ax-ps*.3,ay-ps*.12);x.lineTo(ax,ay-ps*.42);x.lineTo(ax+ps*.3,ay-ps*.12);x.stroke();x.restore();
+ const fo=P(o.d-.12,o.d);if(fo>0){x.globalAlpha=fo;x.fillStyle="#000";x.fillRect(0,0,W,H)}x.restore()}
+function peEsUI(){const o=peEsO();return`<div class="card" style="margin:10px 0 0"><label class="pechk" style="margin:0"><input type="checkbox" id="pees"${o.on?" checked":""}> <b>Schermata finale</b> <span class="hint" style="display:inline">· ${o.d} s alla fine di ogni clip</span></label>
+ ${o.on?`<div class="g3" style="grid-template-columns:1fr 1fr"><div><label for="pees1">Testo grande <small style="display:inline">(| per andare a capo)</small></label><input id="pees1" value="${esc(o.t1)}"></div><div><label for="pees2">Bottone</label><input id="pees2" value="${esc(o.t2)}"></div></div>
+ <div class="bar" style="margin:6px 0 0;gap:6px"><span class="hint" style="margin:0">Durata</span>${[2,3,4,5].map(d=>`<button class="btn pbx${o.d===d?" p":""}" data-peesd="${d}">${d} s</button>`).join("")}<button class="btn pbx" id="peesp">▶ Guarda</button></div><div class="hint">Vale per tutte le clip di questa puntata. Si vede anche alla fine dell’anteprima.</div>`:""}</div>`}
+const peEsSet=fn=>{const P=peP();if(!P)return;peDo(()=>{P.es={...(P.es||{})};fn(P.es)})};
+let PEES=0;function peEsPlay(){const c=$("#pecc");if(!c||PEES)return;const snap=bgCv(c.width,c.height);snap.getContext("2d").drawImage(c,0,0);const x=c.getContext("2d"),t0=performance.now(),D=peEsO().d,id=PEES=t0;
+ const f=()=>{if(PEES!==id)return;const t=(performance.now()-t0)/1000;if(t>=D){PEES=0;peClipDraw();return}peEsDraw(x,c.width,c.height,t,snap);requestAnimationFrame(f)};f()}
+$("#pec").addEventListener("click",e=>{const b=e.target.closest("#peesp,[data-peesd]");if(!b)return;if(b.id==="peesp"){const cl=peClipCur(),v=peV();if(cl&&(v.currentTime<cl.b-1.5||v.currentTime>cl.b)){v.pause();v.addEventListener("seeked",()=>setTimeout(peEsPlay,120),{once:true});v.currentTime=Math.max(cl.a,cl.b-.15)}else peEsPlay();return}
+ peEsSet(o=>{o.d=+b.dataset.peesd})});
+$("#pec").addEventListener("change",e=>{const t=e.target;if(t.id==="pees")peEsSet(o=>{o.on=t.checked?1:0});else if(t.id==="pees1"||t.id==="pees2")peEsSet(o=>{o[t.id==="pees1"?"t1":"t2"]=t.value.trim()})});
+/* in anteprima: quando la clip arriva alla fine parte la schermata finale */
+{const tk=peClipTick;peClipTick=function(t){const cl=peClipCur();if(cl&&!PEES&&peEsO().on&&t>=cl.b-.03&&!peV().paused){peV().pause();peEsPlay();peV().currentTime=cl.a;return}return tk(t)}}
+{const cd=peClipDraw;peClipDraw=function(){if(PEES)return;return cd()}}
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
