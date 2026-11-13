@@ -262,6 +262,17 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .peith{width:100%;max-height:170px;object-fit:contain;border-radius:8px;margin-top:6px;background:#000}
 .pefxg{display:grid;grid-template-columns:1fr 1fr;gap:0 12px}
 .peie{border-color:rgba(251,146,60,.55)}
+#rvdlg{position:fixed;inset:0;z-index:160;background:rgba(0,0,0,.62);display:flex;align-items:flex-start;justify-content:center;padding:60px 12px;overflow:auto}
+#rvdlg .rvd{max-width:560px;width:100%;padding:16px;box-shadow:0 20px 60px rgba(0,0,0,.6)}
+#rvdlg .rvd>small{display:block;margin:4px 0 10px}
+.rvr{display:flex;gap:10px;align-items:center;justify-content:space-between;padding:8px 0;border-top:1px solid var(--line);flex-wrap:wrap}
+.rvr small{display:block;color:var(--mut)}.rvs{display:flex;gap:6px;flex-wrap:wrap}
+.rvi{border-top:1px solid var(--line);padding:10px 0 6px}
+.rvc{font-size:12px;padding:2px 8px;border-radius:999px;white-space:nowrap}.rvc.w{background:rgba(224,168,74,.16);color:#e0a84a}.rvc.b{background:rgba(47,123,255,.16);color:#8bb4ff}.rvc.g{background:rgba(74,222,128,.14);color:#4ade80}
+.rvf{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}.rvf label{display:flex;flex-direction:column;gap:2px;font-size:12px;color:var(--mut);margin:0}.rvf input{min-height:34px;width:150px}
+.rvsp{margin-top:8px;padding:8px;border:1px dashed var(--line);border-radius:8px}.rvsp>small{display:block;margin-bottom:4px}
+.rvt{margin-top:6px}.rvp{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px}.rvp label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--fg);margin:0}.rvp input{width:58px;min-height:30px;padding:2px 6px}
+.rvw{border-color:rgba(224,168,74,.45)}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -826,11 +837,11 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
   const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
   let it,hd,cw=78;const yc=Math.max(ty+90,...LB.filter(b=>(b.id==="tt"||b.id==="ts")&&b.y0<H*.45).map(b=>b.y1+34*u));if(T==="tw"&&S.twv==="k")twGrid(x,W,H,yc,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,yc,m,F);else if(T==="an")anv(x,W,H,ty+90,m,F,u);else if(T==="tos")tosv(x,W,H,yc,m,F);else if(T==="qr")qrv(x,W,H,ty+90,m,F,u);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
-  if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n,lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
+  if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n+(typeof rvTeamPend==="function"&&rvTeamPend(e.n)?" *":""),lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
   else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:gqMarHl(e,i),c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:(twDN(p)||"Nome Cognome")+twSfx(p),sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
   drawTab(x,W,H,it,hd,cw,ty,m,F,st,mu,T)}}
- x.textAlign="left";drawLy(x,W,H,0,st);
+ x.textAlign="left";drawLy(x,W,H,0,st);if(typeof rvFoot==="function")rvFoot(x,W,H,u,F,T);
  if(!EXP)gdDraw(x,W,H);if(!EXP){const b=LB.find(q=>q.id===SEL);if(b){x.save();x.strokeStyle="#2f7bff";x.lineWidth=3*u;x.setLineDash([12*u,8*u]);x.strokeRect(b.x0-6*u,b.y0-6*u,b.x1-b.x0+12*u,b.y1-b.y0+12*u);x.restore()}} if($("#l").classList.contains("on"))thumbs()}
 
 const P=a=>a[Math.floor(Math.random()*a.length)],FT="\n\n#ForPlayersByPlayers ⚽💚🩵";
@@ -844,7 +855,7 @@ function capt(){const T0=$("#gt").value,T=BS(T0),tt=$("#gh").value.replace(/\|/g
  else if(T==="an")t=anCapt();else if(T==="tos")t=tosCapt();else if(T==="tw"){const sl=SL(),ps=S.tw2.map((p,i)=>({...p,r:sl[i]})).filter(p=>p.n),at=ps.filter(p=>p.r==="Attaccante"),cnt={};ps.forEach(p=>{if(p.t)cnt[p.t]=(cnt[p.t]||0)+1});const tp=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0],tm=tp&&tp[1]>1?`${tp[0]} piazza ${tp[1]} giocatori nell’undici ideale.`:"";
   t=`Il team of the week ${wg} è servito!`+(at.length?` Davanti ${at.map(p=>p.n).join(" e ")}${at.length>1?" fanno paura":" fa paura"}${tm?", e "+tm:"."}`:tm?" "+tm:"")+P(["\n\nSiete d’accordo con la formazione? Scrivetelo nei commenti.","\n\nChi avreste scelto voi? Dite la vostra nei commenti.","\n\nManca qualcuno che meritava un posto? Taggatelo!"])}
  else if(T==="bo"){const r=rows(S[T0]||"").filter(a=>a[0]&&a[0]!=="Nome Cognome");t=`I migliori goal ${wg}`+(r.length?`: ${r.slice(0,4).map(a=>a[0]+(a[1]&&a[1]!=="Squadra"?" ("+a[1]+")":"")).join(", ")}${r.length>4?" e non solo":""}.`:".")+P([" Guardate i video e votate il vostro preferito nei commenti!"," Quale vi ha fatto saltare dal divano? Votate nei commenti!"," Il più bello secondo voi? Scrivetelo qui sotto!"])}
- else if(T==="ris"){const r=parseRes(S.res||""),tg=r.reduce((q,e)=>q+e.h+e.a,0),bg=[...r].sort((p,q)=>q.h+q.a-p.h-p.a)[0];t=`Tutti i risultati ${wg}!`+(r.length?` ${r.length} ${r.length===1?"partita":"partite"} e ${tg} gol in totale.`+(bg&&bg.h+bg.a>=5?` Il match più ricco di reti: ${bg.hn} ${bg.h}-${bg.a} ${bg.an}.`:""):"")+P(["\n\nCome sono andate per la vostra squadra? Scrivetelo nei commenti!","\n\nQuale risultato vi ha sorpreso di più? Dite la vostra!","\n\nTutti i punteggi nella grafica: avete visto qualche sorpresa?"])}
+ else if(T==="ris"){const r=parseRes(S.res||""),tg=r.reduce((q,e)=>q+e.h+e.a,0),bg=[...r].sort((p,q)=>q.h+q.a-p.h-p.a)[0];t=`Tutti i risultati ${wg}!`+(r.length?` ${r.length} ${r.length===1?"partita":"partite"} e ${tg} gol in totale.`+(bg&&bg.h+bg.a>=5?` Il match più ricco di reti: ${bg.hn} ${bg.h}-${bg.a} ${bg.an}.`:""):"")+(()=>{const v=typeof risRows==="function"?risRows(S.res||"").filter(q=>q.rv):[];return v.length?`\n\n⏸ ${v.length===1?"Rinviata":"Rinviate"}: ${v.map(q=>q.hn+" – "+q.an).join(", ")}.`:""})()+P(["\n\nCome sono andate per la vostra squadra? Scrivetelo nei commenti!","\n\nQuale risultato vi ha sorpreso di più? Dite la vostra!","\n\nTutti i punteggi nella grafica: avete visto qualche sorpresa?"])}
  else if(T==="mc"){const h=S.mt.h||"Casa",a=S.mt.a||"Ospite";t=(S.mt.sc?`Full time: ${h} ${S.mt.sc} ${a}`:`${h} vs ${a}`)+`${S.mt.d?", "+S.mt.d:""}${S.mt.v?" · "+S.mt.v:""}. `+(S.mt.sc?P(["Grazie a tutti per averci seguito!","Cosa ne pensate del match? Dite la vostra nei commenti!"]):P(["Tutti a sostenere la propria squadra!","Venite a riempire gli spalti: si gioca!","Chi la spunterà? Dite la vostra nei commenti."]))}
  else if(T==="st")t=`Siamo tornati, carichi per ${/campionato/i.test(tt)?"il "+tt.toLowerCase():"la nuova stagione"}! ${S.cl.length||"Tante"} squadre pronte a contendersi la corona. Chi la spunterà?`;
  else t=`${tt}${sb?" · "+sb:""}. `+P(["Non perdetevelo!","Dateci un’occhiata e fateci sapere cosa ne pensate.","Fateci sapere cosa ne pensate nei commenti!"]);
@@ -925,13 +936,13 @@ const mtT=l=>l.f==="vs"?(l.t||"VS"):l.f==="sc"?(S.mt.sc||""):l.f==="d"?(S.mt.d||
 function mcCol(l){const[W,H]=S.sty.fmt.split("x").map(Number),bl=l.ia?LY().find(q=>q.k==="band"&&Math.abs(l.x-q.x)<=q.s/2&&Math.abs(l.y-q.y)<=q.h*W/H/2):null;return bl?(lum(bl.c||S.sty.ac)>150?"#000000":"#ffffff"):S.sty.tx}
 function parseRes(t){const nm=[...new Set([...S.cl.map(e=>e.n),...Object.keys(S.raw).filter(k=>k!=="__lega")])],cn=q=>nm.find(n=>n.toLowerCase()===q.toLowerCase())||q;
  return t.split("\n").map(l=>l.trim().replace(/\s+/g," ").match(/^(.+?) (\d+) ?[-–:] ?(\d+) (.+)$/)).filter(Boolean).map(m=>({hn:cn(m[1]),an:cn(m[4]),h:+m[2],a:+m[3]}))}
-function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=parseRes(S.res||""),n=ms.length,top0=y0+30*u;x.save();
+function risv(x,W,H,y0,m,F,u){const st=S.sty,ms=typeof risRows==="function"?risRows(S.res||""):parseRes(S.res||""),n=ms.length,top0=y0+30*u;x.save();
  if(!n){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Inserisci i risultati nei Contenuti",W/2,top0+70*u);x.restore();return}
  const hl=ms.some(r=>logo(r.hn)||logo(r.an)),av=H-top0-90*u,rh=Math.min(200*u,av/n),top=top0+Math.max(0,av-n*rh)*.35,cx=W/2,pw=Math.min(210*u,W*.22),ph=Math.min(rh*.5,104*u),lg=hl?Math.min(rh*.5,90*u):0,gap=18*u,sw=(W-2*m-pw)/2,tc=lum(st.ac)>150?"#000":"#fff",mw=sw-gap*(hl?2:1)-lg;
  const NF=fitNames(x,ms.flatMap(r=>[r.hn,r.an]),800,Math.min(rh*.27,56*u),mw,true,F,12),lh=NF.f*1.1;
  ms.forEach((r,i)=>{const cy=top+i*rh+rh/2;x.fillStyle=rgba(st.tx,.14);x.fillRect(m-18,top+(i+1)*rh-1.5,W-2*m+36,1.5);
-  x.fillStyle=st.ac;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();
-  x.fillStyle=tc;x.font=`800 ${ph*.56}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(r.h+" - "+r.a,cx,cy+ph*.02);
+  if(r.rv){rvPill(x,cx,cy,pw,ph,F,st);x.textAlign="center";x.textBaseline="middle"}else{x.fillStyle=st.ac;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();
+  x.fillStyle=tc;x.font=`800 ${ph*.56}px ${F}`;x.textAlign="center";x.textBaseline="middle";x.fillText(r.h+" - "+r.a,cx,cy+ph*.02)}
   [[r.hn,-1,r.h,r.a,2*i],[r.an,1,r.a,r.h,2*i+1]].forEach(([nm,sd,o,q,ix])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);
    const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),wt=o===q?700:o>q?800:500,ls=NF.l[ix];x.font=`${wt} ${NF.f}px ${F}`;
    x.textAlign=sd<0?"right":"left";x.fillStyle=o<q?rgba(st.tx,.75):st.tx;ls.forEach((t,k)=>x.fillText(t,nx,cy+(k-(ls.length-1)/2)*lh+NF.f*.02))})});x.restore()}
@@ -1056,7 +1067,7 @@ function kChk(){const el=$("#kchk");if(!el)return;const w=wd(S.gs);if(!w){el.inn
  const r=parseRes(S.res||""),o=[],rt={},tm={};r.forEach(m=>[[m.hn,m.h,m.a],[m.an,m.a,m.h]].forEach(([t,f,s])=>{const x=rt[t]=rt[t]||{g:0,gf:0,gs:0};x.g++;x.gf+=f;x.gs+=s}));w.tm.forEach(e=>tm[e.n]=e);
  if(r.length&&kHAS(S.gs,"cl")&&w.pc.cl!=null){Object.keys(rt).forEach(t=>{const a=rt[t],b=tm[t];if(!b)o.push(`<b>${esc(t)}</b>: nei risultati risulta una partita (${a.gf}-${a.gs}) che non è ancora nella classifica Excel`);else if(a.gf!==b.gf||a.gs!==b.gs)o.push(`<b>${esc(t)}</b>: risultati ${a.gf}-${a.gs}, classifica Excel ${b.gf}-${b.gs}`)});Object.keys(tm).forEach(t=>{if(!rt[t])o.push(`<b>${esc(t)}</b>: ha giocato nella classifica Excel ma manca nei risultati`)})}
  if(kHAS(S.gs,"cl")&&kHAS(S.gs,"mar")&&w.pc.cl!=null&&w.pc.mar!=null)w.tm.forEach(e=>{const s=w.mar.filter(m=>m.sq===e.n).reduce((q,m)=>q+m.w,0);if(s<e.gf)o.push(`<b>${esc(e.n)}</b>: ${e.gf} gol in classifica, ${s} marcatori registrati (ne mancano ${e.gf-s}: autogol o marcatore non ancora inserito)`);else if(s>e.gf)o.push(`<b>${esc(e.n)}</b>: ${s} gol di marcatori ma ${e.gf} in classifica (la classifica non è ancora aggiornata)`)});
- const cm=(S.cal||[]).filter(x=>x.g===S.gs&&!kRG(x.r));if(cm.length)o.push("Senza risultato nel calendario: "+cm.map(x=>esc(x.h)+" – "+esc(x.a)).join(", "));
+ const rvq=x=>typeof rvRec==="function"&&rvRec(x),cm=(S.cal||[]).filter(x=>x.g===S.gs&&!kRG(x.r)&&!rvq(x));if(cm.length)o.push("Senza risultato nel calendario: "+cm.map(x=>esc(x.h)+" – "+esc(x.a)).join(", "));
  el.innerHTML=o.length?`<div class="card"><b>Controllo dei dati</b><small>Confronto tra risultati, classifica e marcatori</small>${o.map(x=>`<div class="hint" style="color:#e0a84a">⚠ ${x}</div>`).join("")}</div>`:(r.length?'<div class="hint" style="color:#4ade80">✓ Risultati, classifica e marcatori sono coerenti.</div>':"")}
 const KX={},KXN=8;
 function xl(a,k,f,em){if(!a.length)return'<div class="hint">'+em+'</div>';return(KX[k]?a:a.slice(0,KXN)).map(f).join("")+(a.length>KXN?`<button class="btn" data-kx="${k}" style="margin:6px 0">${KX[k]?"Comprimi l’elenco":"Mostra tutti ("+a.length+")"}</button>`:"")}
@@ -1133,7 +1144,7 @@ function renderK(){kMvp();kRoles();kPhotos();const N0=kNG(),ch=[];for(const n of
  ["cl","mar","amm"].forEach(k=>{const a=kGR(S.gs)[k],t=(kGR(S.gs).t||{})[k];$(`[data-ds="${k}"]`).innerHTML=a&&a.length?`<b style="color:#4ade80">✓ G${S.gs}</b> · ${sm[k](a)}<br>${TS(t)}`:`Nessun file per la giornata ${S.gs}`});
  const cal=S.cal||[],cg=[...new Set(cal.map(r=>r.g))];$('[data-ds="cal"]').innerHTML=cal.length?`<b style="color:#4ade80">✓</b> ${cal.length} partite · giornate ${Math.min(...cg)}–${Math.max(...cg)} · ${cal.filter(r=>kRG(r.r)).length} con risultato${calCur()!=null?" (ultima: giornata "+calCur()+")":""}${S.calInfo&&S.calInfo.t?"<br>"+TS(S.calInfo.t):""}`:(S.calInfo&&!S.calInfo.k?`<b style="color:#e0a84a">⚠ ${esc(S.calInfo.n)} letto</b>, ma contiene solo l’intestazione: nessuna partita. Riesportalo dal sito quando il calendario è compilato, oppure scrivi i risultati a mano qui sotto.`:"Nessun calendario: incollalo qui sopra");
  const rows=[...new Set([...kGL().filter(n=>kHAS(n,"cl")||kHAS(n,"mar")||kHAS(n,"amm")),S.gs])].sort((a,b)=>a-b),cell=(n,k)=>kHAS(n,k)?`<span style="color:#4ade80">✓</span> ${new Date(kGR(n).t[k]).toLocaleString("it-IT",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} <button class="btn" data-rm="${n}|${k}" title="Elimina" style="padding:0 7px;min-height:0">×</button>`:'<span style="color:var(--mut)">—</span>',inc=[];
- rows.forEach(n=>{const a=kGR(n).cl;if(a&&a.length){const mx=Math.max(...a.map(e=>e.g)),lo=a.filter(e=>e.g<mx);if(lo.length)inc.push(`G${n}: ${lo.map(e=>esc(e.n)+" ("+e.g+" su "+mx+")").join(", ")} con meno gare, dati incompleti`)}});
+ rows.forEach(n=>{const a=kGR(n).cl;if(a&&a.length){const mx=Math.max(...a.map(e=>e.g)),lo=a.filter(e=>e.g<mx);if(lo.length)inc.push(`G${n}: ${lo.map(e=>esc(e.n)+" ("+e.g+" su "+mx+(typeof rvAll==="function"&&rvAll().some(o=>o.g<=n&&(rvEq(o.h,e.n)||rvEq(o.a,e.n))&&(!kRG(rvResO(o))||(rvGp(o)??1e9)>n))?", partita rinviata":"")+")").join(", ")} con meno gare`)}});
  $("#kst").innerHTML=kHint()+`<div class="card"><b>Giornate caricate</b><div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><tr style="color:var(--mut);text-align:left"><th>Giornata</th><th>Classifica</th><th>Marcatori</th><th>Ammoniti</th></tr>${rows.map(n=>`<tr style="border-top:1px solid var(--line)"><td style="padding:6px 0"><b>G${n}</b>${n===S.gs?" ◀":""}</td><td>${cell(n,"cl")}</td><td>${cell(n,"mar")}</td><td>${cell(n,"amm")}</td></tr>`).join("")}</table></div>${inc.map(x=>`<div class="hint" style="color:#e0a84a">⚠ ${x}</div>`).join("")}</div>`;
  const w=wd(S.gs);if(!w){$("#kcalc").innerHTML=`<div class="card"><b>Settimana della giornata ${S.gs}</b><small>Carica i file di questa giornata per calcolare squadre, marcatori e ammoniti della settimana.</small></div>`;return}
  const L=k=>w.pc[k]==null?'<span style="color:#e0a84a">nessuna giornata precedente, valori totali</span>':`G${S.gs} − G${w.pc[k]}`,miss=["cl","mar","amm"].filter(k=>!kHAS(S.gs,k)).map(k=>KT[k]),none=!w.tm.length&&!w.mar.length&&!w.amm.length;
@@ -1189,7 +1200,7 @@ $("#twp").addEventListener("click",e=>{const b=e.target.closest("[data-tmv],[dat
  S.tw2.forEach((q,k)=>{if(twSame(q,p.n,p.sq))S.tw2[k]={n:"",t:""}});const o=S.tw2[i];S.tw2[i]={n:twName(p.n),f:p.n,t:p.sq,...(o.ph&&(o.f||o.n)===p.n?{ph:o.ph}:{})};renderTW();save();draw();cm()});
 /* ---- MVP per partita (Dati e TOTW) ---- */
 function kPl(sq){const k=kHN(sq),o=new Set();[...(S.mar||[]),...Object.values(S.gv||{}).flatMap(g=>[...(g.mar||[]),...(g.amm||[])])].forEach(e=>{if(kHN(e.sq)===k)o.add(e.n)});return[...o].sort()}
-function kMvpM(){const c=(S.cal||[]).filter(r=>r.g===S.gs);return c.length?c.map(r=>({h:r.h,a:r.a,r:r.r})):parseRes(S.res||"").map(m=>({h:m.hn,a:m.an,r:m.h+"-"+m.a}))}
+function kMvpM(){const c=(S.cal||[]).filter(r=>r.g===S.gs&&!(typeof rvPend==="function"&&rvPend(r)));return c.length?c.map(r=>({h:r.h,a:r.a,r:r.r})):parseRes(S.res||"").map(m=>({h:m.hn,a:m.an,r:m.h+"-"+m.a}))}
 function kMvp(){const el=$("#kmvp");if(!el)return;const n=S.gs,ms=kMvpM(),M=(S.mvp||{})[n]||{},set=Object.values(M).filter(e=>e.n).length;
  el.innerHTML=`<div class="card" style="margin-top:12px"><b>⭐ MVP della giornata ${n}${ms.length?` · ${set}/${ms.length}`:""}</b><small>Il premio che l’arbitro assegna in ogni partita. Gli MVP prendono il badge nel Team of the week, +${fvF(FVP().m)} nel fantavoto e puoi metterli in porta o in difesa con un clic (anche se non hanno segnato).</small>${ms.length?ms.map((m,i)=>{const k=m.h+"|"+m.a,v=M[k]||{};
   return`<div class="kmv"><span><b>${esc(m.h)} – ${esc(m.a)}</b>${kRG(m.r)?" · "+esc(m.r):""}</span><input list="kmvl${i}" data-mvk="${esc(k)}" value="${esc(v.n||"")}" placeholder="Nome dell’MVP"><datalist id="kmvl${i}">${[...kPl(m.h),...kPl(m.a)].map(p=>`<option value="${esc(p)}">`).join("")}</datalist><select data-mvs="${esc(k)}" aria-label="Squadra dell’MVP"><option value="${esc(m.h)}">${esc(m.h)}</option><option value="${esc(m.a)}"${v.sq===m.a?" selected":""}>${esc(m.a)}</option></select></div>`}).join(""):'<div class="hint">Nessuna partita per questa giornata: incolla il calendario o scrivi i risultati.</div>'}</div>`}
@@ -1749,9 +1760,9 @@ $("#lyc").addEventListener("click",e=>{const b=e.target.closest("[data-fw]");if(
 /* ---- Grafiche squadra: match day automatico, grafica “Risultati” della squadra, font e sfondi propri ---- */
 function gqMatches(){const t=kHN(gqCur());if(!t)return[];return(S.cal||[]).filter(r=>kHN(r.h)===t||kHN(r.a)===t).sort((a,b)=>a.g-b.g||String(a.d).localeCompare(String(b.d)))}
 /* match day: la prossima partita della squadra; full time: l'ultima giocata. Se scegli tu una partita (o scrivi i campi) resta la tua. */
-function gqMcPick(M){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,pl=M.filter(r=>kRG(r.r)),np=M.filter(r=>!kRG(r.r));return ft?pl[pl.length-1]||M[M.length-1]:np[0]||pl[pl.length-1]}
+function gqMcPick(M){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft,pl=M.filter(r=>kRG(r.r)),np=M.filter(r=>!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r)&&!(String(r.d)>new Date().toISOString().slice(0,10))));return ft?pl[pl.length-1]||M[M.length-1]:np[0]||pl[pl.length-1]}
 function gqMcFill(){const sel=$("#mcsel");MCM=gqMatches();
- sel.innerHTML=`<option value="">${MCM.length?"Partite di "+esc(gqSN())+": scegline un’altra se vuoi":"Nessuna partita della squadra: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">G${r.g} · ${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`).join("");
+ sel.innerHTML=`<option value="">${MCM.length?"Partite di "+esc(gqSN())+": scegline un’altra se vuoi":"Nessuna partita della squadra: incolla il calendario in Dati e TOTW"}</option>`+MCM.map((r,i)=>`<option value="${i}">G${r.g} · ${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":(typeof rvPend==="function"&&rvPend(r))?" (rinviata)":""}</option>`).join("");
  if(BS(gT())!=="mc")return;
  if(S.mt.au===0){const i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a);if(i>=0){sel.value=i;MCC=MCM[i];mcSub(MCC.g)}return}
  const r=gqMcPick(MCM);if(!r)return;sel.value=MCM.indexOf(r);MCC=r;mcSub(r.g);const x=kRG(r.r);
@@ -2470,7 +2481,7 @@ $("#e").addEventListener("click",e=>{if(!e.target.closest("#pecov"))return;go("g
 
 /* ---- Anteprima della settimana: le partite di una giornata dal calendario (di default la prossima da giocare), divise per giorno, con campo e risultati già noti ---- */
 function anGs(){const m={};(S.cal||[]).forEach(r=>{(m[r.g]=m[r.g]||[]).push(r)});return m}
-function anDef(){const M=anGs(),G=Object.keys(M).map(Number).sort((a,b)=>a-b);if(!G.length)return null;const pend=g=>M[g].filter(r=>!kRG(r.r)).length;
+function anDef(){const M=anGs(),G=Object.keys(M).map(Number).sort((a,b)=>a-b);if(!G.length)return null;const pend=g=>M[g].filter(r=>!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r))).length;
  return G.find(g=>pend(g)>=Math.max(1,M[g].length/2))??G.find(g=>pend(g)>0)??G[G.length-1]}
 const anCur=()=>{const o=S.an||{},M=anGs();return o.g!=null&&M[o.g]?o.g:anDef()};
 function anRange(ms){const ds=[...new Set(ms.map(r=>r.d).filter(d=>/^\d{4}-\d\d-\d\d$/.test(d||"")))].sort();if(!ds.length)return"";const f=(d,o)=>new Date(d+"T12:00:00").toLocaleDateString("it-IT",o);if(ds.length===1)return f(ds[0],{day:"numeric",month:"long"});const a=ds[0],b=ds[ds.length-1];return a.slice(0,7)===b.slice(0,7)?f(a,{day:"numeric"})+"–"+f(b,{day:"numeric",month:"long"}):f(a,{day:"numeric",month:"short"})+" – "+f(b,{day:"numeric",month:"short"})}
@@ -2482,10 +2493,11 @@ function anv(x,W,H,y0,m,F,u){const st=S.sty,ms=anMatches(),n=ms.length,top0=y0+2
  const NF=fitNames(x,ms.flatMap(r=>[r.h,r.a]),800,Math.min(rh*.25,(tall?60:52)*u),mw,true,F,12),lh=NF.f*1.08;let y=top,ix=0;
  days.forEach(dy=>{const lab=/^\d{4}-\d\d-\d\d$/.test(dy.d||"")?new Date(dy.d+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"}):"Data da definire",fs=Math.min(hh*.48,34*u);
   x.font=`800 ${fs}px ${F}`;x.textAlign="left";x.textBaseline="middle";const tw=x.measureText(lab.toUpperCase()).width;x.fillStyle=st.ac;x.fillRect(m-18,y+hh*.5-fs*.62,6*u,fs*1.24);x.fillStyle=st.tx;x.fillText(lab.toUpperCase(),m-2,y+hh*.52);x.fillStyle=rgba(st.tx,.18);x.fillRect(m+tw+16*u,y+hh*.52,W-2*m-tw-16*u+18,1.5);y+=hh;
-  dy.ms.forEach(r=>{const cy=y+rh*.44,res=showR&&kRG(r.r),on=team&&(kHN(r.h)===kHN(team)||kHN(r.a)===kHN(team));if(on){x.fillStyle=rgba(st.ac,.2);x.beginPath();x.roundRect(m-18,y+4*u,W-2*m+36,rh-8*u,14*u);x.fill()}
+  dy.ms.forEach(r=>{const cy=y+rh*.44,res=showR&&kRG(typeof rvRes==="function"?rvRes(r):r.r),rvp=(typeof rvPend==="function"&&rvPend(r)),on=team&&(kHN(r.h)===kHN(team)||kHN(r.a)===kHN(team));if(on){x.fillStyle=rgba(st.ac,.2);x.beginPath();x.roundRect(m-18,y+4*u,W-2*m+36,rh-8*u,14*u);x.fill()}
    if(res){x.fillStyle=st.ac;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();x.fillStyle=tc;x.font=`800 ${ph*.54}px ${F}`;x.textAlign="center";x.fillText(res[0]+" - "+res[1],cx,cy+ph*.03)}
+   else if(rvp){rvPill(x,cx,cy,pw,ph,F,st);x.textAlign="center";x.textBaseline="middle"}
    else{x.strokeStyle=st.ac;x.lineWidth=3*u;x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.stroke();x.fillStyle=st.tx;x.font=`800 ${ph*.5}px ${F}`;x.textAlign="center";x.fillText("VS",cx,cy+ph*.03)}
-   const v=(S.stad||{})[r.s]||r.s||"";if(v){x.fillStyle=rgba(st.tx,.65);x.font=`600 ${Math.min(ph*.3,22*u)}px ${F}`;x.fillText(v+(r.rc?" · recupero":""),cx,cy+ph/2+Math.min(ph*.3,22*u)*.95,pw*1.6)}
+   const v=rvp?"da recuperare":(S.stad||{})[r.s]||r.s||"";if(v){x.fillStyle=rgba(st.tx,.65);x.font=`600 ${Math.min(ph*.3,22*u)}px ${F}`;x.fillText(v+(!rvp&&(r.rc||typeof rvRec==="function"&&rvRec(r))?" · recupero":""),cx,cy+ph/2+Math.min(ph*.3,22*u)*.95,pw*1.6)}
    [[r.h,-1,2*ix],[r.a,1,2*ix+1]].forEach(([nm,sd,j])=>{const lx=cx+sd*(pw/2+gap+lg/2),l=hl?logo(nm):null;if(l)dl(x,l,lx,cy,lg);const nx=cx+sd*(pw/2+gap+lg+(hl?gap:0)),ls=NF.l[j];x.font=`800 ${NF.f}px ${F}`;x.fillStyle=st.tx;x.textAlign=sd<0?"right":"left";
     ls.forEach((q,i)=>x.fillText(q,nx,cy+(i-(ls.length-1)/2)*lh+NF.f*.04))});
    x.fillStyle=rgba(st.tx,.1);x.fillRect(m-18,y+rh-1,W-2*m+36,1);y+=rh;ix++})});
@@ -2493,12 +2505,12 @@ function anv(x,W,H,y0,m,F,u){const st=S.sty,ms=anMatches(),n=ms.length,top0=y0+2
 /* pannello in Contenuti */
 $("#rsw").insertAdjacentHTML("beforebegin",`<div id="anw" class="card" style="display:none"><b>Partite della giornata</b><small>Dal calendario incollato in Dati e TOTW. Di default la prossima giornata da giocare (quella ancora senza risultati).</small><label for="ang">Giornata</label><select id="ang"></select><label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="anr"> Mostra i risultati delle partite già giocate</label><div class="hint" id="anh"></div></div>`);
 function anUI(){const el=$("#anw");if(!el||el.style.display==="none")return;const M=anGs(),G=Object.keys(M).map(Number).sort((a,b)=>a-b),o=S.an||{},auto=o.g==null||!M[o.g],g=anCur(),d0=anDef();
- $("#ang").innerHTML=G.length?`<option value=""${auto?" selected":""}>Automatica: la prossima da giocare${d0!=null?" (giornata "+d0+")":""}</option>`+G.map(n=>{const ms=M[n],dn=ms.filter(r=>kRG(r.r)).length;return`<option value="${n}"${!auto&&n===g?" selected":""}>Giornata ${n}${anRange(ms)?" · "+anRange(ms):""} · ${dn===ms.length?"giocata":dn?dn+"/"+ms.length+" giocate":"da giocare"}</option>`}).join(""):`<option value="">Nessun calendario</option>`;
+ $("#ang").innerHTML=G.length?`<option value=""${auto?" selected":""}>Automatica: la prossima da giocare${d0!=null?" (giornata "+d0+")":""}</option>`+G.map(n=>{const ms=M[n],dn=ms.filter(r=>kRG(typeof rvRes==="function"?rvRes(r):r.r)).length,nr=ms.filter(r=>(typeof rvPend==="function"&&rvPend(r))).length;return`<option value="${n}"${!auto&&n===g?" selected":""}>Giornata ${n}${anRange(ms)?" · "+anRange(ms):""} · ${dn===ms.length?"giocata":dn?dn+"/"+ms.length+" giocate":"da giocare"}${nr?" · "+nr+(nr===1?" rinviata":" rinviate"):""}</option>`}).join(""):`<option value="">Nessun calendario</option>`;
  $("#anr").checked=o.r!==0;const ms=anMatches();$("#anh").textContent=!G.length?"Incolla il calendario in Dati e TOTW: le partite arrivano da lì.":`${ms.length} ${ms.length===1?"partita":"partite"}${anRange(ms)?" · "+anRange(ms):""}. Titolo e sottotitolo li cambi qui sopra.`;
  const gs=$("#gs");if(g!=null&&/^Giornata \d+( · .*)?$/.test(gs.value.trim())){const want=`Giornata ${g}${anRange(ms)?" · "+anRange(ms):""}`;if(gs.value!==want){gs.value=want}}}
 $("#anw").addEventListener("change",e=>{const t=e.target;S.an={...(S.an||{})};if(t.id==="ang")S.an.g=t.value===""?null:+t.value;else if(t.id==="anr")S.an.r=t.checked?1:0;else return;anUI();save();draw();cm()});
 function anCapt(){const ms=anMatches(),g=anCur();if(!ms.length)return"Ecco le partite della settimana! Chi vince secondo voi?";const by={};ms.forEach(r=>{(by[r.d]=by[r.d]||[]).push(r)});
- return`Si torna in campo: ecco il programma della giornata ${g}! ⚽`+Object.entries(by).map(([d,a])=>"\n\n📅 "+(itD(d)||"Data da definire")+a.map(r=>`\n${r.h} – ${r.a}${kRG(r.r)?" ("+r.r+")":""}${(S.stad||{})[r.s]||r.s?" · "+((S.stad||{})[r.s]||r.s):""}`).join("")).join("")+P(["\n\nI vostri pronostici nei commenti!","\n\nQual è la partita da non perdere?","\n\nVenite a fare il tifo: chi vince secondo voi?"])}
+ return`Si torna in campo: ecco il programma della giornata ${g}! ⚽`+Object.entries(by).map(([d,a])=>"\n\n📅 "+(itD(d)||"Data da definire")+a.map(r=>`\n${r.h} – ${r.a}${kRG(r.r)?" ("+r.r+")":(typeof rvPend==="function"&&rvPend(r))?" (rinviata)":""}${(S.stad||{})[r.s]||r.s?" · "+((S.stad||{})[r.s]||r.s):""}`).join("")).join("")+P(["\n\nI vostri pronostici nei commenti!","\n\nQual è la partita da non perdere?","\n\nVenite a fare il tifo: chi vince secondo voi?"])}
 
 /* ---- effetti sui testi (oro, argento, bagliore, rilievo 3D, contorno, ombra, sfumato) ---- */
 const FXT=[["","Nessuno"],["oro","Oro (regale)"],["chm","Oro champagne"],["arg","Argento"],["bro","Bronzo"],["ste","Acciaio scuro"],["ros","Oro rosa"],["mcu","Metallo del colore scelto"],["cha","Champagne inciso (stile TOTS)"],["neon","Bagliore"],["3d","Rilievo 3D"],["out","Solo contorno"],["omb","Ombra morbida"],["acc","Sfumato con l’accento"]];
@@ -2598,11 +2610,11 @@ lgmUI();
 function mcGT(){const ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft;if(ft)return S.gs;const n=typeof anDef==="function"?anDef():null;return n??S.gs}
 function mcSub(g){const e=$("#gs");if(e&&g!=null&&BS(gT())==="mc"&&/^giornata \d+$/i.test(e.value.trim())&&e.value.trim()!=="Giornata "+g)e.value="Giornata "+g}
 function mcFillL(){const sel=$("#mcsel"),g=mcGT(),all=S.cal||[],G=[...new Set(all.map(r=>r.g))],ft=!!((S.cg||[]).find(c=>c.id===gT())||{}).ft;MCM=[];
- const grp=n=>{const ms=all.filter(r=>r.g===n);if(!ms.length)return"";return`<optgroup label="Giornata ${n}${n===g?(ft?" · giocata":" · prossima"):""}">`+ms.map(r=>{MCM.push(r);return`<option value="${MCM.length-1}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":""}</option>`}).join("")+"</optgroup>"};
+ const grp=n=>{const ms=all.filter(r=>r.g===n);if(!ms.length)return"";return`<optgroup label="Giornata ${n}${n===g?(ft?" · giocata":" · prossima"):""}">`+ms.map(r=>{MCM.push(r);return`<option value="${MCM.length-1}">${esc(r.h)} – ${esc(r.a)}${kRG(r.r)?" ("+r.r+")":(typeof rvPend==="function"&&rvPend(r))?" (rinviata)":""}</option>`}).join("")+"</optgroup>"};
  sel.innerHTML=`<option value="">${all.length?"Scegli la partita (giornata "+g+")":"Nessuna partita: incolla il calendario in Dati e TOTW"}</option>`+grp(g)+G.filter(n=>n!==g).sort((a,b)=>Math.abs(a-g)-Math.abs(b-g)||a-b).map(grp).join("");
  let i=MCM.findIndex(r=>r.h===S.mt.h&&r.a===S.mt.a&&r.g===g);
  /* match day: se la partita mostrata non è della prossima giornata, metto la prima ancora da giocare (resta la tua scelta se è di quella giornata) */
- if(i<0&&!ft&&BS(gT())==="mc"&&g!=null){const ms=MCM.filter(r=>r.g===g),r=ms.find(r=>!kRG(r.r))||ms[0];if(r){i=MCM.indexOf(r);S.mt={...S.mt,h:r.h,a:r.a,sc:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}}
+ if(i<0&&!ft&&BS(gT())==="mc"&&g!=null){const ms=MCM.filter(r=>r.g===g),r=ms.find(r=>!kRG(r.r)&&!(typeof rvPend==="function"&&rvPend(r)))||ms[0];if(r){i=MCM.indexOf(r);S.mt={...S.mt,h:r.h,a:r.a,sc:"",d:itD(r.d)+(r.rc?" · recupero":""),v:(S.stad||{})[r.s]||r.s,au:1};["h","a","d","v","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}}
  if(i>=0){sel.value=i;MCC=MCM[i]}if(BS(gT())==="mc")mcSub(ft?S.gs:g)}
 
 /* ---- Podcast: scheda di presentazione della squadra ospite, stagione scorsa e quest'anno a confronto (grafica da scaricare o mettere nel video) ---- */
@@ -2812,6 +2824,114 @@ $("#pesb").addEventListener("change",async e=>{const t=e.target,P=peP();if(!P)re
  if(t.id==="peiff"){const f=t.files[0];t.value="";if(!f)return;try{const im=await ldImg(await new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=ko;r.readAsDataURL(f)})),s=Math.min(1,1920/Math.max(im.naturalWidth,im.naturalHeight)),c=bgCv(im.naturalWidth*s,im.naturalHeight*s);c.getContext("2d").drawImage(im,0,0,c.width,c.height);
    await phIdb("put","pe|intro|"+PE.key,c.toDataURL("image/jpeg",.92));PEI.th=c;PEI.k="";peIUpd(o=>{o.src="f";o.pv=(o.pv||0)+1});if(Math.abs(c.width/c.height-PE.w/PE.h)>.05)toast("La foto ha proporzioni diverse dal video: la adatto, ma per un effetto pulito usa un fotogramma del video")}catch(x){alert("Non riesco a leggere la foto")}}});
 $("#pesb").addEventListener("input",e=>{if(e.target.id==="peid"){const s=$("#peidv");if(s)s.textContent=String(e.target.value).replace(".",",")+" s"}});
+
+/* ---- Partite rinviate ----
+   S.rv[giornata|casa|ospite] = {g,h,a,st:"r" rinviata | "n" mancava solo il risultato, r:risultato scritto a mano, d:data del recupero,
+   gp:giornata dei file Excel che contengono il recupero (se scelta a mano), mar/amm:gol e cartellini del recupero, dt:1 se li hai sistemati tu, at}
+   Una partita rinviata: nei Risultati e nelle grafiche compare RINVIO, il Team of the week della giornata ha la nota.
+   Quando si recupera (spesso durante un'altra giornata) il risultato torna alla sua giornata e gol, cartellini e partita
+   vengono tolti dalla settimana in cui si è giocata, così il Team of the week di quella settimana non li conta. */
+const rvK=(g,h,a)=>g+"|"+kHN(h)+"|"+kHN(a),rvEq=(a,b)=>kHN(a)===kHN(b)||(typeof tmScore==="function"&&tmScore(a,b)>=.5);
+function rvRec(r){const o=r&&(S.rv||{})[rvK(r.g,r.h,r.a)];return o&&o.st==="r"?o:null}
+function rvRow(o){return(S.cal||[]).find(r=>r.g===o.g&&kHN(r.h)===kHN(o.h)&&kHN(r.a)===kHN(o.a))||null}
+function rvResO(o){const r=rvRow(o);return r&&kRG(r.r)?r.r:kRG(o.r)?o.r:""}
+function rvRes(r){if(kRG(r.r))return r.r;const o=rvRec(r);return o&&kRG(o.r)?o.r:""}
+const rvPend=r=>!!rvRec(r)&&!rvRes(r),rvAll=()=>Object.entries(S.rv||{}).filter(([,o])=>o.st==="r").map(([k,o])=>Object.assign(o,{k})),rvOf=g=>rvAll().filter(o=>o.g===g);
+const rvTeamPend=t=>rvAll().some(o=>!rvResO(o)&&(rvEq(o.h,t)||rvEq(o.a,t)));
+/* risultati della giornata: le rinviate restano in elenco con RINVIO, i recuperi tornano alla loro giornata */
+kEff=function(n){const m=kGR(n).res;if(m&&m.trim())return m;return(S.cal||[]).filter(r=>r.g===n).map(r=>{const x=kRG(rvRes(r));return x?r.h+" "+x[0]+"-"+x[1]+" "+r.a:rvPend(r)?r.h+" RINVIO "+r.a:""}).filter(Boolean).join("\n")};
+function risRows(t){const out=[];String(t||"").split("\n").forEach(l=>{l=l.trim().replace(/\s+/g," ");if(!l)return;const p=parseRes(l);if(p.length)return out.push(p[0]);const m=l.match(/^(.+?) (rinvio|rinviata|rinviato|rinv\.?) (.+)$/i);if(m){const q=parseRes(m[1]+" 0-0 "+m[3])[0];if(q)out.push({hn:q.hn,an:q.an,h:null,a:null,rv:1})}});return out}
+function rvPill(x,cx,cy,pw,ph,F,st){x.save();x.fillStyle=rgba(st.ac,.14);x.strokeStyle=st.ac;x.lineWidth=Math.max(2,ph*.05);x.beginPath();x.roundRect(cx-pw/2,cy-ph/2,pw,ph,ph/2);x.fill();x.stroke();
+ let fs=ph*.4;x.font=`800 ${fs}px ${F}`;while(x.measureText("RINVIO").width>pw*.8&&fs>8){fs-=1;x.font=`800 ${fs}px ${F}`}x.fillStyle=st.tx;x.textAlign="center";x.textBaseline="middle";x.fillText("RINVIO",cx,cy+ph*.02);x.restore()}
+/* ---- in quale settimana di dati Excel è finito il recupero ---- */
+function rvCnt(X,T){return(S.cal||[]).filter(r=>r.g===X&&(rvEq(r.h,T)||rvEq(r.a,T))&&!rvPend(r)).length}
+function rvGp(o){if(o.gp!=null)return o.gp;if(!kRG(rvResO(o)))return null;for(const X of kGL().filter(x=>x>=o.g&&kHAS(x,"cl"))){const w=rvWd0(X);if(!w||w.pc.cl==null)continue;const e=w.tm.find(q=>rvEq(q.n,o.h)),f=w.tm.find(q=>rvEq(q.n,o.a));
+  if(X===o.g){if(e||f)return X;continue}if(e&&e.g>rvCnt(X,o.h)||f&&f.g>rvCnt(X,o.a))return X}return null}
+/* gol e cartellini del recupero: se una squadra non ha giocato altre partite in quella settimana li separo da solo, altrimenti li sistemi tu */
+function rvData(o,X){if(o.dt)return{mar:o.mar||[],amm:o.amm||[],amb:[],ok:1,man:1};const w=rvWd0(X),x=kRG(rvResO(o)),D={mar:[],amm:[],amb:[],ok:1};if(!w||!x)return D;
+ [[o.h,x[0]],[o.a,x[1]]].forEach(([T,gr])=>{const row=(S.cal||[]).find(r=>r.g===X&&(rvEq(r.h,T)||rvEq(r.a,T))&&!rvPend(r)),rr=row&&kRG(row.r),gx=rr?(rvEq(row.h,T)?rr[0]:rr[1]):null,pl=w.mar.filter(e=>rvEq(e.sq,T)),am=w.amm.filter(e=>rvEq(e.sq,T)),amb=()=>{if(!D.amb.includes(T))D.amb.push(T);D.ok=0};
+  if(gr>0&&pl.length){if(!row||gx===0)pl.forEach(e=>D.mar.push({n:e.n,sq:e.sq,g:e.w}));else amb()}
+  if(am.length){if(!row)am.forEach(e=>D.amm.push({n:e.n,sq:e.sq,t:e.w}));else amb()}});return D}
+function rvApply(R,o,D,s){const x=kRG(rvResO(o));[[o.h,x[0],x[1]],[o.a,x[1],x[0]]].forEach(([t,f,a])=>{let e=R.tm.find(q=>rvEq(q.n,t));if(!e){if(s<0)return;e={n:t,g:0,gf:0,gs:0,pt:0};R.tm.push(e)}e.g+=s;e.gf+=s*f;e.gs+=s*a;e.pt+=s*(f>a?3:f===a?1:0)});
+ D.mar.forEach(p=>{let e=R.mar.find(q=>q.n===p.n&&rvEq(q.sq,p.sq));if(!e){if(s<0)return;e={n:p.n,sq:p.sq,g:p.g,w:0};R.mar.push(e)}e.w+=s*p.g});
+ D.amm.forEach(p=>{let e=R.amm.find(q=>q.n===p.n&&rvEq(q.sq,p.sq));if(!e){if(s<0)return;e={n:p.n,sq:p.sq,t:p.t,w:0};R.amm.push(e)}e.w+=s*p.t})}
+const rvWd0=wd;
+wd=function(n){const w=rvWd0(n);if(!w||!S.rv)return w;let R=null;
+ rvAll().forEach(o=>{if(!kRG(rvResO(o)))return;const X=rvGp(o);if(X==null||X===o.g||(n!==X&&n!==o.g))return;const D=rvData(o,X);
+  if(!R)R={...w,mar:w.mar.map(e=>({...e})),tm:w.tm.map(e=>({...e})),amm:w.amm.map(e=>({...e})),rvSub:[],rvAdd:[]};rvApply(R,o,D,n===X?-1:1);(n===X?R.rvSub:R.rvAdd).push({o,D})});
+ if(!R)return w;R.mar=R.mar.filter(e=>e.w>0).sort((a,b)=>b.w-a.w||a.n.localeCompare(b.n));R.amm=R.amm.filter(e=>e.w>0).sort((a,b)=>a.sq.localeCompare(b.sq)||a.n.localeCompare(b.n));R.tm=R.tm.filter(e=>e.g>0);
+ const aw={};R.amm.forEach(e=>aw[e.sq]=(aw[e.sq]||0)+e.w);R.aw=aw;return R};
+/* una rinviata è "sistemata" quando ha il risultato e gol e cartellini sono al loro posto */
+function rvOk(o){if(!kRG(rvResO(o)))return false;const X=rvGp(o);if(X==null)return !!o.dt;if(X===o.g)return true;return !!rvData(o,X).ok}
+const rvOpen=g=>rvOf(g).filter(o=>!rvOk(o));
+/* nota in fondo alle grafiche: Team of the week senza le rinviate, Classifica con l'asterisco */
+function rvFoot(x,W,H,u,F,T){let t="";if(T==="tw"&&rvOpen(S.gs).length)t="* grafica elaborata senza considerare le partite rinviate";else if(T==="cl"&&(S.cl||[]).some(e=>rvTeamPend(e.n)))t="* una partita da recuperare";if(!t)return;
+ const f=(typeof LB!=="undefined"?LB:[]).find(b=>b.id==="ft"&&b.y0>H*.8),fs=Math.max(14,21*u),y=f?f.y0-10*u:H-22*u;x.save();x.font=`600 ${fs}px ${F}`;const tw=Math.min(W-60*u,x.measureText(t).width);
+ x.fillStyle="rgba(0,0,0,.6)";x.beginPath();x.roundRect(W/2-tw/2-14*u,y-fs*1.05,tw+28*u,fs*1.5,fs*.75);x.fill();x.textAlign="center";x.textBaseline="alphabetic";x.fillStyle=rgba(S.sty.tx,.92);x.fillText(t,W/2,y-fs*.12,W-60*u);x.restore()}
+/* ---- domanda quando mancano dei risultati ---- */
+let RVL=0,RVT=0;
+function rvCand(){const cur=calCur();if(cur==null)return[];const C=S.cal||[],R=S.rv||{},td=new Date().toISOString().slice(0,10),D=/^\d{4}-\d\d-\d\d$/,
+  gd=g=>C.filter(q=>q.g===g&&kRG(q.r)&&D.test(q.d||"")).map(q=>q.d).sort().pop()||"",late=(d,g)=>{const m=gd(g);if(!m)return false;const x=new Date(m+"T12:00:00");x.setDate(x.getDate()+2);return d>x.toISOString().slice(0,10)};
+ /* senza risultato in una giornata già giocata: data passata, oppure spostata parecchi giorni dopo le altre (già riprogrammata) */
+ return C.filter(r=>r.g<=cur&&!kRG(r.r)&&!R[rvK(r.g,r.h,r.a)]&&C.some(q=>q.g===r.g&&kRG(q.r))&&(!D.test(r.d||"")||r.d<td||late(r.d,r.g)))}
+function rvAsk(force){if(!force&&(RVL||window.__noRvAsk))return;const c=rvCand();if(!c.length||$("#rvdlg"))return;const sel={};c.forEach(r=>sel[rvK(r.g,r.h,r.a)]="r");
+ const td=new Date().toISOString().slice(0,10),gs=[...new Set(c.map(r=>r.g))],row=r=>{const k=rvK(r.g,r.h,r.a),fut=/^\d{4}-/.test(r.d||"")&&r.d>td;return`<div class="rvr"><span><b>${esc(r.h)} – ${esc(r.a)}</b><small>Giornata ${r.g}${r.d?" · "+(fut?"ora in calendario per "+itD(r.d).toLowerCase():itD(r.d).toLowerCase()):""}</small></span><span class="rvs"><button class="btn pbx p" data-rva="${esc(k)}" data-v="r">Rinviata</button><button class="btn pbx" data-rva="${esc(k)}" data-v="n">Manca solo il risultato</button></span></div>`};
+ document.body.insertAdjacentHTML("beforeend",`<div id="rvdlg" role="dialog" aria-modal="true" aria-labelledby="rvdt"><div class="card rvd"><b id="rvdt">⏸ ${c.length===1?"Una partita senza risultato":c.length+" partite senza risultato"}</b><small>Nei dati della giornata ${gs.join(", ")} ${c.length===1?"manca questo risultato":"mancano questi risultati"}. ${c.length===1?"È stata rinviata":"Sono state rinviate"}?</small>${c.map(row).join("")}
+  <div class="hint">Le rinviate: nei Risultati compare RINVIO, il Team of the week si fa lo stesso con la nota “* grafica elaborata senza considerare le partite rinviate”. Quando si recuperano le trovi in Dati e TOTW › Partite rinviate.</div><div class="bar" style="margin:10px 0 0;gap:8px"><button class="btn p" id="rvok">Conferma</button><button class="btn" id="rvlt">Chiedimelo dopo</button></div></div></div>`);
+ const d=$("#rvdlg");d.addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;if(b.dataset.rva){sel[b.dataset.rva]=b.dataset.v;b.parentElement.querySelectorAll("button").forEach(q=>q.classList.toggle("p",q===b));return}
+  if(b.id==="rvlt"){RVL=1;d.remove();return}if(b.id!=="rvok")return;S.rv=S.rv||{};let n=0;c.forEach(r=>{const k=rvK(r.g,r.h,r.a);S.rv[k]={g:r.g,h:r.h,a:r.a,st:sel[k],at:Date.now()};if(sel[k]==="r")n++});d.remove();rvRefresh();
+  toast(n?`${n===1?"Partita segnata come rinviata":n+" partite segnate come rinviate"}: nei Risultati compare RINVIO`:"Ok: aspetto i risultati")});setTimeout(()=>{const b=$("#rvok");if(b)b.focus()},50)}
+function rvRefresh(){kApply();save();renderK();if(typeof renderTW==="function")renderTW();draw();if(typeof cm==="function")cm()}
+/* dopo aver incollato il calendario: recuperi giocati e nuove partite senza risultato */
+function rvAfter(){const nw=[];rvAll().forEach(o=>{const r=rvRow(o);if(r&&kRG(r.r)&&o.seen!==r.r){o.seen=r.r;if(r.d)o.d=r.d;nw.push(o)}});
+ if(nw.length){save();renderK();toast(nw.map(o=>`Recupero giocato: ${o.h} ${rvResO(o)} ${o.a}`).join(" · ")+" · torna alla giornata "+nw.map(o=>o.g).join(", "))}setTimeout(()=>rvAsk(1),nw.length?600:0)}
+{const ci=calImport;calImport=function(t){const r=ci(t);if(r)rvAfter();return r}}
+/* ---- Dati e TOTW › Partite rinviate ---- */
+$("#kst").insertAdjacentHTML("afterend",'<div id="krv"></div>');
+function rvUI(){const el=$("#krv");if(!el)return;const L=rvAll().sort((a,b)=>a.g-b.g||a.h.localeCompare(b.h)),cur=calCur(),td=new Date().toISOString().slice(0,10),
+  free=(S.cal||[]).filter(r=>!kRG(r.r)&&!rvRec(r)&&(cur==null||r.g<=cur+1)).sort((a,b)=>a.g-b.g);
+ if(!L.length&&!rvCand().length){el.innerHTML=free.length?`<details class="card"><summary><b>⏸ Partite rinviate</b> <span class="hint" style="display:inline">· nessuna</span></summary>${rvAddSel(free)}</details>`:"";return}
+ el.innerHTML=`<div class="card"><b>⏸ Partite rinviate</b><small>Nella loro giornata non contano (Risultati con RINVIO, Team of the week con la nota). Quando si recuperano il risultato arriva dal calendario o lo scrivi qui: torna alla sua giornata e gol, cartellini e partita vengono tolti dalla settimana in cui si è giocato il recupero.</small>
+ ${rvCand().length?`<div class="hint" style="color:#e0a84a">⚠ Ci sono partite senza risultato da controllare. <button class="btn pbx" data-rvq>Controlla</button></div>`:""}${L.map(rvItem).join("")}${free.length?rvAddSel(free):""}</div>`}
+function rvAddSel(free){return`<div class="bar" style="margin:8px 0 0;gap:6px"><label class="hint" style="margin:0" for="rvadd">Segna come rinviata</label><select id="rvadd" style="width:auto;min-height:36px"><option value="">Scegli la partita…</option>${free.map(r=>`<option value="${esc(rvK(r.g,r.h,r.a))}">G${r.g} · ${esc(r.h)} – ${esc(r.a)}</option>`).join("")}</select></div>`}
+function rvItem(o){const k=esc(o.k),row=rvRow(o),res=rvResO(o),fc=row&&kRG(row.r),X=res?rvGp(o):null,ok=rvOk(o),chip=!res?`<span class="rvc w">Da recuperare</span>`:ok?`<span class="rvc g">✓ Sistemata · ${esc(res)}</span>`:`<span class="rvc b">Recuperata · ${esc(res)}</span>`,gl=kGL().filter(x=>x>=o.g&&kHAS(x,"cl"));
+ let h=`<div class="rvi"><div class="bar" style="margin:0;gap:8px"><b style="flex:1">G${o.g} · ${esc(o.h)} – ${esc(o.a)}</b>${chip}<button class="btn pbx" data-rvx="${k}" title="Non era rinviata">×</button></div>
+ <div class="rvf"><label>Risultato del recupero<input data-rvr="${k}" value="${esc(fc?row.r:o.r||"")}" placeholder="es. 2-1"${fc?" disabled title=\"Arriva dal calendario\"":""}></label><label>Giocata il<input type="date" data-rvd="${k}" value="${esc(o.d||(fc&&row.d)||"")}"></label></div>`;
+ if(res){h+=`<div class="hint" style="margin:4px 0 0">${X==null?`Non ancora nei file Excel caricati: quando carichi quelli della settimana in cui si è giocato lo riconosco da solo.`:X===o.g?`Già compreso nei file Excel della giornata ${o.g}: niente da spostare.`:`Nei file Excel della giornata ${X}${o.gp!=null?" (scelta da te)":" (riconosciuta da sola)"}: lo tolgo da lì e lo riporto alla giornata ${o.g}.`}
+  ${gl.length?` <select data-rvg="${k}" style="width:auto;min-height:30px;font-size:12px"><option value="">${o.gp!=null?"Riconosci da sola":"Cambia giornata…"}</option>${gl.map(x=>`<option value="${x}"${o.gp===x?" selected":""}>File della giornata ${x}</option>`).join("")}</select>`:""}</div>`;
+  if(X!=null&&X!==o.g)h+=rvSplitUI(o,X)}
+ return h+"</div>"}
+function rvSplitUI(o,X){const w=rvWd0(X),D=rvData(o,X),x=kRG(rvResO(o)),k=esc(o.k);if(!w)return"";const sec=(T,gr)=>{const pl=w.mar.filter(e=>rvEq(e.sq,T)),am=w.amm.filter(e=>rvEq(e.sq,T)),g=p=>(D.mar.find(q=>q.n===p.n&&rvEq(q.sq,p.sq))||{}).g||0,a=p=>(D.amm.find(q=>q.n===p.n&&rvEq(q.sq,p.sq))||{}).t||0;
+  if(!pl.length&&!am.length)return"";return`<div class="rvt"><b>${esc(T)}</b> <span class="hint" style="display:inline">${gr} ${gr===1?"gol":"gol"} nel recupero${D.amb.includes(T)&&!D.man?" · ha giocato anche un’altra partita in quella settimana: dimmi tu cosa è successo nel recupero":""}</span>
+   ${pl.length?`<div class="rvp">${pl.map(p=>`<label>⚽ ${esc(p.n)} <input type="number" min="0" max="${p.w}" value="${g(p)}" data-rvm="${k}" data-n="${esc(p.n)}" data-sq="${esc(p.sq)}"><span class="hint" style="display:inline">su ${p.w}</span></label>`).join("")}</div>`:""}
+   ${am.length?`<div class="rvp">${am.map(p=>`<label>🟨 ${esc(p.n)} <input type="number" min="0" max="${p.w}" value="${a(p)}" data-rva2="${k}" data-n="${esc(p.n)}" data-sq="${esc(p.sq)}"><span class="hint" style="display:inline">su ${p.w}</span></label>`).join("")}</div>`:""}</div>`};
+ const s=sec(o.h,x[0])+sec(o.a,x[1]);
+ return`<div class="rvsp"><small>Gol e cartellini della settimana ${X} delle due squadre: indica quanti sono del recupero.${D.ok&&!D.man?" Li ho separati da soli (nessuna delle due ha giocato altre partite quella settimana), puoi correggerli.":""}</small>${s||'<div class="hint">Nessun gol o cartellino delle due squadre in quella settimana.</div>'}<div class="bar" style="margin:6px 0 0;gap:6px"><button class="btn pbx p" data-rvs="${k}">Salva i dati del recupero</button>${o.dt?`<button class="btn pbx" data-rva0="${k}">↺ Automatico</button>`:""}</div></div>`}
+$("#krv").addEventListener("click",e=>{const b=e.target.closest("button");if(!b)return;const d=b.dataset,R=S.rv||{};
+ if(d.rvq!=null)return rvAsk(1);
+ if(d.rvx){const o=R[d.rvx];if(!o||!confirm(`${o.h} – ${o.a} non era rinviata? Torna una partita normale senza risultato.`))return;o.st="n";rvRefresh();return}
+ if(d.rva0){const o=R[d.rva0];if(o){delete o.dt;delete o.mar;delete o.amm;rvRefresh()}return}
+ if(d.rvs){const o=R[d.rvs];if(!o)return;const v=s=>[...$$(`#krv [${s}="${CSS.escape(d.rvs)}"]`)].map(i=>({n:i.dataset.n,sq:i.dataset.sq,v:Math.max(0,Math.min(+i.max||99,+i.value||0))})).filter(q=>q.v>0);
+  o.mar=v("data-rvm").map(q=>({n:q.n,sq:q.sq,g:q.v}));o.amm=v("data-rva2").map(q=>({n:q.n,sq:q.sq,t:q.v}));o.dt=1;rvRefresh();toast(`Recupero ${o.h} – ${o.a} sistemato: conta nella giornata ${o.g}`)}});
+$("#krv").addEventListener("change",e=>{const t=e.target,d=t.dataset,R=S.rv||{};
+ if(t.id==="rvadd"&&t.value){const r=(S.cal||[]).find(q=>rvK(q.g,q.h,q.a)===t.value);if(r){S.rv=S.rv||{};S.rv[t.value]={g:r.g,h:r.h,a:r.a,st:"r",at:Date.now()};rvRefresh();toast(`${r.h} – ${r.a} segnata come rinviata`)}return}
+ if(d.rvr){const o=R[d.rvr];if(!o)return;const x=kRG(t.value);if(t.value.trim()&&!x){toast("Scrivi il risultato così: 2-1");return}o.r=x?x[0]+"-"+x[1]:"";rvRefresh();return}
+ if(d.rvd){const o=R[d.rvd];if(o){o.d=t.value;save()}return}
+ if(d.rvg){const o=R[d.rvg];if(o){if(t.value==="")delete o.gp;else o.gp=+t.value;rvRefresh()}}});
+/* dati della settimana: cosa ho spostato per i recuperi */
+function rvWeek(){const el=$("#kcalc");if(!el)return;const w=wd(S.gs);if(!w)return;const p=[];
+ (w.rvSub||[]).forEach(({o,D})=>p.push(`Qui c’è anche il recupero <strong>${esc(o.h)} ${esc(rvResO(o))} ${esc(o.a)}</strong> della giornata ${o.g}: l’ho tolto da questa settimana${D.ok?"":` <span style="color:#e0a84a">(gol o cartellini da separare in Partite rinviate)</span>`}.`));
+ (w.rvAdd||[]).forEach(({o})=>p.push(`Comprende il recupero <strong>${esc(o.h)} ${esc(rvResO(o))} ${esc(o.a)}</strong>, giocato più tardi.`));
+ rvOpen(S.gs).forEach(o=>p.push(`<strong>${esc(o.h)} – ${esc(o.a)}</strong> rinviata: il Team of the week ha la nota “* grafica elaborata senza considerare le partite rinviate”.`));
+ if(p.length)el.insertAdjacentHTML("afterbegin",`<div class="card rvw"><b>⏸ Rinvii e recuperi · giornata ${S.gs}</b>${p.map(x=>`<div class="hint">${x}</div>`).join("")}</div>`)}
+{const rk=renderK;renderK=function(){rk();rvUI();rvWeek();if($("#k").classList.contains("on")){clearTimeout(RVT);RVT=setTimeout(()=>rvAsk(),600)}}}
+/* match day / full time di una rinviata */
+function rvMt(){const r=MCC;if(!r||!S.mt||kHN(S.mt.h)!==kHN(r.h)||kHN(S.mt.a)!==kHN(r.a))return;const o=rvRec(r);if(!o)return;const x=kRG(rvRes(r)),td=new Date().toISOString().slice(0,10),fut=/^\d{4}-/.test(r.d||"")&&r.d>td;
+ const sc=x?x[0]+" - "+x[1]:"RINVIATA",dd=x||fut?itD(r.d)+" · recupero":"Rinviata · data da definire";let ch=0;if(S.mt.sc!==sc&&(!S.mt.sc||/^\d+ - \d+$|^RINVIATA$/.test(S.mt.sc))){S.mt.sc=sc;ch=1}if(S.mt.d!==dd&&(!S.mt.d||S.mt.d.startsWith(itD(r.d))||/^Rinviata/.test(S.mt.d))){S.mt.d=dd;ch=1}
+ if(ch)["d","sc"].forEach(k=>{const e=$(`[data-m="${k}"]`);if(e)e.value=S.mt[k]||""})}
+{const mf=mcFill;mcFill=function(){mf();rvMt()};const sel=$("#mcsel"),oc=sel.onchange;sel.onchange=e=>{oc&&oc(e);rvMt();draw()}}
+/* all'avvio e quando apri Dati e TOTW: se ci sono partite senza risultato ancora da chiarire, te lo chiedo */
+setTimeout(()=>rvAsk(),3500);document.addEventListener("click",e=>{const b=e.target.closest('nav [data-t="k"]');if(b)setTimeout(()=>rvAsk(),300)});
 kApply();TBU();renderK();
 week();tipi();sty();renderGt();renderTW();sync(true);renderB();renderGal();renderCP();draw();cm();
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
