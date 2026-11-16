@@ -273,6 +273,40 @@ input,select,textarea{font-size:16px;min-height:44px}input[type=range]{min-heigh
 .rvsp{margin-top:8px;padding:8px;border:1px dashed var(--line);border-radius:8px}.rvsp>small{display:block;margin-bottom:4px}
 .rvt{margin-top:6px}.rvp{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:4px}.rvp label{display:flex;gap:6px;align-items:center;font-size:13px;color:var(--fg);margin:0}.rvp input{width:58px;min-height:30px;padding:2px 6px}
 .rvw{border-color:rgba(224,168,74,.45)}
+/* ---- interfaccia più ordinata ---- */
+.hero{height:72px;padding:0 20px 12px}.hero h1{font-size:clamp(20px,2.4vw,28px)}
+.uxhb{align-items:center}.uxhb>#ex,.uxhb>label.btn{display:none!important}
+.uxmenu{position:relative}.uxmenu>summary{list-style:none;cursor:pointer}.uxmenu>summary::-webkit-details-marker{display:none}
+.uxmenu-p{position:absolute;right:0;top:calc(100% + 6px);background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:6px;min-width:270px;z-index:60;box-shadow:0 12px 40px rgba(0,0,0,.55)}
+.uxmenu-p .btn{text-align:left}.uxmenu-p small{color:var(--mut);font-size:12px;line-height:1.35;padding:2px 4px}
+@media(min-width:801px){nav{position:sticky;top:0;z-index:40;background:rgba(0,0,0,.94);-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);align-items:center}}
+nav .ni{margin-right:6px;font-size:14px}.uxsp{flex:1;min-width:12px}nav button.uxsec{font-size:13.5px}
+@media(max-width:800px){.uxsp{display:none}nav .ni{display:block;margin:0 0 2px;font-size:17px}nav button{line-height:1.1}}
+/* editor grafiche: barra della grafica scelta e delle azioni */
+.uxtb{position:sticky;top:var(--navh,0px);z-index:20;background:var(--bg);padding:6px 0 10px;border-bottom:1px solid var(--line);margin-bottom:6px}
+.uxrow{display:flex;gap:10px;align-items:flex-end;flex-wrap:wrap}.uxf{display:flex;flex-direction:column;gap:4px}.uxf>label{margin:0;font-size:12px;color:var(--mut)}
+.uxg{flex:1;min-width:240px}.uxin{display:flex;gap:6px}.uxin select{flex:1;font-weight:700;font-size:15px}.uxin .btn{white-space:nowrap}.uxfm select{width:auto;min-width:160px}
+.uxacts{margin-top:8px;align-items:center}.uxgap{flex:1}.uxadd{display:flex;gap:6px;align-items:center;flex-wrap:wrap}.uxlab{color:var(--mut);font-size:12.5px}
+.uxur{display:flex;gap:6px}.uxur .btn{min-width:42px;padding:8px 10px;font-size:16px;line-height:1}
+.uxfoot{font-size:12px;opacity:.7;margin-top:14px}
+.uxgal{margin-top:14px}.uxgal>summary{cursor:pointer;list-style-position:inside}.uxgal>summary b{display:inline}.uxgal .gal{margin-top:8px}.uxgal .gal>.hint:first-child{display:none}
+.uxbgal>.hint:first-child{font-weight:600;color:var(--fg)}
+/* aiuti lunghi richiudibili */
+.uxhelp{margin:2px 0 10px}.uxhelp>summary{cursor:pointer;color:var(--blue);font-size:13.5px;width:max-content}.uxhelp>p{margin-top:6px}
+/* Dati e TOTW a schede */
+.uxkt{margin:12px 0 12px}.uxkt .uxbd{font-style:normal;font-size:11px;background:var(--line);color:var(--fg);border-radius:999px;padding:1px 7px;margin-left:6px}.uxkt .uxbd.w{background:rgba(224,168,74,.22);color:#e0a84a}.uxkt button.on .uxbd{background:rgba(255,255,255,.25);color:#fff}
+/* piccole correzioni generali */
+.card .hint b,.card small b,.card p b,.card li b,.card span b,.card label b,.card td b,.card summary b,.wb b{display:inline}
+.tabs{flex-wrap:wrap}
+input[type=file]{color:var(--mut);font-size:13px}
+input[type=file]::file-selector-button{background:var(--panel);color:var(--fg);border:1px solid var(--line);border-radius:8px;padding:6px 12px;font:600 13px "Inter Tight",system-ui,sans-serif;cursor:pointer;margin-right:10px}
+details.card>summary{cursor:pointer}
+.uxnew{margin-top:16px}.uxnew>b{margin-bottom:6px}
+.uxflash{animation:uxf 1.2s}@keyframes uxf{0%,100%{box-shadow:none}30%{box-shadow:0 0 0 4px rgba(47,123,255,.65)}}
+.uxkgo{position:sticky;top:var(--navh,0px);z-index:15;background:var(--bg);padding:8px 0;margin:0 0 8px;border-bottom:1px solid var(--line)}
+html{scroll-padding-top:calc(var(--navh,0px) + 8px)}
+@media(max-width:800px){.uxtb{position:static}.uxlab{display:none}.uxmenu .uxt{display:none}.hero h1{max-width:calc(100% - 170px);font-size:17px;line-height:1.1}.uxhb .acc{max-width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.uxkgo{position:static}}
+.ext .uxgal{display:none!important}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -2068,7 +2102,7 @@ $("main").insertAdjacentHTML("beforeend",`<section id="e"><div class="bar pehd">
 $("nav [data-t='p']").insertAdjacentHTML("afterend",`<button role="tab" aria-selected="false" data-t="e">Edit podcast</button>`);
 {const b=$("nav [data-t='e']"),o=$("nav [data-t='p']");b.onclick=()=>{$$("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));$$("section").forEach(s=>s.classList.toggle("on",s.id==="e"));if(typeof gMode==="function")gMode(false);$("main").classList.add("wide");peShow();peUI();peTop()};
  $$("nav button").forEach(x=>{if(x!==b)x.addEventListener("click",()=>{peV().pause();if(x.dataset.t!=="w")$("main").classList.remove("wide")})})}
-function peTop(){if(PE.f)setTimeout(()=>{const y=$("#e").getBoundingClientRect().top+scrollY-6;if(scrollY<y-20)scrollTo({top:y,behavior:"smooth"})},60)}
+function peTop(){if(PE.f)setTimeout(()=>{const y=$("#e").getBoundingClientRect().top+scrollY-6-(parseFloat(getComputedStyle(document.documentElement).getPropertyValue("--navh"))||0);if(scrollY<y-20)scrollTo({top:y,behavior:"smooth"})},60)}
 function peStat(t){const e=$("#pestat");e.style.display=t?"":"none";e.textContent=t}
 function peShow(){const on=!!PE.f;{const ck=S.pe&&S.pe.cur||"";if(ck&&PE.hfk!==ck){PE.hfk=ck;peFH(ck).then(h=>{const v=!!h;if(v!==!!PE.hfh){PE.hfh=v;peShow()}})}}$("#pe0").style.display=on?"none":"";$("#pev").style.display=on&&PE.view==="v"?"":"none";$("#pec").style.display=on&&PE.view==="c"?"":"none";$$("#pet [data-pv]").forEach(b=>b.classList.toggle("on",b.dataset.pv===PE.view));
  const P=S.pe&&S.pe.p&&S.pe.cur&&S.pe.p[S.pe.cur];$("#pe0r").innerHTML=!on&&P?`<div class="card" style="margin-top:14px;text-align:left"><b>Ultimo progetto: ${esc(P.n)}</b> <span class="hint">${peTf(P.d)} · ${P.cut.length} tagli · ${P.cl.length} clip</span><div class="bar" style="margin:8px 0 0"><button class="btn p" id="pero">${PE.hfh?"Riapri il video":"Scegli il file del video"}</button><span class="hint" style="margin:0">${PE.hfh?"Ricaricando lo stesso file riprendi da dove eri rimasto.":"Il progetto arriva dal profilo condiviso, il video no: sceglilo da questo dispositivo (stesso file = stesso progetto, con tagli e clip)."}</span></div></div>`:""}
@@ -3050,6 +3084,89 @@ $("#pec").addEventListener("change",e=>{const t=e.target;if(t.id==="pees")peEsSe
 /* in anteprima: quando la clip arriva alla fine parte la schermata finale */
 {const tk=peClipTick;peClipTick=function(t){const cl=peClipCur();if(cl&&!PEES&&peEsO().on&&t>=cl.b-.03&&!peV().paused){peV().pause();peEsPlay();peV().currentTime=cl.a;return}return tk(t)}}
 {const cd=peClipDraw;peClipDraw=function(){if(PEES)return;return cd()}}
+
+/* ---- Interfaccia più ordinata ----
+   intestazione compatta e menu fisso in alto (in ordine di lavoro, con icone); nell'editor delle grafiche la scelta della grafica
+   e le azioni principali in una barra sempre in vista; Dati e TOTW a schede; gli aiuti lunghi si richiudono. Gli id restano gli stessi. */
+(function(){const step=(n,f)=>{try{f()}catch(e){console.error("interfaccia · "+n,e)}};
+ const nav=document.querySelector("nav");step("menu",()=>{
+ /* menu: Settimana, Dati e TOTW, poi le grafiche, i video e il podcast; Loghi e Tipi di content in fondo */
+ const IC={w:"📅",k:"📊",g:"🎨",q:"🛡️",b:"🎞️",p:"🎙️",e:"✂️",l:"🖼️",t:"🗓️"};
+ ["w","k","g","q","b","p","e","l","t"].forEach(t=>{const b=nav.querySelector(`[data-t="${t}"]`);if(!b)return;nav.append(b);if(!b.querySelector(".ni"))b.insertAdjacentHTML("afterbegin",`<span class="ni" aria-hidden="true">${IC[t]}</span>`)});
+ const lb=nav.querySelector('[data-t="l"]');if(lb){lb.insertAdjacentHTML("beforebegin",'<span class="uxsp" aria-hidden="true"></span>');lb.classList.add("uxsec");nav.querySelector('[data-t="t"]')?.classList.add("uxsec")}
+ /* backup della configurazione: in un menu (i pulsanti originali restano, nascosti) */
+ const hb=$("#ex").parentElement;hb.classList.add("uxhb");hb.insertAdjacentHTML("beforeend",`<details class="uxmenu"><summary class="btn" title="Backup della configurazione">⚙️<span class="uxt"> Backup</span></summary><div class="uxmenu-p"><button class="btn" data-uxm="ex">⬇ Esporta configurazione</button><button class="btn" data-uxm="im">⬆ Importa configurazione</button><small>Un file con loghi, preset, grafiche e impostazioni, da tenere come copia o da aprire su un altro computer.</small></div></details>`);
+ hb.addEventListener("click",e=>{const b=e.target.closest("[data-uxm]");if(!b)return;b.closest("details").open=false;if(b.dataset.uxm==="ex")$("#ex").click();else $("#imc").click()});
+ document.addEventListener("click",e=>{const m=$(".uxmenu");if(m&&m.open&&!m.contains(e.target))m.open=false});
+ });
+ /* altezza del menu fisso, per le barre che restano attaccate sotto */
+ const nh=()=>document.documentElement.style.setProperty("--navh",(window.innerWidth>800?nav.offsetHeight:0)+"px");nh();window.addEventListener("resize",nh);
+
+ /* ---- Grafiche: barra con la grafica scelta, il formato e le azioni ---- */
+ step("grafiche",()=>{const edp=$(".edp"),ob=edp&&edp.querySelector(":scope > .bar");
+ if(edp&&ob){const tb=document.createElement("div");tb.className="uxtb";
+  tb.innerHTML=`<div class="uxrow"><div class="uxf uxg"><label for="gt">Grafica</label><div class="uxin"></div></div><div class="uxf uxfm"><label for="gf">Formato</label></div></div>
+  <div class="uxrow uxacts"><span class="uxur"></span><span class="uxgap"></span><span class="uxadd"><span class="uxlab">Aggiungi a</span></span></div>`;
+  const un=$("#un"),re=$("#re"),dl=$("#dl"),sg=$("#sg"),spe=$("#spe");ob.replaceWith(tb);[...edp.querySelectorAll('#ep_s > label[for="gt"], #ep_s > label[for="gf"]')].forEach(l=>l.remove());
+  tb.querySelector(".uxin").append($("#gt"),$("#ng2"),$("#dg2"));tb.querySelector(".uxfm").append($("#gf"));tb.querySelector(".uxrow").after($("#ngp"));
+  const ng=$("#ng2");ng.textContent="＋ Nuova";ng.title="Crea una nuova grafica personalizzata";const dg=$("#dg2");dg.textContent="🗑";dg.title="Elimina questa grafica personalizzata";dg.setAttribute("aria-label","Elimina questa grafica");
+  $("#ep_s").querySelectorAll(":scope > .bar").forEach(x=>{if(!x.children.length)x.remove()});
+  un.textContent="↶";un.title="Annulla (Ctrl+Z)";un.setAttribute("aria-label","Annulla");re.textContent="↷";re.title="Ripeti (Ctrl+Y)";re.setAttribute("aria-label","Ripeti");
+  tb.querySelector(".uxur").append(un,re);dl.textContent="⬇ Scarica";dl.classList.add("p");tb.querySelector(".uxacts").append(dl);
+  const add=tb.querySelector(".uxadd");[sg,spe].forEach(b=>{if(b){b.classList.remove("p");add.append(b)}});
+  /* i testi dei due pulsanti tornano corti anche dopo il “✓ Aggiunta” */
+  const SH={"Aggiungi grafica al Best of":"🎞️ Best of","Aggiungi al podcast":"✂️ Podcast","✓ Aggiunta al Best of":"✓ Best of","✓ Aggiunta al podcast":"✓ Podcast"};
+  [sg,spe].forEach(b=>{if(!b)return;const f=()=>{const t=b.textContent.trim();if(SH[t])b.textContent=SH[t]};f();new MutationObserver(f).observe(b,{childList:true,characterData:true,subtree:true})});
+  /* schede dell'editor: prima i contenuti */
+  const et=$("#et"),NM={c:"Contenuti",e:"Elementi",y:"Stile",s:"Impaginazione",k:"Testo del post"};["c","e","y","s","k"].forEach(k=>{const b=et.querySelector(`[data-et="${k}"]`);if(b){b.textContent=NM[k];et.append(b)}});
+  setTimeout(()=>{const b=et.querySelector('[data-et="c"]');if(b&&!(window.__uxKeepTab))b.click()},0);
+  /* il promemoria in fondo: più piccolo */
+  const hn=[...edp.querySelectorAll(":scope > p.hint")].pop();if(hn)hn.classList.add("uxfoot");
+  /* le mie grafiche: sotto l'editor, richiudibili */
+  const g=$("#g"),gal=g.querySelector(":scope > .gal"),ed=g.querySelector(".two.ed");if(gal&&ed){const d=document.createElement("details");d.className="card uxgal";d.innerHTML='<summary><b>📁 Le mie grafiche</b> <span class="hint" id="uxgn"></span></summary>';ed.after(d);d.append(gal)}}
+ });
+ {const rg=renderGal;renderGal=function(){rg();const n=$("#uxgn");if(n)n.textContent=G.length?`· ${G.length} · clic su una grafica per metterla nel Best of`:"· nessuna: le salvi con “Aggiungi a Best of”"}}
+
+ /* ---- Dati e TOTW: a schede, con la giornata sempre in vista ---- */
+ step("dati",()=>{const K=$("#k");if(K){const gch=$("#gch"),lab=gch.previousElementSibling,intro=K.querySelector(":scope > p.hint");
+  if(intro){const d=document.createElement("details");d.className="uxhelp";d.innerHTML="<summary>❔ Come si caricano i dati</summary>";intro.replaceWith(d);d.append(intro)}
+  const T=[["up","📥 Carica i dati"],["wk","📈 Settimana e TOTW"],["mv","⭐ MVP"],["pl","👤 Giocatori"],["rv","⏸ Rinvii"]];
+  gch.insertAdjacentHTML("afterend",`<div class="tabs uxkt" role="tablist">${T.map(([k,t])=>`<button data-kt="${k}" role="tab">${t}<i class="uxbd" data-ktb="${k}"></i></button>`).join("")}</div>`);
+  const kt=K.querySelector(".uxkt"),P={up:[".dz4","#kst"],wk:["#kcalc"],mv:["#kmvp"],pl:["#krl","#kph"],rv:["#krv"]},box={};
+  let last=kt;T.forEach(([k])=>{const w=document.createElement("div");w.className="uxkp";w.dataset.kp=k;last.after(w);last=w;box[k]=w;P[k].forEach(s=>{const el=K.querySelector(s);if(el)w.append(el)})});
+  const msg=$("#kmsg");if(msg)kt.before(msg);
+  if(lab&&lab.tagName==="LABEL")lab.innerHTML=`Giornata <small style="display:inline">(● classifica, marcatori, ammoniti già caricati)</small>`;
+  const show=k=>{if(!box[k])k="up";kt.querySelectorAll("button").forEach(b=>b.classList.toggle("on",b.dataset.kt===k));Object.entries(box).forEach(([q,w])=>w.style.display=q===k?"":"none");try{localStorage.setItem("uxkt",k)}catch(e){}};
+  window.uxKShow=show;kt.addEventListener("click",e=>{const b=e.target.closest("[data-kt]");if(b)show(b.dataset.kt)});let k0="up";try{k0=localStorage.getItem("uxkt")||"up"}catch(e){}show(k0);
+  /* contatori sulle schede */
+  const badges=()=>{const n=S.gs,ms=typeof kMvpM==="function"?kMvpM():[],M=(S.mvp||{})[n]||{},set=Object.values(M).filter(e=>e.n).length,rv=typeof rvAll==="function"?rvAll().filter(o=>!(typeof rvOk==="function"&&rvOk(o))).length:0,
+    B={mv:ms.length?`${set}/${ms.length}`:"",rv:rv?String(rv):""};Object.keys(box).forEach(k=>{const i=kt.querySelector(`[data-ktb="${k}"]`);if(i){i.textContent=B[k]||"";i.style.display=B[k]?"":"none";i.classList.toggle("w",k==="rv"&&!!B[k]||k==="mv"&&ms.length&&set<ms.length)}})};
+  /* “Compila il TOTW” in cima alla scheda della settimana, non in fondo */
+  const kgo=()=>{const b=$("#kgo"),kc=$("#kcalc");if(b&&kc){const bar=b.closest(".bar");if(bar&&kc.firstElementChild!==bar){bar.classList.add("uxkgo");kc.prepend(bar)}}};
+  {const rk=renderK;renderK=function(){rk();try{badges();kgo()}catch(e){}}}
+  /* dalla Settimana: i link “carica l'Excel” e “MVP” aprono la scheda giusta */
+  $("#w").addEventListener("click",e=>{const b=e.target.closest('[data-wgo="k"]');if(b)show(/MVP/.test(b.textContent)?"mv":"up")},true);
+  /* dalla domanda sui rinvii: “Partite rinviate” è la scheda Rinvii */
+  document.addEventListener("click",e=>{if(e.target.closest("#rvok"))setTimeout(()=>{if($("#k").classList.contains("on"))show("rv")},50)})}
+
+});
+ /* ---- Best of: esporta in alto, aiuto richiudibile ---- */
+ step("best of",()=>{const B=$("#b");if(B){const bar=B.querySelector(":scope > .bar"),xv=$("#xv"),h=B.querySelector(":scope > p.hint");if(bar&&xv){xv.textContent="⬇ Esporta video";bar.append(xv)}
+  if(h){const d=document.createElement("details");d.className="uxhelp";d.innerHTML="<summary>❔ Come funziona il Best of</summary>";h.replaceWith(d);d.append(h)}
+  const gl=B.querySelector(":scope > .gal");if(gl)gl.classList.add("card","uxbgal")}
+
+});
+ /* ---- Edit podcast: esporta sempre in vista ---- */
+ step("edit podcast",()=>{const pr=$("#pere");if(pr){pr.insertAdjacentHTML("afterend",'<button class="btn p" id="uxpex" title="Esporta il video completo o la clip scelta">⬇ Esporta</button>');
+  $("#uxpex").addEventListener("click",()=>{if(!PE.f){toast("Prima carica il video della puntata");return}if(PE.view==="c"){const b=$("#pecx1");if(b){b.scrollIntoView({behavior:"smooth",block:"center"});b.classList.add("uxflash");setTimeout(()=>b.classList.remove("uxflash"),1200)}else toast("Scegli o crea prima una clip");return}
+   PE.tab="ex";PE.es=null;peUI();const s=$("#pesb");if(s)s.scrollIntoView({behavior:"smooth",block:"nearest"})})}
+ const fo=$("#pefo");if(fo&&!/📂/.test(fo.textContent))fo.textContent="📂 "+fo.textContent;
+
+});
+ /* ---- Loghi e Tipi di content ---- */
+ step("loghi e tipi",()=>{const am=$("#am");if(am&&am.parentElement)am.parentElement.insertAdjacentHTML("afterbegin",'<label for="am" style="margin:0;color:var(--fg)">Stile di tutti i loghi</label>');
+ const tf=$("#t .f");if(tf){const c=document.createElement("div");c.className="card uxnew";c.innerHTML="<b>＋ Nuovo tipo di content</b>";tf.before(c);c.append(tf,...[...$("#t").querySelectorAll(':scope > label[for="nd"], :scope > #nd')],$("#na").closest(".bar"))}});
+})();
 [kApply,TBU,renderK,week,tipi,sty,()=>renderGt(),renderTW,()=>sync(true),renderB,renderGal,renderCP,draw,cm].forEach(f=>{try{f()}catch(e){console.error("avvio:",e)}});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
