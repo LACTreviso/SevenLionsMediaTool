@@ -571,7 +571,7 @@ const TR=[["cut","Taglio secco"],["fade","Dissolvenza"],["sl","Scorri da destra"
 let bsz=[720,1280],ac=null,adst=null,run=null,JO=-1,OB=[],OSELo=null,ESELo=null,EDT=null,bdrag=null;
 const jn=i=>{const c=CL[i],nm=TR.find(a=>a[0]===c.tr)[1],op=JO===i,td=(c.td||TD).toFixed(1);return `<div class="jn"><button class="dot${op?" on":""}" data-j="${i}" title="Transizione tra la clip ${i} e la ${i+1}">${c.tr==="cut"?"●":"◆"}</button><small>${nm}${c.tr!=="cut"?" · "+td+" s":""}</small></div>`+(op?`<div class="card jp"><label>Transizione tra la clip ${i} e la ${i+1}</label><div class="bar" style="gap:6px">${TR.map(([k,t])=>`<button class="btn${k===c.tr?" p":""}" data-tr="${k}" data-i="${i}">${t}</button>`).join("")}</div>${c.tr!=="cut"?`<label>Durata della transizione: ${td} s</label><input type="range" min=".2" max="1.5" step=".1" data-f="td" data-i="${i}" value="${c.td||TD}">`:""}</div>`:"")};
 const dur=c=>c.k==="g"?c.d:plan(c).tot;
-const L=()=>{let e=0;return CL.map((c,i)=>{const s0=i&&c.tr!=="cut"?Math.max(0,e-(c.td||TD)):e,d=dur(c);e=s0+d;return{c,s:s0,d}})},total=()=>{const l=L();return l.length?Math.max(...l.map(o=>o.s+o.d)):0};
+const L=()=>{let e=0;return CL.map((c,i)=>{const s0=i&&c.tr!=="cut"?Math.max(0,e-(c.td||TD)):e,d=dur(c);e=s0+d;return{c,s:s0,d}})},totI=()=>{const l=L();return l.length?Math.max(...l.map(o=>o.s+o.d)):0},total=()=>{const t=totI();return t?t+bEsD():0};
 function meta(i,v){const c=CL[i];if(c&&c.k==="c"&&!c.b){c.b=+v.duration.toFixed(1);renderB()}}
 function itemDraw(x,c,lt,d,BW,BH,p,still){x.save();const tr=c.tr;
  if(p<1&&tr!=="cut"){if(tr==="fade")x.globalAlpha=p;else if(tr==="sl")x.translate((1-p)*BW,0);else if(tr==="su")x.translate(0,(1-p)*BH);else if(tr==="zm"){x.globalAlpha=p;x.translate(BW/2,BH/2);x.scale(.6+.4*p,.6+.4*p);x.translate(-BW/2,-BH/2)}else if(tr==="wp"){x.beginPath();x.rect(0,0,BW*p,BH);x.clip()}else if(tr==="sr")x.translate(-(1-p)*BW,0);else if(tr==="sd")x.translate(0,-(1-p)*BH);else if(tr==="fl")x.globalAlpha=p}
@@ -1952,15 +1952,15 @@ const M4={
  hx:n=>n.toString(16).padStart(2,"0").toUpperCase()
 };
 async function mp4Read(file){
- const rd=async(o,n)=>new DataView(await file.slice(o,Math.min(file.size,o+n)).arrayBuffer());let off=0,mv=null;
+ const rd=async(o,n)=>new DataView(await file.slice(o,Math.min(file.size,o+n)).arrayBuffer());let off=0,mv=null;const MF=[];
  while(off+8<=file.size){const h=await rd(off,16);let n=h.getUint32(0);const t=M4.s4(h,4);if(n===1)n=Number(h.getBigUint64(8));else if(n===0)n=file.size-off;if(n<8)break;
-  if(t==="moov"){mv=await rd(off,n);break}if(t==="moof")throw new Error("video frammentato: non supportato");off+=n}
+  if(t==="moov"){mv=await rd(off,n);if(!M4.one(mv,8,mv.byteLength,"mvex"))break}else if(t==="moof")MF.push([off,n]);off+=n}
  if(!mv)throw new Error("indice del video (moov) non trovato");
  const v=mv,root=M4.kids(v,0,v.byteLength)[0],mvh=M4.one(v,root.s,root.e,"mvhd"),mts=v.getUint8(mvh.s)===1?v.getUint32(mvh.s+20):v.getUint32(mvh.s+12),T=[];
  for(const tk of M4.f(v,root.s,root.e,"trak")){
   const hd=M4.one(v,tk.s,tk.e,"mdia","hdlr"),ty=hd?M4.s4(v,hd.s+8):"",md=M4.one(v,tk.s,tk.e,"mdia","mdhd");if(!md||(ty!=="vide"&&ty!=="soun"))continue;
   const v1=v.getUint8(md.s)===1,ts=v1?v.getUint32(md.s+20):v.getUint32(md.s+12),st=M4.one(v,tk.s,tk.e,"mdia","minf","stbl");if(!st)continue;
-  const th=M4.one(v,tk.s,tk.e,"tkhd"),tv1=th&&v.getUint8(th.s)===1,mo=th?th.s+(tv1?48:40):0;let rot=0;
+  const th=M4.one(v,tk.s,tk.e,"tkhd"),tv1=th&&v.getUint8(th.s)===1,mo=th?th.s+(tv1?52:40):0,tid=th?v.getUint32(th.s+(tv1?20:12)):0;let rot=0;
   if(th){const a=v.getInt32(mo),b=v.getInt32(mo+4);rot=a===0&&b===65536?90:a===0&&b===-65536?270:a===-65536?180:0}
   /* edit list: ritardo iniziale e spostamento dei tempi (B-frame) */
   let dly=0,sh=0,el=M4.one(v,tk.s,tk.e,"edts","elst");if(el){const ev=v.getUint8(el.s),n=v.getUint32(el.s+4);let p=el.s+8;for(let i=0;i<n;i++){const sd=ev===1?Number(v.getBigUint64(p)):v.getUint32(p),mt=ev===1?Number(v.getBigInt64(p+8)):v.getInt32(p+4);p+=ev===1?20:12;if(mt===-1){dly+=sd/mts;continue}sh=mt;break}}
@@ -1977,19 +1977,35 @@ async function mp4Read(file){
     if(asc&&asc.length){const aot=asc[0]>>3;tr.codec="mp4a.40."+(aot||2);tr.desc=asc;const f=((asc[0]&7)<<1)|(asc[1]>>7),SR=[96000,88200,64000,48000,44100,32000,24000,22050,16000,12000,11025,8000,7350];if(SR[f])tr.asr=SR[f]}else if(oti===0x40)tr.codec="mp4a.40.2"}
    else if(fm==="Opus"){tr.codec="opus"}}
   /* tabella dei campioni */
-  const B=t=>M4.one(v,st.s,st.e,t),stz=B("stsz"),stts=B("stts"),stc=B("stsc"),sco=B("stco")||B("co64"),c64=!!B("co64"),ctt=B("ctts"),sss=B("stss");if(!stz||!stts||!stc||!sco)continue;
-  const fz=v.getUint32(stz.s+4),N=v.getUint32(stz.s+8),size=new Uint32Array(N);for(let i=0;i<N;i++)size[i]=fz||v.getUint32(stz.s+12+4*i);
-  const dts=new Float64Array(N),dur=new Float64Array(N);{let n=v.getUint32(stts.s+4),p=stts.s+8,i=0,t=0;for(let k=0;k<n&&i<N;k++){const c=v.getUint32(p),d=v.getUint32(p+4);p+=8;for(let j=0;j<c&&i<N;j++,i++){dts[i]=t;dur[i]=d;t+=d}}}
-  const cts=new Float64Array(dts);if(ctt){const cv=v.getUint8(ctt.s),n=v.getUint32(ctt.s+4);let p=ctt.s+8,i=0;for(let k=0;k<n&&i<N;k++){const c=v.getUint32(p),o=cv===1?v.getInt32(p+4):v.getUint32(p+4);p+=8;for(let j=0;j<c&&i<N;j++,i++)cts[i]+=o}}
-  const key=new Uint8Array(N);if(sss){const n=v.getUint32(sss.s+4);for(let k=0;k<n;k++){const i=v.getUint32(sss.s+8+4*k)-1;if(i>=0&&i<N)key[i]=1}}else key.fill(1);
+  const B=t=>M4.one(v,st.s,st.e,t),stz=B("stsz"),stts=B("stts"),stc=B("stsc"),sco=B("stco")||B("co64"),c64=!!B("co64"),ctt=B("ctts"),sss=B("stss");
+  let N=0,size=new Uint32Array(0),dts=new Float64Array(0),dur=new Float64Array(0),cts=new Float64Array(0),key=new Uint8Array(0),off2=new Float64Array(0);
+  if(stz&&stts&&stc&&sco){const fz=v.getUint32(stz.s+4);N=v.getUint32(stz.s+8);size=new Uint32Array(N);for(let i=0;i<N;i++)size[i]=fz||v.getUint32(stz.s+12+4*i);
+  dts=new Float64Array(N);dur=new Float64Array(N);{let n=v.getUint32(stts.s+4),p=stts.s+8,i=0,t=0;for(let k=0;k<n&&i<N;k++){const c=v.getUint32(p),d=v.getUint32(p+4);p+=8;for(let j=0;j<c&&i<N;j++,i++){dts[i]=t;dur[i]=d;t+=d}}}
+  cts=new Float64Array(dts);if(ctt){const cv=v.getUint8(ctt.s),n=v.getUint32(ctt.s+4);let p=ctt.s+8,i=0;for(let k=0;k<n&&i<N;k++){const c=v.getUint32(p),o=cv===1?v.getInt32(p+4):v.getUint32(p+4);p+=8;for(let j=0;j<c&&i<N;j++,i++)cts[i]+=o}}
+  key=new Uint8Array(N);if(sss){const n=v.getUint32(sss.s+4);for(let k=0;k<n;k++){const i=v.getUint32(sss.s+8+4*k)-1;if(i>=0&&i<N)key[i]=1}}else key.fill(1);
   const nc=v.getUint32(sco.s+4),co=new Float64Array(nc);for(let k=0;k<nc;k++)co[k]=c64?Number(v.getBigUint64(sco.s+8+8*k)):v.getUint32(sco.s+8+4*k);
-  const off2=new Float64Array(N);{const n=v.getUint32(stc.s+4),E=[];for(let k=0;k<n;k++)E.push([v.getUint32(stc.s+8+12*k),v.getUint32(stc.s+12+12*k)]);let i=0;
-   for(let k=0;k<E.length&&i<N;k++){const c0=E[k][0]-1,c1=k+1<E.length?E[k+1][0]-1:nc;for(let c=c0;c<c1&&i<N;c++){let o=co[c];for(let j=0;j<E[k][1]&&i<N;j++,i++){off2[i]=o;o+=size[i]}}}}
+  off2=new Float64Array(N);{const n=v.getUint32(stc.s+4),E=[];for(let k=0;k<n;k++)E.push([v.getUint32(stc.s+8+12*k),v.getUint32(stc.s+12+12*k)]);let i=0;
+   for(let k=0;k<E.length&&i<N;k++){const c0=E[k][0]-1,c1=k+1<E.length?E[k+1][0]-1:nc;for(let c=c0;c<c1&&i<N;c++){let o=co[c];for(let j=0;j<E[k][1]&&i<N;j++,i++){off2[i]=o;o+=size[i]}}}}}
+  /* video frammentato (per esempio quelli registrati dal browser, come il Best of): i campioni sono nei blocchi moof/traf/trun */
+  if(MF.length){const F=await mp4Frag(rd,MF,v,root,tid);if(F.n){const cat=(A,Bb,C)=>{const r=new C(A.length+Bb.length);r.set(A);r.set(Bb,A.length);return r},t0=N?dts[N-1]+dur[N-1]:0;
+    if(!F.hasT)for(let i=0;i<F.n;i++)F.dts[i]+=t0;size=cat(size,F.size,Uint32Array);off2=cat(off2,F.off,Float64Array);dur=cat(dur,F.dur,Float64Array);key=cat(key,F.key,Uint8Array);
+    const c2=Float64Array.from(F.dts,(d,i)=>d+F.cto[i]);dts=cat(dts,F.dts,Float64Array);cts=cat(cts,c2,Float64Array);N+=F.n}}
+  if(!N)continue;
   const pts=new Float64Array(N);for(let i=0;i<N;i++)pts[i]=dly+(cts[i]-sh)/ts;
   Object.assign(tr,{n:N,off:off2,size,pts,dur:Float64Array.from(dur,d=>d/ts),key,dtsS:Float64Array.from(dts,d=>dly+(d-sh)/ts)});
   if(tr.type==="v"){let mx=0;for(let i=0;i<N;i++)mx=Math.max(mx,pts[i]+tr.dur[i]);tr.end=mx;tr.fps=N/Math.max(.001,mx-pts.reduce((a,b)=>Math.min(a,b),Infinity))}
   T.push(tr)}
  return{v:T.find(t=>t.type==="v")||null,a:T.find(t=>t.type==="a")||null,file}}
+/* campioni di un video frammentato per la traccia tid: valori predefiniti da mvex/trex, poi ogni moof › traf (tfhd, tfdt, trun) */
+async function mp4Frag(rd,MF,v,root,tid){let dd=0,ds=0,df=0;const tx=M4.f(v,root.s,root.e,"mvex","trex").find(x=>v.getUint32(x.s+4)===tid);if(tx){dd=v.getUint32(tx.s+12);ds=v.getUint32(tx.s+16);df=v.getUint32(tx.s+20)}
+ const S={size:[],off:[],dur:[],dts:[],cto:[],key:[]};let hasT=false,tEnd=0;
+ for(const[mo,mn]of MF){const m=await rd(mo,mn);for(const tf of M4.f(m,8,m.byteLength,"traf")){const hd=M4.one(m,tf.s,tf.e,"tfhd");if(!hd||m.getUint32(hd.s+4)!==tid)continue;const fl=m.getUint32(hd.s)&0xffffff;let p=hd.s+8,base=mo,sd=dd,sz=ds,sf=df;
+   if(fl&1){base=Number(m.getBigUint64(p));p+=8}if(fl&2)p+=4;if(fl&8){sd=m.getUint32(p);p+=4}if(fl&16){sz=m.getUint32(p);p+=4}if(fl&32){sf=m.getUint32(p);p+=4}
+   const td=M4.one(m,tf.s,tf.e,"tfdt");let t=tEnd;if(td){t=m.getUint8(td.s)===1?Number(m.getBigUint64(td.s+4)):m.getUint32(td.s+4);hasT=true}
+   let pos=base;for(const tr of M4.f(m,tf.s,tf.e,"trun")){const vf=m.getUint32(tr.s),ver=vf>>>24,f=vf&0xffffff,n=m.getUint32(tr.s+4);let q=tr.s+8;if(f&1){pos=base+m.getInt32(q);q+=4}let ff=null;if(f&4){ff=m.getUint32(q);q+=4}
+    for(let i=0;i<n;i++){let d=sd,z=sz,fg=sf,co=0;if(f&0x100){d=m.getUint32(q);q+=4}if(f&0x200){z=m.getUint32(q);q+=4}if(f&0x400){fg=m.getUint32(q);q+=4}else if(i===0&&ff!=null)fg=ff;if(f&0x800){co=ver?m.getInt32(q):m.getUint32(q);q+=4}
+     S.size.push(z);S.off.push(pos);S.dur.push(d);S.dts.push(t);S.cto.push(co);S.key.push(fg&0x10000?0:1);pos+=z;t+=d}}tEnd=t}}
+ return{n:S.size.length,hasT,size:Uint32Array.from(S.size),off:Float64Array.from(S.off),dur:Float64Array.from(S.dur),dts:Float64Array.from(S.dts),cto:Float64Array.from(S.cto),key:Uint8Array.from(S.key)}}
 /* legge i dati dei campioni [i0,i1) a blocchi contigui (max ~12 MB per lettura) */
 async function* mp4Samples(file,tr,i0,i1){let i=i0;while(i<i1){let j=i+1,end=tr.off[i]+tr.size[i];while(j<i1&&tr.off[j]===end&&end-tr.off[i]<12e6){end+=tr.size[j];j++}
  const buf=new Uint8Array(await file.slice(tr.off[i],end).arrayBuffer());for(let k=i;k<j;k++){const o=tr.off[k]-tr.off[i];yield{i:k,data:buf.subarray(o,o+tr.size[k])}}i=j}}
@@ -3054,12 +3070,12 @@ $("#pesb").addEventListener("input",e=>{const t=e.target;if(t.id==="peytn"||t.id
 /* ---- schermata finale delle clip ---- */
 const peEsO=()=>{const P=peP(),o=P&&P.es||{};return{on:o.on!==0,t1:o.t1||"Guarda l’episodio completo",t2:o.t2||"clicca sul link in bio!",d:Math.max(2,Math.min(6,+o.d||3))}};
 let PEESB=null;
-function peEsDraw(x,W,H,t,snap){const o=peEsO(),st=S.sty||{},ac=st.ac||"#2f7bff";let u=Math.min(W,H)/1080;const F='"Inter Tight",system-ui,sans-serif',P=(a,b)=>Math.max(0,Math.min(1,(t-a)/(b-a))),c=peP()&&S.pod&&S.pod.cur||{};
+function peEsDraw(x,W,H,t,snap,o0){const o=o0||peEsO(),st=S.sty||{},ac=st.ac||"#2f7bff";let u=Math.min(W,H)/1080;const F='"Inter Tight",system-ui,sans-serif',P=(a,b)=>Math.max(0,Math.min(1,(t-a)/(b-a))),c=o0?{}:peP()&&S.pod&&S.pod.cur||{};
  x.save();x.fillStyle="#000";x.fillRect(0,0,W,H);
  if(snap){const b=PEESB&&PEESB.width===48?PEESB:(PEESB=bgCv(48,Math.max(8,Math.round(48*H/W))));b.height=Math.max(8,Math.round(48*H/W));b.getContext("2d").drawImage(snap,0,0,b.width,b.height);x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";x.drawImage(b,0,0,W,H);
   const k=1-P(0,.45);if(k>0){x.globalAlpha=k;x.drawImage(snap,0,0,W,H);x.globalAlpha=1}}
  x.fillStyle=`rgba(4,8,18,${.35+.3*P(0,.45)})`;x.fillRect(0,0,W,H);const g=x.createLinearGradient(0,H*.45,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,rgba(ac,.45));x.fillStyle=g;x.fillRect(0,H*.45,W,H*.55);
- const vert=H>W*1.15;if(vert)u*=1.3;const ls=o.t1.split("|"),show=[(c.show||"Seven Lions Podcast"),c.ep?"EP. "+c.ep:""].filter(Boolean).join(" · ").toUpperCase(),lz=(vert?300:240)*u,fs0=(vert?86:76)*u,mw=W*.86;
+ const vert=H>W*1.15;if(vert)u*=1.3;const ls=o.t1.split("|"),show=(o.t0!=null?o.t0:[(c.show||"Seven Lions Podcast"),c.ep?"EP. "+c.ep:""].filter(Boolean).join(" · ")).toUpperCase(),lz=(vert?300:240)*u,fs0=(vert?86:76)*u,mw=W*.86;
  const fit=(t,wt,s)=>{do{x.font=`${wt} ${s}px ${F}`;s-=2}while(x.measureText(t).width>mw&&s>14);return s+2};let fs=Math.min(...ls.map(q=>fit(q,800,fs0)));
  /* se una riga sola è troppo lunga la vado a capo */
  let L=ls;if(L.length===1&&fs<fs0*.72){const w=o.t1.split(" "),m=Math.ceil(w.length/2);L=[w.slice(0,m).join(" "),w.slice(m).join(" ")];fs=Math.min(...L.map(q=>fit(q,800,fs0)))}
@@ -3173,6 +3189,31 @@ $("#pec").addEventListener("change",e=>{const t=e.target;if(t.id==="pees")peEsSe
  step("loghi e tipi",()=>{const am=$("#am");if(am&&am.parentElement)am.parentElement.insertAdjacentHTML("afterbegin",'<label for="am" style="margin:0;color:var(--fg)">Stile di tutti i loghi</label>');
  const tf=$("#t .f");if(tf){const c=document.createElement("div");c.className="card uxnew";c.innerHTML="<b>＋ Nuovo tipo di content</b>";tf.before(c);c.append(tf,...[...$("#t").querySelectorAll(':scope > label[for="nd"], :scope > #nd')],$("#na").closest(".bar"))}});
 })();
+/* ---- Best of · schermata finale ("Guarda l’episodio completo, clicca sul link in bio!") in coda al video, come nelle clip dell'Edit podcast.
+   Si attiva con la spunta sotto l'anteprima; allunga il video di 2–5 s (con audio muto) e parte dall'ultimo fotogramma sfocato. ---- */
+function bEsD(){const o=S.bes;return o&&o.on?Math.max(2,Math.min(6,+o.d||3)):0}
+function bEsO(){const o=S.bes||{},c=S.pod&&S.pod.cur||{},t0=[(c.show||"Seven Lions Podcast"),c.ep?"EP. "+c.ep:""].filter(Boolean).join(" · ");
+ return{on:!!o.on,t0:o.t0!=null&&o.t0!==""?o.t0:t0,t0d:t0,t1:o.t1||"Guarda l’episodio completo",t2:o.t2||"clicca sul link in bio!",d:bEsD()||Math.max(2,Math.min(6,+o.d||3))}}
+const BES={ok:0,snap:null};
+function bEsSnap(cv,W,H){if(!BES.snap||BES.snap.width!==W||BES.snap.height!==H)BES.snap=bgCv(W,H);const x=BES.snap.getContext("2d");x.clearRect(0,0,W,H);x.drawImage(cv,0,0);BES.ok=1}
+/* il disegno del Best of: oltre la fine dell'ultimo elemento disegno la schermata finale */
+{const fr0=frame;frame=function(t,still){const d=bEsD(),T0=totI();if(!d||!T0||t<T0-1e-6){BES.ok=0;return fr0(t,still)}
+ const[BW,BH]=bsz,cv=$("#bp");if(!BES.ok){if(!run){bEsSeek();fr0(Math.max(0,T0-.05),true)}bEsSnap(cv,BW,BH)}
+ if(cv.width!==BW||cv.height!==BH){cv.width=BW;cv.height=BH}OB=[];const x=cv.getContext("2d");x.save();peEsDraw(x,BW,BH,Math.min(t-T0,d-.001),BES.snap,bEsO());x.restore()}}
+/* in anteprima (a video fermo) porto l'ultima clip sul suo ultimo fotogramma, poi ridisegno */
+function bEsSeek(){const l=L();if(!l.length)return;let lo=l[0];l.forEach(o=>{if(o.s+o.d>=lo.s+lo.d)lo=o});const c=lo.c;if(c.k!=="c"||!c.el||typeof segAt!=="function")return;
+ const lt=Math.max(0,lo.d-.05),q=segAt(c,lt),st=q.s+(lt-q.o)*q.sp;if(BES.sd===st||Math.abs(c.el.currentTime-st)<.08)return;BES.sd=st;c.el.onseeked=()=>{c.el.onseeked=null;BES.ok=0;if(!run)idle()};c.el.currentTime=st}
+function bEsUI(){const e=$("#bes");if(!e)return;const o=bEsO();
+ e.innerHTML=`<label class="pechk" style="margin:0"><input type="checkbox" id="besc"${o.on?" checked":""}> <b>🔚 Schermata finale</b> <span class="hint" style="display:inline">· “${esc(o.t1)}” per ${o.d} s alla fine del video</span></label>
+ ${o.on?`<div class="g3" style="grid-template-columns:1fr 1fr;margin-top:6px"><div><label for="bes1">Testo grande <small style="display:inline">(| per andare a capo)</small></label><input id="bes1" value="${esc(o.t1)}"></div><div><label for="bes2">Bottone</label><input id="bes2" value="${esc(o.t2)}"></div></div>
+ <label for="bes0">Riga piccola in alto <small style="display:inline">(vuota = ${esc(o.t0d)})</small></label><input id="bes0" value="${esc(S.bes&&S.bes.t0||"")}" placeholder="${esc(o.t0d)}">
+ <div class="bar" style="margin:8px 0 0;gap:6px"><span class="hint" style="margin:0">Durata</span>${[2,3,4,5].map(d=>`<button class="btn pbx${o.d===d?" p":""}" data-besd="${d}">${d} s</button>`).join("")}<button class="btn pbx" id="besp">▶ Guarda il finale</button></div>`:""}`}
+function bEsSet(fn){S.bes={...(S.bes||{})};fn(S.bes);BES.ok=0;save();renderB()}
+{const rb=renderB;renderB=function(){rb();BES.ok=0;BES.sd=null;const d=bEsD();if(d&&CL.length){const bt=$("#bt");if(bt)bt.insertAdjacentHTML("beforeend",`<div title="Schermata finale" style="flex:${d};min-width:18px;border-radius:6px;background:repeating-linear-gradient(135deg,var(--line,#2a3245) 0 6px,transparent 6px 12px);border:1px dashed var(--mut,#8892a6);color:var(--fg);font-size:12px;display:flex;align-items:center;justify-content:center">🔚</div>`);
+  const br=$("#br");if(br)br.insertAdjacentHTML("beforeend",`<div class="hint">🔚 Schermata finale — ${d} s · “${esc(bEsO().t1)}”</div>`)}bEsUI()}}
+{const bt=$("#bt");if(bt&&!$("#bes")){bt.insertAdjacentHTML("beforebegin",'<div id="bes" class="card" style="margin:10px 0 0;padding:10px 12px"></div>');
+ $("#bes").addEventListener("click",e=>{const b=e.target.closest("#besp,[data-besd]");if(!b)return;if(b.id==="besp"){if(!CL.length){toast("Aggiungi prima almeno una clip o una grafica");return}runM(0,Math.max(0,totI()-1.2));return}bEsSet(o=>{o.d=+b.dataset.besd})});
+ $("#bes").addEventListener("change",e=>{const t=e.target;if(t.id==="besc")bEsSet(o=>{o.on=t.checked?1:0});else if(t.id==="bes1"||t.id==="bes2"||t.id==="bes0"){const k={bes1:"t1",bes2:"t2",bes0:"t0"}[t.id];bEsSet(o=>{o[k]=t.value.trim()})}})}}
 [kApply,TBU,renderK,week,tipi,sty,()=>renderGt(),renderTW,()=>sync(true),renderB,renderGal,renderCP,draw,cm].forEach(f=>{try{f()}catch(e){console.error("avvio:",e)}});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
