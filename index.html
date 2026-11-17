@@ -307,6 +307,7 @@ details.card>summary{cursor:pointer}
 html{scroll-padding-top:calc(var(--navh,0px) + 8px)}
 @media(max-width:800px){.uxtb{position:static}.uxlab{display:none}.uxmenu .uxt{display:none}.hero h1{max-width:calc(100% - 170px);font-size:17px;line-height:1.1}.uxhb .acc{max-width:120px;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}.uxkgo{position:static}}
 .ext .uxgal{display:none!important}
+.uxlpr{margin-top:8px;align-items:center;gap:8px}.uxlpr #lpb{display:flex;flex-wrap:wrap;gap:6px;margin:0}.uxlpr #lpb .btn{padding:6px 11px;font-size:13px}.uxlpr #lpo{border-color:var(--blue);color:#8bb4ff}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -3110,7 +3111,10 @@ $("#pec").addEventListener("change",e=>{const t=e.target;if(t.id==="pees")peEsSe
   const un=$("#un"),re=$("#re"),dl=$("#dl"),sg=$("#sg"),spe=$("#spe");ob.replaceWith(tb);[...edp.querySelectorAll('#ep_s > label[for="gt"], #ep_s > label[for="gf"]')].forEach(l=>l.remove());
   tb.querySelector(".uxin").append($("#gt"),$("#ng2"),$("#dg2"));tb.querySelector(".uxfm").append($("#gf"));tb.querySelector(".uxrow").after($("#ngp"));
   const ng=$("#ng2");ng.textContent="＋ Nuova";ng.title="Crea una nuova grafica personalizzata";const dg=$("#dg2");dg.textContent="🗑";dg.title="Elimina questa grafica personalizzata";dg.setAttribute("aria-label","Elimina questa grafica");
-  $("#ep_s").querySelectorAll(":scope > .bar").forEach(x=>{if(!x.children.length)x.remove()});
+  $("#ep_s").querySelectorAll(":scope > .bar:not([id])").forEach(x=>{if(!x.children.length)x.remove()});
+  /* impaginazioni salvate (Originale/Predefinita, varianti, ✏️ Modifica impaginazione): in vista nella barra, non più in una scheda */
+  const lpb=$("#lpb");if(lpb){const r=document.createElement("div");r.className="uxrow uxlpr";r.innerHTML='<span class="uxlab">Impaginazione</span>';r.append(lpb);tb.querySelector(".uxrow").after(r);
+   const es=$("#ep_s");[...es.querySelectorAll(":scope > label")].filter(l=>/Impaginazione/.test(l.textContent)).forEach(l=>l.remove());const h=es.querySelector(":scope > p.hint");if(h&&/salvali come predefiniti/.test(h.textContent)){lpb.title=h.textContent;h.remove()}}
   un.textContent="↶";un.title="Annulla (Ctrl+Z)";un.setAttribute("aria-label","Annulla");re.textContent="↷";re.title="Ripeti (Ctrl+Y)";re.setAttribute("aria-label","Ripeti");
   tb.querySelector(".uxur").append(un,re);dl.textContent="⬇ Scarica";dl.classList.add("p");tb.querySelector(".uxacts").append(dl);
   const add=tb.querySelector(".uxadd");[sg,spe].forEach(b=>{if(b){b.classList.remove("p");add.append(b)}});
@@ -3118,7 +3122,9 @@ $("#pec").addEventListener("change",e=>{const t=e.target;if(t.id==="pees")peEsSe
   const SH={"Aggiungi grafica al Best of":"🎞️ Best of","Aggiungi al podcast":"✂️ Podcast","✓ Aggiunta al Best of":"✓ Best of","✓ Aggiunta al podcast":"✓ Podcast"};
   [sg,spe].forEach(b=>{if(!b)return;const f=()=>{const t=b.textContent.trim();if(SH[t])b.textContent=SH[t]};f();new MutationObserver(f).observe(b,{childList:true,characterData:true,subtree:true})});
   /* schede dell'editor: prima i contenuti */
-  const et=$("#et"),NM={c:"Contenuti",e:"Elementi",y:"Stile",s:"Impaginazione",k:"Testo del post"};["c","e","y","s","k"].forEach(k=>{const b=et.querySelector(`[data-et="${k}"]`);if(b){b.textContent=NM[k];et.append(b)}});
+  const et=$("#et"),NM={c:"Contenuti",e:"Elementi",y:"Stile",s:"Altro",k:"Testo del post"};["c","e","y","s","k"].forEach(k=>{const b=et.querySelector(`[data-et="${k}"]`);if(b){b.textContent=NM[k];et.append(b)}});
+  /* se nella vecchia scheda Impostazioni non è rimasto nulla, la tolgo */
+  {const es=$("#ep_s"),b=et.querySelector('[data-et="s"]'),left=[...es.children].filter(x=>x.id!=="ngp"&&getComputedStyle(x).display!=="none");if(b&&!left.length)b.style.display="none"}
   setTimeout(()=>{const b=et.querySelector('[data-et="c"]');if(b&&!(window.__uxKeepTab))b.click()},0);
   /* il promemoria in fondo: più piccolo */
   const hn=[...edp.querySelectorAll(":scope > p.hint")].pop();if(hn)hn.classList.add("uxfoot");
