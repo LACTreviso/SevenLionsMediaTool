@@ -318,6 +318,22 @@ html{scroll-padding-top:calc(var(--navh,0px) + 8px)}
 .qoi{grid-row:1;grid-column:2;display:flex;gap:6px;align-items:flex-end}.qoi label{display:flex;flex-direction:column;align-items:center;margin:0;font-weight:800;font-size:12px;color:var(--fg)}
 .qoi input{width:62px;text-align:center;padding:6px 4px;margin-top:2px}.qoi .btn{padding:6px 9px}
 @media (max-width:560px){.qor{grid-template-columns:1fr}.qoi{grid-row:auto;grid-column:1}}
+/* sottotitoli delle clip */
+.pesbd{margin-top:10px}.pesbd summary{cursor:pointer;font-weight:700;font-size:13px}
+.pesbl{display:flex;flex-direction:column;gap:5px;margin-top:8px;max-height:340px;overflow:auto;padding-right:2px}
+.pesbr{display:flex;gap:6px;align-items:center}.pesbr textarea{flex:1;min-width:0;margin:0;padding:6px 8px;resize:vertical;font:inherit;font-size:13px;line-height:1.35}.pesbr .btn{flex:none;font-variant-numeric:tabular-nums}
+/* giocata della settimana */
+#gw .gwst{display:grid;grid-template-columns:repeat(auto-fit,minmax(420px,1fr));gap:12px;align-items:start}
+#gw .gwst>.card{margin:0}
+.gwl{display:flex;flex-direction:column;gap:6px;margin-top:10px}
+.gwc{display:flex;gap:10px;align-items:center;border:1px solid var(--line,#2a3245);border-radius:12px;padding:6px 8px;cursor:pointer}
+.gwc.on{border-color:var(--blue,#2f7bff);background:rgba(47,123,255,.08)}
+.gwth{width:44px;height:78px;object-fit:cover;border-radius:6px;background:#111;flex:none}
+.gwn{flex:none;width:30px;height:30px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-weight:800;background:var(--blue,#2f7bff);color:#fff;font-size:14px}
+.gwf{flex:1;min-width:0;display:grid;grid-template-columns:1fr 1fr;gap:4px 8px;align-items:center}.gwf select,.gwf input{margin:0;min-width:0}.gwf small{grid-column:1/-1;color:var(--mut,#8892a6);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.gwpv{display:grid;grid-template-columns:1fr 160px;gap:10px;align-items:start;margin-top:8px}.gwpv video{width:100%;max-height:300px;background:#000;border-radius:10px}.gwpv canvas{width:160px;height:284px;border-radius:10px;background:#000}
+.gwvl{display:flex;flex-direction:column;gap:6px;margin-top:8px}.gwv{display:flex;align-items:center;gap:10px;margin:0;color:var(--fg)}.gwv span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gwv input{width:90px;margin:0;text-align:center}
+@media (max-width:560px){#gw .gwst{grid-template-columns:1fr}.gwf{grid-template-columns:1fr}.gwpv{grid-template-columns:1fr 120px}.gwpv canvas{width:120px;height:213px}}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -371,7 +387,7 @@ button.wwarn{background:none;border:0;padding:0;text-align:left;cursor:pointer;t
 <div class="bar"><h2>Editor grafiche</h2><button class="btn" id="un" data-nc>↶ Annulla</button><button class="btn" id="re" data-nc>↷ Ripeti</button><button class="btn" id="dl">Scarica grafica</button><button class="btn p" id="sg">Aggiungi grafica al Best of</button></div>
 <div class="tabs" id="et"><button class="on" data-et="s" data-nc>Impostazioni</button><button data-et="y" data-nc>Stile</button><button data-et="c" data-nc>Contenuti</button><button data-et="e" data-nc>Elementi</button><button data-et="k" data-nc>Caption</button></div>
 <div class="ep on" id="ep_s"><label for="gt">Modello</label>
-<select id="gt"><option value="cl">Classifica</option><option value="mar">Marcatori</option><option value="tw">Team of the week</option><option value="tos">Team of the season</option><option value="bo">Best of della settimana</option><option value="cop">Copertina</option><option value="pod">Copertina podcast</option><option value="mc">Match day (partita)</option><option value="ris">Risultati della giornata</option><option value="an">Anteprima della settimana</option><option value="qo">Quote della giornata (1X2)</option><option value="st">Logo tra le stelle</option></select>
+<select id="gt"><option value="cl">Classifica</option><option value="mar">Marcatori</option><option value="tw">Team of the week</option><option value="tos">Team of the season</option><option value="bo">Best of della settimana</option><option value="cop">Copertina</option><option value="pod">Copertina podcast</option><option value="mc">Match day (partita)</option><option value="ris">Risultati della giornata</option><option value="an">Anteprima della settimana</option><option value="qo">Quote della giornata (1X2)</option><option value="gwa">Giocata della settimana · anticipazione</option><option value="gwr">Giocata della settimana · vincitore</option><option value="st">Logo tra le stelle</option></select>
 <div class="bar" style="margin:8px 0 0"><button class="btn" id="ng2">+ Aggiungi nuova grafica</button><button class="btn" id="dg2" style="display:none">Elimina questa grafica</button></div>
 <div id="ngp" class="card" style="display:none;margin-top:8px"><label for="ngn">Nome della grafica</label><input id="ngn" placeholder="Es. Sondaggio MVP"><label for="ngb">Parti da</label><select id="ngb"><option value="cop">Copertina (titolo grande)</option><option value="pod">Copertina podcast (ritagli)</option><option value="bo">Elenco libero (righe Testo;Sottotesto;Valore)</option><option value="vuota">Vuota (titolo e sottotitolo, poi aggiungi elementi)</option><option value="mc">Match day (partita)</option><option value="ft">Full time (risultato finale)</option><option value="ris">Risultati della giornata</option><option value="an">Anteprima della giornata (partite)</option><option value="qo">Quote 1X2 della giornata</option><option value="tw">Formazione (campetto)</option><option value="st">Logo tra le stelle</option></select><div class="bar" style="margin:8px 0 0"><button class="btn p" id="ngc">Crea</button><button class="btn" id="ngx">Annulla</button></div></div>
 <label for="gf">Formato</label>
@@ -830,10 +846,10 @@ $("#bt").onclick=e=>{const q=e.target.closest("[title]");if(!q||run)return;const
 $("#et").onclick=e=>{const k=e.target.dataset.et;if(!k)return;$$("#et button").forEach(b=>b.classList.toggle("on",b===e.target));$$(".ep").forEach(p=>p.classList.toggle("on",p.id==="ep_"+k))};
 
 /* ---- editor grafiche ---- */
-const TT={pod:["NOME|& NOME","SEVEN LIONS PODCAST · EP. 1"],cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],tos:["Team of the season","Dopo 3 giornate"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"],ris:["Risultati","Giornata 4"],an:["Anteprima della settimana","Giornata 3"],qo:["Quote della giornata","Giornata 3"]};
+const TT={pod:["NOME|& NOME","SEVEN LIONS PODCAST · EP. 1"],cl:["Classifica","Giornata 3"],mar:["Marcatori","Dopo 3 giornate"],tw:["Team of the week","Giornata 3"],tos:["Team of the season","Dopo 3 giornate"],bo:["Best of della settimana","Giornata 3"],cop:["Intervista|alla squadra","Settimana 4"],st:["Campionato 2026-27","Lega Amatori Calcio Treviso"],mc:["MATCH|DAY","Giornata 4"],ris:["Risultati","Giornata 4"],an:["Anteprima della settimana","Giornata 3"],qo:["Quote della giornata","Giornata 3"],gwa:["Giocata della settimana","Giornata 3 · si vota domenica"],gwr:["Giocata della settimana","Giornata 3"]};
 const gsub=s=>S.gs?String(s).replace(/^(giornata\s+)\d+/i,"$1"+S.gs).replace(/^(dopo\s+)\d+/i,"$1"+S.gs):s;
 function sync(ch){const T=gT(),B=BS(T);if(ch){const q=lpTT(T)||TT[T]||["Titolo","Giornata 3"];$("#gh").value=q[0];$("#gs").value=gsub(q[1])}
- $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";if($("#anw")){$("#anw").style.display=B==="an"?"block":"none";if(B==="an")anUI()}if($("#qow")){$("#qow").style.display=B==="qo"?"block":"none";if(B==="qo")qoUI()}if($("#tosw")){$("#tosw").style.display=B==="tos"?"block":"none";if(B==="tos")tosUI()}$("#marw").style.display=B==="mar"?"block":"none";$("#pcw").style.display=B==="pod"?"block":"none";if(B==="pod")podUI();marUI();
+ $("#gdw").style.display=B==="bo"?"block":"none";$("#rsw").style.display=B==="ris"?"block":"none";$("#rres").value=S.res||"";$("#twp").style.display=B==="tw"?"block":"none";if($("#anw")){$("#anw").style.display=B==="an"?"block":"none";if(B==="an")anUI()}if($("#qow")){$("#qow").style.display=B==="qo"?"block":"none";if(B==="qo")qoUI()}if($("#gww")){$("#gww").style.display=B==="gwa"||B==="gwr"?"block":"none";if(B==="gwa"||B==="gwr")gwwUI()}if($("#tosw")){$("#tosw").style.display=B==="tos"?"block":"none";if(B==="tos")tosUI()}$("#marw").style.display=B==="mar"?"block":"none";$("#pcw").style.display=B==="pod"?"block":"none";if(B==="pod")podUI();marUI();
  if(B==="bo"){$("#gdl").textContent=T==="bo"?"Goal (Marcatore;Squadra;Minuto)":"Righe (Testo;Sottotesto;Valore)";$("#gd").value=S[T]||""}
  ["h","a","d","v","sc"].forEach(k=>{$(`[data-m="${k}"]`).value=S.mt[k]||""});mcFill();lyUI();renderLP();qrUI()}
 function sty(){bgUI();["bg","ac","tx"].forEach(k=>$("#c"+k).value=S.sty[k]);$("#ss").checked=S.sty.str;$("#dk").value=S.sty.dk;$("#po").value=S.sty.po;$("#gf").value=S.sty.fmt}
@@ -881,7 +897,7 @@ function draw(){const st=S.sty,[W,H]=st.fmt.split("x").map(Number),c=$("#cv"),T0
  else if(T==="st"){x.textAlign="center";const g=x.createLinearGradient(0,H*.6,0,H);g.addColorStop(0,"rgba(0,0,0,0)");g.addColorStop(1,"rgba(0,0,0,.65)");x.fillStyle=g;x.fillRect(0,H*.6,W,H*.4);const sl=LY().find(l=>l.k==="stars");if(sl)stars(x,W,H,sl);
   const s=fit(tt,120*u,W-2*m,800);TX(x,W,H,[tt],W/2,H-m*2.3,s,"center","tt",st.tx,800,1,F);TX(x,W,H,[sb],W/2,H-m*1.3,s*.36,"center","ts",st.ac,400,1,F)}
  else{const s=fit(tt,96*u,W-2*m-130,800),ty=m+s;TX(x,W,H,[tt],m,ty,s,"left","tt",st.tx,800,1,F);TX(x,W,H,[sb],m,ty+52,36,"left","ts",st.ac,400,1,F);
-  let it,hd,cw=78;const yc=Math.max(ty+90,...LB.filter(b=>(b.id==="tt"||b.id==="ts")&&b.y0<H*.45).map(b=>b.y1+34*u));if(T==="tw"&&S.twv==="k")twGrid(x,W,H,yc,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,yc,m,F);else if(T==="an")anv(x,W,H,ty+90,m,F,u);else if(T==="qo")qov(x,W,H,ty+90,m,F,u);else if(T==="tos")tosv(x,W,H,yc,m,F);else if(T==="qr")qrv(x,W,H,ty+90,m,F,u);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
+  let it,hd,cw=78;const yc=Math.max(ty+90,...LB.filter(b=>(b.id==="tt"||b.id==="ts")&&b.y0<H*.45).map(b=>b.y1+34*u));if(T==="tw"&&S.twv==="k")twGrid(x,W,H,yc,m,F);else if(T==="tw"&&S.twv!=="l")pitch(x,W,H,yc,m,F);else if(T==="an")anv(x,W,H,ty+90,m,F,u);else if(T==="qo")qov(x,W,H,ty+90,m,F,u);else if(T==="gwa")gwav(x,W,H,ty+90,m,F,u);else if(T==="gwr")gwrv(x,W,H,ty+90,m,F,u);else if(T==="tos")tosv(x,W,H,yc,m,F);else if(T==="qr")qrv(x,W,H,ty+90,m,F,u);else if(T==="ris")risv(x,W,H,ty+90,m,F,u);else if(T!=="vuota"){
   if(T==="cl"){hd=["G","V","N","P","DR","Pt"];it=S.cl.map((e,i)=>({n:e.n+(typeof rvTeamPend==="function"&&rvTeamPend(e.n)?" *":""),lg:e.n,hl:gqHl(e.n,i),c:[e.g,e.v,e.nn,e.p,(e.dr>0?"+":"")+e.dr,e.pt]}))}
   else if(T==="mar"){hd=["Gol"];cw=110;it=marList().map((e,i)=>({n:e.n,sub:e.sq,lg:e.sq,hl:gqMarHl(e,i),c:[e.g]}))}
   else{cw=270;hd=[T==="tw"?"Ruolo":T0==="bo"?"Minuto":""];it=T==="tw"?S.tw2.map((p,i)=>({n:(twDN(p)||"Nome Cognome")+twSfx(p),sub:p.t,lg:p.t,c:[SL()[i]]})):rows(S[T0]||"").map(a=>({n:a[0],sub:a[1],lg:a[1],c:[a[2]||""]}))}
@@ -897,7 +913,7 @@ function capt(){const T0=$("#gt").value,T=BS(T0),tt=$("#gh").value.replace(/\|/g
   o3=at===df?` ${at.n} ha il miglior attacco (${at.gf} gol) e la miglior difesa (${df.gs} subiti): squadra da battere.`:P([` Attacco più prolifico: ${at.n} con ${at.gf} gol. Difesa più solida: ${df.n}, solo ${df.gs} subiti.`,` ${at.n} fa festa con ${at.gf} gol, ${df.n} blinda la porta con appena ${df.gs} subiti.`]);
   t=o1+o2+o3+(inv.length?` ${inv.map(e=>e.n).join(" e ")} ${inv.length>1?"restano":"resta"} imbattut${inv.length>1?"e":"a"}.`:"")+P(["\n\nTutte le posizioni nella grafica. Chi sale e chi scende? Ditecelo nei commenti.","\n\nScorrete per vedere tutte le posizioni: secondo voi chi vince il titolo?","\n\nTutte le squadre nella grafica. Per chi tifate?"])}
  else if(T==="mar"&&S.mar.length){const a=S.mar[0],b=S.mar[1],gp=b?a.g-b.g:0;t=P([`${a.n} (${a.sq}) comanda la classifica marcatori con ${a.g} gol`,`Capocannoniere: ${a.n} (${a.sq}) a quota ${a.g} gol`,`Il bomber del momento è ${a.n} (${a.sq}): ${a.g} gol`])+(b?(gp===0?`, ma ${b.n} (${b.sq}) è a pari gol.`:`, ${b.n} (${b.sq}) insegue a ${gp} gol.`):".")+P([" Chi riuscirà a raggiungerlo?"," Gli attaccanti sono avvisati."," La corsa al titolo di capocannoniere è aperta!"])+"\n\nTutti i marcatori nella grafica."}
- else if(T==="an")t=anCapt();else if(T==="qo")t=qoCapt();else if(T==="tos")t=tosCapt();else if(T==="tw"){const sl=SL(),ps=S.tw2.map((p,i)=>({...p,r:sl[i]})).filter(p=>p.n),at=ps.filter(p=>p.r==="Attaccante"),cnt={};ps.forEach(p=>{if(p.t)cnt[p.t]=(cnt[p.t]||0)+1});const tp=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0],tm=tp&&tp[1]>1?`${tp[0]} piazza ${tp[1]} giocatori nell’undici ideale.`:"";
+ else if(T==="an")t=anCapt();else if(T==="qo")t=qoCapt();else if(T==="gwa"||T==="gwr")t=gwCapt(T);else if(T==="tos")t=tosCapt();else if(T==="tw"){const sl=SL(),ps=S.tw2.map((p,i)=>({...p,r:sl[i]})).filter(p=>p.n),at=ps.filter(p=>p.r==="Attaccante"),cnt={};ps.forEach(p=>{if(p.t)cnt[p.t]=(cnt[p.t]||0)+1});const tp=Object.entries(cnt).sort((a,b)=>b[1]-a[1])[0],tm=tp&&tp[1]>1?`${tp[0]} piazza ${tp[1]} giocatori nell’undici ideale.`:"";
   t=`Il team of the week ${wg} è servito!`+(at.length?` Davanti ${at.map(p=>p.n).join(" e ")}${at.length>1?" fanno paura":" fa paura"}${tm?", e "+tm:"."}`:tm?" "+tm:"")+P(["\n\nSiete d’accordo con la formazione? Scrivetelo nei commenti.","\n\nChi avreste scelto voi? Dite la vostra nei commenti.","\n\nManca qualcuno che meritava un posto? Taggatelo!"])}
  else if(T==="bo"){const r=rows(S[T0]||"").filter(a=>a[0]&&a[0]!=="Nome Cognome");t=`I migliori goal ${wg}`+(r.length?`: ${r.slice(0,4).map(a=>a[0]+(a[1]&&a[1]!=="Squadra"?" ("+a[1]+")":"")).join(", ")}${r.length>4?" e non solo":""}.`:".")+P([" Guardate i video e votate il vostro preferito nei commenti!"," Quale vi ha fatto saltare dal divano? Votate nei commenti!"," Il più bello secondo voi? Scrivetelo qui sotto!"])}
  else if(T==="ris"){const r=parseRes(S.res||""),tg=r.reduce((q,e)=>q+e.h+e.a,0),bg=[...r].sort((p,q)=>q.h+q.a-p.h-p.a)[0];t=`Tutti i risultati ${wg}!`+(r.length?` ${r.length} ${r.length===1?"partita":"partite"} e ${tg} gol in totale.`+(bg&&bg.h+bg.a>=5?` Il match più ricco di reti: ${bg.hn} ${bg.h}-${bg.a} ${bg.an}.`:""):"")+(()=>{const v=typeof risRows==="function"?risRows(S.res||"").filter(q=>q.rv):[];return v.length?`\n\n⏸ ${v.length===1?"Rinviata":"Rinviate"}: ${v.map(q=>q.hn+" – "+q.an).join(", ")}.`:""})()+P(["\n\nCome sono andate per la vostra squadra? Scrivetelo nei commenti!","\n\nQuale risultato vi ha sorpreso di più? Dite la vostra!","\n\nTutti i punteggi nella grafica: avete visto qualche sorpresa?"])}
@@ -916,7 +932,7 @@ const gT=()=>$("#gt").value,nid=()=>"l"+Date.now().toString(36)+Math.random().to
 const defLy=T=>{const T0=T;T=BS(T);const a=[];if(T==="st")a.push({id:"stars",k:"stars",nm:"Logo a stelle",x:.5,y:.25,s:1,o:100,c:"",b:0});
  else if(T==="pod")a.push({id:"logo",k:"logo",nm:lgNm(),x:.91,y:.13,s:.1,o:100,c:"",b:0});
  else{a.push({id:"logo",k:"logo",nm:lgNm(),x:T==="mc"?.5:.89,y:.075,s:T==="mc"?.16:.11,o:100,c:"",b:0},{id:"ft",k:"text",nm:"Piè di pagina",t:lgFoot(),x:.5,y:.975,s:.02,o:60,c:"",b:0});
-  if(["cl","mar","bo","ris","qr","an","qo"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
+  if(["cl","mar","bo","ris","qr","an","qo","gwa"].includes(T))a.unshift({id:"wm",k:"logo",nm:"Logo filigrana",x:.68,y:.62,s:.8,o:10,c:"",b:1})}
  if(T==="mc"){const[W,H]=S.sty.fmt.split("x").map(Number),cg=(S.cg||[]).find(c=>c.id===T0),b=BAND();a.unshift(b,...MCL(b,W,H,cg&&cg.ft))}return[...a,...TL()]};
 const TL=()=>[{id:"tt",k:"tt",nm:"Titolo",x:null,y:null,s:1,o:100,c:"",b:0},{id:"ts",k:"ts",nm:"Sottotitolo",x:null,y:null,s:1,o:100,c:"",b:0}],BAND=()=>({id:"band",k:"band",nm:"Fascia loghi",x:.5,y:.735,s:.84,h:.176,r:18,o:90,c:"",b:1});
 const LY=()=>S.ly[gT()]||(S.ly[gT()]=lpDef(gT())||defLy(gT())),SELL=()=>LY().find(q=>q.id===SEL),rd=()=>{if(!rq)rq=requestAnimationFrame(()=>{rq=0;draw()})};
@@ -1844,23 +1860,37 @@ function gqAssets(){const b=(S.gqs||{})[gqCur()]||{};return{f:(b.fonts||[]).filt
 function gqAssetsLoad(){const ks=[];Object.values(S.gqs||{}).forEach(b=>[...((b||{}).fonts||[]),...((b||{}).bgs||[])].forEach(o=>{if(!o||!o.k)return;if(S.raw&&S.raw[o.k]){if(PHIK&&!PHIK.has(o.k)){PHIK.add(o.k);phIdb("put",o.k,S.raw[o.k])}}else ks.push(o.k)}));
  if(ks.length)Promise.all(ks.map(k=>phIdb("get",k).then(d=>{if(d){S.raw=S.raw||{};S.raw[k]=d;return 1}}))).then(r=>{if(r.some(Boolean)){PC={};draw();if(TQ)gqAUI();save()}})}
 /* font e sfondi della squadra: nella barra della squadra, in una riga compatta (valgono per tutte le grafiche della squadra) */
-$("#gqh").insertAdjacentHTML("beforebegin",`<div id="gqa" class="gqa" style="display:none"><div class="gqg"><span class="gqal">Font</span><div class="gqcl" id="gqfl"></div><label class="gqc gqadd" id="gqfa" title="Carica un font .woff2, .ttf o .otf (massimo 650 KB)">+ Font<input type="file" id="gqfi" accept=".woff2,.woff,.ttf,.otf" hidden></label></div>
-<div class="gqg"><span class="gqal">Sfondo</span><div class="gqcl" id="gqbl"></div><label class="gqt gqadd" id="gqba" title="Carica uno sfondo (lo comprimo io)" aria-label="Carica uno sfondo">+<input type="file" id="gqbi" accept="image/*" hidden></label></div><span class="gqam">Fino a 2 font e 2 sfondi · opacità e oscuramento in Stile</span></div>`);
+/* quanti font e sfondi per squadra (ognuno è un documento a parte nel cloud, quindi il limite vero è la grandezza del singolo file) */
+var GQMF=12,GQMB=12;
+$("#gqh").insertAdjacentHTML("beforebegin",`<div id="gqa" class="gqa" style="display:none"><div class="gqg"><span class="gqal">Font</span><div class="gqcl" id="gqfl"></div><label class="gqc gqadd" id="gqfa" title="Carica uno o più font .woff2, .ttf, .otf, anche tutti insieme in uno .zip (massimo 650 KB l’uno)">+ Font<input type="file" id="gqfi" accept=".woff2,.woff,.ttf,.otf,.zip" multiple hidden></label></div>
+<div class="gqg"><span class="gqal">Sfondo</span><div class="gqcl" id="gqbl"></div><label class="gqt gqadd" id="gqba" title="Carica uno o più sfondi (li comprimo io)" aria-label="Carica uno o più sfondi">+<input type="file" id="gqbi" accept="image/*" multiple hidden></label></div><span class="gqam">Fino a ${GQMF} font e ${GQMB} sfondi · opacità e oscuramento in Stile</span></div>`);
 function gqAUI(){const el=$("#gqa");if(!el)return;el.style.display=TQ&&gqCur()?"flex":"none";if(!TQ||!gqCur())return;const A=gqAssets(),ff=A.f.some(o=>o.k===S.sty.ff)?S.sty.ff:"";
- $("#gqfl").innerHTML=`<span class="gqc${!ff?" on":""}"><button type="button" data-gqfu="" title="Il carattere del tool"><b>Aa</b>Inter Tight</button></span>`+A.f.map(o=>{gqF(o.k);const fm=(FFL[o.k]||{}).ok?FFL[o.k].fam:"";return`<span class="gqc${ff===o.k?" on":""}"><button type="button" data-gqfu="${esc(o.k)}" title="Usa ${esc(o.n)} in tutte le grafiche della squadra"><b style="font-family:${fm?`'${fm}',`:""}sans-serif">Aa</b>${esc(o.n.length>16?o.n.slice(0,15)+"…":o.n)}${S.raw&&S.raw[o.k]?"":" …"}</button><button type="button" class="gqx" data-gqfx="${esc(o.k)}" aria-label="Elimina il font ${esc(o.n)}">×</button></span>`}).join("");
- $("#gqfa").style.display=A.f.length>=2?"none":"";
+ $("#gqfl").innerHTML=`<span class="gqc${!ff?" on":""}"><button type="button" data-gqfu="" title="Il carattere del tool"><b>Aa</b>Inter Tight</button></span>`+A.f.map(o=>{gqF(o.k);const fm=(FFL[o.k]||{}).ok?FFL[o.k].fam:"";return`<span class="gqc${ff===o.k?" on":""}"><button type="button" data-gqfu="${esc(o.k)}" title="Usa ${esc(o.n)} in tutte le grafiche della squadra"><b style="font-family:${fm?`'${fm}',`:""}sans-serif">Aa</b>${esc(o.n.length>24?o.n.slice(0,23)+"…":o.n)}${S.raw&&S.raw[o.k]?"":" …"}</button><button type="button" class="gqx" data-gqfx="${esc(o.k)}" aria-label="Elimina il font ${esc(o.n)}">×</button></span>`}).join("");
+ $("#gqfa").style.display=A.f.length>=GQMF?"none":"";
  $("#gqbl").innerHTML=`<span class="gqt${!S.sty.bgi?" on":""}"><button type="button" data-gqbu="" title="Nessuno sfondo" aria-label="Nessuno sfondo">∅</button></span>`+A.g.map(o=>`<span class="gqt${S.sty.bgi===o.k?" on":""}"><button type="button" data-gqbu="${esc(o.k)}" title="Usa lo sfondo ${esc(o.n)}" aria-label="Usa lo sfondo ${esc(o.n)}">${S.raw&&S.raw[o.k]?`<img src="${S.raw[o.k]}" alt="">`:"…"}</button><button type="button" class="gqx" data-gqbx="${esc(o.k)}" aria-label="Elimina lo sfondo ${esc(o.n)}">×</button></span>`).join("");
- $("#gqba").style.display=A.g.length>=2?"none":""}
+ $("#gqba").style.display=A.g.length>=GQMB?"none":""}
 function gqRead(f){return new Promise((ok,ko)=>{const r=new FileReader();r.onload=()=>ok(r.result);r.onerror=()=>ko();r.readAsDataURL(f)})}
-$("#gqfi").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const t=gqCur(),b=gqB(t);if((b.fonts||[]).length>=2)return alert("Puoi tenere al massimo 2 font per squadra: eliminane uno prima.");
- if(f.size>650*1024)return alert("Questo font pesa troppo ("+Math.round(f.size/1024)+" KB, massimo 650 KB). Usa la versione .woff2, che è molto più leggera.");
- let d;try{d=await gqRead(f)}catch(x){return alert("Font non leggibile")}const k="fn|"+t+"|"+Date.now().toString(36),n=f.name.replace(/\.[^.]+$/,"");
- try{await new FontFace("tftest",`url(${d})`).load()}catch(x){return alert("Questo file non sembra un font valido.")}
- S.raw[k]=d;(b.fonts=b.fonts||[]).push({k,n});PHIK.add(k);phIdb("put",k,d);if(!S.sty.ff)S.sty.ff=k;gqAUI();lyUI();draw();save();cm();toast("Font “"+n+"” caricato")};
-$("#gqbi").onchange=async e=>{const f=e.target.files[0];e.target.value="";if(!f)return;const t=gqCur(),b=gqB(t);if((b.bgs||[]).length>=2)return alert("Puoi tenere al massimo 2 sfondi per squadra: eliminane uno prima.");
- let src;try{src=await gqRead(f)}catch(x){return alert("Immagine non leggibile")}let i;try{i=await ldImg(src)}catch(x){return alert("Immagine non leggibile")}
- let d="";for(const[mx,q]of[[1920,.85],[1600,.8],[1280,.75],[1080,.7]]){const s=Math.min(1,mx/Math.max(i.naturalWidth,i.naturalHeight)),c=bgCv(Math.round(i.naturalWidth*s),Math.round(i.naturalHeight*s));c.getContext("2d").drawImage(i,0,0,c.width,c.height);d=c.toDataURL("image/jpeg",q);if(d.length<700000)break}
- const k="bg|"+t+"|"+Date.now().toString(36);S.raw[k]=d;(b.bgs=b.bgs||[]).push({k,n:f.name.replace(/\.[^.]+$/,"")});PHIK.add(k);phIdb("put",k,d);S.sty.bgi=k;if(!(S.sty.po>0))S.sty.po=100;sty();gqAUI();draw();save();cm();toast("Sfondo caricato e in uso")};
+/* .zip: estraggo i font che ci sono dentro (anche quelli nelle cartelle) */
+async function gqUnzip(f){const buf=await f.arrayBuffer(),u=new Uint8Array(buf),dv=new DataView(buf),td=new TextDecoder();let e=u.length-22;while(e>0&&dv.getUint32(e,true)!==0x06054b50)e--;if(e<=0)throw new Error("zip non valido");const n=dv.getUint16(e+10,true);let p=dv.getUint32(e+16,true);const out=[];
+ for(let i=0;i<n;i++){const m=dv.getUint16(p+10,true),cs=dv.getUint32(p+20,true),nl=dv.getUint16(p+28,true),xe=dv.getUint16(p+30,true),ce=dv.getUint16(p+32,true),o=dv.getUint32(p+42,true),nm=td.decode(u.subarray(p+46,p+46+nl));p+=46+nl+xe+ce;
+  if(!/\.(woff2?|ttf|otf)$/i.test(nm)||/(^|\/)(__MACOSX|\.)/.test(nm))continue;const h=o+30+dv.getUint16(o+26,true)+dv.getUint16(o+28,true),d=u.subarray(h,h+cs);
+  const data=m===8?new Uint8Array(await new Response(new Blob([d]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer()):m===0?d.slice():null;if(data)out.push(new File([data],nm.split("/").pop(),{type:"font/"+nm.split(".").pop().toLowerCase()}))}return out}
+$("#gqfi").onchange=async e=>{let F=[...e.target.files];e.target.value="";if(!F.length)return;const t=gqCur(),b=gqB(t),msg=[];let ok=0;
+ const L=[];for(const f of F){if(/\.zip$/i.test(f.name)){try{const z=await gqUnzip(f);if(!z.length)msg.push(f.name+": nessun font dentro");L.push(...z)}catch(x){msg.push(f.name+": zip non leggibile")}}else L.push(f)}
+ for(const f of L){const n=f.name.replace(/\.[^.]+$/,"").replace(/[-_]+/g," ").replace(/([a-zà-ù])([A-Z])/g,"$1 $2").replace(/\s+/g," ").trim();
+  if((b.fonts||[]).some(o=>o.n.toLowerCase()===n.toLowerCase())){msg.push(n+": c’è già");continue}
+  if((b.fonts||[]).length>=GQMF){msg.push(n+": massimo "+GQMF+" font per squadra");continue}
+  if(f.size>650*1024){msg.push(n+": pesa troppo ("+Math.round(f.size/1024)+" KB, massimo 650 KB: usa la versione .woff2)");continue}
+  let d;try{d=await gqRead(f)}catch(x){msg.push(n+": non leggibile");continue}
+  try{await new FontFace("tftest",`url(${d})`).load()}catch(x){msg.push(n+": non sembra un font valido");continue}
+  const k="fn|"+t+"|"+Date.now().toString(36)+ok;S.raw[k]=d;(b.fonts=b.fonts||[]).push({k,n});PHIK.add(k);phIdb("put",k,d);if(!S.sty.ff)S.sty.ff=k;ok++}
+ gqAUI();lyUI();draw();save();cm();if(msg.length)alert((ok?ok+(ok===1?" font caricato.":" font caricati.")+"\n\n":"")+msg.join("\n"));else toast(ok===1?"Font caricato":ok+" font caricati")};
+$("#gqbi").onchange=async e=>{const F=[...e.target.files];e.target.value="";if(!F.length)return;const t=gqCur(),b=gqB(t),msg=[];let ok=0,last="";
+ for(const f of F){if((b.bgs||[]).length>=GQMB){msg.push(f.name+": massimo "+GQMB+" sfondi per squadra");continue}
+  let src,i;try{src=await gqRead(f);i=await ldImg(src)}catch(x){msg.push(f.name+": immagine non leggibile");continue}
+  let d="";for(const[mx,q]of[[1920,.85],[1600,.8],[1280,.75],[1080,.7]]){const s=Math.min(1,mx/Math.max(i.naturalWidth,i.naturalHeight)),c=bgCv(Math.round(i.naturalWidth*s),Math.round(i.naturalHeight*s));c.getContext("2d").drawImage(i,0,0,c.width,c.height);d=c.toDataURL("image/jpeg",q);if(d.length<700000)break}
+  const k="bg|"+t+"|"+Date.now().toString(36)+ok;S.raw[k]=d;(b.bgs=b.bgs||[]).push({k,n:f.name.replace(/\.[^.]+$/,"")});PHIK.add(k);phIdb("put",k,d);last=k;ok++}
+ if(last){S.sty.bgi=last;if(!(S.sty.po>0))S.sty.po=100;sty()}gqAUI();draw();save();cm();if(msg.length)alert((ok?ok+(ok===1?" sfondo caricato.":" sfondi caricati.")+"\n\n":"")+msg.join("\n"));else if(ok)toast(ok===1?"Sfondo caricato e in uso":ok+" sfondi caricati: in uso l’ultimo")};
 $("#gqa").addEventListener("click",e=>{const fu=e.target.closest("[data-gqfu]");if(fu){S.sty.ff=fu.dataset.gqfu;gqAUI();lyUI();draw();save();cm();return}const u=e.target.closest("[data-gqbu]"),x=e.target.closest("[data-gqbx]"),fx=e.target.closest("[data-gqfx]"),b=gqB(gqCur());
  if(u){S.sty.bgi=u.dataset.gqbu;if(S.sty.bgi&&!(S.sty.po>0)){S.sty.po=100;sty()}gqAUI();draw();save();cm();return}
  if(x||fx){const k=(x||fx).dataset[x?"gqbx":"gqfx"],L=x?"bgs":"fonts",o=(b[L]||[]).find(q=>q.k===k);if(!confirm("Elimino "+(x?"lo sfondo":"il font")+" “"+(o?o.n:"")+"”?"))return;b[L]=(b[L]||[]).filter(q=>q.k!==k);delete S.raw[k];PHIK.delete(k);phIdb("del",k);if(S.sty.bgi===k)S.sty.bgi="";if(S.sty.ff===k)S.sty.ff="";Object.values(S.ly||{}).forEach(a=>(a||[]).forEach(l=>{if(l&&l.ff===k)delete l.ff}));gqAUI();lyUI();draw();save();cm()}});
@@ -2077,7 +2107,7 @@ function peRender(x,W,H,src,sw,sh,t,cl){const P=peP();if(!P||!src)return;const{s
   x.translate((1-k)*-40*u,0);x.fillStyle="rgba(8,12,22,.86)";x.beginPath();x.roundRect(bx,by,bw,bh,10*u);x.fill();x.fillStyle=S.sty&&S.sty.ac||"#2f7bff";x.fillRect(bx,by,8*u,bh);x.fillStyle="#fff";x.font=`800 ${fs}px ${F}`;x.textBaseline="top";x.fillText(lb.s.n,bx+fs*.6,by+fs*.18);if(lb.s.sub){x.fillStyle="rgba(255,255,255,.75)";x.font=`600 ${sf}px ${F}`;x.fillText(lb.s.sub,bx+fs*.6,by+fs*1.2)}x.setTransform(1,0,0,1,0,0);x.globalAlpha=1}
  if(cl&&cl.tt&&W<H*1.2){const fs=64*u,mw=W*.86;x.font=`800 ${fs}px ${F}`;const ws=cl.tt.split(/\s+/),ln=[];let c="";ws.forEach(w=>{const q=c?c+" "+w:w;if(x.measureText(q).width>mw&&c){ln.push(c);c=w}else c=q});if(c)ln.push(c);const lh=fs*1.18,y0=H*.1;x.textAlign="center";x.textBaseline="middle";
   ln.slice(0,3).forEach((l,i)=>{const w=x.measureText(l).width+fs*.6,y=y0+i*lh;x.fillStyle="#fff";x.beginPath();x.roundRect(W/2-w/2,y-lh/2+4*u,w,lh-8*u,12*u);x.fill();x.fillStyle="#0b0f19";x.fillText(l,W/2,y+2*u)});x.textAlign="left"}
- if(!cl&&typeof peYtAll==="function")peYtAll(x,W,H,t);
+ if(cl&&typeof peSbDraw==="function")peSbDraw(x,W,H,t,cl);if(!cl&&typeof peYtAll==="function")peYtAll(x,W,H,t);
  x.restore()}
 /* ---- anteprima ---- */
 function peDraw(){const v=peV();if(!v||!PE.f||typeof PEI!=="undefined"&&PEI&&PEI.run)return;if(PE.view==="v"){const c=$("#pecv"),x=c.getContext("2d");if(PE.es!=null)return peShotEd(x,c.width,c.height);peRender(x,c.width,c.height,v.readyState>=2?v:null,v.videoWidth,v.videoHeight,v.currentTime,null);
@@ -3228,7 +3258,7 @@ function bEsSet(fn){S.bes={...(S.bes||{})};fn(S.bes);BES.ok=0;save();renderB()}
    Modello: gol attesi di casa e ospite (Poisson) da attacco e difesa di ogni squadra, presi dalla classifica (gol fatti, subiti, punti)
    e mescolati con la forma delle ultime 3 partite (dal calendario). Fattore campo e frequenza dei pareggi li ricavo dai risultati del campionato.
    S.qo = {wf: peso forma 0–0,8, mg: margine del banco, fo: mostra la forma, nt: nota in fondo, tn: testo nota, ov: {chiave: [q1,qx,q2] scritte a mano}} ---- */
-const QOD={wf:.35,mg:.05,fo:1,nt:1,tn:"Quote indicative, calcolate su classifica e ultime 3 partite · solo per gioco"};
+const QOD={wf:.35,mg:.05,sp:.15,fo:1,nt:1,tn:"Quote indicative, calcolate su classifica e ultime 3 partite · solo per gioco"};
 function qoO(){return{...QOD,...(S.qo||{})}}
 function qoK(r){return r.g+"|"+kHN(r.h)+"|"+kHN(r.a)}
 function qoRes(r){return kRG(typeof rvRes==="function"?rvRes(r):r.r)}
@@ -3239,7 +3269,7 @@ function qoPois(l,n){const p=[Math.exp(-l)];for(let k=1;k<=n;k++)p[k]=p[k-1]*l/k
 /* probabilità di 1, X, 2 con gol indipendenti */
 function qo3(lh,la){const N=30,A=qoPois(lh,N),B=qoPois(la,N);let p1=0,px=0,p2=0;for(let i=0;i<=N;i++)for(let j=0;j<=N;j++){const q=A[i]*B[j];if(i>j)p1+=q;else if(i===j)px+=q;else p2+=q}const s=p1+px+p2||1;return[p1/s,px/s,p2/s]}
 /* arrotondamento come sulle lavagne dei bookmaker */
-function qoRound(q){q=Math.max(1.03,Math.min(50,q));const st=q<2?.01:q<3?.05:q<5?.1:q<10?.25:q<20?.5:1;return Math.round(Math.round(q/st)*st*100)/100}
+function qoRound(q){q=Math.max(1.03,Math.min(30,q));const st=q<2?.01:q<3?.05:q<5?.1:q<10?.25:q<20?.5:1;return Math.round(Math.round(q/st)*st*100)/100}
 const qoFmt=q=>q==null||!isFinite(q)?"–":q.toFixed(2);
 function qoModel(G){const o=qoO(),w0=Math.max(0,Math.min(.8,+o.wf||0)),cal=S.cal||[],k=4,kf=2;
  /* risultati che si conoscono prima della giornata G (i recuperi contano con la loro data) */
@@ -3261,9 +3291,11 @@ function qoModel(G){const o=qoO(),w0=Math.max(0,Math.min(.8,+o.wf||0)),cal=S.cal
  const lam=(h,a)=>{const H=T[kHN(h)],A=T[kHN(a)];return[Math.max(.25,Math.min(12,mu*H.A*A.D*HA)),Math.max(.25,Math.min(12,mu*A.A*H.D/HA))]};
  /* i pareggi: il modello li tara sulla frequenza vera del campionato */
  let fx=1;if(nR>=4){const dm=R.reduce((a,q)=>a+qo3(...lam(q.r.h,q.r.a))[1],0)/nR,dn=R.filter(q=>q.x[0]===q.x[1]).length;fx=Math.max(.7,Math.min(1.5,((dn+10*dm)/(nR+10))/Math.max(.01,dm)))}
- const ov=o.ov||{},mg=Math.max(0,Math.min(.2,+o.mg||0));
+ const ov=o.ov||{},mg=Math.max(0,Math.min(.2,+o.mg||0)),sp=Math.max(0,Math.min(.4,+o.sp||0));
+ /* spazio alle sorprese: nel calcio amatoriale (poche partite, rose che cambiano) mescolo il modello con la media del campionato, così niente quote assurde */
+ const hw=R.filter(q=>q.x[0]>q.x[1]).length,dw=R.filter(q=>q.x[0]===q.x[1]).length,BA=[(hw+4.2)/(nR+10),(dw+1.8)/(nR+10),(nR-hw-dw+4)/(nR+10)];
  const ms=(typeof anGs==="function"?anGs()[G]||[]:[]).slice().sort((a,b)=>String(a.d).localeCompare(String(b.d))).map(r=>{const[lh,la]=lam(r.h,r.a);let[p1,px,p2]=qo3(lh,la);const X=Math.min(.6,px*fx),s=(p1+p2)||1;p1=p1/s*(1-X);p2=p2/s*(1-X);px=X;
-  const p=[p1,px,p2],q=p.map(v=>qoRound(1/(Math.max(.02,v)*(1+mg)))),key=qoK(r),m=ov[key]||[],qq=q.map((v,i)=>{const z=parseFloat(String(m[i]==null?"":m[i]).replace(",","."));return z>1?z:v});
+  const p=[p1,px,p2].map((v,i)=>(1-sp)*v+sp*BA[i]),q=p.map(v=>qoRound(1/(Math.max(.02,v)*(1+mg)))),key=qoK(r),m=ov[key]||[],qq=q.map((v,i)=>{const z=parseFloat(String(m[i]==null?"":m[i]).replace(",","."));return z>1?z:v});
   return{r,key,lh,la,p,q,qq,man:qq.some((v,i)=>v!==q[i]),x:qoRes(r),pend:qoPend(r),fav:qq.indexOf(Math.min(...qq)),H:T[kHN(r.h)],A:T[kHN(r.a)]}});
  return{G,mu,pa,HA,fx,nR,cn,T,ms}}
 function qoCur(){const g=typeof anCur==="function"?anCur():null;return g==null?null:qoModel(g)}
@@ -3300,7 +3332,7 @@ function qov(x,W,H,y0,m,F,u){const st=S.sty,o=qoO(),M=qoCur(),ms=M?M.ms:[],n=ms.
 /* ---- pannello in Contenuti ---- */
 $("#anw").insertAdjacentHTML("afterend",`<div id="qow" class="card" style="display:none"><b>Quote 1X2 della giornata</b><small>Calcolate da sole: gol fatti e subiti e punti dalla classifica, forma delle ultime 3 partite dal calendario, più fattore campo e frequenza dei pareggi presi dai risultati del campionato. Le partite sono quelle dell’Anteprima.</small>
 <label for="qog">Giornata <small style="display:inline">(la stessa dell’Anteprima)</small></label><select id="qog"></select>
-<div class="g3" style="grid-template-columns:1fr 1fr"><div><label for="qowf">Peso della forma (ultime 3) · <b id="qowfv"></b></label><input type="range" id="qowf" min="0" max="70" step="5"></div><div><label for="qomg">Margine del banco · <b id="qomgv"></b></label><input type="range" id="qomg" min="0" max="12" step="1"></div></div>
+<div class="g3" style="grid-template-columns:1fr 1fr 1fr"><div><label for="qowf">Peso della forma (ultime 3) · <b id="qowfv"></b></label><input type="range" id="qowf" min="0" max="70" step="5"></div><div><label for="qosp" title="Più è alto, più le quote delle sfavorite si abbassano: nel calcio amatoriale le sorprese capitano">Spazio alle sorprese · <b id="qospv"></b></label><input type="range" id="qosp" min="0" max="40" step="5"></div><div><label for="qomg">Margine del banco · <b id="qomgv"></b></label><input type="range" id="qomg" min="0" max="12" step="1"></div></div>
 <label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="qofo"> Mostra la forma (V N P delle ultime 3) accanto alle squadre</label>
 <label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="qont"> Nota in fondo</label><input id="qotn" placeholder="${esc(QOD.tn)}">
 <div id="qol"></div><div class="hint" id="qoh"></div><div class="bar" style="margin:8px 0 0"><button class="btn" id="qo2an">📅 Vai all’Anteprima della stessa giornata</button></div></div>`);
@@ -3310,7 +3342,7 @@ $("#an2qo").onclick=()=>qoGo("qo");$("#qo2an").onclick=()=>qoGo("an");
 const qoPct=v=>Math.round(v*100)+"%",qoFS=t=>t&&t.F.length?t.F.map(f=>`<i class="qof qof${f.e}">${f.e}</i>`).join(""):'<small style="display:inline">nessuna partita</small>';
 function qoUI(){const el=$("#qow");if(!el||el.style.display==="none")return;const o=qoO(),M0=anGs(),G=Object.keys(M0).map(Number).sort((a,b)=>a-b),a0=S.an||{},auto=a0.g==null||!M0[a0.g],d0=anDef(),M=qoCur();
  $("#qog").innerHTML=G.length?`<option value=""${auto?" selected":""}>Automatica: la prossima da giocare${d0!=null?" (giornata "+d0+")":""}</option>`+G.map(n=>`<option value="${n}"${!auto&&n===anCur()?" selected":""}>Giornata ${n}${anRange(M0[n])?" · "+anRange(M0[n]):""}</option>`).join(""):`<option value="">Nessun calendario</option>`;
- $("#qowf").value=Math.round(o.wf*100);$("#qowfv").textContent=Math.round(o.wf*100)+"%";$("#qomg").value=Math.round(o.mg*100);$("#qomgv").textContent=Math.round(o.mg*100)+"%";$("#qofo").checked=!!o.fo;$("#qont").checked=!!o.nt;const tn=$("#qotn");if(document.activeElement!==tn)tn.value=S.qo&&S.qo.tn!=null?S.qo.tn:QOD.tn;tn.style.display=o.nt?"":"none";
+ $("#qowf").value=Math.round(o.wf*100);$("#qowfv").textContent=Math.round(o.wf*100)+"%";$("#qomg").value=Math.round(o.mg*100);$("#qosp").value=Math.round(o.sp*100);$("#qospv").textContent=Math.round(o.sp*100)+"%";$("#qomgv").textContent=Math.round(o.mg*100)+"%";$("#qofo").checked=!!o.fo;$("#qont").checked=!!o.nt;const tn=$("#qotn");if(document.activeElement!==tn)tn.value=S.qo&&S.qo.tn!=null?S.qo.tn:QOD.tn;tn.style.display=o.nt?"":"none";
  if(!M||!M.ms.length){$("#qol").innerHTML="";$("#qoh").textContent="Incolla il calendario in Dati e TOTW: le partite arrivano da lì.";return}
  $("#qol").innerHTML=M.ms.map(q=>{const r=q.r,ov=(o.ov||{})[q.key]||[];return`<div class="qor"><div class="qot"><div><b>${esc(r.h)}</b><span>${qoFS(q.H)}</span></div><div><b>${esc(r.a)}</b><span>${qoFS(q.A)}</span></div></div>
   <div class="qop">${q.pend?"Rinviata":q.x?"Giocata: "+q.x[0]+"-"+q.x[1]:`1 ${qoPct(q.p[0])} · X ${qoPct(q.p[1])} · 2 ${qoPct(q.p[2])} · gol attesi ${q.lh.toFixed(1)}–${q.la.toFixed(1)}`}</div>
@@ -3322,7 +3354,7 @@ const qoSet=fn=>{S.qo={...(S.qo||{})};fn(S.qo);save();qoUI();draw();cm()};
 $("#qow").addEventListener("change",e=>{const t=e.target;if(t.id==="qog"){S.an={...(S.an||{}),g:t.value===""?null:+t.value};save();qoUI();draw();cm()}
  else if(t.id==="qofo"||t.id==="qont")qoSet(o=>{o[t.id.slice(2)]=t.checked?1:0});else if(t.id==="qotn")qoSet(o=>{o.tn=t.value.trim()});
  else if(t.dataset.qo){const v=t.value.trim().replace(",",".");if(v&&!(parseFloat(v)>1)){toast("Scrivi una quota maggiore di 1, per esempio 1.85");t.value="";return}qoSet(o=>{o.ov={...(o.ov||{})};const a=(o.ov[t.dataset.qo]||[null,null,null]).slice();a[+t.dataset.qi]=v?+parseFloat(v).toFixed(2):null;if(a.some(z=>z!=null))o.ov[t.dataset.qo]=a;else delete o.ov[t.dataset.qo]})}});
-$("#qow").addEventListener("input",e=>{const t=e.target;if(t.id==="qowf"||t.id==="qomg"){S.qo={...(S.qo||{}),[t.id==="qowf"?"wf":"mg"]:+t.value/100};$("#"+t.id+"v").textContent=t.value+"%";save();draw()}else if(t.id==="qotn"){S.qo={...(S.qo||{}),tn:t.value};draw()}});
+$("#qow").addEventListener("input",e=>{const t=e.target;if(t.id==="qowf"||t.id==="qomg"||t.id==="qosp"){S.qo={...(S.qo||{}),[{qowf:"wf",qomg:"mg",qosp:"sp"}[t.id]]:+t.value/100};$("#"+t.id+"v").textContent=t.value+"%";save();draw()}else if(t.id==="qotn"){S.qo={...(S.qo||{}),tn:t.value};draw()}});
 $("#qow").addEventListener("click",e=>{const b=e.target.closest("[data-qor]");if(!b)return;qoSet(o=>{o.ov={...(o.ov||{})};delete o.ov[b.dataset.qor]})});
 /* quando cambi la giornata dall'Anteprima, anche le quote seguono */
 {const a0=anUI;anUI=function(){a0();const b=$("#an2qo");if(b)b.textContent="📊 Crea le quote 1X2 della giornata "+(anCur()??"")}}
@@ -3332,6 +3364,277 @@ function qoCapt(){const M=qoCur();if(!M||!M.ms.length)return"Le quote della gior
   P(["\n\nVoi su cosa puntereste? Scrivete il vostro pronostico nei commenti! 👇","\n\nSiete d’accordo con le quote? Ditecelo nei commenti! 👇","\n\nChi ribalta il pronostico? Pronostici nei commenti! 👇"])+"\n\nQuote calcolate su classifica e forma delle ultime 3 partite, solo per gioco."}
 /* quando arrivano dati nuovi (calendario, classifica) il pannello si aggiorna */
 {const a0=autoLabels;autoLabels=function(){a0();try{if(BS(gT())==="qo")qoUI()}catch(e){}}}
+/* ---- Edit podcast · sottotitoli automatici nelle clip ----
+   La voce la trascrive Whisper direttamente nel browser (niente server): il modello si scarica la prima volta e poi resta in memoria nel browser.
+   P.sub = [{a,b,t}] frasi con tempi nel video originale (le correggi a mano), P.subr = [[a,b]] tratti già trascritti,
+   P.sb = {on, st:"hl" parola evidenziata | "cl" bianco | "bx" box, fs grandezza, y altezza, up maiuscolo, hc colore, off sincronia, q:"small"|"base"} ---- */
+PEHK.push("sub","subr");
+const PESBD={on:0,st:"hl",fs:1,y:.62,up:1,hc:"#ffd400",off:0,q:"small"};
+const peSbO=()=>{const P=peP();return{...PESBD,...(P&&P.sb||{})}};
+const PESBV="3.8.1",PESBM={small:["onnx-community/whisper-small","Precisa","≈ 250–450 MB"],base:["onnx-community/whisper-base","Veloce","≈ 80–150 MB"]};
+const PESB={tr:null,q:"",busy:0,st:"",ph:null,phK:null};
+/* frasi dette senza voce che Whisper a volte si inventa */
+const PESBX=/sottotitoli (creati|a cura|e revisione)|amara\.org|qtss|grazie (a tutti )?per (la visione|l'attenzione)|iscriviti al canale/i;
+/* audio della clip: decodifico solo il tratto che serve e lo porto a 16 kHz mono */
+async function peAud16(a0,a1){const M=PE.M,a=M&&M.a;if(!a||!/^mp4a|^opus/.test(a.codec)||!window.AudioDecoder)throw new Error("audio di questo video non leggibile dal browser");
+ const cfg={codec:a.codec,sampleRate:a.asr||a.sr,numberOfChannels:a.ch,...(a.desc?{description:a.desc}:{})};if(!(await AudioDecoder.isConfigSupported(cfg)).supported)throw new Error("formato audio non supportato ("+a.codec+")");
+ let i0=0;while(i0<a.n&&a.pts[i0]+a.dur[i0]<a0)i0++;i0=Math.max(0,i0-2);let i1=i0;while(i1<a.n&&a.pts[i1]<a1)i1++;i1=Math.min(a.n,i1+1);
+ let out=null,sr=0,err=null;const dec=new AudioDecoder({output:ad=>{try{const s=ad.sampleRate,nf=ad.numberOfFrames,nc=ad.numberOfChannels,t0=ad.timestamp/1e6;if(!out){sr=s;out=new Float32Array(Math.ceil((a1-a0)*s))}
+   const b=new Float32Array(nf);for(let c=0;c<nc;c++){ad.copyTo(b,{planeIndex:c,format:"f32-planar"});const k0=Math.round((t0-a0)*sr);for(let i=0;i<nf;i++){const k=k0+i;if(k>=0&&k<out.length)out[k]+=b[i]/nc}}}finally{ad.close()}},error:e=>{err=e}});
+ dec.configure(cfg);for await(const q of mp4Samples(PE.f,a,i0,i1)){if(err)break;dec.decode(new EncodedAudioChunk({type:"key",timestamp:Math.round(a.pts[q.i]*1e6),duration:Math.round(a.dur[q.i]*1e6),data:q.data}));if(dec.decodeQueueSize>48)await peDq(dec)}
+ if(!err)await dec.flush();try{dec.close()}catch(e){}if(err)throw err;if(!out)throw new Error("nessun audio in questo tratto");if(sr===16000)return out;
+ const n=Math.ceil(out.length*16000/sr),oc=new OfflineAudioContext(1,n,16000),bf=oc.createBuffer(1,out.length,sr);bf.copyToChannel(out,0);const src=oc.createBufferSource();src.buffer=bf;src.connect(oc.destination);src.start();return(await oc.startRendering()).getChannelData(0)}
+/* il riconoscitore vocale (transformers.js + Whisper): scheda video se c'è, altrimenti processore */
+async function peSbPipe(q,prog){if(PESB.tr&&PESB.q===q)return PESB.tr;PESB.tr=null;const T=await import(`https://cdn.jsdelivr.net/npm/@huggingface/transformers@${PESBV}`);T.env.allowLocalModels=false;
+ let gpu=false;try{gpu=!!(navigator.gpu&&await navigator.gpu.requestAdapter())}catch(e){}
+ const F={},pc=p=>{if(p.status==="progress"&&p.file){F[p.file]=[p.loaded||0,p.total||0];let l=0,t=0;Object.values(F).forEach(([x,y])=>{l+=x;t+=y});if(t>2e6)prog("Scarico il modello dei sottotitoli (solo la prima volta)… "+Math.round(100*l/t)+"% di "+Math.round(t/1e6)+" MB")}};
+ const mk=d=>T.pipeline("automatic-speech-recognition",PESBM[q][0],d==="webgpu"?{device:"webgpu",dtype:{encoder_model:"fp32",decoder_model_merged:"q4"},progress_callback:pc}:{device:"wasm",dtype:"q8",progress_callback:pc});
+ let tr;try{tr=await mk(gpu?"webgpu":"wasm")}catch(e){if(!gpu)throw e;console.warn("sottotitoli: webgpu non va, uso il processore",e);tr=await mk("wasm")}PESB.tr=tr;PESB.q=q;PESB.dev=gpu?"webgpu":"wasm";return tr}
+const peSbCov=(a,b)=>{const P=peP(),R=(P&&P.subr||[]).filter(r=>r[1]>a&&r[0]<b).map(r=>[Math.max(a,r[0]),Math.min(b,r[1])]).sort((x,y)=>x[0]-y[0]);let c=0,e=a;R.forEach(([x,y])=>{if(y>e){c+=y-Math.max(x,e);e=y}});return b>a?c/(b-a):1};
+async function peSbRun(cl){if(PESB.busy||!cl)return;const P=peP(),o=peSbO(),a0=Math.max(0,cl.a-.3),a1=Math.min(PE.dur||cl.b,cl.b+.3),t0=performance.now();PESB.busy=1;
+ const st=t=>{PESB.st=t;const e=$("#pesb_st");if(e)e.textContent=t};
+ try{st("Preparo l’audio della clip…");const au=await peAud16(a0,a1);st("Carico il riconoscimento vocale…");const tr=await peSbPipe(o.q,st);
+  const tk=setInterval(()=>st(`Trascrivo ${Math.round(a1-a0)} s di audio… ${Math.round((performance.now()-t0)/1000)} s${PESB.dev==="wasm"?" (senza scheda video è più lento)":""}`),500);let r;
+  try{r=await tr(au,{language:"italian",task:"transcribe",return_timestamps:true,chunk_length_s:30,stride_length_s:5})}finally{clearInterval(tk)}
+  const seg=(r.chunks||[{timestamp:[0,a1-a0],text:r.text||""}]).map(c=>{const s=c.timestamp||[],x=+s[0]||0,y=s[1]==null?a1-a0:+s[1];return{a:+(a0+x).toFixed(2),b:+(a0+Math.max(x+.3,y)).toFixed(2),t:String(c.text||"").replace(/\s+/g," ").trim()}}).filter(s=>s.t&&!PESBX.test(s.t)&&!/^[\s.,!?…-]*$/.test(s.t));
+  peDo(()=>{const Q=peP();Q.sub=(Q.sub||[]).filter(s=>s.b<=a0||s.a>=a1).concat(seg).sort((x,y)=>x.a-y.a);const R=(Q.subr||[]).concat([[a0,a1]]).sort((x,y)=>x[0]-y[0]),M=[];R.forEach(r=>{const l=M[M.length-1];if(l&&r[0]<=l[1]+.05)l[1]=Math.max(l[1],r[1]);else M.push([r[0],r[1]])});Q.subr=M});
+  st("");toast(seg.length?`Sottotitoli pronti: ${seg.length} frasi. Controlla i nomi qui sotto.`:"Nessuna voce trovata in questa clip")}
+ catch(e){console.error("sottotitoli",e);st("");toast("Sottotitoli non riusciti: "+(e&&e.message||e))}finally{PESB.busy=0;if(typeof peUI==="function")peUI()}}
+/* frasi brevi da mostrare (al massimo 4 parole), con i tempi di ogni parola divisi in proporzione alla lunghezza */
+function peSbPhr(){const P=peP(),S0=P&&P.sub||[];if(PESB.phK===S0)return PESB.ph;const out=[];
+ S0.forEach(s=>{const ws=String(s.t||"").trim().split(/\s+/).filter(Boolean);if(!ws.length)return;const L=ws.map(w=>w.replace(/[^\p{L}\p{N}]/gu,"").length+2),tot=L.reduce((a,b)=>a+b,0),d=Math.max(.2,s.b-s.a);let t=s.a,cur=null;
+  ws.forEach((w,i)=>{const wa=t,wb=t+d*L[i]/tot;t=wb;if(!cur||cur.w.length>=4||(cur.c+w.length>18&&cur.w.length>=2)){cur={a:wa,b:wb,w:[],c:0};out.push(cur)}cur.w.push({t:w,a:wa,b:wb});cur.c+=w.length+1;cur.b=wb;if(/[.!?…]$/.test(w)||(/[,;:]$/.test(w)&&cur.w.length>=2))cur=null})});
+ out.sort((x,y)=>x.a-y.a);for(let i=0;i<out.length;i++){const n=out[i+1];out[i].e=n?Math.max(out[i].b,Math.min(n.a,out[i].b+.4)):out[i].b+.4}PESB.ph=out;PESB.phK=S0;return out}
+function peSbDraw(x,W,H,t,cl){const o=peSbO();if(!o.on)return;const ph=peSbPhr();if(!ph.length)return;const tt=t-o.off;let lo=0,hi=ph.length-1,p=null;
+ while(lo<=hi){const m=(lo+hi)>>1;if(ph[m].a<=tt){p=ph[m];lo=m+1}else hi=m-1}if(!p||tt>=p.e)return;
+ const u=Math.min(W,H)/1080,vert=H>W*1.15,F='"Inter Tight",system-ui,sans-serif',ac=o.hc||"#ffd400",mw=W*.86,cy=H*(vert?o.y:.82+(o.y-.62)*.5),k=Math.min(1,(tt-p.a)/.12),sc=.86+.14*(1-Math.pow(1-k,3));
+ let fs=(vert?82:66)*u*o.fs;const ws=p.w.map(w=>o.up?w.t.toUpperCase():w.t);x.save();x.textBaseline="middle";x.textAlign="left";x.lineJoin="round";
+ const lay=()=>{x.font=`900 ${fs}px ${F}`;const sp=x.measureText(" ").width,L=[];let c=[],cw=0;ws.forEach((w,i)=>{const ww=x.measureText(w).width;if(c.length&&cw+sp+ww>mw){L.push({i:c,w:cw});c=[];cw=0}cw+=(c.length?sp:0)+ww;c.push(i)});if(c.length)L.push({i:c,w:cw});return{L,sp}};
+ let G=lay();while((G.L.length>2||G.L.some(l=>l.w>mw))&&fs>20*u){fs*=.92;G=lay()}const lh=fs*1.12,y0=cy-(G.L.length-1)*lh/2;
+ x.translate(W/2,cy);x.scale(sc,sc);x.translate(-W/2,-cy);
+ G.L.forEach((l,j)=>{const y=y0+j*lh;let xx=W/2-l.w/2;if(o.st==="bx"){x.fillStyle="rgba(0,0,0,.72)";x.beginPath();x.roundRect(xx-fs*.3,y-lh*.52,l.w+fs*.6,lh*1.0,fs*.22);x.fill()}
+  l.i.forEach(i=>{const w=ws[i],ww=x.measureText(w).width,on=o.st!=="cl"&&tt>=p.w[i].a-.02&&(tt<p.w[i].b||i===p.w.length-1);
+   if(o.st!=="bx"){x.lineWidth=fs*.2;x.strokeStyle="rgba(0,0,0,.9)";x.shadowColor="rgba(0,0,0,.45)";x.shadowBlur=fs*.18;x.strokeText(w,xx,y);x.shadowBlur=0}
+   x.fillStyle=on?ac:"#fff";x.fillText(w,xx,y);xx+=ww+G.sp})});x.restore()}
+/* ---- pannello nella clip (sotto la schermata finale) ---- */
+function peSbUI(){const o=peSbO(),cl=peClipCur(),P=peP();if(!cl||!P)return"";const cov=peSbCov(cl.a,cl.b),sg=(P.sub||[]).map((s,i)=>[s,i]).filter(([s])=>s.b>cl.a&&s.a<cl.b);
+ const sty=[["hl","Parola evidenziata"],["cl","Bianco"],["bx","Box scuro"]];
+ return`<div class="card" style="margin:10px 0 0" id="pesbc"><label class="pechk" style="margin:0"><input type="checkbox" id="pesb_on"${o.on?" checked":""}> <b>Sottotitoli</b> <span class="hint" style="display:inline">· scritti in automatico dalla voce, valgono per tutte le clip</span></label>
+ ${o.on?`<div class="bar" style="margin:8px 0 0;gap:6px;align-items:center">${PESB.busy?`<button class="btn" disabled>⏳ Trascrivo…</button>`:cov<.97?`<button class="btn p" id="pesb_go">🎙️ Trascrivi questa clip</button>`:`<span class="wok">✓ Clip trascritta</span><button class="btn pbx" id="pesb_go" title="Rifà la trascrizione e sostituisce le correzioni di questa clip">↻ Rifai</button>`}
+  <select id="pesb_q" style="width:auto" title="Modello">${Object.entries(PESBM).map(([k,m])=>`<option value="${k}"${o.q===k?" selected":""}>${m[1]} (${m[2]})</option>`).join("")}</select></div><div class="hint" id="pesb_st">${esc(PESB.st||"")}</div>
+  <label>Stile</label><div class="bar" style="margin:0;gap:6px">${sty.map(([k,n])=>`<button class="btn pbx${o.st===k?" p":""}" data-pesbs="${k}">${n}</button>`).join("")}${o.st!=="cl"?`<input type="color" id="pesb_hc" value="${esc(o.hc)}" title="Colore della parola detta" style="width:42px;height:34px;padding:2px">`:""}<label class="pechk" style="margin:0 0 0 6px"><input type="checkbox" id="pesb_up"${o.up?" checked":""}> MAIUSCOLO</label></div>
+  <div class="g3" style="grid-template-columns:1fr 1fr 1fr"><div><label for="pesb_fs">Grandezza</label><input type="range" id="pesb_fs" min=".6" max="1.5" step=".05" value="${o.fs}"></div><div><label for="pesb_y">Altezza</label><input type="range" id="pesb_y" min=".2" max=".8" step=".01" value="${o.y}"></div><div><label for="pesb_off">Sincronia <small style="display:inline" id="pesb_offv">${o.off>0?"+":""}${o.off.toFixed(1)} s</small></label><input type="range" id="pesb_off" min="-1" max="1" step=".1" value="${o.off}"></div></div>
+  ${sg.length?`<details class="pesbd"${sg.length<=14?" open":""}><summary>✏️ Correggi il testo (${sg.length} frasi)</summary><div class="pesbl">${sg.map(([s,i])=>`<div class="pesbr"><button class="btn pbx" data-pesbt="${s.a}" title="Vai a questo punto">${peTf(s.a,1)}</button><textarea data-pesbi="${i}" rows="2">${esc(s.t)}</textarea><button class="btn pbx" data-pesbx="${i}" title="Togli questa frase">×</button></div>`).join("")}</div></details>`:cov>=.97?'<div class="hint">Nessuna frase in questa clip.</div>':""}
+  <div class="hint">La prima volta il browser scarica il modello (poi resta salvato). I nomi di giocatori e squadre a volte li sbaglia: correggili sopra. Il testo compare solo nelle clip, non nel Video completo.</div>`:""}</div>`}
+{const e0=peEsUI;peEsUI=function(){return e0()+peSbUI()}}
+const peSbSet=(fn,ui=1)=>{const P=peP();if(!P)return;if(ui)peDo(()=>{P.sb={...(P.sb||{})};fn(P.sb)});else{P.sb={...(P.sb||{})};fn(P.sb);if(typeof peClipDraw==="function")peClipDraw()}};
+$("#pec").addEventListener("click",e=>{const b=e.target.closest("#pesb_go,[data-pesbs],[data-pesbt],[data-pesbx]");if(!b)return;const d=b.dataset;
+ if(b.id==="pesb_go"){const cl=peClipCur();if(!cl||cl===PE.tc){toast("Tieni prima la clip");return}peSbRun(cl);peUI();return}
+ if(d.pesbs){peSbSet(o=>{o.st=d.pesbs});return}if(d.pesbt!=null){peSeek(+d.pesbt+.02);return}
+ if(d.pesbx!=null){const i=+d.pesbx;peDo(()=>{const P=peP();P.sub=P.sub.filter((s,j)=>j!==i)})}});
+$("#pec").addEventListener("change",e=>{const t=e.target;if(t.id==="pesb_on")peSbSet(o=>{o.on=t.checked?1:0});else if(t.id==="pesb_up")peSbSet(o=>{o.up=t.checked?1:0});else if(t.id==="pesb_q")peSbSet(o=>{o.q=t.value});
+ else if(t.id==="pesb_hc"||t.id==="pesb_fs"||t.id==="pesb_y"||t.id==="pesb_off"){peSave()}
+ else if(t.dataset.pesbi!=null){const i=+t.dataset.pesbi,v=t.value.replace(/\s+/g," ").trim();peDo(()=>{const P=peP();P.sub=v?P.sub.map((s,j)=>j===i?{...s,t:v}:s):P.sub.filter((s,j)=>j!==i)})}});
+$("#pec").addEventListener("input",e=>{const t=e.target,k={pesb_hc:"hc",pesb_fs:"fs",pesb_y:"y",pesb_off:"off"}[t.id];if(!k)return;peSbSet(o=>{o[k]=k==="hc"?t.value:+t.value},0);if(k==="off"){const v=$("#pesb_offv");if(v)v.textContent=(+t.value>0?"+":"")+(+t.value).toFixed(1)+" s"}});
+/* ---- Giocata della settimana ----
+   Ogni squadra manda (il capitano, dal link di caricamento) il suo gol più bello. Il tool sorteggia l'ordine, prepara una storia 9:16 per ogni gol
+   (sopra si mette lo sticker sondaggio "🔥 Voto questo / 👀 Vedo gli altri"), poi con i 🔥 di ogni storia fa la grafica del vincitore.
+   S.gw = {g: giornata scelta (null = quella attiva), dl, vd, rd: scadenza / giorno del voto / del risultato, link, rr: regole scritte a mano,
+           W: {giornata: {c:[{id, sq squadra, n marcatore, a, b taglio in secondi, du durata, o posizione sorteggiata, v voti 🔥, fn nome file}], at: quando è stato fatto il sorteggio, win: id scelto a mano in caso di pari}}}
+   I video e le foto restano su questo computer (IndexedDB): gw|id e gwth|id. ---- */
+const GWD={dl:"sabato alle 12",vd:"domenica",rd:"lunedì",link:""};
+const gwO=()=>({...GWD,...(S.gw||{})});
+function gwG(){const o=S.gw||{};return o.g!=null?o.g:(S.gs||1)}
+function gwW(g){S.gw=S.gw||{};S.gw.W=S.gw.W||{};g=g==null?gwG():g;return S.gw.W[g]=S.gw.W[g]||{c:[]}}
+const gwWr=g=>((S.gw||{}).W||{})[g==null?gwG():g]||{c:[]};
+const gwOrd=w=>w.c.slice().sort((a,b)=>(a.o==null?99:a.o)-(b.o==null?99:b.o));
+const gwCap=s=>s?s.charAt(0).toUpperCase()+s.slice(1):s;
+function gwTeams(){const m=new Map(),add=n=>{n=String(n||"").trim();if(n&&!m.has(kHN(n)))m.set(kHN(n),n)};(S.cl||[]).forEach(e=>add(e.n));(S.cal||[]).forEach(r=>{add(r.h);add(r.a)});return[...m.values()].sort((a,b)=>a.localeCompare(b,"it"))}
+/* chi ha segnato quella giornata per la squadra (dai marcatori), per i suggerimenti */
+function gwScorers(g,sq){let L=[];try{const w=wd(g);if(w)L=w.mar.filter(e=>!sq||kHN(e.sq)===kHN(sq)||(typeof rvEq==="function"&&rvEq(e.sq,sq))).map(e=>e.n)}catch(e){}if(!L.length&&sq)L=(S.mar||[]).filter(e=>kHN(e.sq)===kHN(sq)||(typeof rvEq==="function"&&rvEq(e.sq,sq))).map(e=>e.n);return[...new Set(L)]}
+/* vincitore: più 🔥; a pari voti scegli tu (o vince chi era più in fondo nelle storie, visto da meno persone) */
+function gwRank(w){const c=w.c.filter(q=>q.v!=null&&q.v!=="").slice().sort((a,b)=>(+b.v)-(+a.v)||(b.o||0)-(a.o||0));if(!c.length)return{c,win:null,tie:[]};const top=+c[0].v,tie=c.filter(q=>+q.v===top);
+ const win=tie.length>1&&w.win&&tie.some(q=>q.id===w.win)?tie.find(q=>q.id===w.win):c[0];return{c:[win,...c.filter(q=>q!==win)],win,tie:tie.length>1?tie:[]}}
+/* ---- memoria locale: video e foto ---- */
+const GWV={},GWT={};
+async function gwBlob(id){if(GWV[id])return GWV[id].b;const b=await phIdb("get","gw|"+id);if(b){GWV[id]={b,u:URL.createObjectURL(b)}}return b||null}
+const gwUrl=id=>GWV[id]?GWV[id].u:null;
+function gwTh(id){if(GWT[id]!==undefined)return GWT[id];GWT[id]=null;phIdb("get","gwth|"+id).then(d=>{if(d){GWT[id]=d;if(typeof draw==="function")draw();gwPaintThumbs()}});return null}
+function gwDel(id){phIdb("del","gw|"+id);phIdb("del","gwth|"+id);if(GWV[id]){URL.revokeObjectURL(GWV[id].u);delete GWV[id]}delete GWT[id]}
+/* tengo solo le ultime 3 giornate (i video occupano spazio) */
+function gwPrune(){const W=(S.gw||{}).W||{},ks=Object.keys(W).map(Number).sort((a,b)=>b-a);ks.slice(3).forEach(k=>{(W[k].c||[]).forEach(c=>gwDel(c.id));delete W[k]})}
+/* fotogramma per la grafica del vincitore (lato lungo 640) */
+function gwShot(el){const sw=el.videoWidth,sh=el.videoHeight;if(!sw)return null;const k=640/Math.max(sw,sh),c=bgCv(sw*k,sh*k);c.getContext("2d").drawImage(el,0,0,c.width,c.height);return c.toDataURL("image/jpeg",.78)}
+/* ---- disegno: storia 9:16 di un gol ---- */
+let GWBL=null;
+function gwStory(x,W,H,src,sw,sh,t,c,pos,n,g){const st=S.sty||{},ac=st.ac||"#2f7bff",F=gqF(st.ff),u=W/1080,tc=lum(ac)>150?"#000":"#fff";x.save();x.fillStyle="#000";x.fillRect(0,0,W,H);
+ if(src&&sw){if(sw/sh<.75){const k=Math.max(W/sw,H/sh);x.drawImage(src,(W-sw*k)/2,(H-sh*k)/2,sw*k,sh*k)}
+  else{if(!GWBL)GWBL=bgCv(54,96);const bx=GWBL.getContext("2d"),kb=Math.max(54/sw,96/sh);bx.drawImage(src,(54-sw*kb)/2,(96-sh*kb)/2,sw*kb,sh*kb);x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";x.drawImage(GWBL,0,0,W,H);x.fillStyle="rgba(0,0,0,.4)";x.fillRect(0,0,W,H);
+   const k=W/sw,h=sh*k;x.drawImage(src,0,H*.44-h/2,W,h)}}
+ const fa=Math.min(1,Math.max(0,t/.45));x.globalAlpha=fa;x.textBaseline="middle";
+ let gr=x.createLinearGradient(0,0,0,H*.3);gr.addColorStop(0,"rgba(0,0,0,.78)");gr.addColorStop(1,"rgba(0,0,0,0)");x.fillStyle=gr;x.fillRect(0,0,W,H*.3);
+ const lg=logo("__lega"),ty=H*.135,tx=lg?190*u:70*u;if(lg)dl(x,lg,110*u,ty,120*u);
+ x.textAlign="left";x.fillStyle="#fff";x.font=`900 ${50*u}px ${F}`;x.fillText("GIOCATA DELLA SETTIMANA",tx,ty-26*u,W-tx-210*u);x.fillStyle=ac;x.font=`700 ${34*u}px ${F}`;x.fillText(`Giornata ${g} · gol ${pos} di ${n}`,tx,ty+28*u,W-tx-210*u);
+ const bx=W-118*u;x.fillStyle=ac;x.shadowColor="rgba(0,0,0,.4)";x.shadowBlur=20*u;x.beginPath();x.arc(bx,ty,74*u,0,7);x.fill();x.shadowBlur=0;x.fillStyle=tc;x.textAlign="center";x.font=`900 ${84*u}px ${F}`;x.fillText(pos,bx,ty+5*u);
+ gr=x.createLinearGradient(0,H*.6,0,H);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(.5,"rgba(0,0,0,.55)");gr.addColorStop(1,"rgba(0,0,0,.85)");x.fillStyle=gr;x.fillRect(0,H*.6,W,H*.4);
+ /* spazio libero per lo sticker sondaggio, con l'invito */
+ x.textAlign="center";x.fillStyle="#fff";x.font=`800 ${42*u}px ${F}`;x.shadowColor="rgba(0,0,0,.6)";x.shadowBlur=14*u;x.fillText("Ti piace? Vota 🔥 qui sotto",W/2,H*.665,W-120*u);x.shadowBlur=0;
+ const cy=H*.835,ch=150*u,cx0=60*u,cw=W-120*u,tl=c.sq?logo(c.sq):null;x.fillStyle="rgba(8,12,22,.82)";x.beginPath();x.roundRect(cx0,cy-ch/2,cw,ch,24*u);x.fill();x.fillStyle=ac;x.fillRect(cx0,cy-ch/2+18*u,9*u,ch-36*u);
+ const lx=cx0+40*u;let nx=lx;if(tl){dl(x,tl,lx+55*u,cy,110*u);nx=lx+130*u}x.textAlign="left";const mw=cx0+cw-30*u-nx;
+ if(c.n){x.fillStyle="#fff";x.font=`900 ${56*u}px ${F}`;x.fillText(c.n,nx,cy-24*u,mw);x.fillStyle="rgba(255,255,255,.75)";x.font=`700 ${36*u}px ${F}`;x.fillText(c.sq||"",nx,cy+34*u,mw)}
+ else{x.fillStyle="#fff";x.font=`900 ${58*u}px ${F}`;x.fillText(c.sq||"Squadra",nx,cy+2*u,mw)}
+ x.restore()}
+/* copertina delle storie (la prima storia della domenica) */
+function gwCover(x,W,H,g){const st=S.sty||{},ac=st.ac||"#2f7bff",F=gqF(st.ff),u=W/1080,w=gwWr(g),L=gwOrd(w).filter(c=>c.sq);x.save();x.fillStyle=st.bg||"#000";x.fillRect(0,0,W,H);if(st.str&&typeof stripes==="function")stripes(x,W,H,.34,ac);
+ const gr=x.createLinearGradient(0,H*.4,0,H);gr.addColorStop(0,"rgba(0,0,0,0)");gr.addColorStop(1,rgba(ac,.35));x.fillStyle=gr;x.fillRect(0,H*.4,W,H*.6);
+ x.textAlign="center";x.textBaseline="middle";const lg=logo("__lega");if(lg)dl(x,lg,W/2,H*.2,230*u);
+ x.fillStyle=st.tx||"#fff";x.font=`900 ${70*u}px ${F}`;x.fillText("GIOCATA DELLA SETTIMANA",W/2,H*.31,W-100*u);x.fillStyle=ac;x.font=`700 ${44*u}px ${F}`;x.fillText("Giornata "+g,W/2,H*.355);
+ x.fillStyle=st.tx||"#fff";x.font=`900 ${150*u}px ${F}`;x.fillText("SI VOTA! 🔥",W/2,H*.445,W-80*u);
+ x.font=`600 ${38*u}px ${F}`;x.fillStyle=rgba(st.tx||"#fff",.88);["Un gol per storia: scorri e guardali tutti","Metti 🔥 nel sondaggio sui gol che ti piacciono",`Vince chi prende più 🔥 · risultato ${gwO().rd}`].forEach((l,i)=>x.fillText(l,W/2,H*.52+i*58*u,W-120*u));
+ if(L.length){const cols=L.length>4?2:1,rows=Math.ceil(L.length/cols),y0=H*.64,rh=Math.min(110*u,(H*.86-y0)/rows),cw=(W-120*u)/cols;
+  L.forEach((c,i)=>{const col=Math.floor(i/rows),row=i%rows,x0=60*u+col*cw,cy=y0+row*rh+rh/2,r=rh*.32;x.fillStyle=ac;x.beginPath();x.arc(x0+r+6*u,cy,r,0,7);x.fill();x.fillStyle=lum(ac)>150?"#000":"#fff";x.font=`900 ${r*1.15}px ${F}`;x.textAlign="center";x.fillText(c.o||i+1,x0+r+6*u,cy+2*u);
+   const l=logo(c.sq);let nx=x0+2*r+24*u;if(l){dl(x,l,nx+r,cy,r*2);nx+=2*r+16*u}x.textAlign="left";x.fillStyle=st.tx||"#fff";x.font=`800 ${Math.min(40*u,rh*.36)}px ${F}`;x.fillText(c.sq,nx,cy+2*u,x0+cw-nx-16*u)})}
+ x.restore()}
+/* ---- grafiche nel Grafiche: anticipazione (gwa) e vincitore (gwr) ---- */
+function gwRules(){const o=gwO(),t=String(o.rr||"").trim();if(t)return rows(t).slice(0,5).map(a=>({e:a[0].match(/^\p{Extended_Pictographic}/u)?.[0]||"⚽",t:a[0].replace(/^\p{Extended_Pictographic}️?\s*/u,""),s:a[1]||""}));
+ return[{e:"🎥",t:"Un gol per squadra",s:"Lo carica il capitano entro "+o.dl},{e:"📲",t:gwCap(o.vd)+" nelle nostre storie",s:"Un gol per storia, in ordine sorteggiato"},{e:"🔥",t:"Vota con il sondaggio",s:"Puoi votare tutti i gol che ti piacciono"},{e:"🏆",t:gwCap(o.rd)+" il vincitore",s:"Vince la storia con più 🔥"}]}
+function gwav(x,W,H,y0,m,F,u){const st=S.sty,R=gwRules(),T=gwTeams().filter(n=>logo(n)),top=y0+30*u,av=H-top-(T.length?250:110)*u,rh=Math.min(170*u,av/R.length),tc=lum(st.ac)>150?"#000":"#fff";x.save();x.textBaseline="middle";
+ R.forEach((r,i)=>{const cy=top+rh*(i+.5),cr=Math.min(rh*.36,58*u);x.fillStyle=rgba(st.tx,.06);x.beginPath();x.roundRect(m-18,cy-rh*.44,W-2*m+36,rh*.88,18*u);x.fill();
+  x.fillStyle=st.ac;x.beginPath();x.arc(m+cr+4*u,cy,cr,0,7);x.fill();x.textAlign="center";x.font=`${cr*1.05}px ${F}`;x.fillStyle=tc;x.fillText(r.e,m+cr+4*u,cy+3*u);
+  const nx=m+2*cr+34*u,mw=W-m-nx;x.textAlign="left";x.fillStyle=st.tx;x.font=`800 ${Math.min(rh*.27,46*u)}px ${F}`;x.fillText(r.t,nx,cy-(r.s?rh*.15:0),mw);if(r.s){x.fillStyle=rgba(st.tx,.72);x.font=`500 ${Math.min(rh*.18,31*u)}px ${F}`;x.fillText(r.s,nx,cy+rh*.19,mw)}});
+ if(T.length){const y=H-200*u,n=T.length,sz=Math.min(92*u,(W-2*m)/n-10*u);x.textAlign="center";x.fillStyle=st.ac;x.font=`800 ${34*u}px ${F}`;x.fillText("Chi sarà? 👀",W/2,y-sz*.5-34*u);T.forEach((t,i)=>dl(x,logo(t),W/2+(i-(n-1)/2)*(sz+10*u),y+8*u,sz))}
+ x.restore();x.textAlign="left";x.textBaseline="alphabetic"}
+function gwrv(x,W,H,y0,m,F,u){const st=S.sty,g=gwG(),w=gwWr(g),R=gwRank(w),top=y0+24*u;x.save();x.textBaseline="middle";
+ if(!R.win){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Scrivi i 🔥 di ogni storia nella sezione Giocata della settimana",W/2,top+70*u,W-2*m);x.restore();return}
+ const c=R.win,L=R.c,tall=H>W*1.4,rest=L.length-1,lh=Math.min(64*u,(H-top-110*u)*.42/Math.max(1,rest)),hh=Math.max(H*(tall?.36:.3),H-top-110*u-rest*lh-30*u)*(rest?1:.9),hh2=Math.min(hh,(W-2*m)*.62*1.25);
+ /* foto del gol vincente */
+ const pw=hh2*.8,px=m-6,py=top,th=gwTh(c.id),img=th?im(th):null,tc=lum(st.ac)>150?"#000":"#fff";x.save();x.beginPath();x.roundRect(px,py,pw,hh2,22*u);x.clip();x.fillStyle=rgba(st.ac,.25);x.fillRect(px,py,pw,hh2);
+ if(img){const k=Math.max(pw/img.naturalWidth,hh2/img.naturalHeight);x.drawImage(img,px+(pw-img.naturalWidth*k)/2,py+(hh2-img.naturalHeight*k)/2,img.naturalWidth*k,img.naturalHeight*k)}else{const l=logo(c.sq);if(l)dl(x,l,px+pw/2,py+hh2/2,pw*.6)}x.restore();
+ x.strokeStyle=st.ac;x.lineWidth=6*u;x.beginPath();x.roundRect(px,py,pw,hh2,22*u);x.stroke();x.fillStyle=st.ac;x.beginPath();x.arc(px+pw-10*u,py+12*u,46*u,0,7);x.fill();x.textAlign="center";x.font=`${50*u}px ${F}`;x.fillText("🏆",px+pw-10*u,py+16*u);
+ /* nome, squadra, voti */
+ const nx=px+pw+40*u,mw=W-m-nx,cy=py+hh2/2;x.textAlign="left";x.fillStyle=st.ac;x.font=`800 ${30*u}px ${F}`;x.fillText("🏆 VINCITORE",nx,cy-hh2*.32,mw);
+ const nm=c.n||c.sq||"",NF=fitNames(x,[nm],900,Math.min(84*u,hh2*.16),mw,true,F,24),l0=NF.l[0];x.fillStyle=st.tx;x.font=`900 ${NF.f}px ${F}`;l0.forEach((q,i)=>x.fillText(q,nx,cy-hh2*.14+i*NF.f*1.02,mw));
+ let ty=cy-hh2*.14+(l0.length-1)*NF.f*1.02+NF.f*.95;if(c.n&&c.sq){const tl=logo(c.sq),ls=40*u;let tx=nx;if(tl){dl(x,tl,tx+ls/2,ty,ls);tx+=ls+12*u}x.fillStyle=rgba(st.tx,.8);x.font=`700 ${34*u}px ${F}`;x.fillText(c.sq,tx,ty,W-m-tx);ty+=60*u}
+ const vt=`🔥 ${c.v} ${+c.v===1?"voto":"voti"}`;x.font=`900 ${50*u}px ${F}`;const vw=x.measureText(vt).width+48*u;x.fillStyle=st.ac;x.beginPath();x.roundRect(nx,ty-10*u,vw,78*u,39*u);x.fill();x.fillStyle=tc;x.fillText(vt,nx+24*u,ty+29*u);
+ if(R.tie.length){x.fillStyle=rgba(st.tx,.65);x.font=`600 ${26*u}px ${F}`;x.fillText("a pari voti con "+R.tie.filter(q=>q!==c).map(q=>q.sq).join(", "),nx,ty+110*u,mw)}
+ /* gli altri, con la barra dei voti */
+ if(rest){const mx=Math.max(1,...L.map(q=>+q.v||0));let y=py+hh2+40*u;x.fillStyle=rgba(st.tx,.6);x.font=`800 ${26*u}px ${F}`;x.fillText("I VOTI DEGLI ALTRI GOL",m,y);y+=lh*.8;
+  L.slice(1).forEach((q,i)=>{const cy2=y+i*lh,ls=lh*.66,l=logo(q.sq);let tx=m+48*u;x.fillStyle=rgba(st.tx,.7);x.font=`800 ${lh*.42}px ${F}`;x.textAlign="right";x.fillText(i+2,m+32*u,cy2);x.textAlign="left";if(l){dl(x,l,tx+ls/2,cy2,ls);tx+=ls+12*u}
+   const bw0=W-m-tx,lw=Math.min(bw0*.5,420*u);x.fillStyle=st.tx;x.font=`700 ${lh*.38}px ${F}`;x.fillText((q.n?q.n+" · ":"")+q.sq,tx,cy2,lw);const bx=tx+lw+16*u,bw=Math.max(4*u,(W-m-bx-90*u)*(+q.v||0)/mx);
+   x.fillStyle=rgba(st.ac,.75);x.beginPath();x.roundRect(bx,cy2-lh*.18,bw,lh*.36,lh*.18);x.fill();x.fillStyle=st.tx;x.font=`800 ${lh*.38}px ${F}`;x.fillText("🔥 "+q.v,bx+bw+12*u,cy2)})}
+ x.restore();x.textAlign="left";x.textBaseline="alphabetic"}
+/* ---- esportazione di una storia: WebCodecs (veloce, senza perdere fotogrammi), altrimenti in tempo reale ---- */
+async function gwRun(blob,c,pos,n,g,onp){const M=await mp4Read(blob),v=M.v;if(!v)throw new Error("NODEC");const a=M.a&&/^mp4a/.test(M.a.codec)?M.a:null;if(M.a&&!a)throw new Error("NODEC");
+ const vc={codec:v.codec,codedWidth:v.w,codedHeight:v.h,...(v.desc?{description:v.desc}:{})};let ok=false;try{ok=(await VideoDecoder.isConfigSupported(vc)).supported}catch(e){}if(!ok)throw new Error("NODEC");
+ const W=1080,H=1920,fps=Math.max(15,Math.min(60,Math.round(v.fps)||30));let ec=null;for(const cd of["avc1.640028","avc1.4d0028","avc1.42e028"]){const t={codec:cd,width:W,height:H,bitrate:8e6,framerate:fps,latencyMode:"quality",avc:{format:"avc"}};try{if((await VideoEncoder.isConfigSupported(t)).supported){ec=t;break}}catch(e){}}if(!ec)throw new Error("NOENC");
+ const Mx=await peLib(),target=new Mx.ArrayBufferTarget(),mux=new Mx.Muxer({target,video:{codec:"avc",width:W,height:H,frameRate:fps},...(a?{audio:{codec:"aac",numberOfChannels:a.ch,sampleRate:a.asr||a.sr}}:{}),fastStart:"in-memory",firstTimestampBehavior:"cross-track-offset"});
+ const s=Math.max(0,+c.a||0),e=Math.min(v.end||1e9,c.b>s?+c.b:v.end||1e9),D=Math.max(.1,e-s);let err=null,lastKey=-9,aF=true,A=[],ai=0;
+ const enc=new VideoEncoder({output:(ch,meta)=>{try{mux.addVideoChunk(ch,meta)}catch(x){err=x}},error:x=>{err=x}});enc.configure(ec);
+ const cv=bgCv(W,H),x=cv.getContext("2d"),rot=v.rot||0,rc=rot?bgCv(rot%180?v.h:v.w,rot%180?v.w:v.h):null,rx=rc&&rc.getContext("2d");
+ const addA=up=>{while(a&&ai<A.length&&A[ai].t<=up){const q=A[ai++];try{mux.addAudioChunkRaw(q.data,"key",Math.round(q.t*1e6),Math.round(q.d*1e6),aF?{decoderConfig:{codec:a.codec,sampleRate:a.asr||a.sr,numberOfChannels:a.ch,...(a.desc?{description:a.desc}:{})}}:undefined);aF=false}catch(x){err=x}}};
+ const dec=new VideoDecoder({output:fr=>{const t=fr.timestamp/1e6;if(err||t<s-.001||t>=e-.001){fr.close();return}const ot=t-s;let src=fr,sw=fr.displayWidth,sh=fr.displayHeight;
+   if(rot){rx.save();rx.translate(rc.width/2,rc.height/2);rx.rotate(rot*Math.PI/180);rx.drawImage(fr,-sw/2,-sh/2,sw,sh);rx.restore();src=rc;sw=rc.width;sh=rc.height}
+   try{gwStory(x,W,H,src,sw,sh,ot,c,pos,n,g)}catch(q){err=q}fr.close();const vf=new VideoFrame(cv,{timestamp:Math.round(ot*1e6),duration:Math.round(1e6/fps)}),kf=ot-lastKey>=2;if(kf)lastKey=ot;try{enc.encode(vf,{keyFrame:kf})}catch(q){err=q}vf.close();addA(ot+.25);if(onp)onp(Math.min(.99,ot/D))},error:q=>{err=q}});dec.configure(vc);
+ const bs=(arr,nn,t)=>{let lo=0,hi=nn;while(lo<hi){const m=(lo+hi)>>1;if(arr[m]<t)lo=m+1;else hi=m}return lo};
+ if(a){const i0=bs(a.pts,a.n,s-1e-4),i1=bs(a.pts,a.n,e-1e-4);for await(const q of mp4Samples(blob,a,i0,i1))A.push({t:Math.max(0,a.pts[q.i]-s),d:a.dur[q.i],data:q.data.slice()})}
+ const k=mp4KeyBefore(v,s);let K=k+1;while(K<v.n&&!(v.key[K]&&v.pts[K]>=e-1e-4))K++;
+ for await(const q of mp4Samples(blob,v,k,K)){if(err)break;dec.decode(new EncodedVideoChunk({type:v.key[q.i]?"key":"delta",timestamp:Math.round(v.pts[q.i]*1e6),duration:Math.round(v.dur[q.i]*1e6),data:q.data}));while(!err&&(dec.decodeQueueSize>8||enc.encodeQueueSize>8))await peDq(dec.decodeQueueSize>8?dec:enc)}
+ if(!err){await dec.flush();addA(Infinity)}if(err){try{dec.close();enc.close()}catch(q){}throw err}await enc.flush();dec.close();enc.close();mux.finalize();return{b:new Blob([target.buffer],{type:"video/mp4"}),ext:"mp4"}}
+async function gwRT(blob,c,pos,n,g,onp){const v=document.createElement("video");v.src=URL.createObjectURL(blob);v.playsInline=true;v.preload="auto";await new Promise((ok,ko)=>{v.onloadedmetadata=ok;v.onerror=()=>ko(new Error("video non leggibile dal browser"))});
+ const W=1080,H=1920,cv=bgCv(W,H),x=cv.getContext("2d"),ac=new AudioContext(),sn=ac.createMediaElementSource(v),dst=ac.createMediaStreamDestination();sn.connect(dst);await ac.resume();const st=cv.captureStream(30);dst.stream.getAudioTracks().forEach(t=>st.addTrack(t));
+ const mt=["video/mp4;codecs=avc1.640028,mp4a.40.2","video/mp4;codecs=avc1.42E01E,mp4a.40.2","video/webm;codecs=vp9,opus","video/webm"].find(m=>MediaRecorder.isTypeSupported(m)),rec=new MediaRecorder(st,{mimeType:mt,videoBitsPerSecond:8e6}),ch=[];rec.ondataavailable=q=>q.data.size&&ch.push(q.data);
+ const s=Math.max(0,+c.a||0),e=Math.min(v.duration||1e9,c.b>s?+c.b:v.duration||1e9);await new Promise(r=>{v.addEventListener("seeked",r,{once:true});v.currentTime=s});gwStory(x,W,H,v,v.videoWidth,v.videoHeight,0,c,pos,n,g);rec.start(1000);await v.play();
+ await new Promise(r=>{const f=()=>{if(v.currentTime>=e-.02||v.ended){v.pause();return r()}gwStory(x,W,H,v,v.videoWidth,v.videoHeight,v.currentTime-s,c,pos,n,g);if(onp)onp(Math.min(.99,(v.currentTime-s)/(e-s)));requestAnimationFrame(f)};f()});
+ const b=await new Promise(r=>{rec.onstop=()=>r(new Blob(ch,{type:mt.split(";")[0]}));rec.stop()});try{ac.close()}catch(q){}URL.revokeObjectURL(v.src);return{b,ext:/mp4/.test(mt)?"mp4":"webm"}}
+async function gwMake(c,pos,n,g,onp){const b=await gwBlob(c.id);if(!b)throw new Error("video di “"+(c.sq||c.fn)+"” non trovato su questo computer: ricaricalo");try{return await gwRun(b,c,pos,n,g,onp)}catch(e){if(!/NODEC|NOENC|moov|frammentato|non supportat/i.test(e.message||""))console.warn("storia: provo in tempo reale",e);return await gwRT(b,c,pos,n,g,onp)}}
+const gwFn=(g,pos,c,ext)=>`giocata_G${g}_${String(pos).padStart(2,"0")}_${(c?c.sq||"gol":"copertina").replace(/[^\w\- ]+/g,"").replace(/\s+/g,"_")}.${ext}`;
+function gwDl(b,fn){const a=document.createElement("a");a.href=URL.createObjectURL(b);a.download=fn;document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),6e4)}
+const gwCoverBlob=g=>new Promise(r=>{const c=bgCv(1080,1920);gwCover(c.getContext("2d"),1080,1920,g);c.toBlob(r,"image/png")});
+let GWX=0;
+async function gwExport(only){if(GWX)return;const g=gwG(),w=gwW(g),L=gwOrd(w),n=L.length,bad=L.filter(c=>!c.sq);if(!n)return toast("Aggiungi prima le clip");if(bad.length)return toast("Scegli la squadra di ogni clip");if(L.some(c=>c.o==null))return toast("Prima sorteggia l’ordine delle storie");
+ const todo=only?L.filter(c=>c.id===only):L;let dir=null;if(!only&&window.showDirectoryPicker){try{dir=await window.showDirectoryPicker({id:"giocata",mode:"readwrite"})}catch(e){if(e&&e.name==="AbortError")return}}
+ const put=async(b,fn)=>{if(dir){const fh=await dir.getFileHandle(fn,{create:true}),ws=await fh.createWritable();await ws.write(b);await ws.close()}else{gwDl(b,fn);await new Promise(r=>setTimeout(r,700))}};
+ const st=t=>{const e=$("#gwxs");if(e)e.textContent=t};GWX=1;gwUI();
+ try{if(!only)await put(await gwCoverBlob(g),gwFn(g,0,null,"png"));for(let i=0;i<todo.length;i++){const c=todo[i];st(`Storia ${c.o} di ${n} (${c.sq})…`);const r=await gwMake(c,c.o,n,g,f=>st(`Storia ${c.o} di ${n} (${c.sq})… ${Math.round(f*100)}%`));await put(r.b,gwFn(g,c.o,c,r.ext))}
+  st("");toast(only?"Storia pronta":dir?`Fatto: copertina e ${todo.length} storie salvate nella cartella`:`Fatto: copertina e ${todo.length} storie scaricate`)}
+ catch(e){console.error("giocata",e);st("");toast("Esportazione non riuscita: "+(e&&e.message||e))}finally{GWX=0;gwUI()}}
+/* ---- sezione nel menu ---- */
+{const nav=document.querySelector("nav"),bb=nav&&nav.querySelector('[data-t="b"]'),b=document.createElement("button");b.setAttribute("role","tab");b.setAttribute("aria-selected","false");b.dataset.t="gw";b.innerHTML='<span class="ni" aria-hidden="true">🔥</span>Giocata';
+ if(bb)bb.after(b);else if(nav)nav.append(b);
+ b.onclick=()=>{$$("nav button").forEach(x=>x.setAttribute("aria-selected",x===b));$$("section").forEach(s=>s.classList.toggle("on",s.id==="gw"));if(typeof gMode==="function")gMode(false);$("main").classList.remove("wide");gwUI()};
+ $("#b").insertAdjacentHTML("afterend",`<section id="gw"><div class="bar"><h2>🔥 Giocata della settimana</h2><label for="gwg" class="hint" style="margin:0">Giornata</label><select id="gwg" style="width:auto"></select></div>
+<details class="uxhelp"><summary>❔ Come funziona</summary><div class="hint">Ogni squadra candida il suo gol più bello della giornata: lo carica il capitano dal link, entro la scadenza. Il tool sorteggia l’ordine e prepara una storia 9:16 per ogni gol, più la copertina. Su ogni storia aggiungi lo sticker <b>Sondaggio</b> con due opzioni («🔥 Voto questo» e «👀 Vedo gli altri»): ognuno può votare tutti i gol che vuole. Il giorno dopo scrivi qui i 🔥 di ogni storia e il tool fa la grafica del vincitore. I video restano solo su questo computer.</div></details>
+<div id="gwb"></div></section>`)}
+let GWS=null;
+function gwGs(){const s=new Set((S.cal||[]).map(r=>r.g));Object.keys(((S.gw||{}).W)||{}).forEach(k=>s.add(+k));if(S.gs)s.add(S.gs);return[...s].filter(n=>n>0).sort((a,b)=>a-b)}
+function gwUI(){const el=$("#gwb");if(!el||!$("#gw").classList.contains("on"))return;const o=gwO(),g=gwG(),w=gwWr(g),L=gwOrd(w),n=L.length,T=gwTeams(),R=gwRank(w),drawn=n&&L.every(c=>c.o!=null),dup=T.length&&(()=>{const m={};L.forEach(c=>{if(c.sq)m[kHN(c.sq)]=(m[kHN(c.sq)]||0)+1});return Object.values(m).some(v=>v>1)})();
+ $("#gwg").innerHTML=gwGs().map(k=>`<option value="${k}"${k===g?" selected":""}>Giornata ${k}${k===S.gs?" (attiva)":""}${(gwWr(k).c||[]).length?" · "+gwWr(k).c.length+" clip":""}</option>`).join("");
+ if(!GWS||!w.c.some(c=>c.id===GWS))GWS=L[0]?L[0].id:null;const sel=w.c.find(c=>c.id===GWS),planOk=["gwa","gwv","gwr"].every(id=>(S.tipi||[]).some(t=>t.id===id));
+ const team=(c)=>`<select data-gwk="sq" data-id="${c.id}"><option value="">Squadra…</option>${T.map(t=>`<option${kHN(t)===kHN(c.sq||"")?" selected":""}>${esc(t)}</option>`).join("")}</select>`;
+ el.innerHTML=`<div class="gwst"><div class="card"><b>1 · Prima della scadenza: le candidature</b><small>Pubblica la grafica dell’anticipazione e manda ai capitani il link per caricare il gol.</small>
+  <div class="g3" style="grid-template-columns:1fr 1fr 1fr"><div><label for="gwdl">Scadenza</label><input id="gwdl" value="${esc(o.dl)}"></div><div><label for="gwvd">Si vota</label><input id="gwvd" value="${esc(o.vd)}"></div><div><label for="gwrd">Vincitore</label><input id="gwrd" value="${esc(o.rd)}"></div></div>
+  <label for="gwlk">Link per caricare le clip <small style="display:inline">(solo per i capitani, non va pubblicato)</small></label><input id="gwlk" value="${esc(o.link)}" placeholder="https://www.dropbox.com/request/…">
+  <div class="hint">Consiglio: su Dropbox crea una <b>Richiesta di file</b>: chi carica non ha bisogno di un account e non serve il tuo numero. Chiedi di mettere il nome della squadra nel nome del file: la squadra la riconosco da solo.</div>
+  <div class="bar" style="margin:8px 0 0;gap:6px"><button class="btn p" data-gwopen="gwa">🎨 Grafica dell’anticipazione</button><button class="btn" id="gwmsg">📋 Copia il messaggio per i capitani</button>${planOk?"":'<button class="btn" id="gwplan">📅 Metti gli appuntamenti nel piano della Settimana</button>'}</div></div>
+ <div class="card"><b>2 · Le clip arrivate${n?" · "+n:""}</b><small>Aggiungi i video, controlla squadra e marcatore, se serve taglia inizio e fine, poi sorteggia l’ordine.</small>
+  <div class="bar" style="margin:6px 0 0;gap:6px"><label class="btn p" style="margin:0">+ Aggiungi le clip<input type="file" id="gwfi" accept="video/*" multiple hidden></label><button class="btn" id="gwdraw"${n<2?" disabled":""}>🎲 ${drawn?"Rifai il sorteggio":"Sorteggia l’ordine"}</button></div>
+  ${dup?'<div class="hint" style="color:#e0a84a">⚠ Ci sono due clip della stessa squadra: la regola è un gol per squadra.</div>':""}${n&&!drawn?'<div class="hint" style="color:#e0a84a">Ordine da sorteggiare (le storie escono nell’ordine del sorteggio).</div>':drawn&&w.at?`<div class="hint">Ordine sorteggiato il ${new Date(w.at).toLocaleString("it-IT",{weekday:"long",day:"numeric",month:"long",hour:"2-digit",minute:"2-digit"})}.</div>`:""}
+  <div class="gwl">${L.map(c=>{const sc=gwScorers(g,c.sq);return`<div class="gwc${c.id===GWS?" on":""}" data-gwsel="${c.id}"><img class="gwth" data-gwth="${c.id}" alt=""><span class="gwn">${c.o||"–"}</span><div class="gwf">${team(c)}<input data-gwk="n" data-id="${c.id}" list="gwml${c.id}" value="${esc(c.n||"")}" placeholder="Chi ha segnato (facoltativo)"><datalist id="gwml${c.id}">${sc.map(q=>`<option value="${esc(q)}">`).join("")}</datalist>
+   <small>${esc(c.fn||"clip")} · ${c.a||c.b?`da ${peTf(c.a||0,1)} a ${peTf(c.b||c.du||0,1)} · `:""}${Math.round(((c.b||c.du||0)-(c.a||0))*10)/10} s</small></div><button class="btn pbx" data-gwx="${c.id}" aria-label="Togli la clip">×</button></div>`}).join("")||'<div class="hint">Nessuna clip ancora.</div>'}</div></div>
+ <div class="card"><b>3 · ${gwCap(o.vd)}: le storie</b><small>Una storia per gol nell’ordine sorteggiato, più la copertina da mettere per prima.</small>
+  ${sel?`<div class="gwpv"><div><video id="gwpv" src="${gwUrl(sel.id)||""}" controls playsinline preload="metadata"></video><div class="bar" style="margin:6px 0 0;gap:6px"><button class="btn pbx" data-gwt="a">⏮ Inizio qui</button><button class="btn pbx" data-gwt="b">Fine qui ⏭</button><button class="btn pbx" data-gwt="r">↺ Tutta</button><button class="btn pbx" data-gwt="f">📸 Foto per la grafica</button></div></div><canvas id="gwsc" width="270" height="480" title="Anteprima della storia"></canvas></div>`:""}
+  <div class="bar" style="margin:8px 0 0;gap:6px"><button class="btn p" id="gwxa"${!n||GWX?" disabled":""}>⬇ Scarica copertina e storie</button><button class="btn" id="gwxc"${!n?" disabled":""}>⬇ Solo la copertina</button>${sel?`<button class="btn" id="gwx1"${GWX?" disabled":""}>⬇ Solo questa storia</button>`:""}</div><div class="hint" id="gwxs"></div>
+  <div class="hint">Su ogni storia aggiungi lo sticker <b>Sondaggio</b> nello spazio libero sotto la scritta: domanda <b>Giocata della settimana?</b>, opzioni <b>🔥 Voto questo</b> e <b>👀 Vedo gli altri</b>. <button class="btn pbx" data-gwcp="🔥 Voto questo">📋 🔥 Voto questo</button> <button class="btn pbx" data-gwcp="👀 Vedo gli altri">📋 👀 Vedo gli altri</button> Tip: salva le storie in evidenza “🔥 Giocata”.</div></div>
+ <div class="card"><b>4 · ${gwCap(o.rd)}: il vincitore</b><small>Apri ogni storia, tocca “Visualizzazioni” e scrivi quanti 🔥 ha preso.</small>
+  <div class="gwvl">${L.map(c=>`<label class="gwv"><span class="gwn">${c.o||"–"}</span><span>${esc(c.sq||"Squadra?")}${c.n?" · "+esc(c.n):""}</span><input type="number" min="0" data-gwv="${c.id}" value="${c.v==null?"":c.v}" placeholder="🔥"></label>`).join("")}</div>
+  <div id="gwwin">${gwWinH(R)}</div></div></div>`;
+ gwPaintThumbs();gwPrev()}
+function gwWinH(R){return`${R.tie.length?`<div class="hint" style="color:#e0a84a">Pari voti: scegli il vincitore ${R.tie.map(c=>`<label class="pechk" style="display:inline-flex;margin:0 8px"><input type="radio" name="gwwin" value="${c.id}"${R.win===c?" checked":""}> ${esc(c.sq)}</label>`).join("")} (di base vince chi era più in fondo nelle storie, visto da meno persone).</div>`:""}
+ ${R.win?`<div class="hint">🏆 Vince <b>${esc(R.win.n?R.win.n+" ("+R.win.sq+")":R.win.sq)}</b> con ${R.win.v} 🔥</div>`:""}<div class="bar" style="margin:8px 0 0"><button class="btn p" data-gwopen="gwr"${R.win?"":" disabled"}>🎨 Grafica del vincitore</button></div>`}
+/* ridisegno il pannello dopo l'evento (non durante: un campo che perde il fuoco non deve sparire mentre lo sta perdendo) */
+let GWRT=0;const gwRe=()=>{clearTimeout(GWRT);GWRT=setTimeout(gwUI,0)};
+function gwPaintThumbs(){$$("[data-gwth]").forEach(i=>{const d=gwTh(i.dataset.gwth);if(d&&i.src!==d)i.src=d})}
+/* anteprima della storia mentre guardi la clip */
+let GWPR=0;function gwPrev(){const v=$("#gwpv"),c=$("#gwsc");if(!v||!c)return;const g=gwG(),w=gwWr(g),cl=w.c.find(q=>q.id===GWS);if(!cl)return;const L=gwOrd(w);
+ const paint=()=>{const x=c.getContext("2d");gwStory(x,c.width,c.height,v.readyState>=2?v:null,v.videoWidth,v.videoHeight,Math.max(.5,v.currentTime-(cl.a||0)),cl,cl.o||"?",L.length,g)};
+ v.onloadeddata=()=>{if(cl.a&&Math.abs(v.currentTime-cl.a)>.2)v.currentTime=cl.a;paint()};v.onseeked=paint;v.ontimeupdate=()=>{if(cl.b&&v.currentTime>cl.b+.05&&!v.paused){v.pause();v.currentTime=cl.a||0}};v.onplay=()=>{const id=++GWPR;const f=()=>{if(id!==GWPR||v.paused)return;paint();requestAnimationFrame(f)};f()};
+ if(!gwUrl(cl.id))gwBlob(cl.id).then(b=>{if(b&&$("#gwpv")===v){v.src=gwUrl(cl.id)}});paint()}
+/* aggiunta delle clip: la squadra la cerco nel nome del file */
+function gwGuess(fn){const s=" "+String(fn||"").toLowerCase().replace(/\.[a-z0-9]+$/,"").replace(/[^a-z0-9]+/g," ")+" ",T=gwTeams();let best=null,bs=0;T.forEach(t=>{const tk=(typeof rvTk==="function"?rvTk(t):kHN(t).split(" ")).filter(q=>q.length>2);const m=tk.filter(q=>s.includes(" "+q)).length;if(m>bs){bs=m;best=t}});return best}
+async function gwAdd(files){const g=gwG(),w=gwW(g);let k=0;for(const f of files){if(!/^video\//.test(f.type)&&!/\.(mp4|mov|m4v|webm)$/i.test(f.name))continue;if(w.c.some(c=>c.fn===f.name&&c.sz===f.size))continue;
+  const id="c"+Date.now().toString(36)+(k++),c={id,fn:f.name,sz:f.size,sq:gwGuess(f.name)||"",n:"",a:0,b:0,du:0,o:null,v:null};GWV[id]={b:f,u:URL.createObjectURL(f)};await phIdb("put","gw|"+id,f);
+  try{const v=document.createElement("video");v.muted=true;v.preload="auto";v.src=GWV[id].u;await new Promise((ok,ko)=>{v.onloadeddata=ok;v.onerror=ko;setTimeout(ok,8000)});c.du=+(v.duration||0).toFixed(2);
+   await new Promise(r=>{v.onseeked=r;v.currentTime=Math.min(c.du*.5,c.du-.1);setTimeout(r,4000)});const d=gwShot(v);if(d){GWT[id]=d;phIdb("put","gwth|"+id,d)}}catch(e){console.warn("clip",e)}
+  w.c.push(c);GWS=id}
+ if(w.c.some(c=>c.o!=null))w.c.forEach(c=>{c.o=null});w.at=0;gwPrune();save();gwUI();if(k)toast(k===1?"Clip aggiunta":k+" clip aggiunte")}
+function gwDraw(){const g=gwG(),w=gwW(g),n=w.c.length;if(n<2)return;if(w.c.some(c=>c.v!=null&&c.v!=="")&&!confirm("Hai già scritto dei voti: rifaccio il sorteggio lo stesso?"))return;
+ const p=[...Array(n).keys()],r=new Uint32Array(n);crypto.getRandomValues(r);for(let i=n-1;i>0;i--){const j=r[i]%(i+1);[p[i],p[j]]=[p[j],p[i]]}w.c.forEach((c,i)=>{c.o=p[i]+1});w.at=Date.now();save();gwUI();toast("Ordine sorteggiato: "+gwOrd(w).map(c=>c.o+". "+(c.sq||"?")).join(" · "))}
+async function gwCopy(t){try{await navigator.clipboard.writeText(t);toast("Copiato")}catch(e){const a=document.createElement("textarea");a.value=t;document.body.append(a);a.select();try{document.execCommand("copy");toast("Copiato")}catch(q){prompt("Copia il testo:",t)}a.remove()}}
+function gwMsg(){const o=gwO(),g=gwG();return`Ciao capitani! 🔥 Torna la GIOCATA DELLA SETTIMANA (giornata ${g}).\n\nMandateci il gol più bello della vostra squadra: uno solo e solo con il video.\n⏰ Entro ${o.dl}\n📤 Caricatelo da qui: ${o.link||"[link]"}\n✍️ Nel nome del file scrivete la squadra e chi ha segnato.\n\n${gwCap(o.vd)} si vota nelle nostre storie Instagram, ${o.rd} il vincitore. Fate votare amici e tifosi! 💪`}
+$("#gw").addEventListener("click",e=>{const b=e.target.closest("button,[data-gwsel]");if(!b)return;const d=b.dataset,g=gwG(),w=gwW(g);
+ if(d.gwx){const c=w.c.find(q=>q.id===d.gwx);if(!c||!confirm("Tolgo la clip di “"+(c.sq||c.fn)+"”?"))return;w.c=w.c.filter(q=>q!==c);gwDel(c.id);if(c.o!=null)w.c.forEach(q=>{q.o=null});save();gwUI();return}
+ if(d.gwsel!=null&&!e.target.closest("select,input,button")){GWS=d.gwsel;gwUI();return}
+ if(d.gwopen){openG(d.gwopen,null);return}if(b.id==="gwmsg")return gwCopy(gwMsg());if(d.gwcp)return gwCopy(d.gwcp);
+ if(b.id==="gwplan"){S.tipi=S.tipi||[];[["gwa","Giocata della settimana · candidature",3,"Instagram (post + storia)","Grafica dell’anticipazione + messaggio ai capitani con il link"],["gwv","Giocata della settimana · si vota",6,"Instagram (storie)","Copertina + un gol per storia con lo sticker Sondaggio 🔥"],["gwr","Giocata della settimana · vincitore",0,"Instagram","Grafica del vincitore con i 🔥 di ogni gol"]].forEach(([id,nm,gg,c,dd])=>{if(!S.tipi.some(t=>t.id===id))S.tipi.push({id,n:nm,g:gg,c,d:dd})});save();if(typeof tipi==="function")tipi();if(typeof week==="function")week();gwUI();toast("Aggiunti al piano: giovedì, domenica e lunedì (li sposti da Tipi di content)");return}
+ if(b.id==="gwdraw")return gwDraw();if(b.id==="gwxa")return gwExport();if(b.id==="gwx1")return gwExport(GWS);
+ if(b.id==="gwxc"){gwCoverBlob(g).then(bl=>gwDl(bl,gwFn(g,0,null,"png")));return}
+ if(d.gwt){const v=$("#gwpv"),c=w.c.find(q=>q.id===GWS);if(!v||!c)return;const t=+v.currentTime.toFixed(2);if(d.gwt==="a"){c.a=t;if(c.b&&c.b<=t)c.b=0}else if(d.gwt==="b"){if(t<=(c.a||0)+.5)return toast("La fine deve venire dopo l’inizio");c.b=t}else if(d.gwt==="r"){c.a=0;c.b=0}else{const s=gwShot(v);if(s){GWT[c.id]=s;phIdb("put","gwth|"+c.id,s);toast("Foto per la grafica del vincitore salvata")}return}save();gwUI();return}});
+$("#gw").addEventListener("change",e=>{const t=e.target,g=gwG();if(t.id==="gwfi"){gwAdd([...t.files]);t.value="";return}if(t.id==="gwg"){S.gw={...(S.gw||{}),g:+t.value===S.gs?null:+t.value};GWS=null;save();gwUI();return}
+ if(["gwdl","gwvd","gwrd","gwlk"].includes(t.id)){S.gw={...(S.gw||{}),[{gwdl:"dl",gwvd:"vd",gwrd:"rd",gwlk:"link"}[t.id]]:t.value.trim()||(t.id==="gwlk"?"":GWD[{gwdl:"dl",gwvd:"vd",gwrd:"rd"}[t.id]])};save();gwRe();return}
+ if(t.name==="gwwin"){gwW(g).win=t.value;save();$("#gwwin").innerHTML=gwWinH(gwRank(gwW(g)));return}
+ const w=gwW(g);if(t.dataset.gwk){const c=w.c.find(q=>q.id===t.dataset.id);if(!c)return;c[t.dataset.gwk]=t.value.trim();save();gwRe();return}
+ if(t.dataset.gwv){const c=w.c.find(q=>q.id===t.dataset.gwv);if(!c)return;c.v=t.value===""?null:Math.max(0,Math.round(+t.value));save();const e2=$("#gwwin");if(e2)e2.innerHTML=gwWinH(gwRank(w))}});
+/* ---- collegamenti: piano della Settimana e Grafiche ---- */
+{const w0=wkSmart;wkSmart=function(t,di){if(/^gw[avr]$/.test(t.id))return'<div class="ws"><button class="btn wsb" data-gwgo="1">🔥 Apri la Giocata della settimana →</button></div>';return w0(t,di)}}
+$("#w").addEventListener("click",e=>{if(e.target.closest("[data-gwgo]")){e.preventDefault();go("gw")}});
+$("#rsw").insertAdjacentHTML("beforebegin",`<div id="gww" class="card" style="display:none"><b>Giocata della settimana</b><small id="gwwh"></small><div id="gwwr"><label for="gwrr">Regole (una per riga: Testo;Sottotesto · se vuoto le scrivo io)</label><textarea id="gwrr" rows="4"></textarea></div><div class="bar" style="margin:8px 0 0"><button class="btn" id="gwwgo">🔥 Apri la sezione Giocata della settimana</button></div></div>`);
+function gwwUI(){const el=$("#gww");if(!el||el.style.display==="none")return;const T=BS(gT()),g=gwG(),w=gwWr(g),R=gwRank(w);$("#gwwr").style.display=T==="gwa"?"":"none";const ta=$("#gwrr");if(document.activeElement!==ta){ta.value=(S.gw||{}).rr||"";ta.placeholder=gwRules().map(r=>r.e+" "+r.t+";"+r.s).join("\n")}
+ $("#gwwh").textContent=T==="gwa"?`Le regole del gioco per la giornata ${g}: scadenza ${gwO().dl}, si vota ${gwO().vd}, vincitore ${gwO().rd} (li cambi nella sezione).`:R.win?`Giornata ${g}: vince ${R.win.n?R.win.n+" ("+R.win.sq+")":R.win.sq} con ${R.win.v} 🔥 · ${w.c.length} gol in gara.`:`Giornata ${g}: scrivi prima i 🔥 di ogni storia nella sezione.`;
+ const gs=$("#gs"),want=T==="gwa"?`Giornata ${g} · si vota ${gwO().vd}`:`Giornata ${g}`;if(/^Giornata \d+( · .*)?$/.test(gs.value.trim())&&gs.value!==want)gs.value=want}
+$("#gww").addEventListener("change",e=>{if(e.target.id==="gwrr"){S.gw={...(S.gw||{}),rr:e.target.value};save();draw();cm()}});$("#gww").addEventListener("input",e=>{if(e.target.id==="gwrr"){S.gw={...(S.gw||{}),rr:e.target.value};draw()}});
+$("#gwwgo").onclick=()=>go("gw");
+function gwCapt(T){const o=gwO(),g=gwG(),w=gwWr(g),R=gwRank(w);if(T==="gwa")return`🔥 Arriva la GIOCATA DELLA SETTIMANA!\n\nOgni squadra candida il suo gol più bello della giornata ${g}: lo manda il capitano entro ${o.dl}.\n📲 ${gwCap(o.vd)} tutti i gol nelle nostre storie: votate con 🔥 nel sondaggio, anche più di uno.\n🏆 ${gwCap(o.rd)} il vincitore!\n\nCapitani, il link ve lo mandiamo in privato. Chi sarà? 👀`;
+ if(!R.win)return"🔥 Giocata della settimana: ecco il vincitore!";return`🏆 La GIOCATA DELLA SETTIMANA della giornata ${g} è di ${R.win.n?R.win.n+" ("+R.win.sq+")":R.win.sq}, con ${R.win.v} 🔥!\n\nI voti:\n`+R.c.map((c,i)=>`${i+1}. ${c.n?c.n+" · ":""}${c.sq} — ${c.v} 🔥`).join("\n")+`\n\nGrazie a tutti per aver votato! Capitani, preparate già il prossimo gol 💪`}
 [kApply,TBU,renderK,week,tipi,sty,()=>renderGt(),renderTW,()=>sync(true),renderB,renderGal,renderCP,draw,cm].forEach(f=>{try{f()}catch(e){console.error("avvio:",e)}});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
@@ -3787,22 +4090,42 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  const why=e=>/operation-not-allowed|admin-restricted/.test(e&&e.code||"")?"Attiva l’accesso Anonimo in Firebase (Authentication › Metodo di accesso).":/permission/.test(e&&e.code||"")?"Permesso negato: controlla le regole di Firestore.":/offline|unavailable/.test((e&&e.code||"")+(e&&e.message||""))?"Offline: lavoro sul dispositivo e sincronizzo appena torna la rete.":(e&&e.message)||"errore";
  async function login(u,p){await authOk();const qs=await getDocs(query(collection(db,"a7p"),where("u","==",u)));const d=qs.docs.find(x=>x.data().t==="test"||x.data().t==="ext");if(!d||d.data().ph!==await sha(p))throw"Nome utente o password errati.";const v=d.data();return v.t==="ext"?{pid:"main",role:"ext",u,n:v.n,team:v.team,x:d.id}:{pid:d.id,role:"test",u,n:v.n}}
  if(!SES){window.CLD={login};authOk().then(()=>cStat("Pronto per l’accesso","ok"),e=>cStat(why(e),"e"));return}
- const pid=SES.pid,EXT=SES.role==="ext";let lastQ={},lastR=null,lastJ=null,lastLg={},lastGal=new Set(),tmr=null,gtmr=null,pend=null,ready=false,mute=0,subs=0;
+ const pid=SES.pid,EXT=SES.role==="ext";let lastN=1,lastV="",lastQ={},lastR=null,lastJ=null,lastLg={},lastGal=new Set(),tmr=null,gtmr=null,pend=null,ready=false,mute=0,subs=0;
+ /* stato a pezzi: un documento del cloud tiene al massimo 1 MB, quindi divido il JSON in più documenti scritti tutti insieme (stessa versione v) */
+ const SPn=(id,i)=>doc(db,"a7p",id,"d","state_"+i),PART=300000,SMAX=2e6;
+ const splitJ=j=>{const a=[];let i=0;while(i<j.length){let e=Math.min(j.length,i+PART);if(e<j.length){const c=j.charCodeAt(e-1);if(c>=0xD800&&c<=0xDBFF)e--}a.push(j.slice(i,e));i=e}return a.length?a:[""]};
+ async function fullSD(d,id=pid){for(let t=0;t<5;t++){if(!d||!(d.n>1))return d;const ps=await Promise.all([...Array(d.n-1)].map((_,i)=>getDoc(SPn(id,i+1))));if(ps.every(p=>p.exists()&&p.data().v===d.v))return{...d,j:d.j+ps.map(p=>p.data().j).join("")};
+   await new Promise(r=>setTimeout(r,800));const s2=await getDoc(SD(id));d=s2.exists()?s2.data():null}return null}
+ /* unione a tre vie (base = ultimo stato sincronizzato): tengo le modifiche di tutti e due i dispositivi; elenchi con id (puntate, clip…) uniti elemento per elemento */
+ const isO=v=>!!v&&typeof v==="object"&&!Array.isArray(v),same=(a,b)=>a===b||JSON.stringify(a)===JSON.stringify(b),idA=a=>Array.isArray(a)&&a.every(x=>isO(x)&&x.id!=null);
+ function m3(B,L,Rr,pl){if(same(L,Rr)||same(L,B))return Rr;if(same(Rr,B))return L;
+  if(isO(L)&&isO(Rr)&&!(L.id!=null&&Rr.id!=null&&L.id!==Rr.id)){const o={},b=isO(B)?B:{};new Set([...Object.keys(Rr),...Object.keys(L)]).forEach(k=>{const v=m3(b[k],L[k],Rr[k],pl);if(v!==undefined)o[k]=v});return o}
+  if(idA(L)&&idA(Rr)){const Bm=new Map((idA(B)?B:[]).map(x=>[x.id,x])),Lm=new Map(L.map(x=>[x.id,x])),Rm=new Map(Rr.map(x=>[x.id,x])),out=[],seen=new Set();
+   [...Rr,...L].forEach(x=>{if(seen.has(x.id))return;seen.add(x.id);const v=m3(Bm.get(x.id),Lm.get(x.id),Rm.get(x.id),pl);if(v!==undefined)out.push(v)});return out}
+  return pl?L:Rr}
+ /* senza base (prima volta con questa versione): prendo il cloud e aggiungo solo quello che c'è soltanto qui */
+ function mU(L,Rr){if(Rr===undefined)return L;if(L===undefined)return Rr;if(isO(L)&&isO(Rr)&&!(L.id!=null&&Rr.id!=null&&L.id!==Rr.id)){const o={...Rr};Object.keys(L).forEach(k=>{o[k]=k in Rr?mU(L[k],Rr[k]):L[k]});return o}
+  if(idA(L)&&idA(Rr)){const ids=new Set(Rr.map(x=>x.id));return[...Rr.map(x=>{const l=L.find(y=>y.id===x.id);return l?mU(l,x):x}),...L.filter(x=>!ids.has(x.id))]}return Rr}
+ const BK="cl|base|"+pid,setBase=j=>{try{phIdb("put",BK,j)}catch(e){}};
+ /* copie di sicurezza dei dati di questo dispositivo, prima che il cloud li cambi (le ultime 10) */
+ async function snap(w,j){try{await phIdb("put","bk|"+pid+"|"+Date.now(),JSON.stringify({at:Date.now(),w,j:j||J()}));const ks=((await phIdb("keys"))||[]).filter(x=>typeof x==="string"&&x.startsWith("bk|"+pid+"|")).sort();for(const x of ks.slice(0,-10))phIdb("del",x)}catch(e){}}
+ const applyObj=(M,rj)=>{const tq=typeof gqOut==="function"&&gqOut(),raw=S.raw,gqs=S.gqs;S={...DEF(),...M,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};if(typeof gqMig==="function")gqMig();if(tq)gqIn();lastR=rj;lastJ=rj;localSave()};
  const localSave=()=>{mute=1;save();mute=0},localG=()=>{try{localStorage.setItem(LK("a7g"),JSON.stringify(G))}catch(e){}};
  const typing=()=>{const a=document.activeElement;return!!(a&&/INPUT|TEXTAREA|SELECT/.test(a.tagName)&&a.closest("main"))};
  function reRender(){try{PC={};kApply();TBU();renderK();week();tipi();sty();renderGt();renderTW();sync(false);renderCP();renderGal();if($("#l").classList.contains("on"))renderLogos();draw();if(typeof poAll==="function")poAll();if(typeof peUI==="function")peUI()}catch(e){console.warn(e)}}
- function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const tq=typeof gqOut==="function"&&gqOut(),raw=S.raw,gqs=S.gqs;S={...DEF(),...o,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};if(typeof gqMig==="function")gqMig();if(tq)gqIn();lastR=d.j;lastJ=J();pend=null;localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
+ function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const tq=typeof gqOut==="function"&&gqOut(),raw=S.raw,gqs=S.gqs;S={...DEF(),...o,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};if(typeof gqMig==="function")gqMig();if(tq)gqIn();lastR=d.j;lastJ=J();pend=null;if(d.n)lastN=d.n;if(d.v)lastV=d.v;setBase(d.j);localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
  function applyLogos(docs){const r={};docs.forEach(x=>{const d=x.data();r[d.k]=d.d});S.raw=r;lastLg={...r};PC={};localSave()}
  function applyGal(docs){const R=docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.o||0)-(b.o||0)).map(g=>({id:g.id,n:g.n,d:g.d})),ri=new Set(R.map(g=>g.id));lastGal=new Set(ri);G=[...R,...G.filter(g=>(g.d||"").length>1e6&&!ri.has(g.id))];localG();renderGal()}
  async function commitOps(ops){let b=writeBatch(db),n=0,sz=0;for(const[t,r,d]of ops){const z=d?JSON.stringify(d).length:60;if(n&&(n>=450||sz+z>7e6)){await b.commit();b=writeBatch(db);n=0;sz=0}if(t==="d")b.delete(r);else b.set(r,d);n++;sz+=z}if(n)await b.commit()}
- async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),q=v=>JSON.stringify(v);Object.keys({...Rm,...B}).forEach(k=>{if(q(L[k])===q(B[k])&&q(Rm[k])!==q(L[k])){if(Rm[k]===undefined)delete S[k];else S[k]=Rm[k];ch=1}});lastR=pend.j;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch&&typeof gqMig==="function")gqMig();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
-  if(j!==lastJ&&EXT)lastJ=j;if(j!==lastJ){if(j.length>950000){cStat("Dati troppo grandi per il cloud: elimina qualche foto o dato vecchio","e");return}ops.push(["s",SD(pid),{j,at,by:DEV}]);lastJ=j;lastR=j}
+ async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),M=m3(B,L,Rm,true);if(!same(M,L)){const raw=S.raw,gqs=S.gqs;S={...DEF(),...M,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};ch=1}lastR=pend.j;if(pend.n)lastN=pend.n;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch&&typeof gqMig==="function")gqMig();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
+  if(j!==lastJ&&EXT)lastJ=j;if(j!==lastJ){if(j.length>SMAX){cStat("Dati troppo grandi per il cloud ("+Math.round(j.length/1e6*10)/10+" milioni di caratteri): elimina qualche puntata o dato vecchio","e");return}const Pp=splitJ(j),v=at.toString(36)+DEV;
+   ops.push(["s",SD(pid),{j:Pp[0],n:Pp.length,v,at,by:DEV}]);for(let i=1;i<Pp.length;i++)ops.push(["s",SPn(pid,i),{j:Pp[i],v}]);for(let i=Pp.length;i<lastN;i++)ops.push(["d",SPn(pid,i)]);lastN=Pp.length;lastV=v;lastJ=j;lastR=j}
   const own=k=>!EXT||k.startsWith("fn|"+SES.team+"|")||k.startsWith("bg|"+SES.team+"|");
   Object.keys(raw).forEach(k=>{if(own(k)&&lastLg[k]!==raw[k]){ops.push(["s",doc(LG(pid),hk(k)),{k,d:raw[k]}]);lastLg[k]=raw[k]}});
   {const Q=(typeof canonS==="function"?canonS():S).gqs||{};Object.keys(Q).forEach(t=>{if(!t||(EXT&&t!==SES.team))return;const qj=JSON.stringify(Q[t]);if(lastQ[t]!==qj){ops.push(["s",doc(QC(pid),hk("q|"+t)),{team:t,j:qj,at,by:DEV}]);lastQ[t]=qj}})}
   Object.keys(lastLg).forEach(k=>{if(own(k)&&!(k in raw)){ops.push(["d",doc(LG(pid),hk(k))]);delete lastLg[k]}});
   if(!ops.length)return cStat("Sincronizzato · "+hm(),"ok");localStorage.setItem(LK("a7at"),at);pend=null;cStat(navigator.onLine?"Salvataggio nel cloud…":"Offline: salvo appena torna la rete","w");
-  try{await commitOps(ops);cStat("Salvato nel cloud · "+hm(),"ok")}catch(e){lastJ=null;lastLg={};lastQ={};cStat("Errore di salvataggio: "+why(e),"e")}}
+  try{await commitOps(ops);if(lastJ)setBase(lastJ);cStat("Salvato nel cloud · "+hm(),"ok")}catch(e){lastJ=null;lastLg={};lastQ={};cStat("Errore di salvataggio: "+why(e),"e")}}
  async function pushGal(){gtmr=null;if(!ready)return;const ids=new Set(G.map(g=>g.id)),ops=[];let big=0;
   G.forEach((g,i)=>{if(!lastGal.has(g.id)){if((g.d||"").length>1e6){big++;return}ops.push(["s",doc(GL(pid),g.id),{n:g.n,d:g.d,o:Date.now()+i}]);lastGal.add(g.id)}});
   [...lastGal].forEach(id=>{if(!ids.has(id)){ops.push(["d",doc(GL(pid),id)]);lastGal.delete(id)}});
@@ -3818,32 +4141,41 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  async function pushAll(){lastJ=null;lastLg={};lastQ={};lastGal=new Set();ready=true;await push();await pushGal()}
  async function start(){try{cStat("Collegamento al cloud…","w");await authOk();
    const pd=await getDoc(P(pid));if(!pd.exists()){if(pid!=="main"){alert("Questo profilo di prova è stato eliminato.");return setSes(null)}await setDoc(P("main"),{n:"Principale",t:"main",c:Date.now()})}
-   const sd=await getDoc(SD(pid)),la=+localStorage.getItem(LK("a7at"))||0,first=!localStorage.getItem(LK("a7sync")),has=!!((S.cl||[]).length||Object.keys(S.raw||{}).length||Object.keys(S.gv||{}).length||G.length);
-   let up=!sd.exists();
-   if(!up&&first&&has&&J()!==sd.data().j)up=confirm("Nel cloud c’è già il profilo condiviso, ma questo dispositivo ha dati suoi mai sincronizzati.\n\nOK = carica nel cloud i dati di QUESTO dispositivo (sostituiscono quelli condivisi)\nAnnulla = usa i dati del cloud anche qui");
-   else if(!up&&!first&&la>(sd.data().at||0))up=true;
-   if(EXT)up=false;
+   const sd0=await getDoc(SD(pid)),sd=sd0.exists()?await fullSD(sd0.data()):null;if(sd0.exists()&&!sd)throw new Error("unavailable: dati del cloud incompleti, riprovo");if(sd&&sd.n)lastN=sd.n;
+   const la=+localStorage.getItem(LK("a7at"))||0,first=!localStorage.getItem(LK("a7sync")),has=!!((S.cl||[]).length||Object.keys(S.raw||{}).length||Object.keys(S.gv||{}).length||G.length),base=EXT?null:await phIdb("get",BK),L=J();
+   let mode=!sd?(EXT?"cloud":"up"):EXT||L===sd.j?"cloud":first&&has&&!base?(confirm("Nel cloud c’è già il profilo condiviso, ma questo dispositivo ha dati suoi mai sincronizzati.\n\nOK = carica nel cloud i dati di QUESTO dispositivo (sostituiscono quelli condivisi)\nAnnulla = usa i dati del cloud anche qui (i dati di questo dispositivo restano in una copia di sicurezza)")?"up":"cloud"):"merge";
    const qd=(await getDocs(QC(pid))).docs;
-   if(up){await pushAll();toast(sd.exists()?"Dati di questo dispositivo caricati nel cloud":"Profilo condiviso creato con i dati di questo dispositivo")}
-   else{applyState(sd.data());applyQ(qd);applyLogos((await getDocs(LG(pid))).docs);applyGal((await getDocs(GL(pid))).docs);reRender();ready=true}
+   if(mode==="up"){if(sd)await snap("prima di sostituire i dati del cloud",sd.j);await pushAll();toast(sd?"Dati di questo dispositivo caricati nel cloud":"Profilo condiviso creato con i dati di questo dispositivo")}
+   else{let M=null;if(mode==="merge"){const Lo=JSON.parse(L),Ro=JSON.parse(sd.j);M=base?m3(JSON.parse(base),Lo,Ro,la>(sd.at||0)):mU(Lo,Ro);if(same(M,Ro))M=null}
+    if(mode!=="cloud"||L!==sd.j)await snap(M?"prima di unire i dati con il cloud":"prima di prendere i dati del cloud",L);
+    if(M)applyObj(M,sd.j);else applyState(sd);applyQ(qd);applyLogos((await getDocs(LG(pid))).docs);applyGal((await getDocs(GL(pid))).docs);reRender();ready=true;
+    if(M){await push();toast("Ho unito i dati di questo dispositivo con quelli del cloud")}}
    if(Object.keys(S.gqs||{}).some(t=>t&&!(t in lastQ)&&(!EXT||t===SES.team)))dirty();
    localStorage.setItem(LK("a7sync"),"1");cStat("Sincronizzato · "+hm(),"ok");if(!subs)listen()}
   catch(e){cStat(why(e),"e");setTimeout(start,15000)}}
  function applyQ(docs){docs.forEach(x=>{const d=x.data();if(!d||!d.team||d.j===lastQ[d.team])return;let b;try{b=JSON.parse(d.j)}catch(e){return}if(typeof gqRemote==="function"&&gqRemote(d.team,b,!!tmr||typing()))lastQ[d.team]=d.j})}
  function listen(){subs=1;const er=e=>cStat(why(e),"e");
   onSnapshot(QC(pid),qs=>{if(qs.metadata.hasPendingWrites)return;const ch=qs.docChanges().filter(c=>c.type!=="removed").map(c=>c.doc);if(ch.length){applyQ(ch);localSave()}},er);
-  onSnapshot(SD(pid),s=>{if(!s.exists()||s.metadata.hasPendingWrites)return;const d=s.data();if(d.j===lastR||d.j===lastJ)return;if(tmr||typing()){pend=d;return}applyState(d);if(d.by!==DEV)toast("Aggiornato da un altro dispositivo")},er);
+  onSnapshot(SD(pid),async s=>{if(!s.exists()||s.metadata.hasPendingWrites)return;let d=s.data();if(d.v&&d.v===lastV)return;if(d.n>1){d=await fullSD(d);if(!d)return}if(d.j===lastR||d.j===lastJ)return;if(tmr||typing()){pend=d;return}applyState(d);if(d.by!==DEV)toast("Aggiornato da un altro dispositivo")},er);
   onSnapshot(LG(pid),qs=>{if(qs.metadata.hasPendingWrites)return;let ch=0;qs.docChanges().forEach(c=>{const d=c.doc.data();if(c.type==="removed"){if(d.k in S.raw){delete S.raw[d.k];ch=1}delete lastLg[d.k]}else{if(S.raw[d.k]!==d.d){S.raw[d.k]=d.d;ch=1}lastLg[d.k]=d.d}});if(ch){PC={};localSave();if($("#l").classList.contains("on"))renderLogos();draw()}},er);
   onSnapshot(GL(pid),qs=>{if(qs.metadata.hasPendingWrites||gtmr)return;if(qs.docs.map(x=>x.id).sort().join()!==[...lastGal].sort().join())applyGal(qs.docs)},er)}
  /* ---- pannello profilo / admin ---- */
  async function panel(c){const A=SES.role==="admin";
   c.innerHTML=ADM_HEAD(A?"Profili · admin":"Profilo")+`<p class="hint">Aperto: <b>${esc(EXT?"Social media esterno · "+SES.n+" ("+(SES.team||"")+")":pid==="main"?"Profilo condiviso (principale)":"Prova · "+SES.n)}</b><br><span id="ast">${esc(CST[0])}</span></p>`+
-  (A?`<div id="apl" class="hint">Carico i profili…</div><div class="card" style="margin-top:12px"><b>+ Nuovo profilo</b><div class="g3" style="grid-template-columns:1fr 1fr"><div><label for="atp">Tipo</label><select id="atp"><option value="test">Profilo di prova (copia del condiviso)</option><option value="ext">Social media esterno (solo Grafiche squadra)</option></select></div><div id="atw" style="display:none"><label for="atm">Squadra</label><select id="atm">${S.cl.map(e=>`<option>${esc(e.n)}</option>`).join("")}</select></div></div><small id="ath">Parte da una copia del profilo condiviso (dati, loghi, preset, calendario; le grafiche salvate no). Chi entra con questo utente lavora solo sulla copia.</small><div class="g3"><div><label>Nome</label><input id="anm" placeholder="Es. Prova Marco"></div><div><label>Utente</label><input id="anu" autocapitalize="none" spellcheck="false"></div><div><label>Password</label><input id="anp"></div></div><div class="bar" style="margin:10px 0 0"><button class="btn p" data-ac="1">Crea profilo</button><span class="hint" id="anm2" style="margin:0"></span></div></div>`:"")+ADM_FOOT();
-  if(A)listP()}
+  (A?`<div id="apl" class="hint">Carico i profili…</div><div class="card" style="margin-top:12px"><b>+ Nuovo profilo</b><div class="g3" style="grid-template-columns:1fr 1fr"><div><label for="atp">Tipo</label><select id="atp"><option value="test">Profilo di prova (copia del condiviso)</option><option value="ext">Social media esterno (solo Grafiche squadra)</option></select></div><div id="atw" style="display:none"><label for="atm">Squadra</label><select id="atm">${S.cl.map(e=>`<option>${esc(e.n)}</option>`).join("")}</select></div></div><small id="ath">Parte da una copia del profilo condiviso (dati, loghi, preset, calendario; le grafiche salvate no). Chi entra con questo utente lavora solo sulla copia.</small><div class="g3"><div><label>Nome</label><input id="anm" placeholder="Es. Prova Marco"></div><div><label>Utente</label><input id="anu" autocapitalize="none" spellcheck="false"></div><div><label>Password</label><input id="anp"></div></div><div class="bar" style="margin:10px 0 0"><button class="btn p" data-ac="1">Crea profilo</button><span class="hint" id="anm2" style="margin:0"></span></div></div>`:"")+(EXT?"":`<div class="card" style="margin-top:12px"><b>Copie di sicurezza di questo dispositivo</b><small>Le faccio da solo ogni volta che il cloud cambia i dati di questo computer. Se manca qualcosa (una puntata, una grafica…), “Recupera ciò che manca” lo rimette senza togliere niente di quello che c’è ora.</small><div id="abk" class="hint">Carico…</div></div>`)+ADM_FOOT();
+  if(A)listP();if(!EXT)bkList()}
+ async function bkList(){const el=$("#abk");if(!el)return;const ks=((await phIdb("keys"))||[]).filter(x=>typeof x==="string"&&x.startsWith("bk|"+pid+"|")).sort().reverse();if(!ks.length){el.textContent="Nessuna copia ancora.";return}
+  const R=[];for(const k of ks){try{const o=JSON.parse(await phIdb("get",k));const d=JSON.parse(o.j),eps=(d.pod&&d.pod.eps||[]).length;R.push(`<div class="row" style="padding:6px 0;gap:6px;flex-wrap:wrap"><span style="flex:1;min-width:200px"><b>${new Date(o.at).toLocaleString("it-IT",{weekday:"short",day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})}</b><br><small>${esc(o.w||"")} · ${eps} ${eps===1?"puntata salvata":"puntate salvate"} · ${Math.round(o.j.length/1024)} KB</small></span><button class="btn pbx" data-bku="${esc(k)}">➕ Recupera ciò che manca</button><button class="btn pbx" data-bkr="${esc(k)}">↺ Ripristina tutto</button><button class="btn pbx" data-bkd="${esc(k)}" title="Scarica il file">⬇</button></div>`)}catch(e){}}
+  el.innerHTML=R.join("")||"Nessuna copia leggibile."}
+ $("#adm").addEventListener("click",async e=>{const t=e.target.closest("[data-bku],[data-bkr],[data-bkd]");if(!t)return;const d=t.dataset,k=d.bku||d.bkr||d.bkd;let o;try{o=JSON.parse(await phIdb("get",k))}catch(x){return toast("Copia non leggibile")}
+  if(d.bkd){const a=document.createElement("a");a.href=URL.createObjectURL(new Blob([o.j],{type:"application/json"}));a.download="copia_sicurezza_"+new Date(o.at).toISOString().slice(0,16).replace(/[:T]/g,"-")+".json";a.click();return}
+  const B=JSON.parse(o.j),C=JSON.parse(J());if(d.bkr&&!confirm("Rimetto TUTTI i dati com’erano in questa copia? Quello che è stato fatto dopo (anche sugli altri dispositivi) va perso. Prima faccio una copia di sicurezza di adesso."))return;
+  await snap(d.bku?"prima del recupero da una copia":"prima del ripristino di una copia");const M=d.bku?mU(B,C):B;if(same(M,C)){toast("Non manca niente: i dati di adesso contengono già tutto quello della copia");return}
+  const raw=S.raw,gqs=S.gqs;S={...DEF(),...M,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};if(typeof gqMig==="function")gqMig();save();reRender();toast(d.bku?"Recuperato quello che mancava: lo salvo nel cloud":"Copia ripristinata: la salvo nel cloud");bkList()});
  async function listP(){const el=$("#apl");if(!el)return;try{await authOk();const ps=(await getDocs(collection(db,"a7p"))).docs.map(d=>({id:d.id,...d.data()})).sort((a,b)=>a.t==="main"?-1:b.t==="main"?1:(a.c||0)-(b.c||0));
    el.innerHTML=ps.map(p=>`<div class="row" style="padding:8px 0"><span><b>${esc(p.t==="main"?"Profilo condiviso":p.n||p.id)}</b>${p.id===pid?' <span style="color:#4ade80">· aperto</span>':""}<br><small>${p.t==="main"?"Principale · utente admin · lo vedono tutti i dispositivi":p.t==="ext"?"Social media esterno · "+esc(p.team||"")+" · utente "+esc(p.u||"")+" · solo Grafiche squadra":"Prova · utente "+esc(p.u||"")+" · creato "+new Date(p.c||0).toLocaleDateString("it-IT")}</small></span>${p.id!==pid&&p.t!=="ext"?`<button class="btn pbx" data-ao="${p.id}" data-an="${esc(p.n||"")}">Apri</button>`:""}${p.t==="ext"?`<button class="btn pbx" data-ad="${p.id}" data-ax2="1">Elimina</button>`:""}${p.t==="test"?`<button class="btn pbx" data-ar="${p.id}">Ricopia dal condiviso</button>${p.id!==pid?`<button class="btn pbx" data-ad="${p.id}">Elimina</button>`:""}`:""}</div>`).join("")}catch(e){el.textContent="Non riesco a leggere i profili: "+why(e)}}
- async function wipe(id,all){const b=writeBatch(db);for(const c of[LG(id),GL(id)])(await getDocs(c)).forEach(d=>b.delete(d.ref));b.delete(SD(id));if(all)b.delete(P(id));await b.commit()}
- async function copyMain(dst){if(pid==="main")await flush();const s=await getDoc(SD("main")),ops=[];if(s.exists())ops.push(["s",SD(dst),{...s.data(),at:Date.now(),by:"copia"}]);(await getDocs(LG("main"))).forEach(d=>ops.push(["s",doc(LG(dst),d.id),d.data()]));await commitOps(ops)}
+ async function wipe(id,all){const b=writeBatch(db);for(const c of[LG(id),GL(id)])(await getDocs(c)).forEach(d=>b.delete(d.ref));{const s0=await getDoc(SD(id)),n0=s0.exists()?s0.data().n||1:1;for(let i=1;i<n0;i++)b.delete(SPn(id,i))}b.delete(SD(id));if(all)b.delete(P(id));await b.commit()}
+ async function copyMain(dst){if(pid==="main")await flush();const s=await getDoc(SD("main")),ops=[];if(s.exists()){const f=await fullSD(s.data(),"main");if(f){const Pp=splitJ(f.j),v=Date.now().toString(36)+"c";ops.push(["s",SD(dst),{j:Pp[0],n:Pp.length,v,at:Date.now(),by:"copia"}]);for(let i=1;i<Pp.length;i++)ops.push(["s",SPn(dst,i),{j:Pp[i],v}])}}(await getDocs(LG("main"))).forEach(d=>ops.push(["s",doc(LG(dst),d.id),d.data()]));await commitOps(ops)}
  $("#adm").addEventListener("change",e=>{if(e.target.id!=="atp")return;const x=e.target.value==="ext";$("#atw").style.display=x?"":"none";$("#ath").textContent=x?"Chi entra con questo utente vede solo Grafiche squadra, sempre della squadra scelta, con i dati e i loghi del profilo condiviso. Non può modificare classifica, loghi, Best of né le altre sezioni.":"Parte da una copia del profilo condiviso (dati, loghi, preset, calendario; le grafiche salvate no). Chi entra con questo utente lavora solo sulla copia."});
  $("#adm").addEventListener("click",async e=>{const t=e.target.closest("[data-ao],[data-ar],[data-ad],[data-ac]");if(!t||SES.role!=="admin")return;const d=t.dataset,m=$("#anm2");
   try{if(d.ao)return setSes(d.ao==="main"?{pid:"main",role:"admin",u:ADMIN.u,n:"Principale"}:{pid:d.ao,role:"admin",u:ADMIN.u,n:d.an});
