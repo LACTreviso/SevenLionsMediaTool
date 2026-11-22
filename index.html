@@ -335,6 +335,10 @@ html{scroll-padding-top:calc(var(--navh,0px) + 8px)}
 .gwpv{display:grid;grid-template-columns:1fr 160px;gap:10px;align-items:start;margin-top:8px}.gwpv video{width:100%;max-height:300px;background:#000;border-radius:10px}.gwpv canvas{width:160px;height:284px;border-radius:10px;background:#000}
 .gwvl{display:flex;flex-direction:column;gap:6px;margin-top:8px}.gwv{display:flex;align-items:center;gap:10px;margin:0;color:var(--fg)}.gwv span:nth-child(2){flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.gwv input{width:90px;margin:0;text-align:center}
 @media (max-width:560px){#gw .gwst{grid-template-columns:1fr}.gwf{grid-template-columns:1fr}.gwpv{grid-template-columns:1fr 120px}.gwpv canvas{width:120px;height:213px}}
+/* modifica delle grafiche salvate */
+.gi .gie{left:2px;right:auto;font-size:12px}
+.gedb{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;margin:8px 0;padding:8px 12px;border:1px solid var(--blue,#2f7bff);border-radius:12px;background:rgba(47,123,255,.1)}
+.gedb>span{flex:1;min-width:200px}.gedb small{color:var(--mut,#8892a6)}
 /* ---- accesso, profili, cloud ---- */
 #lgn{position:fixed;inset:0;z-index:200;background:var(--bg);display:none;align-items:center;justify-content:center;padding:16px}
 #lgn.on{display:flex}
@@ -1050,7 +1054,7 @@ const saveG=()=>{const cl=!!(window.CLD&&CLD.gal);if(cl)CLD.gal();try{localStora
 function renderGal(){const h=G.length?G.map(g=>`<div class="gi"><img src="${g.d}" title="${esc(g.n)}" data-ga="${g.id}"><button class="btn" data-gx="${g.id}">×</button></div>`).join(""):'<span class="hint">Nessuna grafica: usa “Aggiungi grafica al Best of”.</span>';
  $$(".gal").forEach(e=>e.innerHTML='<div class="hint">Le mie grafiche (clic per aggiungerla al montaggio Best of)</div><div class="bar" style="gap:8px">'+h+'</div>')}
 $("#sg").onclick=()=>{EXP=1;draw();const c=CV,k=Math.min(1,1080/Math.max(c.width,c.height)),t=document.createElement("canvas");t.width=Math.round(c.width*k);t.height=Math.round(c.height*k);t.getContext("2d").drawImage(c,0,0,t.width,t.height);EXP=0;draw();
- const gn=$("#gh").value.replace("|"," "),gd=t.toDataURL("image/jpeg",.85);G.push({id:nid(),n:gn,d:gd});if(!saveG())G.pop();renderGal();const gi=new Image();gi.onload=()=>{addC({k:"g",n:gn,img:gi,d:3,fx:"zi"});const bb=$("#sg");bb.textContent="✓ Aggiunta al Best of";setTimeout(()=>bb.textContent="Aggiungi grafica al Best of",1800)};gi.src=gd};
+ const gn=$("#gh").value.replace("|"," "),gd=t.toDataURL("image/jpeg",.85);G.push({id:nid(),n:gn,d:gd,s:gSnapS()});if(!saveG())G.pop();renderGal();const gi=new Image();gi.onload=()=>{addC({k:"g",n:gn,img:gi,d:3,fx:"zi"});const bb=$("#sg");bb.textContent="✓ Aggiunta al Best of";setTimeout(()=>bb.textContent="Aggiungi grafica al Best of",1800)};gi.src=gd};
 document.addEventListener("click",e=>{const a=e.target.dataset.ga,x=e.target.dataset.gx;if(a)addG(a);if(x){G=G.filter(g=>g.id!==x);saveG();renderGal()}});
 function renderCP(){$$("#pr .cp").forEach(b=>b.remove());(S.cp||[]).forEach((p,i)=>{const b=document.createElement("button");b.className="btn cp";b.textContent=p.n;b.title="Tasto destro per eliminare";b.onclick=()=>{prApply(p);sty();save();draw();cm()};b.oncontextmenu=e=>{e.preventDefault();S.cp.splice(i,1);save();renderCP()};$("#pr").append(b)})}
 $("#sp").onclick=()=>{const n=prompt("Nome del preset?");if(n){(S.cp=S.cp||[]).push({n,v:[S.sty.bg,S.sty.ac,S.sty.tx],str:!!S.sty.str,gen:{...BGD()}});save();renderCP()}};
@@ -2303,7 +2307,7 @@ document.addEventListener("keydown",e=>{if(!$("#e").classList.contains("on")||!P
  else return;peAct();peTL();peDraw()});
 /* ---- dalle Grafiche: “Aggiungi al podcast” ---- */
 $("#sg").insertAdjacentHTML("afterend",'<button class="btn" id="spe" title="La grafica entra nella galleria del podcast; se il video è aperto la metto dove sei arrivato">Aggiungi al podcast</button>');
-$("#spe").onclick=()=>{EXP=1;draw();const c=$("#cv"),k=Math.min(1,1920/Math.max(c.width,c.height)),t=bgCv(c.width*k,c.height*k);t.getContext("2d").drawImage(c,0,0,t.width,t.height);EXP=0;draw();const n=$("#gh").value.replace(/\|/g," "),g={id:nid(),n,d:t.toDataURL("image/jpeg",.88)};G.push(g);if(!saveG()){G.pop();return}renderGal();
+$("#spe").onclick=()=>{EXP=1;draw();const c=$("#cv"),k=Math.min(1,1920/Math.max(c.width,c.height)),t=bgCv(c.width*k,c.height*k);t.getContext("2d").drawImage(c,0,0,t.width,t.height);EXP=0;draw();const n=$("#gh").value.replace(/\|/g," "),g={id:nid(),n,d:t.toDataURL("image/jpeg",.88),s:gSnapS()};G.push(g);if(!saveG()){G.pop();return}renderGal();
  const P=peP();if(P&&PE.f){pePush();P.ins.push({id:"i"+Date.now().toString(36),g:g.id,t:+peV().currentTime.toFixed(2),d:6});peSave();pePush();toast(`Aggiunta al podcast a ${peTf(peV().currentTime)} (6 s): la sposti in Edit podcast › Grafiche`)}else toast("Aggiunta: la trovi in Edit podcast › Grafiche");const b=$("#spe");b.textContent="✓ Aggiunta al podcast";setTimeout(()=>b.textContent="Aggiungi al podcast",1800)};
 
 /* ---- Edit podcast · barra di scorrimento pulita + timeline unica a tracce (come CapCut):
@@ -3664,6 +3668,44 @@ $("#gww").addEventListener("change",e=>{if(e.target.id==="gwrr"){S.gw={...(S.gw|
 $("#gwwgo").onclick=()=>go("gw");
 function gwCapt(T){const o=gwO(),g=gwG(),w=gwWr(g),R=gwRank(w);if(T==="gwa")return`🔥 Arriva la GIOCATA DELLA SETTIMANA!\n\nOgni squadra candida il suo gol più bello della giornata ${g}: lo manda il capitano entro ${o.dl}.\n📲 ${gwCap(o.vd)} tutti i gol nelle nostre storie: votate con 🔥 nel sondaggio, anche più di uno.\n🏆 ${gwCap(o.rd)} il vincitore!\n\nCapitani, il link ve lo mandiamo in privato. Chi sarà? 👀`;
  if(!R.win)return"🔥 Giocata della settimana: ecco il vincitore!";return`🏆 La GIOCATA DELLA SETTIMANA della giornata ${g} è di ${R.win.n?R.win.n+" ("+R.win.sq+")":R.win.sq}, con ${R.win.v} 🔥!\n\nI voti:\n`+R.c.map((c,i)=>`${i+1}. ${c.n?c.n+" · ":""}${c.sq} — ${c.v} 🔥`).join("\n")+`\n\nGrazie a tutti per aver votato! Capitani, preparate già il prossimo gol 💪`}
+/* ---- Le mie grafiche: ✏️ riapri una grafica salvata nell'editor (per esempio per cambiarne il formato e riscaricarla) ----
+   Ogni grafica salvata da qui in poi porta con sé (g.s) quello che serve per ridisegnarla: tipo, titoli, stile, elementi della grafica,
+   formazione del Team of the week, partita del Match day, squadra (in Grafiche squadra). Le grafiche salvate prima non lo hanno:
+   per quelle riapro il tipo giusto (lo riconosco dal titolo) con i dati di adesso. */
+let GEDIT=null;
+function gSnapO(full){const T=gT(),B=BS(T),o={v:1,T,B,gh:$("#gh").value,gs:$("#gs").value,sty:S.sty,ly:S.ly&&S.ly[T]||null,tq:TQ?gqCur():""};
+ if(full||B==="tw"||B==="tos")["tw2","twx","twk","tf","twv","twb","tos"].forEach(k=>{if(S[k]!==undefined)o[k]=S[k]});
+ if(full||B==="mc")o.mt=S.mt;if(B==="bo")o.rows=S[T]||"";if(full||B==="an"||B==="qo")o.an=S.an;
+ return o}
+function gSnapS(){try{return JSON.stringify(gSnapO())}catch(e){return""}}
+const gClone=v=>v==null?v:JSON.parse(JSON.stringify(v));
+function gApply(o){if(o.tq&&!gqExt()){go("q");if(o.tq!==gqCur())gqSwitch(o.tq)}else go(o.tq?"q":"g");
+ const has=[...$("#gt").options].some(op=>op.value===o.T),T=has?o.T:o.B;$("#gt").value=T;
+ if(o.sty)S.sty={...S.sty,...gClone(o.sty)};if(o.ly){S.ly=S.ly||{};S.ly[T]=gClone(o.ly)}
+ ["tw2","twx","twk","tf","twv","twb","tos","mt","an"].forEach(k=>{if(o[k]!==undefined)S[k]=gClone(o[k])});if(o.rows!=null)S[T]=o.rows;
+ SEL=null;PC={};sty();sync(false);$("#gh").value=o.gh||"";$("#gs").value=o.gs||"";if(typeof renderTW==="function")renderTW();save();draw();cm()}
+/* grafiche salvate prima: riconosco il tipo dal titolo */
+function gGuess(n){const k=s=>String(s||"").replace(/\|/g," ").replace(/\s+/g," ").trim().toLowerCase(),want=k(n);let best=null;
+ [...$("#gt").options].forEach(op=>{const v=op.value,tt=(lpTT(v)||TT[v]||[])[0],cg=(S.cg||[]).find(c=>c.id===v);[tt,cg&&cg.n,op.textContent].forEach(c=>{if(!best&&c&&k(c)===want)best=v})});return best}
+function gEdit(id){const g=G.find(q=>q.id===id);if(!g)return;let o=null;try{o=g.s?JSON.parse(g.s):null}catch(e){}
+ const before=gSnapO(true);cm();
+ if(o)gApply(o);else{const T=gGuess(g.n);if(!T)return alert("Questa grafica è stata salvata prima che si potesse riaprire e non riesco a capire che grafica sia dal titolo («"+g.n+"»).\n\nLe grafiche che salvi da adesso si riaprono tutte con la ✏️.");
+  go("g");$("#gt").value=T;$("#gt").dispatchEvent(new Event("change"));toast("Salvata prima di questa versione: l’ho riaperta con i dati e lo stile di adesso")}
+ GEDIT={id:g.id,n:g.n,before,old:!o};gEdB();if(o)toast("Riaperta: cambia quello che vuoi, poi scaricala o aggiornala nelle mie grafiche");
+ const cv=$("#cv");if(cv)cv.scrollIntoView({behavior:"smooth",block:"center"})}
+/* barra in alto mentre modifichi una grafica riaperta */
+function gEdB(){let b=$("#gedb");if(!b){const tb=document.querySelector(".uxtb")||$("#cv");if(!tb)return;tb.insertAdjacentHTML(tb.classList&&tb.classList.contains("uxtb")?"afterend":"beforebegin",`<div id="gedb" class="gedb"><span>✏️ Stai modificando <b id="gedn"></b><small id="gedh"></small></span><button class="btn pbx p" id="gedu" title="Sostituisce la grafica salvata con quella di adesso">💾 Aggiorna nelle mie grafiche</button><button class="btn pbx" id="gedr" title="Rimette la grafica che avevi nell’editor prima di aprire questa">↩ Torna a prima</button><button class="btn pbx" id="gedx" aria-label="Chiudi">✕</button></div>`);b=$("#gedb");
+  b.addEventListener("click",e=>{const t=e.target.closest("button");if(!t)return;if(t.id==="gedx"){GEDIT=null;gEdB()}else if(t.id==="gedr"){if(GEDIT)gApply(GEDIT.before);GEDIT=null;gEdB();toast("Tornato alla grafica di prima")}else if(t.id==="gedu")gUpd()})}
+ b.style.display=GEDIT&&G.some(g=>g.id===GEDIT.id)?"":"none";if(GEDIT){$("#gedn").textContent="«"+GEDIT.n+"»";$("#gedh").textContent=GEDIT.old?" · salvata prima di questa versione: riaperta con i dati di adesso":" · per riscaricarla usa ⬇ Scarica"}}
+/* sostituisco l'immagine salvata (nuovo id, così il cloud la ricarica) e aggiorno i riferimenti nell'Edit podcast */
+function gUpd(){if(!GEDIT)return;const i=G.findIndex(g=>g.id===GEDIT.id);if(i<0){GEDIT=null;return gEdB()}const old=G[i],pi=new Image();
+ pi.onload=()=>{const mx=Math.max(1080,Math.min(1920,Math.max(pi.naturalWidth,pi.naturalHeight)));EXP=1;draw();const c=$("#cv"),k=Math.min(1,mx/Math.max(c.width,c.height)),t=bgCv(c.width*k,c.height*k);t.getContext("2d").drawImage(c,0,0,t.width,t.height);EXP=0;draw();
+  const n=$("#gh").value.replace(/\|/g," ").trim()||old.n,g={id:nid(),n,d:t.toDataURL("image/jpeg",mx>1080?.88:.85),s:gSnapS()};G[i]=g;if(!saveG()){G[i]=old;return}
+  try{Object.values((S.pe&&S.pe.p)||{}).forEach(P=>(P.ins||[]).forEach(q=>{if(q.g===old.id)q.g=g.id}));if(typeof PE!=="undefined"&&PE.img)delete PE.img[old.id];save()}catch(e){}
+  GEDIT.id=g.id;GEDIT.n=n;GEDIT.old=false;renderGal();gEdB();toast("Aggiornata nelle mie grafiche")};pi.src=old.d}
+/* matita su ogni grafica salvata (nell'angolo opposto alla ×) */
+{const rg=renderGal;renderGal=function(){rg();$$(".gal .gi").forEach(el=>{const im=el.querySelector("[data-ga]");if(!im||el.querySelector("[data-ge]"))return;const g=G.find(q=>q.id===im.dataset.ga);el.insertAdjacentHTML("beforeend",`<button class="btn gie" data-ge="${im.dataset.ga}" title="${g&&g.s?"Riapri e modifica (formato, testi, elementi…)":"Riapri: salvata prima di questa versione, la riapro con i dati di adesso"}" aria-label="Modifica la grafica">✏️</button>`)});if(typeof gEdB==="function"&&$("#gedb"))gEdB()}}
+document.addEventListener("click",e=>{const b=e.target.closest("[data-ge]");if(!b)return;e.preventDefault();e.stopPropagation();gEdit(b.dataset.ge)},true);
 [kApply,TBU,renderK,week,tipi,sty,()=>renderGt(),renderTW,()=>sync(true),renderB,renderGal,renderCP,draw,cm].forEach(f=>{try{f()}catch(e){console.error("avvio:",e)}});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
@@ -4144,7 +4186,7 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  function reRender(){try{PC={};kApply();TBU();renderK();week();tipi();sty();renderGt();renderTW();sync(false);renderCP();renderGal();if($("#l").classList.contains("on"))renderLogos();draw();if(typeof poAll==="function")poAll();if(typeof peUI==="function")peUI()}catch(e){console.warn(e)}}
  function applyState(d){if(!d||d.j===lastR)return;let o;try{o=JSON.parse(d.j)}catch(e){return}const tq=typeof gqOut==="function"&&gqOut(),raw=S.raw,gqs=S.gqs;S={...DEF(),...o,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};if(typeof gqMig==="function")gqMig();if(tq)gqIn();lastR=d.j;lastJ=J();pend=null;if(d.n)lastN=d.n;if(d.v)lastV=d.v;setBase(d.j);localStorage.setItem(LK("a7at"),d.at||Date.now());localSave();reRender()}
  function applyLogos(docs){const r={};docs.forEach(x=>{const d=x.data();r[d.k]=d.d});S.raw=r;lastLg={...r};PC={};localSave()}
- function applyGal(docs){const R=docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.o||0)-(b.o||0)).map(g=>({id:g.id,n:g.n,d:g.d})),ri=new Set(R.map(g=>g.id));lastGal=new Set(ri);G=[...R,...G.filter(g=>(g.d||"").length>1e6&&!ri.has(g.id))];localG();renderGal()}
+ function applyGal(docs){const R=docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>(a.o||0)-(b.o||0)).map(g=>({id:g.id,n:g.n,d:g.d,...(g.s?{s:g.s}:{})})),ri=new Set(R.map(g=>g.id));{const L0=new Map(G.map(g=>[g.id,g]));R.forEach(g=>{if(!g.s&&L0.get(g.id)&&L0.get(g.id).s)g.s=L0.get(g.id).s})}lastGal=new Set(ri);G=[...R,...G.filter(g=>(g.d||"").length>1e6&&!ri.has(g.id))];localG();renderGal()}
  async function commitOps(ops){let b=writeBatch(db),n=0,sz=0;for(const[t,r,d]of ops){const z=d?JSON.stringify(d).length:60;if(n&&(n>=450||sz+z>7e6)){await b.commit();b=writeBatch(db);n=0;sz=0}if(t==="d")b.delete(r);else b.set(r,d);n++;sz+=z}if(n)await b.commit()}
  async function push(){tmr=null;if(!ready)return;if(pend){let ch=0;const tq=typeof gqOut==="function"&&gqOut();try{const B=JSON.parse(lastR||"{}"),Rm=JSON.parse(pend.j),L=JSON.parse(J()),M=m3(B,L,Rm,true);if(!same(M,L)){const raw=S.raw,gqs=S.gqs;S={...DEF(),...M,raw};if(gqs)S.gqs=gqs;S.sty={...DEF().sty,...S.sty};ch=1}lastR=pend.j;if(pend.n)lastN=pend.n;pend=null}catch(e){pend=null;ch=0}if(tq)gqIn();if(ch&&typeof gqMig==="function")gqMig();if(ch){localSave();reRender()}}const j=J(),at=Date.now(),ops=[],raw=S.raw||{};
   if(j!==lastJ&&EXT)lastJ=j;if(j!==lastJ){if(j.length>SMAX){cStat("Dati troppo grandi per il cloud ("+Math.round(j.length/1e6*10)/10+" milioni di caratteri): elimina qualche puntata o dato vecchio","e");return}const Pp=splitJ(j),v=at.toString(36)+DEV;
@@ -4156,7 +4198,7 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
   if(!ops.length)return cStat("Sincronizzato · "+hm(),"ok");localStorage.setItem(LK("a7at"),at);pend=null;cStat(navigator.onLine?"Salvataggio nel cloud…":"Offline: salvo appena torna la rete","w");
   try{await commitOps(ops);if(lastJ)setBase(lastJ);cStat("Salvato nel cloud · "+hm(),"ok")}catch(e){lastJ=null;lastLg={};lastQ={};cStat("Errore di salvataggio: "+why(e),"e")}}
  async function pushGal(){gtmr=null;if(!ready)return;const ids=new Set(G.map(g=>g.id)),ops=[];let big=0;
-  G.forEach((g,i)=>{if(!lastGal.has(g.id)){if((g.d||"").length>1e6){big++;return}ops.push(["s",doc(GL(pid),g.id),{n:g.n,d:g.d,o:Date.now()+i}]);lastGal.add(g.id)}});
+  G.forEach((g,i)=>{if(!lastGal.has(g.id)){const sz=(g.d||"").length;if(sz>1e6){big++;return}ops.push(["s",doc(GL(pid),g.id),{n:g.n,d:g.d,o:Date.now()+i,...(g.s&&sz+g.s.length<1e6?{s:g.s}:{})}]);lastGal.add(g.id)}});
   [...lastGal].forEach(id=>{if(!ids.has(id)){ops.push(["d",doc(GL(pid),id)]);lastGal.delete(id)}});
   if(big)cStat(big+(big===1?" grafica troppo pesante resta":" grafiche troppo pesanti restano")+" solo su questo dispositivo","w");
   if(ops.length)try{await commitOps(ops)}catch(e){cStat("Galleria non salvata: "+why(e),"e")}}
