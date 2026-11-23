@@ -319,6 +319,7 @@ html{scroll-padding-top:calc(var(--navh,0px) + 8px)}
 .qoi{grid-row:1;grid-column:2;display:flex;gap:6px;align-items:flex-end}.qoi label{display:flex;flex-direction:column;align-items:center;margin:0;font-weight:800;font-size:12px;color:var(--fg)}
 .qoi input{width:62px;text-align:center;padding:6px 4px;margin-top:2px}.qoi .btn{padding:6px 9px}
 @media (max-width:560px){.qor{grid-template-columns:1fr}.qoi{grid-row:auto;grid-column:1}}
+.qot input.qonm{flex:1;min-width:0;margin:0;padding:4px 8px;font-weight:700}
 /* sottotitoli delle clip */
 .pesbd{margin-top:10px}.pesbd summary{cursor:pointer;font-weight:700;font-size:13px}
 .pesbl{display:flex;flex-direction:column;gap:5px;margin-top:8px;max-height:340px;overflow:auto;padding-right:2px}
@@ -3291,8 +3292,10 @@ function bEsSet(fn){S.bes={...(S.bes||{})};fn(S.bes);BES.ok=0;save();renderB()}
    Modello: gol attesi di casa e ospite (Poisson) da attacco e difesa di ogni squadra, presi dalla classifica (gol fatti, subiti, punti)
    e mescolati con la forma delle ultime 3 partite (dal calendario). Fattore campo e frequenza dei pareggi li ricavo dai risultati del campionato.
    S.qo = {wf: peso forma 0–0,8, mg: margine del banco, fo: mostra la forma, nt: nota in fondo, tn: testo nota, ov: {chiave: [q1,qx,q2] scritte a mano}} ---- */
-const QOD={wf:.35,mg:.05,sp:.15,fo:1,nt:1,tn:"Quote indicative, calcolate su classifica e ultime 3 partite · solo per gioco"};
+const QOD={wf:.35,mg:.05,sp:.2,ns:1,fo:1,nt:1,tn:"Quote indicative, calcolate su classifica e ultime 3 partite · solo per gioco"};
 function qoO(){return{...QOD,...(S.qo||{})}}
+/* nome della squadra sulla grafica: si può accorciare dal pannello (S.qo.nm), di base quello del calendario */
+function qoNm(n){const m=(S.qo||{}).nm||{};return m[kHN(n)]||n}
 function qoK(r){return r.g+"|"+kHN(r.h)+"|"+kHN(r.a)}
 function qoRes(r){return kRG(typeof rvRes==="function"?rvRes(r):r.r)}
 function qoPend(r){return typeof rvPend==="function"&&rvPend(r)}
@@ -3302,9 +3305,9 @@ function qoPois(l,n){const p=[Math.exp(-l)];for(let k=1;k<=n;k++)p[k]=p[k-1]*l/k
 /* probabilità di 1, X, 2 con gol indipendenti */
 function qo3(lh,la){const N=30,A=qoPois(lh,N),B=qoPois(la,N);let p1=0,px=0,p2=0;for(let i=0;i<=N;i++)for(let j=0;j<=N;j++){const q=A[i]*B[j];if(i>j)p1+=q;else if(i===j)px+=q;else p2+=q}const s=p1+px+p2||1;return[p1/s,px/s,p2/s]}
 /* arrotondamento come sulle lavagne dei bookmaker */
-function qoRound(q){q=Math.max(1.03,Math.min(30,q));const st=q<2?.01:q<3?.05:q<5?.1:q<10?.25:q<20?.5:1;return Math.round(Math.round(q/st)*st*100)/100}
+function qoRound(q){q=Math.max(1.03,Math.min(15,q));const st=q<2?.01:q<3?.05:q<5?.1:q<10?.25:q<20?.5:1;return Math.round(Math.round(q/st)*st*100)/100}
 const qoFmt=q=>q==null||!isFinite(q)?"–":q.toFixed(2);
-function qoModel(G){const o=qoO(),w0=Math.max(0,Math.min(.8,+o.wf||0)),cal=S.cal||[],k=4,kf=2;
+function qoModel(G){const o=qoO(),w0=Math.max(0,Math.min(.8,+o.wf||0)),cal=S.cal||[],k=6,kf=3;
  /* risultati che si conoscono prima della giornata G (i recuperi contano con la loro data) */
  const R=cal.filter(r=>r.g<G).map(r=>({r,x:qoRes(r),d:qoDate(r)})).filter(q=>q.x);
  const T={},tm=n=>{const key=kHN(n);if(!T[key])T[key]={n,key,g:0,gf:0,gs:0,pt:0,v:0,nn:0,p:0,L:[]};return T[key]};
@@ -3323,12 +3326,15 @@ function qoModel(G){const o=qoO(),w0=Math.max(0,Math.min(.8,+o.wf||0)),cal=S.cal
   t.A=Math.exp((1-w)*Math.log(As)+w*Math.log(Af))*P;t.D=Math.exp((1-w)*Math.log(Ds)+w*Math.log(Df))/P});
  const lam=(h,a)=>{const H=T[kHN(h)],A=T[kHN(a)];return[Math.max(.25,Math.min(12,mu*H.A*A.D*HA)),Math.max(.25,Math.min(12,mu*A.A*H.D/HA))]};
  /* i pareggi: il modello li tara sulla frequenza vera del campionato */
- let fx=1;if(nR>=4){const dm=R.reduce((a,q)=>a+qo3(...lam(q.r.h,q.r.a))[1],0)/nR,dn=R.filter(q=>q.x[0]===q.x[1]).length;fx=Math.max(.7,Math.min(1.5,((dn+10*dm)/(nR+10))/Math.max(.01,dm)))}
+ let fx=1;if(nR>=4){const dm=R.reduce((a,q)=>a+qo3(...lam(q.r.h,q.r.a))[1],0)/nR,dn=R.filter(q=>q.x[0]===q.x[1]).length;fx=Math.max(.85,Math.min(1.6,((dn+20*.16)/(nR+20))/Math.max(.01,dm)))}
  const ov=o.ov||{},mg=Math.max(0,Math.min(.2,+o.mg||0)),sp=Math.max(0,Math.min(.4,+o.sp||0));
  /* spazio alle sorprese: nel calcio amatoriale (poche partite, rose che cambiano) mescolo il modello con la media del campionato, così niente quote assurde */
- const hw=R.filter(q=>q.x[0]>q.x[1]).length,dw=R.filter(q=>q.x[0]===q.x[1]).length,BA=[(hw+4.2)/(nR+10),(dw+1.8)/(nR+10),(nR-hw-dw+4)/(nR+10)];
+ const hw=R.filter(q=>q.x[0]>q.x[1]).length,dw=R.filter(q=>q.x[0]===q.x[1]).length,BA=[(hw+8.4)/(nR+20),(dw+3.6)/(nR+20),(nR-hw-dw+8)/(nR+20)];
  const ms=(typeof anGs==="function"?anGs()[G]||[]:[]).slice().sort((a,b)=>String(a.d).localeCompare(String(b.d))).map(r=>{const[lh,la]=lam(r.h,r.a);let[p1,px,p2]=qo3(lh,la);const X=Math.min(.6,px*fx),s=(p1+p2)||1;p1=p1/s*(1-X);p2=p2/s*(1-X);px=X;
-  const p=[p1,px,p2].map((v,i)=>(1-sp)*v+sp*BA[i]),q=p.map(v=>qoRound(1/(Math.max(.02,v)*(1+mg)))),key=qoK(r),m=ov[key]||[],qq=q.map((v,i)=>{const z=parseFloat(String(m[i]==null?"":m[i]).replace(",","."));return z>1?z:v});
+  let p=[p1,px,p2].map((v,i)=>(1-sp)*v+sp*BA[i]);
+  /* il pareggio non può valere meno della sorpresa: come per i bookmaker veri, la X resta vicina alla quota della sfavorita */
+  {const fl=Math.max(.07,.45*Math.min(p[0],p[2]));if(p[1]<fl){const r=(1-fl)/((p[0]+p[2])||1);p=[p[0]*r,fl,p[2]*r]}}
+  const q=p.map(v=>qoRound(1/(Math.max(.02,v)*(1+mg)))),key=qoK(r),m=ov[key]||[],qq=q.map((v,i)=>{const z=parseFloat(String(m[i]==null?"":m[i]).replace(",","."));return z>1?z:v});
   return{r,key,lh,la,p,q,qq,man:qq.some((v,i)=>v!==q[i]),x:qoRes(r),pend:qoPend(r),fav:qq.indexOf(Math.min(...qq)),H:T[kHN(r.h)],A:T[kHN(r.a)]}});
  return{G,mu,pa,HA,fx,nR,cn,T,ms}}
 function qoCur(){const g=typeof anCur==="function"?anCur():null;return g==null?null:qoModel(g)}
@@ -3336,10 +3342,13 @@ function qoCur(){const g=typeof anCur==="function"?anCur():null;return g==null?n
 function qov(x,W,H,y0,m,F,u){const st=S.sty,o=qoO(),M=qoCur(),ms=M?M.ms:[],n=ms.length,top0=y0+20*u;x.save();
  if(!n){x.fillStyle=rgba(st.tx,.5);x.font=`400 ${32*u}px ${F}`;x.textAlign="center";x.fillText("Incolla il calendario in Dati e TOTW",W/2,top0+70*u);x.restore();return}
  const days=[];ms.forEach(q=>{let d=days[days.length-1];if(!d||d.d!==q.r.d)days.push(d={d:q.r.d,ms:[]});d.ms.push(q)});
- const k=days.length,hu=.4,av=H-top0-(o.nt?122:84)*u,tall=H>W*1.4,rh=Math.min((tall?250:168)*u,av/(n+k*hu)),hh=Math.max(40*u,Math.min(rh*hu,72*u)),tot=n*rh+k*hh,top=top0+Math.max(0,av-tot)*(tall?.42:.35);
+ const k=days.length,hu=.4,av=H-top0-(o.nt?122:84)*u,tall=H>W*1.4,rh=Math.min((tall?270:205)*u,av/(n+k*hu)),hh=Math.max(40*u,Math.min(rh*hu,72*u)),tot=n*rh+k*hh,top=top0+Math.max(0,av-tot)*(tall?.42:.35);
  const team=TQ&&typeof gqCur==="function"&&gqCur(),tc=lum(st.ac)>150?"#000":"#fff",bw=Math.min(132*u,W*.125),g2=12*u,bh=Math.min(rh*.62,(tall?118:104)*u),xR=W-m+8*u,bx0=xR-3*bw-2*g2;
- const lh=Math.min(rh*.36,(tall?74:64)*u),ls=Math.min(lh*.92,56*u),hl=ms.some(q=>logo(q.r.h)||logo(q.r.a)),fz=Math.min(lh*.6,30*u),fw=o.fo?3*fz+2*5*u:0,nx=m+(hl?ls+14*u:0),mw=bx0-24*u-(fw?fw+18*u:0)-nx;
- const NF=fitNames(x,ms.flatMap(q=>[q.r.h,q.r.a]),800,Math.min(lh*.74,46*u),mw,false,F,14);let y=top;
+ const NS=Math.max(.6,Math.min(1.6,+o.ns||1)),blk=rh*.8,hl=ms.some(q=>logo(q.r.h)||logo(q.r.a)),ls0=Math.min(rh*.34,(tall?70:62)*u),fz=Math.min(rh*.17,30*u),fw=o.fo?3*fz+2*5*u:0,nx=m+(hl?ls0+16*u:0),mw=bx0-24*u-(fw?fw+18*u:0)-nx;
+ /* i nomi: parto grandi e scendo finché ogni partita sta nella sua riga (al massimo due righe per squadra) */
+ const NMS=ms.map(q=>[qoNm(q.r.h),qoNm(q.r.a)]);let f0=Math.min(blk*.36,(tall?58:50)*u)*NS,NF;
+ for(let it=0;it<40;it++){NF=fitNames(x,NMS.flat(),800,f0,mw,true,F,14);const L=NF.l,okL=L.every(l=>l.length<=2),hgt=Math.max(...NMS.map((_,i)=>(L[2*i].length+L[2*i+1].length)*NF.f*1.04+NF.f*.5));if((okL&&hgt<=blk)||NF.f<=14)break;f0=Math.min(f0,NF.f)*.94}
+ const lh2=NF.f*1.04,ls=Math.min(ls0,Math.max(NF.f*1.7,34*u));let y=top;
  const FC={V:"#16a34a",N:"#6b7280",P:"#dc2626"};
  days.forEach(dy=>{const lab=/^\d{4}-\d\d-\d\d$/.test(dy.d||"")?new Date(dy.d+"T12:00:00").toLocaleDateString("it-IT",{weekday:"long",day:"numeric",month:"long"}):"Data da definire",fs=Math.min(hh*.5,32*u);
   x.font=`800 ${fs}px ${F}`;x.textAlign="left";x.textBaseline="middle";const tw=x.measureText(lab.toUpperCase()).width;x.fillStyle=st.ac;x.fillRect(m-18,y+hh*.5-fs*.62,6*u,fs*1.24);x.fillStyle=st.tx;x.fillText(lab.toUpperCase(),m-2,y+hh*.52);x.fillStyle=rgba(st.tx,.18);x.fillRect(m+tw+16*u,y+hh*.52,bx0-m-tw-28*u,1.5);
@@ -3347,10 +3356,11 @@ function qov(x,W,H,y0,m,F,u){const st=S.sty,o=qoO(),M=qoCur(),ms=M?M.ms:[],n=ms.
   x.font=`800 ${Math.min(fs*.9,26*u)}px ${F}`;x.textAlign="center";x.fillStyle=rgba(st.tx,.7);["1","X","2"].forEach((l,i)=>x.fillText(l,bx0+i*(bw+g2)+bw/2,y+hh*.52));y+=hh;
   dy.ms.forEach(q=>{const r=q.r,cy=y+rh*.47,on=team&&(qoEq(r.h,team)||qoEq(r.a,team));
    x.fillStyle=on?rgba(st.ac,.22):rgba(st.tx,.055);x.beginPath();x.roundRect(m-18,y+5*u,W-2*m+36,rh-10*u,16*u);x.fill();
-   [[r.h,q.H,-1],[r.a,q.A,1]].forEach(([nm,t,sd],j)=>{const ly=cy+sd*lh*.56,l=hl?logo(nm):null;if(l)dl(x,l,m+ls/2,ly,ls);
-    x.font=`800 ${NF.f}px ${F}`;x.textAlign="left";x.textBaseline="middle";x.fillStyle=st.tx;x.fillText(nm,nx,ly+NF.f*.04,mw);
+   const qi=ms.indexOf(q),LH=NF.l[2*qi],LA=NF.l[2*qi+1],hH=LH.length*lh2,hA=LA.length*lh2,gp=NF.f*.5,y0r=cy-(hH+gp+hA)/2,YC=[y0r+hH/2,y0r+hH+gp+hA/2];
+   [[r.h,q.H,LH],[r.a,q.A,LA]].forEach(([nm,t,ln],j)=>{const ly=YC[j],l=hl?logo(nm):null;if(l)dl(x,l,m+ls0/2,ly,ls);
+    x.font=`800 ${NF.f}px ${F}`;x.textAlign="left";x.textBaseline="middle";x.fillStyle=st.tx;ln.forEach((tx,i)=>x.fillText(tx,nx,ly+(i-(ln.length-1)/2)*lh2+NF.f*.04,mw));
     if(o.fo&&t&&t.F.length&&!q.x){const fx0=bx0-24*u-fw;t.F.forEach((f,i)=>{const fx=fx0+i*(fz+5*u);x.fillStyle=FC[f.e];x.beginPath();x.roundRect(fx,ly-fz/2,fz,fz,fz*.22);x.fill();x.fillStyle="#fff";x.font=`800 ${fz*.62}px ${F}`;x.textAlign="center";x.fillText(f.e,fx+fz/2,ly+fz*.04)})}});
-   if(q.x){x.font=`800 ${Math.min(lh*.62,32*u)}px ${F}`;x.textAlign="right";x.fillStyle=st.ac;x.fillText(q.x[0],bx0-24*u,cy-lh*.56);x.fillText(q.x[1],bx0-24*u,cy+lh*.56)}
+   if(q.x){x.font=`800 ${Math.min(NF.f*1.15,34*u)}px ${F}`;x.textAlign="right";x.fillStyle=st.ac;x.fillText(q.x[0],bx0-24*u,YC[0]);x.fillText(q.x[1],bx0-24*u,YC[1])}
    if(q.pend&&typeof rvPill==="function"){rvPill(x,bx0+(3*bw+2*g2)/2,cy,3*bw+2*g2,bh,F,st);y+=rh;return}
    const won=q.x?(q.x[0]>q.x[1]?0:q.x[0]===q.x[1]?1:2):-1;
    q.qq.forEach((v,i)=>{const bx=bx0+i*(bw+g2),by=cy-bh/2,hi=won>=0?i===won:i===q.fav;x.globalAlpha=won>=0&&!hi?.4:1;
@@ -3366,6 +3376,7 @@ function qov(x,W,H,y0,m,F,u){const st=S.sty,o=qoO(),M=qoCur(),ms=M?M.ms:[],n=ms.
 $("#anw").insertAdjacentHTML("afterend",`<div id="qow" class="card" style="display:none"><b>Quote 1X2 della giornata</b><small>Calcolate da sole: gol fatti e subiti e punti dalla classifica, forma delle ultime 3 partite dal calendario, più fattore campo e frequenza dei pareggi presi dai risultati del campionato. Le partite sono quelle dell’Anteprima.</small>
 <label for="qog">Giornata <small style="display:inline">(la stessa dell’Anteprima)</small></label><select id="qog"></select>
 <div class="g3" style="grid-template-columns:1fr 1fr 1fr"><div><label for="qowf">Peso della forma (ultime 3) · <b id="qowfv"></b></label><input type="range" id="qowf" min="0" max="70" step="5"></div><div><label for="qosp" title="Più è alto, più le quote delle sfavorite si abbassano: nel calcio amatoriale le sorprese capitano">Spazio alle sorprese · <b id="qospv"></b></label><input type="range" id="qosp" min="0" max="40" step="5"></div><div><label for="qomg">Margine del banco · <b id="qomgv"></b></label><input type="range" id="qomg" min="0" max="12" step="1"></div></div>
+<label for="qons">Grandezza dei nomi delle squadre · <b id="qonsv"></b> <small style="display:inline">(i nomi lunghi vanno su due righe; puoi anche accorciarli qui sotto)</small></label><input type="range" id="qons" min="60" max="160" step="5">
 <label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="qofo"> Mostra la forma (V N P delle ultime 3) accanto alle squadre</label>
 <label style="display:flex;gap:8px;align-items:center;color:var(--fg)"><input type="checkbox" id="qont"> Nota in fondo</label><input id="qotn" placeholder="${esc(QOD.tn)}">
 <div id="qol"></div><div class="hint" id="qoh"></div><div class="bar" style="margin:8px 0 0"><button class="btn" id="qo2an">📅 Vai all’Anteprima della stessa giornata</button></div></div>`);
@@ -3375,9 +3386,9 @@ $("#an2qo").onclick=()=>qoGo("qo");$("#qo2an").onclick=()=>qoGo("an");
 const qoPct=v=>Math.round(v*100)+"%",qoFS=t=>t&&t.F.length?t.F.map(f=>`<i class="qof qof${f.e}">${f.e}</i>`).join(""):'<small style="display:inline">nessuna partita</small>';
 function qoUI(){const el=$("#qow");if(!el||el.style.display==="none")return;const o=qoO(),M0=anGs(),G=Object.keys(M0).map(Number).sort((a,b)=>a-b),a0=S.an||{},auto=a0.g==null||!M0[a0.g],d0=anDef(),M=qoCur();
  $("#qog").innerHTML=G.length?`<option value=""${auto?" selected":""}>Automatica: la prossima da giocare${d0!=null?" (giornata "+d0+")":""}</option>`+G.map(n=>`<option value="${n}"${!auto&&n===anCur()?" selected":""}>Giornata ${n}${anRange(M0[n])?" · "+anRange(M0[n]):""}</option>`).join(""):`<option value="">Nessun calendario</option>`;
- $("#qowf").value=Math.round(o.wf*100);$("#qowfv").textContent=Math.round(o.wf*100)+"%";$("#qomg").value=Math.round(o.mg*100);$("#qosp").value=Math.round(o.sp*100);$("#qospv").textContent=Math.round(o.sp*100)+"%";$("#qomgv").textContent=Math.round(o.mg*100)+"%";$("#qofo").checked=!!o.fo;$("#qont").checked=!!o.nt;const tn=$("#qotn");if(document.activeElement!==tn)tn.value=S.qo&&S.qo.tn!=null?S.qo.tn:QOD.tn;tn.style.display=o.nt?"":"none";
+ $("#qowf").value=Math.round(o.wf*100);$("#qowfv").textContent=Math.round(o.wf*100)+"%";$("#qomg").value=Math.round(o.mg*100);$("#qons").value=Math.round(o.ns*100);$("#qonsv").textContent=Math.round(o.ns*100)+"%";$("#qosp").value=Math.round(o.sp*100);$("#qospv").textContent=Math.round(o.sp*100)+"%";$("#qomgv").textContent=Math.round(o.mg*100)+"%";$("#qofo").checked=!!o.fo;$("#qont").checked=!!o.nt;const tn=$("#qotn");if(document.activeElement!==tn)tn.value=S.qo&&S.qo.tn!=null?S.qo.tn:QOD.tn;tn.style.display=o.nt?"":"none";
  if(!M||!M.ms.length){$("#qol").innerHTML="";$("#qoh").textContent="Incolla il calendario in Dati e TOTW: le partite arrivano da lì.";return}
- $("#qol").innerHTML=M.ms.map(q=>{const r=q.r,ov=(o.ov||{})[q.key]||[];return`<div class="qor"><div class="qot"><div><b>${esc(r.h)}</b><span>${qoFS(q.H)}</span></div><div><b>${esc(r.a)}</b><span>${qoFS(q.A)}</span></div></div>
+ $("#qol").innerHTML=M.ms.map(q=>{const r=q.r,ov=(o.ov||{})[q.key]||[];return`<div class="qor"><div class="qot">${[[r.h,q.H],[r.a,q.A]].map(([tn,tt])=>`<div><input class="qonm" data-qonm="${esc(tn)}" value="${qoNm(tn)!==tn?esc(qoNm(tn)):""}" placeholder="${esc(tn)}" title="Nome sulla grafica: scrivine uno più corto se vuoi (vuoto = quello del calendario)"><span>${qoFS(tt)}</span></div>`).join("")}</div>
   <div class="qop">${q.pend?"Rinviata":q.x?"Giocata: "+q.x[0]+"-"+q.x[1]:`1 ${qoPct(q.p[0])} · X ${qoPct(q.p[1])} · 2 ${qoPct(q.p[2])} · gol attesi ${q.lh.toFixed(1)}–${q.la.toFixed(1)}`}</div>
   <div class="qoi">${["1","X","2"].map((l,i)=>`<label>${l}<input data-qo="${esc(q.key)}" data-qi="${i}" inputmode="decimal" placeholder="${qoFmt(q.q[i])}" value="${ov[i]!=null&&ov[i]!==""?esc(String(ov[i])):""}"></label>`).join("")}${q.man?`<button class="btn" data-qor="${esc(q.key)}" title="Torna alle quote calcolate">↺</button>`:""}</div></div>`}).join("");
  const nt=Object.values(M.T),ncl=nt.filter(t=>t.cl).length;
@@ -3385,15 +3396,16 @@ function qoUI(){const el=$("#qow");if(!el||el.style.display==="none")return;cons
  const gs=$("#gs"),g=anCur(),ms=anMatches();if(g!=null&&/^Giornata \d+( · .*)?$/.test(gs.value.trim())){const want=`Giornata ${g}${anRange(ms)?" · "+anRange(ms):""}`;if(gs.value!==want)gs.value=want}}
 const qoSet=fn=>{S.qo={...(S.qo||{})};fn(S.qo);save();qoUI();draw();cm()};
 $("#qow").addEventListener("change",e=>{const t=e.target;if(t.id==="qog"){S.an={...(S.an||{}),g:t.value===""?null:+t.value};save();qoUI();draw();cm()}
+ else if(t.dataset.qonm!=null){const k=kHN(t.dataset.qonm),v=t.value.trim();qoSet(o=>{o.nm={...(o.nm||{})};if(v&&v!==t.dataset.qonm)o.nm[k]=v;else delete o.nm[k]})}
  else if(t.id==="qofo"||t.id==="qont")qoSet(o=>{o[t.id.slice(2)]=t.checked?1:0});else if(t.id==="qotn")qoSet(o=>{o.tn=t.value.trim()});
  else if(t.dataset.qo){const v=t.value.trim().replace(",",".");if(v&&!(parseFloat(v)>1)){toast("Scrivi una quota maggiore di 1, per esempio 1.85");t.value="";return}qoSet(o=>{o.ov={...(o.ov||{})};const a=(o.ov[t.dataset.qo]||[null,null,null]).slice();a[+t.dataset.qi]=v?+parseFloat(v).toFixed(2):null;if(a.some(z=>z!=null))o.ov[t.dataset.qo]=a;else delete o.ov[t.dataset.qo]})}});
-$("#qow").addEventListener("input",e=>{const t=e.target;if(t.id==="qowf"||t.id==="qomg"||t.id==="qosp"){S.qo={...(S.qo||{}),[{qowf:"wf",qomg:"mg",qosp:"sp"}[t.id]]:+t.value/100};$("#"+t.id+"v").textContent=t.value+"%";save();draw()}else if(t.id==="qotn"){S.qo={...(S.qo||{}),tn:t.value};draw()}});
+$("#qow").addEventListener("input",e=>{const t=e.target;if(t.id==="qowf"||t.id==="qomg"||t.id==="qosp"||t.id==="qons"){S.qo={...(S.qo||{}),[{qowf:"wf",qomg:"mg",qosp:"sp",qons:"ns"}[t.id]]:+t.value/100};$("#"+t.id+"v").textContent=t.value+"%";save();draw()}else if(t.id==="qotn"){S.qo={...(S.qo||{}),tn:t.value};draw()}});
 $("#qow").addEventListener("click",e=>{const b=e.target.closest("[data-qor]");if(!b)return;qoSet(o=>{o.ov={...(o.ov||{})};delete o.ov[b.dataset.qor]})});
 /* quando cambi la giornata dall'Anteprima, anche le quote seguono */
 {const a0=anUI;anUI=function(){a0();const b=$("#an2qo");if(b)b.textContent="📊 Crea le quote 1X2 della giornata "+(anCur()??"")}}
 /* testo del post */
 function qoCapt(){const M=qoCur();if(!M||!M.ms.length)return"Le quote della giornata: chi vince secondo voi?";const by={};M.ms.forEach(q=>{(by[q.r.d]=by[q.r.d]||[]).push(q)});
- return`📊 Le quote della giornata ${M.G}! Chi è favorita e chi può fare il colpaccio?`+Object.entries(by).map(([d,a])=>"\n\n📅 "+(itD(d)||"Data da definire")+a.map(q=>`\n${q.r.h} – ${q.r.a}: `+(q.pend?"rinviata":`1 @${qoFmt(q.qq[0])} · X @${qoFmt(q.qq[1])} · 2 @${qoFmt(q.qq[2])}`+(q.x?` (finita ${q.x[0]}-${q.x[1]})`:""))).join("")).join("")+
+ return`📊 Le quote della giornata ${M.G}! Chi è favorita e chi può fare il colpaccio?`+Object.entries(by).map(([d,a])=>"\n\n📅 "+(itD(d)||"Data da definire")+a.map(q=>`\n${qoNm(q.r.h)} – ${qoNm(q.r.a)}: `+(q.pend?"rinviata":`1 @${qoFmt(q.qq[0])} · X @${qoFmt(q.qq[1])} · 2 @${qoFmt(q.qq[2])}`+(q.x?` (finita ${q.x[0]}-${q.x[1]})`:""))).join("")).join("")+
   P(["\n\nVoi su cosa puntereste? Scrivete il vostro pronostico nei commenti! 👇","\n\nSiete d’accordo con le quote? Ditecelo nei commenti! 👇","\n\nChi ribalta il pronostico? Pronostici nei commenti! 👇"])+"\n\nQuote calcolate su classifica e forma delle ultime 3 partite, solo per gioco."}
 /* quando arrivano dati nuovi (calendario, classifica) il pannello si aggiorna */
 {const a0=autoLabels;autoLabels=function(){a0();try{if(BS(gT())==="qo")qoUI()}catch(e){}}}
