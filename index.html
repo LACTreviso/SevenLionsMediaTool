@@ -609,7 +609,7 @@ function itemDraw(x,c,lt,d,BW,BH,p,still){x.save();const tr=c.tr;
  if(p<1&&tr!=="cut"){if(tr==="fade")x.globalAlpha=p;else if(tr==="sl")x.translate((1-p)*BW,0);else if(tr==="su")x.translate(0,(1-p)*BH);else if(tr==="zm"){x.globalAlpha=p;x.translate(BW/2,BH/2);x.scale(.6+.4*p,.6+.4*p);x.translate(-BW/2,-BH/2)}else if(tr==="wp"){x.beginPath();x.rect(0,0,BW*p,BH);x.clip()}else if(tr==="sr")x.translate(-(1-p)*BW,0);else if(tr==="sd")x.translate(0,-(1-p)*BH);else if(tr==="fl")x.globalAlpha=p}
  let sc=1,ty=0,al=1,tx=0;const f=still?"n":c.fx;if(f==="zi")sc=1+.08*lt/d;else if(f==="pu")sc=1+.025*Math.sin(lt*4);else if(f==="fi")al=Math.min(1,lt/.5);else if(f==="up"){const k=Math.min(1,lt/.6);ty=(1-k)*BH*.08;al=k}
  {const xd=Math.min(.6,d/2),ko=Math.min(1,Math.max(0,(d-lt)/xd)),fo=still?"n":c.fo;if(fo==="fo")al*=ko;else if(fo==="dn"){ty+=(1-ko)*BH*.1;al*=ko}else if(fo==="sh"){sc*=.8+.2*ko;al*=ko}else if(fo==="sx")tx=-(1-ko)*BW}const cf=c.k==="c"?clipFx(c,lt):null;x.globalAlpha*=al;x.save();x.translate(BW/2+tx,BH/2+ty);x.scale(sc*(cf?cf.z:1),sc*(cf?cf.z:1));x.translate(-BW/2,-BH/2);
- const m=c.k==="c"?c.el:c.img,mw=m.videoWidth||m.naturalWidth,mh=m.videoHeight||m.naturalHeight;if(mw){if(cf&&cf.f&&"filter" in x)x.filter=cf.f;if(c.k==="c")bfrDraw(x,c,m,mw,mh,BW,BH,lt);else{const r=Math.max(BW/mw,BH/mh);x.drawImage(m,(BW-mw*r)/2,(BH-mh*r)/2,mw*r,mh*r)}x.filter="none"}x.restore();if(cf&&cf.q.rp&&cf.q.rp.lb)repTag(x,lt-cf.q.o,BW,BH);(c.ov||[]).forEach(v=>drawOv(x,v,lt,d,BW,BH,still));
+ const m=c.k==="c"?c.el:c.img,mw=m.videoWidth||m.naturalWidth,mh=m.videoHeight||m.naturalHeight;if(mw){if(cf&&cf.f&&"filter" in x)x.filter=cf.f;if(c.k==="c")bfrDraw(x,c,m,mw,mh,BW,BH,lt);else bofG(x,m,mw,mh,BW,BH);x.filter="none"}x.restore();if(cf&&cf.q.rp&&cf.q.rp.lb)repTag(x,lt-cf.q.o,BW,BH);(c.ov||[]).forEach(v=>drawOv(x,v,lt,d,BW,BH,still));
  if(c.k==="c"&&c.t){const q=c.t.split(";"),k=Math.min(1,lt/.45),e=1-Math.pow(1-k,3),w=BW*.82,Y=BH*.8,h=BH*.095,fs=Math.min(BW,BH)*.04,ac2=S.sty.ac,tc=lum(ac2)>150?"#000":"#fff";
   x.translate(-(1-e)*w,0);x.fillStyle=rgba(ac2,.93);x.fillRect(0,Y,w,h);x.fillStyle=tc;x.textBaseline="middle";x.textAlign="left";x.font=`800 ${fs}px "Inter Tight",system-ui,sans-serif`;x.fillText((q[0]||"").toUpperCase(),BW*.04,Y+h*.36);
   x.font=`400 ${fs*.62}px "Inter Tight",system-ui,sans-serif`;x.fillText((q[1]||""),BW*.04,Y+h*.74);x.textAlign="right";x.font=`800 ${fs*1.3}px "Inter Tight",system-ui,sans-serif`;x.fillText(q[2]||"",w-BW*.04,Y+h/2)}
@@ -3288,6 +3288,9 @@ function bEsSet(fn){S.bes={...(S.bes||{})};fn(S.bes);BES.ok=0;save();renderB()}
 {const bt=$("#bt");if(bt&&!$("#bes")){bt.insertAdjacentHTML("beforebegin",'<div id="bes" class="card" style="margin:10px 0 0;padding:10px 12px"></div>');
  $("#bes").addEventListener("click",e=>{const b=e.target.closest("#besp,[data-besd]");if(!b)return;if(b.id==="besp"){if(!CL.length){toast("Aggiungi prima almeno una clip o una grafica");return}runM(0,Math.max(0,totI()-1.2));return}bEsSet(o=>{o.d=+b.dataset.besd})});
  $("#bes").addEventListener("change",e=>{const t=e.target;if(t.id==="besc")bEsSet(o=>{o.on=t.checked?1:0});else if(t.id==="bes1"||t.id==="bes2"||t.id==="bes0"){const k={bes1:"t1",bes2:"t2",bes0:"t0"}[t.id];bEsSet(o=>{o[k]=t.value.trim()})}})}}
+/* esportazione: se nel montaggio ci sono solo grafiche (nessuna clip con audio) la traccia audio resta vuota e il browser non registra niente:
+   tengo collegata una sorgente di silenzio, così il video esce sempre (anche con la sola schermata finale) */
+{const rm0=runM;runM=function(ex,fr){if(ex){try{ac=ac||new AudioContext();adst=adst||ac.createMediaStreamDestination();if(!BES.sil){const s=ac.createConstantSource();s.offset.value=0;s.connect(adst);s.start();BES.sil=s}}catch(e){console.warn("silenzio",e)}}return rm0.apply(this,arguments)}}
 /* ---- Quote 1X2 della giornata: le partite sono quelle dell'Anteprima (stessa giornata).
    Modello: gol attesi di casa e ospite (Poisson) da attacco e difesa di ogni squadra, presi dalla classifica (gol fatti, subiti, punti)
    e mescolati con la forma delle ultime 3 partite (dal calendario). Fattore campo e frequenza dei pareggi li ricavo dai risultati del campionato.
@@ -3718,6 +3721,11 @@ function gUpd(){if(!GEDIT)return;const i=G.findIndex(g=>g.id===GEDIT.id);if(i<0)
 /* matita su ogni grafica salvata (nell'angolo opposto alla ×) */
 {const rg=renderGal;renderGal=function(){rg();$$(".gal .gi").forEach(el=>{const im=el.querySelector("[data-ga]");if(!im||el.querySelector("[data-ge]"))return;const g=G.find(q=>q.id===im.dataset.ga);el.insertAdjacentHTML("beforeend",`<button class="btn gie" data-ge="${im.dataset.ga}" title="${g&&g.s?"Riapri e modifica (formato, testi, elementi…)":"Riapri: salvata prima di questa versione, la riapro con i dati di adesso"}" aria-label="Modifica la grafica">✏️</button>`)});if(typeof gEdB==="function"&&$("#gedb"))gEdB()}}
 document.addEventListener("click",e=>{const b=e.target.closest("[data-ge]");if(!b)return;e.preventDefault();e.stopPropagation();gEdit(b.dataset.ge)},true);
+/* grafica nel Best of: intera (contain) se il formato è diverso, con lo sfondo sfocato */
+let BOFB=null;function bofG(x,m,mw,mh,BW,BH){if(Math.abs(mw/mh-BW/BH)<.04){const r=Math.max(BW/mw,BH/mh);x.drawImage(m,(BW-mw*r)/2,(BH-mh*r)/2,mw*r,mh*r);return}
+ if(!BOFB||BOFB.m!==m||BOFB.w!==BW||BOFB.h!==BH){const c=bgCv(Math.max(8,Math.round(BW/24)),Math.max(8,Math.round(BH/24))),q=c.getContext("2d"),k=Math.max(c.width/mw,c.height/mh);q.drawImage(m,(c.width-mw*k)/2,(c.height-mh*k)/2,mw*k,mh*k);BOFB={m,w:BW,h:BH,c}}
+ x.save();x.imageSmoothingEnabled=true;x.imageSmoothingQuality="high";x.drawImage(BOFB.c,0,0,BW,BH);x.fillStyle="rgba(0,0,0,.35)";x.fillRect(0,0,BW,BH);x.restore();
+ const r=Math.min(BW/mw,BH/mh);x.drawImage(m,(BW-mw*r)/2,(BH-mh*r)/2,mw*r,mh*r)}
 [kApply,TBU,renderK,week,tipi,sty,()=>renderGt(),renderTW,()=>sync(true),renderB,renderGal,renderCP,draw,cm].forEach(f=>{try{f()}catch(e){console.error("avvio:",e)}});
 if(document.fonts&&document.fonts.ready)document.fonts.ready.then(draw);
 if("serviceWorker" in navigator&&location.protocol.startsWith("http"))navigator.serviceWorker.register("sw.js").catch(()=>{});
