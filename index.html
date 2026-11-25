@@ -4386,7 +4386,7 @@ if(FB_CFG.projectId)(async()=>{const V="10.12.2",U=m=>`https://www.gstatic.com/f
  const dirty=()=>{if(mute)return;localStorage.setItem(LK("a7at"),Date.now());if(!ready)return;clearTimeout(tmr);cStat("Modifiche da salvare…","w");tmr=setTimeout(push,1200)};
  const gal=()=>{if(mute||!ready)return;clearTimeout(gtmr);gtmr=setTimeout(pushGal,600)};
  const flush=()=>Promise.race([(async()=>{if(tmr){clearTimeout(tmr);await push()}if(gtmr){clearTimeout(gtmr);await pushGal()}})(),new Promise(r=>setTimeout(r,4000))]);
- window.CLD={login,dirty,gal,flush,panel:p=>panel(p)};
+ window.CLD={login,dirty,gal,flush,panel:p=>panel(p),lt:async()=>{await authOk();return(await getDocs(collection(db,"lt_stats"))).docs.map(x=>({id:x.id,...x.data()}))}};
  addEventListener("pagehide",()=>{if(tmr){clearTimeout(tmr);push()}if(gtmr){clearTimeout(gtmr);pushGal()}});
  document.addEventListener("visibilitychange",()=>{if(document.hidden&&tmr){clearTimeout(tmr);push()}});
  document.addEventListener("focusout",()=>setTimeout(()=>{if(pend&&!typing()&&!tmr)applyState(pend)},120));
@@ -4453,14 +4453,16 @@ const SC=[
 ["crest","Stemma",E("l").concat([["w","n","Larghezza (px)",132,[40,400]],["sh","n","Ombra (%)",60,[0,100]],["c1","c","Colore stemma","#ffffff"],["c2","c","Dettaglio verde","#4c9a22"],["c3","c","Dettaglio blu","#2d88d0"]])],
 ["title","Titolo",E("l").concat([["tx","t","Testo (| = a capo)","Seven Lions|League"],["sz","n","Grandezza (px)",76,[24,160]],["c","c","Colore","","pg.ink"],["lh","n","Interlinea (%)",92,[70,140]],["ls","n","Spaziatura lettere",5,[-20,60]]])],
 ["sub","Sottotitolo",E("l").concat([["b","t","Parte in grassetto","Lega di calcio a 7 amatoriale"],["tx","t","Resto del testo"," · Esplora il nostro Linktree con tutti i suoi collegamenti."],["sz","n","Grandezza (px)",17,[10,40]],["c","c","Colore","","pg.mute"],["bc","c","Colore grassetto","","pg.ink"]])],
-["stripe","Strisce colorate",E("l").concat([["c1","c","Striscia 1","#ffffff"],["c2","c","Striscia 2","","pg.gr"],["c3","c","Striscia 3","","pg.bl"],["w","n","Larghezza (px)",44,[10,150]],["h","n","Altezza (px)",12,[4,50]],["gp","n","Distanza (px)",5,[0,30]],["sk","n","Inclinazione (°)",18,[0,45]]])],
+["stripe","Strisce colorate",E("l").concat([["c1","c","Striscia 1 (nero)","#000000"],["c2","c","Striscia 2 (verde)","#4c9a22"],["c3","c","Striscia 3 (bianco)","#ffffff"],["c4","c","Striscia 4 (azzurro)","#4aa3df"],["w","n","Larghezza (px)",44,[10,150]],["h","n","Altezza (px)",12,[4,50]],["gp","n","Distanza (px)",5,[0,30]],["sk","n","Inclinazione (°)",18,[0,45]]])],
 ["social","Pulsanti social",E("l").concat([["sz","n","Grandezza testo (px)",15,[10,26]],["hh","n","Altezza (px)",44,[30,80]],["r","n","Arrotondamento (px)",999,[0,999]],["bo","n","Opacità sfondo (%)",4,[0,40]],["ar","k","Freccetta",1]])],
 ["h1","Titolo «In evidenza»",E("l").concat([["tx","t","Testo","In evidenza"],["sz","n","Grandezza (px)",26,[12,60]],["c","c","Colore","","pg.mute"]])],
 ["match","Partita (scoreboard)",E().concat([["top","t","Intestazione","Giornata 5 · Minimatch"],["bd","t","Etichetta","Full time"],["hn","t","Squadra casa","Marzenego Riverside"],["hs","t","Gol casa","1"],["aw","t","Squadra ospite","Sporting Carbonera"],["as","t","Gol ospite","7"],["u","t","Link del video","https://youtu.be/PLvbfudyZLI"],["cta","t","Testo del pulsante","Guarda il minimatch"],["g1","c","Sfondo: alto","#132619"],["g2","c","Sfondo: basso","#0c160f"],["bc","c","Bordo","#4c9a22"],["ac","c","Etichetta e pulsante","#4c9a22"],["ct","c","Testo del pulsante","#071008"],["wc","c","Gol vincente","#ffffff"],["lc","c","Gol perdente","#7f8f82"],["ss","n","Punteggio (px)",88,[30,160]],["ts","n","Nomi squadre (px)",26,[12,50]],["r","n","Arrotondamento (px)",18,[0,50]]])],
 ["pod","Podcast",E().concat([["kk","t","Sigla","Seven Lions Podcast"],["t","t","Titolo puntata","Volare alto con Atletico Cocai"],["el","t","Etichetta episodio","EP."],["ep","t","N° episodio","2"],["u","t","Link","https://youtu.be/72HM_klD8tA?si=clFhoInQuqhH8rNj"],["g1","c","Sfondo: inizio","#0f1f2b"],["g2","c","Sfondo: fine","#0c1510"],["bc","c","Bordo","#2d88d0"],["ec","c","Riquadro episodio","#2d88d0"],["kc","c","Colore sigla","#8fc3ec"],["wv","k","Onda audio",1],["ts","n","Titolo (px)",25,[12,50]],["r","n","Arrotondamento (px)",18,[0,50]]])],
+["iscr","Modulo iscrizioni squadre",[["on","k","Mostra il modulo di iscrizione",0],["t","t","Titolo","Iscrivi la tua squadra"],["s","t","Sottotitolo","Regolamento, costi e modulo di iscrizione"],["u","t","Link del modulo (incollalo quando è pronto)","#"],["i","s","Icona","plus",["plus","globe","mic","phone","link","play","calendar","trophy","mail","users","star","download"].map(k=>[k,k])],["a","s","Colore icona","b",[["g","Verde"],["b","Blu"],["w","Chiara"]]]]],
 ["h2","Titolo «La lega»",E("l").concat([["tx","t","Testo","La lega"],["sz","n","Grandezza (px)",26,[12,60]],["c","c","Colore","","pg.mute"]])],
 ["links","Link (righe): stile",E().concat([["sz","n","Titolo (px)",24,[12,44]],["ss","n","Sottotitolo (px)",15,[10,28]],["hh","n","Altezza minima (px)",76,[50,140]],["r","n","Arrotondamento (px)",16,[0,50]],["gp","n","Distanza tra righe (px)",10,[0,40]]])],
 ["foot","Piè di pagina",E("l").concat([["t1","t","Slogan: prima parte","#ForPlayers"],["t2","t","Slogan: seconda parte","ByPlayers"],["tc","c","Colore seconda parte","","pg.gr"],["cp","t","Testo copyright","© 2026 Seven Lions League · Lega Amatori Calcio Treviso"],["sz","n","Slogan (px)",30,[12,60]]])],
+["st","Statistiche (aperture e click)",[["on","k","Conta aperture e click nella pagina generata",1]]],
 ["meta","Titolo e anteprima della pagina",[["t","t","Titolo (scheda del browser)","Seven Lions League"],["d","x","Descrizione","Seven Lions League: lega di calcio a 7 amatoriale. Risultati, podcast, minimatch e app ufficiale."],["o","t","Descrizione per le anteprime social","Lega di calcio a 7 amatoriale · Lega Amatori Calcio Treviso"]]]];
 const BN={head:"Intestazione (stemma, titolo, strisce)",social:"Pulsanti social",h1:"Titolo «In evidenza»",match:"Partita",pod:"Podcast",h2:"Titolo «La lega»",links:"Link",foot:"Piè di pagina"};
 const A=(d,u)=>({l:d,u}),R=(on,t,s,u,i,a)=>({on,t,s,u,i,a});
@@ -4468,13 +4470,15 @@ const LD={};
 const get=(o,p)=>p.split(".").reduce((a,k)=>a==null?a:a[k],o),put=(o,p,v)=>{const a=p.split(".");let c=o;a.slice(0,-1).forEach(k=>c=c[k]=c[k]||{});c[a[a.length-1]]=v};
 SC.forEach(([g,,F])=>F.forEach(f=>put(LD,g+"."+f[0],f[3])));
 LD.so=[A("Instagram","https://www.instagram.com/sevenlionsleague/"),A("YouTube","https://youtube.com/@LegaAmatoriCalcioTreviso50"),A("Facebook","https://facebook.com/legaamatoricalciotreviso")];
-LD.rw=[R(0,"Iscrivi la tua squadra","Regolamento, costi e modulo di iscrizione","#","plus","b"),R(1,"Sito ufficiale","Risultati e info della Lega Amatori Calcio Treviso","https://www.legaamatoricalciotreviso.it/","globe","g"),R(1,"Seven Lions Podcast","Il canale YouTube della lega","https://youtube.com/@LegaAmatoriCalcioTreviso50","mic","g"),R(1,"App ufficiale","Lega Amatori Calcio Treviso su Google Play","https://play.google.com/store/apps/details?id=it.legaamatori.calcio","phone","g")];
+LD.rw=[R(1,"Sito ufficiale","Risultati e info della Lega Amatori Calcio Treviso","https://www.legaamatoricalciotreviso.it/","globe","g"),R(1,"Seven Lions Podcast","Il canale YouTube della lega","https://youtube.com/@LegaAmatoriCalcioTreviso50","mic","g"),R(1,"App ufficiale","Lega Amatori Calcio Treviso su Google Play","https://play.google.com/store/apps/details?id=it.legaamatori.calcio","phone","g")];
 LD.or=["head","social","h1","match","pod","h2","links","foot"];
 const IC={plus:'<path d="M12 5v14M5 12h14"/>',globe:'<circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3c2.6 2.6 3.8 5.6 3.8 9s-1.2 6.4-3.8 9c-2.6-2.6-3.8-5.6-3.8-9S9.4 5.6 12 3z"/>',mic:'<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11a6.5 6.5 0 0 0 13 0M12 17.5V21M8.5 21h7"/>',phone:'<rect x="6.5" y="2.5" width="11" height="19" rx="2.5"/><path d="M10.5 18.5h3"/>',link:'<path d="M10 14a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1 1M14 10a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1-1"/>',play:'<path d="M8 5.5v13l11-6.5z"/>',calendar:'<rect x="3.5" y="5" width="17" height="15" rx="2.5"/><path d="M3.5 10h17M8 3v4M16 3v4"/>',trophy:'<path d="M8 4h8v5a4 4 0 0 1-8 0V4zM8 6H4.5A3 3 0 0 0 8 10M16 6h3.5A3 3 0 0 1 16 10M12 13v4M8.5 20h7M10 17h4"/>',mail:'<rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m3.5 7 8.5 6 8.5-6"/>',users:'<circle cx="9" cy="8" r="3.2"/><path d="M3 20c0-3.4 2.7-6 6-6s6 2.6 6 6M16 5.2a3.2 3.2 0 0 1 0 5.6M18 14.4c1.8.8 3 2.6 3 5.6"/>',star:'<path d="m12 3.5 2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 17l-5.2 2.7 1-5.9-4.3-4.1 5.9-.8z"/>',download:'<path d="M12 4v11M7 11l5 5 5-5M5 20h14"/>'};
 const TH={"Blu notte":{"pg.bg":"#04070f","pg.ink":"#f2f6ff","pg.mute":"#9fb0cc","pg.gr":"#2f7bff","pg.bl":"#7aa8ff","pg.cd":"#0b1322","pg.c2":"#111c33","bx.g1":"#070d1a","bx.g2":"#050a14","bx.l1":"#cfe0ff","bx.l2":"#bcd2ff","match.g1":"#0f1b33","match.g2":"#0a1224","match.bc":"#2f7bff","match.ac":"#2f7bff","match.ct":"#ffffff","pod.g1":"#101a30","pod.g2":"#0a1020","pod.bc":"#7aa8ff","pod.ec":"#2f7bff","pod.kc":"#a9c4ff","crest.c2":"#2f7bff","crest.c3":"#7aa8ff"},Oro:{"pg.bg":"#0b0905","pg.ink":"#f7efdc","pg.mute":"#b9ab8a","pg.gr":"#c9a45c","pg.bl":"#e6c98a","pg.cd":"#16120a","pg.c2":"#1f1910","bx.g1":"#120e07","bx.g2":"#0e0b05","bx.l1":"#f0dca8","bx.l2":"#e8cf95","match.g1":"#241c0c","match.g2":"#15100a","match.bc":"#c9a45c","match.ac":"#c9a45c","match.ct":"#1a1305","pod.g1":"#231b0b","pod.g2":"#14100a","pod.bc":"#e6c98a","pod.ec":"#c9a45c","pod.kc":"#e6c98a","crest.c2":"#c9a45c","crest.c3":"#e6c98a"},Fuoco:{"pg.bg":"#0d0504","pg.ink":"#fff4ee","pg.mute":"#c4a59a","pg.gr":"#ff5a2a","pg.bl":"#ffb02a","pg.cd":"#1a0b08","pg.c2":"#25110c","bx.g1":"#140705","bx.g2":"#100504","bx.l1":"#ffd2b8","bx.l2":"#ffe0b0","match.g1":"#2a110a","match.g2":"#170a07","match.bc":"#ff5a2a","match.ac":"#ff5a2a","match.ct":"#1a0603","pod.g1":"#2a1a0a","pod.g2":"#170c07","pod.bc":"#ffb02a","pod.ec":"#ff5a2a","pod.kc":"#ffc27a","crest.c2":"#ff5a2a","crest.c3":"#ffb02a"},Giorno:{"pg.bg":"#f4f7ff","pg.ink":"#060b1c","pg.mute":"#53607e","pg.gr":"#1646d9","pg.bl":"#1646d9","pg.cd":"#ffffff","pg.c2":"#eef3ff","bx.g1":"#eaf0ff","bx.g2":"#e2eaff","bx.l1":"#ffffff","bx.l2":"#dbe6ff","match.g1":"#ffffff","match.g2":"#eaf0ff","match.bc":"#1646d9","match.ac":"#1646d9","match.ct":"#ffffff","match.wc":"#060b1c","match.lc":"#8a94ae","pod.g1":"#ffffff","pod.g2":"#eaf0ff","pod.bc":"#1646d9","pod.ec":"#1646d9","pod.kc":"#1646d9","crest.c1":"#060b1c","crest.c2":"#1646d9","crest.c3":"#2f7bff"}};
 const TP=[...new Set(Object.values(TH).flatMap(Object.keys))];
 const mrg=(d,s)=>{if(Array.isArray(d))return Array.isArray(s)?s:JSON.parse(JSON.stringify(d));if(d&&typeof d==="object"){const o={};for(const k in d)o[k]=mrg(d[k],s&&s[k]);return o}return s===undefined||s===null?d:s};
-const ld=()=>S.lt=mrg(LD,S.lt);
+const mig=()=>{const l=S.lt;if(!l)return;if(l.stripe&&l.stripe.c4===undefined)["c1","c2","c3"].forEach(k=>delete l.stripe[k]);if(l.rw&&l.rw[0]&&l.rw[0].t==="Iscrivi la tua squadra"&&!l.iscr){const r=l.rw.shift();l.iscr={on:r.on,t:r.t,s:r.s,u:r.u,i:r.i,a:r.a}}};
+const ld=()=>{mig();return S.lt=mrg(LD,S.lt)};
+const sl=x=>String(x).normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().replace(/[^a-z0-9]+/g,"_").replace(/^_|_$/g,"")||"link";
 const hx=h=>{h=(h||"#000000").replace("#","");if(h.length===3)h=h.replace(/./g,"$&$&");return[0,2,4].map(i=>parseInt(h.slice(i,i+2),16)||0)};
 const ra=(h,a)=>`rgba(${hx(h)},${a})`,mx=(h,w,k)=>"#"+hx(h).map((v,i)=>Math.round(v+(hx(w)[i]-v)*k).toString(16).padStart(2,"0")).join("");
 const IMK=()=>LK("a7ltimg");let IMG="";try{IMG=localStorage.getItem(IMK())||""}catch(e){}
@@ -4496,8 +4500,8 @@ h1{font:400 ${cl(t.sz,.71,.2237)}/${t.lh/100} var(--disp);margin:18px 0 10px;let
 .sub{margin:0;color:${s.c||"var(--mute)"};font-size:${F(s.sz)};max-width:30em;text-align:${ta[s.al]};${mg(s.al)}}
 .sub b{color:${s.bc||"var(--ink)"};font-weight:600}
 .stripe{display:flex;gap:${sr.gp}px;margin:18px 0 0;justify-content:${jc[sr.al]}}
-.stripe i{display:block;width:${sr.w}px;height:${sr.h}px;transform:skewX(-${sr.sk}deg);border-radius:2px}
-.stripe i:nth-child(1){background:${sr.c1}}.stripe i:nth-child(2){background:${sr.c2||"var(--green)"}}.stripe i:nth-child(3){background:${sr.c3||"var(--blue)"}}
+.stripe i{display:block;width:${sr.w}px;height:${sr.h}px;transform:skewX(-${sr.sk}deg);border-radius:2px;box-shadow:inset 0 0 0 1px ${ra(ink,.25)}}
+.stripe i:nth-child(1){background:${sr.c1}}.stripe i:nth-child(2){background:${sr.c2}}.stripe i:nth-child(3){background:${sr.c3}}.stripe i:nth-child(4){background:${sr.c4}}
 .social{display:flex;flex-wrap:wrap;gap:8px;margin:22px 0 6px;justify-content:${jc[so.al]}}
 .social a{display:inline-flex;align-items:center;gap:8px;min-height:${so.hh}px;padding:0 16px;border:1px solid var(--line);border-radius:${so.r}px;background:${ra(ink,so.bo/100)};font-weight:600;font-size:${F(so.sz)};transition:background .2s,border-color .2s}
 .social a:hover,.social a:focus-visible{background:${ra(ink,(so.bo+5)/100)};border-color:${ra(ink,.25)}}
@@ -4542,7 +4546,7 @@ footer .tag span{color:${f.tc||"var(--green)"}}
 ${p.an&&!pv?`@media (prefers-reduced-motion:no-preference){
 .in{animation:up .6s cubic-bezier(.2,.7,.2,1) both}
 .stripe i{animation:slide .7s cubic-bezier(.2,.7,.2,1) both}
-.stripe i:nth-child(2){animation-delay:.08s}.stripe i:nth-child(3){animation-delay:.16s}
+.stripe i:nth-child(2){animation-delay:.08s}.stripe i:nth-child(3){animation-delay:.16s}.stripe i:nth-child(4){animation-delay:.24s}
 @keyframes up{from{opacity:0;transform:translateY(14px)}}
 @keyframes slide{from{opacity:0;transform:translateX(-24px) skewX(-${sr.sk}deg)}}
 }`:""}`}
@@ -4559,15 +4563,15 @@ head:()=>`<header class="in">
   ${V("crest",`<svg class="crest" viewBox="0 0 1400 1344" role="img" aria-label="Logo Seven Lions League"${ST("crest")}><path fill="${L.crest.c1}" fill-rule="evenodd" d="${LP[0]}"/><path fill="${L.crest.c2}" d="${LP[1]}"/><path fill="${L.crest.c3}" d="${LP[2]}"/></svg>`)}
   ${V("title",`<h1${ST("title")}>${esc(L.title.tx).split("|").join("<br>")}</h1>`)}
   ${V("sub",`<p class="sub"${ST("sub")}><b>${esc(L.sub.b)}</b>${esc(L.sub.tx)}</p>`)}
-  ${V("stripe",`<div class="stripe" aria-hidden="true"${ST("stripe")}><i></i><i></i><i></i></div>`)}
+  ${V("stripe",`<div class="stripe" aria-hidden="true"${ST("stripe")}><i></i><i></i><i></i><i></i></div>`)}
  </header>`,
 social:()=>V("social",`<!-- ✏️ SOCIAL -->
  <nav class="social in" aria-label="Social"${ST("social",dl())}>
-${L.so.map(x=>`  <a href="${esc(x.u)}">${esc(x.l)}${L.social.ar?" "+arr:""}</a>`).join("\n")}
+${L.so.map(x=>`  <a data-k="${sl(x.l)}" href="${esc(x.u)}">${esc(x.l)}${L.social.ar?" "+arr:""}</a>`).join("\n")}
  </nav>`),
 h1:()=>V("h1",`<h2 class="in sh1"${ST("h1",dl())}>${esc(L.h1.tx)}</h2>`),
 match:()=>V("match",`<!-- ✏️ ULTIMO MINIMATCH: aggiorna giornata, squadre, gol e link ogni settimana. -->
- <a class="match in"${ST("match",dl())} href="${esc(m.u)}">
+ <a class="match in" data-k="partita"${ST("match",dl())} href="${esc(m.u)}">
   <div class="mtop"><span>${esc(m.top)}</span><span class="ft">${esc(m.bd)}</span></div>
   <div class="board">
    <span class="team">${esc(m.hn)}</span>
@@ -4577,7 +4581,7 @@ match:()=>V("match",`<!-- ✏️ ULTIMO MINIMATCH: aggiorna giornata, squadre, g
   <div class="cta"><span>${esc(m.cta)}</span><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5.5v13l11-6.5z"/></svg></div>
  </a>`),
 pod:()=>V("pod",`<!-- ✏️ ULTIMO EPISODIO DEL PODCAST -->
- <a class="pod in"${ST("pod",dl())} href="${esc(d.u)}">
+ <a class="pod in" data-k="ultimo_episodio_podcast"${ST("pod",dl())} href="${esc(d.u)}">
   <div class="ep"><div><small>${esc(d.el)}</small><b>${esc(d.ep)}</b></div></div>
   <div>
    <div class="k">${esc(d.kk)}</div>
@@ -4587,7 +4591,7 @@ pod:()=>V("pod",`<!-- ✏️ ULTIMO EPISODIO DEL PODCAST -->
  </a>`),
 h2:()=>V("h2",`<h2 class="in sh2"${ST("h2",dl())}>${esc(L.h2.tx)}</h2>`),
 links:()=>V("links",`<div class="links in"${ST("links",dl())}>
-${L.rw.map(r=>`  <a class="row${r.on?"":" join"}" href="${esc(r.u)}"><span class="ico${r.a==="g"?"":" "+r.a}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${IC[r.i]||IC.link}</svg></span><span><span class="t">${esc(r.t)}</span><span class="s">${esc(r.s)}</span></span>${chev}</a>`).join("\n")}
+${(L.iscr.on?[L.iscr]:[]).concat(L.rw).map(r=>`  <a class="row${r.on===0?" join":""}" data-k="${sl(r.t)}" href="${esc(r.u)}"><span class="ico${r.a==="g"?"":" "+r.a}"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">${IC[r.i]||IC.link}</svg></span><span><span class="t">${esc(r.t)}</span><span class="s">${esc(r.s)}</span></span>${chev}</a>`).join("\n")}
  </div>`),
 foot:()=>V("foot",`<footer class="in"${ST("foot",dl())}>
   <div class="tag">${esc(L.foot.t1)}<span>${esc(L.foot.t2)}</span></div>
@@ -4599,6 +4603,7 @@ return `<div class="pitch" aria-hidden="true">${IMG&&b.io>0?'<div class="bgi"></
 ${N.map(k=>BL[k]()).filter(Boolean).join("\n\n ")}
 </main>`}
 function doc(pv){const L=ld(),mt=L.meta,fav=LF.replace("%23070c09","%23"+L.pg.bg.slice(1)).replace("%234c9a22","%23"+L.crest.c2.slice(1)).replace("%232d88d0","%23"+L.crest.c3.slice(1)).replace("%23fff%22","%23"+L.crest.c1.slice(1)+"%22");
+const SS=!pv&&L.st.on&&FB_CFG.projectId?`<scr`+`ipt>(function(){try{var P=${JSON.stringify(FB_CFG.projectId)},K=${JSON.stringify(FB_CFG.apiKey)},ls=localStorage;if(/[?#&]nostat/.test(location.href))ls.setItem("ltno","1");if(ls.getItem("ltno"))return;var N="projects/"+P+"/databases/(default)/documents",D=new Date().toISOString().slice(0,10);function hit(f){fetch("https://firestore.googleapis.com/v1/"+N+":commit?key="+K,{method:"POST",keepalive:true,headers:{"Content-Type":"application/json"},body:JSON.stringify({writes:[{update:{name:N+"/lt_stats/"+D},updateMask:{fieldPaths:[]},updateTransforms:f.map(function(x){return{fieldPath:x,increment:{integerValue:"1"}}})}]})}).catch(function(){})}var f=["v"];if(!ls.getItem("ltu")){ls.setItem("ltu","1");f.push("u")}hit(f);document.addEventListener("click",function(e){var a=e.target.closest("a[data-k]");if(a)hit(["c_"+a.dataset.k])},true)}catch(e){}})();<\/scr`+`ipt>`:"";
 const pvs=pv?`<style>.in{animation:none!important}[data-lt]{cursor:pointer}[data-lt].sel{outline:2px dashed #2f7bff;outline-offset:4px;touch-action:none;cursor:move}</style><scr`+`ipt>${PS}<\/scr`+`ipt>`:"";
 return `<!DOCTYPE html>
 <html lang="it">
@@ -4622,7 +4627,7 @@ ${css(pv)}
 </head>
 <body>
 ${pv?'<div id="ltroot">'+body(pv)+"</div>":body(pv)}
-</body>
+${SS}</body>
 </html>
 `}
 const PS=`(function(){var sel="",dr=null,P=function(m){m.lt=1;parent.postMessage(m,"*")};
@@ -4653,15 +4658,32 @@ const lst=(l,arr,fn)=>arr.map((x,i)=>`<div class="ltr">${fn(x,i)}<div class="bar
 const inp=(l,i,f,v,ph)=>`<input data-l="${l}" data-i="${i}" data-f="${f}" value="${esc(v)}" placeholder="${ph}">`;
 const X={social:`<div class="ltr"><b>Pulsanti</b></div>`+lst("so",L.so,(x,i)=>inp("so",i,"l",x.l,"Nome")+inp("so",i,"u",x.u,"Link"))+`<div class="bar" style="margin:8px 0 0"><button class="btn" data-a="add" data-l="so">+ Aggiungi pulsante</button></div>`,
 links:`<div class="ltr"><b>Righe dei link</b></div>`+lst("rw",L.rw,(r,i)=>`<label class="ltk"><input type="checkbox" data-l="rw" data-i="${i}" data-f="on"${r.on?" checked":""}> Visibile</label>`+inp("rw",i,"t",r.t,"Titolo")+inp("rw",i,"s",r.s,"Sottotitolo")+inp("rw",i,"u",r.u,"Link")+`<div class="g3" style="grid-template-columns:1fr 1fr"><select data-l="rw" data-i="${i}" data-f="i">${Object.keys(IC).map(k=>`<option${k===r.i?" selected":""}>${k}</option>`).join("")}</select><select data-l="rw" data-i="${i}" data-f="a">${[["g","Icona verde"],["b","Icona blu"],["w","Icona chiara"]].map(k=>`<option value="${k[0]}"${k[0]===r.a?" selected":""}>${k[1]}</option>`).join("")}</select></div>`)+`<div class="bar" style="margin:8px 0 0"><button class="btn" data-a="add" data-l="rw">+ Aggiungi link</button></div>`,
+st:`<div class="ltr"><div class="bar" style="margin:0"><select id="ltsr" style="width:auto"><option value="1">Oggi</option><option value="7">Ultimi 7 giorni</option><option value="30" selected>Ultimi 30 giorni</option><option value="0">Da sempre</option></select><button class="btn" id="ltsb">Aggiorna statistiche</button></div><div id="ltso" class="hint"></div><details><summary>Regole Firestore da pubblicare (una volta sola)</summary><p class="hint">Firebase › Firestore › Regole: incolla e pubblica. I numeri si vedono solo qui nel tool, mai nel linktree. Per non contare le tue visite apri la pagina online una volta con ?nostat in fondo all’indirizzo.</p><pre style="white-space:pre-wrap;font-size:12px">rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /a7p/{doc=**} {
+      allow read, write: if request.auth != null;
+    }
+    match /lt_stats/{giorno} {
+      allow read: if request.auth != null;
+      allow create, update: if true;
+    }
+  }
+}</pre></details></div>`,
 bx:`<div class="ltr"><label>Immagine di sfondo (resta su questo dispositivo)</label><input type="file" id="ltim" accept="image/*"><button class="btn" id="ltimx" style="margin-top:6px">Rimuovi immagine</button></div>`};
 const G=SC.map(([g,t,fs])=>`<details class="card ltg" data-g="${g}"${OPEN===g?" open":""}><summary><b>${t}</b></summary>${fs.map(f=>fld(g,f,L)).join("")}${X[g]||""}</details>`);
 G.push(`<details class="card ltg" data-g="or"${OPEN==="or"?" open":""}><summary><b>Ordine dei blocchi</b></summary>${lst("or",L.or,k=>BN[k])}</details>`);
 F.innerHTML=G.join("")}
+async function stats(){const o=$("#ltso");if(!(window.CLD&&CLD.lt)){o.textContent="Le statistiche richiedono il cloud collegato (accedi al profilo).";return}o.textContent="Carico…";try{const D=await CLD.lt(),n=+$("#ltsr").value,L=ld(),lim=n?new Date(Date.now()-(n-1)*864e5).toISOString().slice(0,10):"",T={},M={partita:"Partita (scoreboard)",ultimo_episodio_podcast:"Podcast (ultimo episodio)"};
+[...L.so.map(x=>x.l),...L.rw.map(x=>x.t),L.iscr.t].forEach(l=>M[sl(l)]=l);
+const R=D.filter(d=>d.id>=lim);R.forEach(d=>{for(const k in d)if(k!=="id")T[k]=(T[k]||0)+(+d[k]||0)});
+const v=T.v||0,c=Object.keys(T).filter(k=>k.startsWith("c_")).map(k=>[M[k.slice(2)]||k.slice(2),T[k]]).sort((a,b)=>b[1]-a[1]),tc=c.reduce((q,x)=>q+x[1],0);
+o.innerHTML=`<b>${v}</b> aperture · <b>${T.u||0}</b> nuovi visitatori (dispositivi mai visti prima) · <b>${tc}</b> click sui link${v?` (${Math.round(tc*100/v)}% delle aperture)`:""}<br>`+(c.length?c.map(x=>`${esc(x[0])}: <b>${x[1]}</b>${v?" ("+Math.round(x[1]*100/v)+"%)":""}`).join("<br>"):"Nessun click registrato.")+"<br><br>Ultimi giorni<br>"+R.sort((a,b)=>a.id<b.id?1:-1).slice(0,14).map(d=>`${d.id.slice(8)}/${d.id.slice(5,7)}: ${d.v||0} aperture, ${d.u||0} nuovi`).join("<br>")}catch(e){o.textContent="Non riesco a leggere: controlla le regole di Firestore (vedi sotto). "+(e.code||"")}}
 function sel(id){SEL=id;const g=GM[id]||id;OPEN=g;$$("#ltf details").forEach(d=>d.open=d.dataset.g===g);const d=$('#ltf details[data-g="'+g+'"]');if(d)d.scrollIntoView({block:"nearest",behavior:"smooth"});if(fr.contentWindow.ltSel)fr.contentWindow.ltSel(id)}
 function init(){if(ready)return;ready=1;fr=$("#ltfr");ld();PREV=JSON.stringify(S.lt);fr.srcdoc=doc(1);form();const F=$("#ltf");
 F.addEventListener("input",e=>{const t=e.target,L=ld();if(t.dataset.p){put(L,t.dataset.p,t.type==="checkbox"?+t.checked:t.type==="range"?+t.value:t.value);if(t.type==="range")t.previousElementSibling.querySelector("b").textContent=t.value;up()}else if(t.dataset.l){L[t.dataset.l][+t.dataset.i][t.dataset.f]=t.type==="checkbox"?+t.checked:t.value;up()}});
-F.addEventListener("change",e=>{if(e.target.id==="ltim"){const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);IMG=c.toDataURL("image/jpeg",.7);try{localStorage.setItem(IMK(),IMG)}catch(x){IMG="";alert("Immagine troppo pesante per la memoria del browser: usane una più piccola.")}up()};im.src=URL.createObjectURL(f);return}commit()});
-F.addEventListener("click",e=>{const t=e.target;if(t.id==="ltimx"){IMG="";try{localStorage.removeItem(IMK())}catch(x){}up();return}if(!t.dataset.a)return;const L=ld(),a=L[t.dataset.l],i=+t.dataset.i,o=t.dataset.a;if(o==="add")a.push(t.dataset.l==="so"?A("Nuovo","https://"):R(1,"Nuovo link","Descrizione","https://","link","g"));else if(o==="rm"){if(!confirm("Elimino questo elemento?"))return;a.splice(i,1)}else{const j=o==="up"?i-1:i+1;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]}commit();form();up()});
+F.addEventListener("change",e=>{if(e.target.id==="ltsr"){stats();return}if(e.target.id==="ltim"){const f=e.target.files[0];if(!f)return;const im=new Image();im.onload=()=>{const k=Math.min(1,1400/Math.max(im.width,im.height)),c=document.createElement("canvas");c.width=im.width*k;c.height=im.height*k;c.getContext("2d").drawImage(im,0,0,c.width,c.height);IMG=c.toDataURL("image/jpeg",.7);try{localStorage.setItem(IMK(),IMG)}catch(x){IMG="";alert("Immagine troppo pesante per la memoria del browser: usane una più piccola.")}up()};im.src=URL.createObjectURL(f);return}commit()});
+F.addEventListener("click",e=>{const t=e.target;if(t.id==="ltimx"){IMG="";try{localStorage.removeItem(IMK())}catch(x){}up();return}if(t.id==="ltsb"){stats();return}if(!t.dataset.a)return;const L=ld(),a=L[t.dataset.l],i=+t.dataset.i,o=t.dataset.a;if(o==="add")a.push(t.dataset.l==="so"?A("Nuovo","https://"):R(1,"Nuovo link","Descrizione","https://","link","g"));else if(o==="rm"){if(!confirm("Elimino questo elemento?"))return;a.splice(i,1)}else{const j=o==="up"?i-1:i+1;if(j<0||j>=a.length)return;[a[i],a[j]]=[a[j],a[i]]}commit();form();up()});
 F.addEventListener("toggle",e=>{if(e.target.open)OPEN=e.target.dataset.g},true);
 addEventListener("message",e=>{const m=e.data;if(!m||!m.lt||e.source!==fr.contentWindow)return;if(m.t==="sel")sel(m.id);if(m.t==="mv"){const L=ld();L[m.id].x=m.x;L[m.id].y=m.y;commit();form();up()}});
 $("#ltun").onclick=()=>{if(!UN.length)return;RE.push(PREV);restore(UN.pop())};$("#ltre").onclick=()=>{if(!RE.length)return;UN.push(PREV);restore(RE.pop())};
@@ -4673,7 +4695,7 @@ $("#ltdl").onclick=()=>{const a=document.createElement("a");a.href=dn();a.downlo
 $("#ltcp").onclick=()=>navigator.clipboard.writeText(doc(0)).then(()=>alert("Codice copiato."),()=>alert("Copia non riuscita: usa «Genera index.html»."));
 $("#ltop").onclick=()=>window.open(dn(),"_blank")}
 document.addEventListener("click",e=>{const b=e.target.closest('nav button[data-t="lt"]');if(b)init()});
-const ob=$('nav button[data-t="lt"]');if(ob&&typeof SES!=="undefined"&&SES&&SES.role==="ext")ob.remove();
+const ob=$('nav button[data-t="lt"]');if(ob){if(typeof SES!=="undefined"&&SES&&SES.role==="ext")ob.remove();else{if(!ob.querySelector(".ni"))ob.insertAdjacentHTML("afterbegin",'<span class="ni" aria-hidden="true">🌳</span>');const eb=$('nav button[data-t="e"]');eb?eb.after(ob):ob.parentNode.append(ob)}}
 const rr=window.reRender;if(rr)window.reRender=function(){const r=rr.apply(this,arguments);if(ready){form();up()}return r}})();
 </script>
 </body>
